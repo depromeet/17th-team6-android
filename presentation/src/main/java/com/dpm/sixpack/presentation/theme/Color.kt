@@ -1,4 +1,4 @@
-package com.dpm.sixpack.ui.theme
+package com.dpm.sixpack.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

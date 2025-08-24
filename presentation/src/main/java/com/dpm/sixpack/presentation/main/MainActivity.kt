@@ -1,4 +1,4 @@
-package com.dpm.sixpack
+package com.dpm.sixpack.presentation.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,7 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.dpm.sixpack.ui.theme.SixpackTheme
+import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
