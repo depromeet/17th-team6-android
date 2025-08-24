@@ -1,0 +1,24 @@
+package com.dpm.sixpack.convention.extensions
+
+import com.android.build.api.dsl.CommonExtension
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.dependencies
+
+internal fun Project.configureComposeAndroid(commonExtension: CommonExtension<*, *, *, *, *, *>) {
+	commonExtension.apply {
+		buildFeatures {
+			compose = true
+		}
+
+		dependencies {
+			val composeBom = libs.getLibrary("compose-bom")
+			implementation(platform(composeBom))
+			androidTestImplementation(platform(composeBom))
+			implementation(libs.getBundle("compose"))
+			implementation(libs.getBundle("material"))
+			implementation(libs.getBundle("navigation"))
+			debugImplementation(libs.getBundle("compose-debug"))
+			androidTestImplementation(libs.getBundle("compose-debug"))
+		}
+	}
+}
