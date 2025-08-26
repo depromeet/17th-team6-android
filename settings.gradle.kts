@@ -27,9 +27,6 @@ gradle.startParameter.excludedTaskNames.addAll(listOf(":build-logic:convention:t
 
 rootProject.name = "sixpack"
 include(":app")
-//include(":domain")
-//include(":data")
-//include(":presentation")
 include(":data")
 include(":domain")
 include(":presentation")

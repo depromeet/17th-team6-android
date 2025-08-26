@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.hilt) apply false
+    alias(libs.plugins.ktlint) apply false
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.kotlin.parcelize) apply false
 }
@@ -17,5 +18,15 @@ buildscript {
         maven {
             url = uri("https://repository.map.naver.com/archive/maven")
         }
+    }
+}
+
+allprojects {
+    apply {
+        plugin(
+            rootProject.libs.plugins.ktlint
+                .get()
+                .pluginId,
+        )
     }
 }

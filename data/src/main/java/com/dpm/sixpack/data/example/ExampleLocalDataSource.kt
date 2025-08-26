@@ -12,17 +12,17 @@ import javax.inject.Singleton
 
 @Singleton
 class ExampleLocalDataSource @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
 ) {
+    
     private val Context.dataStore by preferencesDataStore(
-        name = PreferencesConstants.EXAMPLE_PREFERENCES_NAME
+        name = PreferencesConstants.EXAMPLE_PREFERENCES_NAME,
     )
 
-    fun getCount(): Flow<Int> {
-        return context.dataStore.data.map { pref ->
+    fun getCount(): Flow<Int> =
+        context.dataStore.data.map { pref ->
             pref[PreferencesConstants.COUNTER_KEY] ?: 0
         }
-    }
 
     suspend fun changeCount(amount: Int) {
         context.dataStore.edit { preferences ->

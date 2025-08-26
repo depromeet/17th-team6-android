@@ -7,7 +7,6 @@ import timber.log.Timber
 
 @HiltAndroidApp
 class SixPackApp : Application() {
-
     override fun onCreate() {
         super.onCreate()
         setDarkMode()
