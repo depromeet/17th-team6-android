@@ -9,4 +9,6 @@ android {
 dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)
+
+    implementation(project(":domain"))
 }

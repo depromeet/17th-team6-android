@@ -7,7 +7,9 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
 import com.dpm.sixpack.presentation.routes.Route
+import com.dpm.sixpack.presentation.example.navigation.navigateSample
 
 internal class MainNavigator(
     val navController: NavHostController
@@ -16,13 +18,19 @@ internal class MainNavigator(
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
 
-    val startDestination = Route.Home
+    val startDestination = Route.Example // FIXME: Change to other when the start screen is implemented
+
+    fun navigateSample() {
+        navController.navigateSample(
+            navOptions = navOptions { launchSingleTop = true }
+        )
+    }
 
     fun navigateHome() {
 
     }
 
-    private fun popBackStack() {
+    fun popBackStack() {
         navController.popBackStack()
     }
 

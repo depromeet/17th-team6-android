@@ -19,7 +19,7 @@ jdkVersion = "17"
 androidx-appcompat = "1.7.0"
 coreKtx = "1.13.1"
 androidx-lifecycle-runtime-ktx = "2.8.2"
-androidx-datastore-preferences = "1.1.1"
+androidx-datastore-preferences = "1.1.7"
 androidx-navigation-common-ktx = "2.7.7"
 
 # Coil
@@ -31,7 +31,7 @@ composeBom = "2024.09.00"
 navigationCompose = "2.8.7"
 
 # Coroutines
-kotlinxCoroutinesCore = "1.8.1"
+kotlinxCoroutinesCore = "1.9.0"
 
 # Debug
 timber = "5.0.1"
@@ -68,12 +68,12 @@ orbitViewmodel = "10.0.0"
 accompanistPermissions = "0.37.0"
 
 # Serialization
-kotlinxSerializationJson = "1.7.1"
+kotlinxSerializationJson = "1.8.0"
 
 # Test
 junit = "4.13.2"
-junitVersion = "1.2.1"
-espressoCore = "3.7.0"
+junitVersion = "1.1.5"
+espressoCore = "3.5.0"
 
 [libraries]
 
@@ -204,10 +204,6 @@ compose-debug = [
 coroutines = [
     "kotlinx-coroutines-android",
     "kotlinx-coroutines-core",
-]
-
-datastore = [
-    "androidx-datastore-preferences",
 ]
 
 material = [

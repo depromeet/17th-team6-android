@@ -20,6 +20,7 @@ class SixPackPresentationPlugin : Plugin<Project> {
             }
 
             dependencies {
+                implementation(libs.getBundle("orbit"))
                 implementation(libs.getLibrary("kotlinx-serialization-json"))
                 implementation(libs.getBundle("navigation"))
             }

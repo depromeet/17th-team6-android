@@ -20,6 +20,7 @@ class SixPackDataPlugin : Plugin<Project> {
 
             dependencies {
                 implementation(libs.getBundle("network"))
+                implementation(libs.getLibrary("androidx-datastore-preferences"))
                 implementation(libs.getLibrary("androidx-room"))
             }
         }

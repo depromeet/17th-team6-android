@@ -23,6 +23,7 @@ class AndroidLibraryPlugin : Plugin<Project> {
 			}
 
 			dependencies {
+				implementation(libs.getLibrary("inject"))
 				implementation(libs.getLibrary("timber"))
 				implementation(libs.getBundle("androidx-core"))
 			}
