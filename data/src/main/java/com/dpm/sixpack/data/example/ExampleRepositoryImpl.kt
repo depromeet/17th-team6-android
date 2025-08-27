@@ -6,13 +6,14 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ExampleRepositoryImpl @Inject constructor(
-    private val localDataSource: ExampleLocalDataSource,
-) : ExampleRepository {
+class ExampleRepositoryImpl
+    @Inject
+    constructor(
+        private val localDataSource: ExampleLocalDataSource,
+    ) : ExampleRepository {
+        override fun getCount(): Flow<Int> = localDataSource.getCount()
 
-    override fun getCount(): Flow<Int> = localDataSource.getCount()
-
-    override suspend fun changeCount(amount: Int) {
-        localDataSource.changeCount(amount)
+        override suspend fun changeCount(amount: Int) {
+            localDataSource.changeCount(amount)
+        }
     }
-}

@@ -11,28 +11,29 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ExampleLocalDataSource @Inject constructor(
-    @ApplicationContext private val context: Context,
-) {
-    
-    private val Context.dataStore by preferencesDataStore(
-        name = PreferencesConstants.EXAMPLE_PREFERENCES_NAME,
-    )
+class ExampleLocalDataSource
+    @Inject
+    constructor(
+        @ApplicationContext private val context: Context,
+    ) {
+        private val Context.dataStore by preferencesDataStore(
+            name = PreferencesConstants.EXAMPLE_PREFERENCES_NAME,
+        )
 
-    fun getCount(): Flow<Int> =
-        context.dataStore.data.map { pref ->
-            pref[PreferencesConstants.COUNTER_KEY] ?: 0
+        fun getCount(): Flow<Int> =
+            context.dataStore.data.map { pref ->
+                pref[PreferencesConstants.COUNTER_KEY] ?: 0
+            }
+
+        suspend fun changeCount(amount: Int) {
+            context.dataStore.edit { preferences ->
+                val currentCount = preferences[PreferencesConstants.COUNTER_KEY] ?: 0
+                preferences[PreferencesConstants.COUNTER_KEY] = currentCount + amount
+            }
         }
 
-    suspend fun changeCount(amount: Int) {
-        context.dataStore.edit { preferences ->
-            val currentCount = preferences[PreferencesConstants.COUNTER_KEY] ?: 0
-            preferences[PreferencesConstants.COUNTER_KEY] = currentCount + amount
+        private object PreferencesConstants {
+            const val EXAMPLE_PREFERENCES_NAME = "example_preferences"
+            val COUNTER_KEY = intPreferencesKey("counter_key")
         }
     }
-
-    private object PreferencesConstants {
-        const val EXAMPLE_PREFERENCES_NAME = "example_preferences"
-        val COUNTER_KEY = intPreferencesKey("counter_key")
-    }
-}

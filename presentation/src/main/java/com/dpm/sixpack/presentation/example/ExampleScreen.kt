@@ -31,7 +31,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 internal fun ExampleScreen(
     onBackClick: () -> Unit,
     onNextClick: () -> Unit,
-    vm: ExampleViewModel = hiltViewModel()
+    vm: ExampleViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val state = vm.collectAsState()
@@ -69,14 +69,14 @@ private fun ExampleScreenContent(
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
         ) {
             if (state.isLoading) {
                 CircularProgressIndicator()
             } else {
                 Text(
                     text = "Count: ${state.count}",
-                    style = MaterialTheme.typography.headlineLarge
+                    style = MaterialTheme.typography.headlineLarge,
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -89,17 +89,16 @@ private fun ExampleScreenContent(
                     Button(onClick = { onEvent(ExampleIntent.Increment(1)) }) {
                         Text("Increment")
                     }
-
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Row {
-                    Button(onClick = { onEvent(ExampleIntent.clickBack) }) {
+                    Button(onClick = { onEvent(ExampleIntent.ClickBack) }) {
                         Text("Back")
                     }
                     Spacer(modifier = Modifier.width(16.dp))
-                    Button(onClick = { onEvent(ExampleIntent.clickNext) }) {
+                    Button(onClick = { onEvent(ExampleIntent.ClickNext) }) {
                         Text("Next")
                     }
                 }
@@ -114,7 +113,7 @@ fun PreviewExampleScreen() {
     SixpackTheme {
         ExampleScreenContent(
             state = ExampleState(count = 0, isLoading = false),
-            onEvent = {}
+            onEvent = {},
         )
     }
 }

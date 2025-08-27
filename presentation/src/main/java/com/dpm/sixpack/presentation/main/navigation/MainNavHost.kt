@@ -10,14 +10,14 @@ import com.dpm.sixpack.presentation.example.navigation.sampleNavGraph
 @Composable
 internal fun MainNavHost(
     navigator: MainNavigator,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         NavHost(
             navController = navigator.navController,
-            startDestination = navigator.startDestination
+            startDestination = navigator.startDestination,
         ) {
             sampleNavGraph(
                 onNextClick = { },
@@ -25,5 +25,4 @@ internal fun MainNavHost(
             )
         }
     }
-
 }

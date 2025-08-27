@@ -8,40 +8,39 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.dpm.sixpack.presentation.routes.Route
 import com.dpm.sixpack.presentation.example.navigation.navigateSample
+import com.dpm.sixpack.presentation.routes.Route
 
 internal class MainNavigator(
-    val navController: NavHostController
+    val navController: NavHostController,
 ) {
     private val currentDestination: NavDestination?
-        @Composable get() = navController
-            .currentBackStackEntryAsState().value?.destination
+        @Composable get() =
+            navController
+                .currentBackStackEntryAsState()
+                .value
+                ?.destination
 
     val startDestination = Route.Example // FIXME: Change to other when the start screen is implemented
 
     fun navigateSample() {
         navController.navigateSample(
-            navOptions = navOptions { launchSingleTop = true }
+            navOptions = navOptions { launchSingleTop = true },
         )
     }
 
     fun navigateHome() {
-
     }
 
     fun popBackStack() {
         navController.popBackStack()
     }
 
-    private inline fun <reified T : Route> isSameCurrentDestination(): Boolean {
-        return navController.currentDestination?.hasRoute<T>() == true
-    }
+    private inline fun <reified T : Route> isSameCurrentDestination(): Boolean = navController.currentDestination?.hasRoute<T>() == true
 }
 
 @Composable
-internal fun rememberMainNavigator(
-    navController: NavHostController = rememberNavController(),
-): MainNavigator = remember(navController) {
-    MainNavigator(navController)
-}
+internal fun rememberMainNavigator(navController: NavHostController = rememberNavController()): MainNavigator =
+    remember(navController) {
+        MainNavigator(navController)
+    }

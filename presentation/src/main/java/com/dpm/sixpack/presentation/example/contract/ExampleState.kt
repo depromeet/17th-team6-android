@@ -6,5 +6,5 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class ExampleState(
     val isLoading: Boolean = false,
-    val count: Int = 0
+    val count: Int = 0,
 ) : UiState
