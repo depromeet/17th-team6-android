@@ -13,8 +13,8 @@ class SixPackPresentationPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             pluginManager.run {
-                apply("sixpack.compose.library")
-                apply("sixpack.hilt")
+                apply(libs.getPlugin("sixpack-compose-library").get().pluginId)
+                apply(libs.getPlugin("sixpack-hilt").get().pluginId)
                 apply(libs.getPlugin("kotlin-serialization").get().pluginId)
                 apply(libs.getPlugin("kotlin-parcelize").get().pluginId)
             }

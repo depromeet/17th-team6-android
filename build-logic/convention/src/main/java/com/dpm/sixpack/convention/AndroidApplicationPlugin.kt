@@ -3,6 +3,7 @@ package com.dpm.sixpack.convention
 import com.android.build.api.dsl.ApplicationExtension
 import com.dpm.sixpack.convention.extensions.configureKotlinAndroid
 import com.dpm.sixpack.convention.extensions.getLibrary
+import com.dpm.sixpack.convention.extensions.getPlugin
 import com.dpm.sixpack.convention.extensions.implementation
 import com.dpm.sixpack.convention.extensions.libs
 import org.gradle.api.Plugin
@@ -11,13 +12,13 @@ import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 
 /* For app module */
-class AndroidApplicationPlugin: Plugin<Project> {
+class AndroidApplicationPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             pluginManager.run {
-                apply("com.android.application")
-                apply("org.jetbrains.kotlin.android")
-                apply("sixpack.hilt")
+                apply(libs.getPlugin("android-application").get().pluginId)
+                apply(libs.getPlugin("kotlin-android").get().pluginId)
+                apply(libs.getPlugin("sixpack-hilt").get().pluginId)
             }
 
             extensions.configure<ApplicationExtension> {
