@@ -12,13 +12,15 @@ import org.gradle.kotlin.dsl.dependencies
 class SixPackDataPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
-            pluginManager.apply {
-                apply("sixpack.android.library")
-                apply("sixpack.hilt")
+            pluginManager.run {
+                apply(libs.getPlugin("sixpack-android-library").get().pluginId)
+                apply(libs.getPlugin("sixpack-hilt").get().pluginId)
+                apply(libs.getPlugin("kotlin-serialization").get().pluginId)
                 apply(libs.getPlugin("kotlin-parcelize").get().pluginId)
             }
 
             dependencies {
+                implementation(libs.getLibrary("kotlinx-serialization-json"))
                 implementation(libs.getBundle("network"))
                 implementation(libs.getLibrary("androidx-datastore-preferences"))
                 implementation(libs.getLibrary("androidx-room"))

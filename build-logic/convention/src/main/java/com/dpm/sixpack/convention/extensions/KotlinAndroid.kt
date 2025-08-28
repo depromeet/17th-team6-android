@@ -8,7 +8,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 internal fun Project.configureKotlinAndroid(commonExtension: CommonExtension<*, *, *, *, *, *>) {
-    pluginManager.apply("org.jetbrains.kotlin.android")
+    pluginManager.apply(libs.getPlugin("kotlin-android").get().pluginId)
 
     commonExtension.apply {
         compileSdk = libs.getVersion("compileSdk").requiredVersion.toInt()

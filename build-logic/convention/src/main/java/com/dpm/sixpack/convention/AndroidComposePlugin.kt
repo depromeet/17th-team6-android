@@ -15,20 +15,20 @@ import org.gradle.kotlin.dsl.dependencies
  For Compose Feature Module
  */
 class AndroidComposePlugin : Plugin<Project> {
-	override fun apply(target: Project) {
-		with(target) {
-			pluginManager.run{
-				apply("sixpack.android.library")
-				apply(libs.getPlugin("compose-compiler").get().pluginId)
-			}
+    override fun apply(target: Project) {
+        with(target) {
+            pluginManager.run {
+                apply(libs.getPlugin("sixpack-android-library").get().pluginId)
+                apply(libs.getPlugin("compose-compiler").get().pluginId)
+            }
 
-			extensions.configure<LibraryExtension> {
-				configureComposeAndroid(this)
-			}
+            extensions.configure<LibraryExtension> {
+                configureComposeAndroid(this)
+            }
 
-			dependencies {
-				implementation(libs.getLibrary("kotlinx.immutable"))
-			}
-		}
-	}
+            dependencies {
+                implementation(libs.getLibrary("kotlinx.immutable"))
+            }
+        }
+    }
 }
