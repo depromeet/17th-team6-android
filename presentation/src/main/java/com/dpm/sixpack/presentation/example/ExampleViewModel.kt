@@ -8,7 +8,8 @@ import com.dpm.sixpack.presentation.example.contract.ExampleIntent
 import com.dpm.sixpack.presentation.example.contract.ExampleSideEffect
 import com.dpm.sixpack.presentation.example.contract.ExampleState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.orbitmvi.orbit.syntax.Syntax
+import org.orbitmvi.orbit.Container
+import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 @HiltViewModel
@@ -16,32 +17,34 @@ class ExampleViewModel @Inject constructor(
     private val fetchCountUseCase: FetchCountUseCase,
     private val changeCountUseCase: ChangeCountUseCase,
     savedStateHandle: SavedStateHandle
-) : BaseViewModel<ExampleState, ExampleIntent, ExampleSideEffect>(savedStateHandle) {
+) : BaseViewModel<ExampleState, ExampleIntent, ExampleSideEffect>() {
 
     override val initialState: ExampleState = ExampleState()
+    override val container: Container<ExampleState, ExampleSideEffect> =
+        container(initialState = initialState, savedStateHandle = savedStateHandle)
 
     init {
         observeCount()
     }
 
-    override fun onIntent(intent: ExampleIntent) {
+    override fun onEvent(intent: ExampleIntent) = intent {
         when (intent) {
-            is ExampleIntent.Increment -> intent {
-                changeCount(state, intent.count)
-                postSideEffect(ExampleSideEffect.ShowToast("Increment value"))
+            is ExampleIntent.Increment -> {
+                changeCount(intent.count)
             }
 
-            is ExampleIntent.Decrement -> intent {
-                changeCount(state, intent.count * -1)
-                postSideEffect(ExampleSideEffect.ShowToast("Decrement value"))
+            is ExampleIntent.Decrement -> {
+                changeCount(intent.count * -1)
             }
 
-            is ExampleIntent.clickNext -> intent {
+            is ExampleIntent.clickNext -> {
                 postSideEffect(ExampleSideEffect.NavigateNext)
+                postSideEffect(ExampleSideEffect.ShowToast("Next"))
             }
 
-            is ExampleIntent.clickBack -> intent {
+            is ExampleIntent.clickBack -> {
                 postSideEffect(ExampleSideEffect.NavigateBack)
+                postSideEffect(ExampleSideEffect.ShowToast("Back"))
             }
         }
     }
@@ -54,38 +57,6 @@ class ExampleViewModel @Inject constructor(
         }
     }
 
-    private fun changeCount(state: ExampleState, amount: Int) = intent {
-        changeCountUseCase(amount)
-    }
-
-    override suspend fun Syntax<ExampleState, ExampleSideEffect>.handleEvent(
-        intent: ExampleIntent
-    ) {
-        when (intent) {
-            is ExampleIntent.Increment -> {
-                changeCount(state, intent.count)
-                postSideEffect(ExampleSideEffect.ShowToast("Increment value"))
-            }
-
-            is ExampleIntent.Decrement -> {
-                changeCount(state, intent.count * -1)
-                postSideEffect(ExampleSideEffect.ShowToast("Decrement value"))
-            }
-
-            is ExampleIntent.clickNext -> {
-                postSideEffect(ExampleSideEffect.NavigateNext)
-                postSideEffect(ExampleSideEffect.ShowToast("Navigate to Next Page"))
-            }
-
-            is ExampleIntent.clickBack -> {
-                postSideEffect(ExampleSideEffect.NavigateBack)
-                postSideEffect(ExampleSideEffect.ShowToast("Navigate to Back Page"))
-            }
-        }
-    }
-
-    private suspend fun Syntax<ExampleState, ExampleSideEffect>.changeCount(state: ExampleState, amount: Int) {
-        changeCountUseCase(amount)
-    }
+    private suspend fun changeCount(amount: Int) = changeCountUseCase(amount)
 }
 
