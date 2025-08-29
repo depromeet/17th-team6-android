@@ -28,7 +28,7 @@ import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
-internal fun ExampleScreen(
+internal fun ExampleRoute(
     onBackClick: () -> Unit,
     onNextClick: () -> Unit,
     vm: ExampleViewModel = hiltViewModel()
@@ -52,14 +52,14 @@ internal fun ExampleScreen(
         }
     }
 
-    ExampleScreenContent(
+    ExampleScreen(
         state = state.value,
         onEvent = vm::onEvent,
     )
 }
 
 @Composable
-private fun ExampleScreenContent(
+private fun ExampleScreen(
     state: ExampleState,
     onEvent: (ExampleIntent) -> Unit,
 ) {
@@ -112,7 +112,7 @@ private fun ExampleScreenContent(
 @Composable
 fun PreviewExampleScreen() {
     SixpackTheme {
-        ExampleScreenContent(
+        ExampleScreen(
             state = ExampleState(count = 0, isLoading = false),
             onEvent = {}
         )
