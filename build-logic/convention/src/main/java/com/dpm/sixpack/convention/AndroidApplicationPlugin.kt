@@ -1,6 +1,8 @@
 package com.dpm.sixpack.convention
 
 import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.gradle.LibraryExtension
+import com.dpm.sixpack.convention.extensions.configureComposeAndroid
 import com.dpm.sixpack.convention.extensions.configureKotlinAndroid
 import com.dpm.sixpack.convention.extensions.getLibrary
 import com.dpm.sixpack.convention.extensions.getPlugin
@@ -19,6 +21,7 @@ class AndroidApplicationPlugin : Plugin<Project> {
                 apply(libs.getPlugin("android-application").get().pluginId)
                 apply(libs.getPlugin("kotlin-android").get().pluginId)
                 apply(libs.getPlugin("sixpack-hilt").get().pluginId)
+                apply(libs.getPlugin("compose-compiler").get().pluginId)
             }
 
             extensions.configure<ApplicationExtension> {
@@ -37,6 +40,7 @@ class AndroidApplicationPlugin : Plugin<Project> {
                 }
 
                 configureKotlinAndroid(this)
+                configureComposeAndroid(this)
             }
 
             dependencies {

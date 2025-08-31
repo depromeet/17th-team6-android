@@ -1,17 +1,21 @@
-package com.dpm.sixpack.presentation.main.navigation
+package com.dpm.sixpack.main.navigation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import com.dpm.sixpack.SixPackAppState
 import com.dpm.sixpack.presentation.example.navigation.sampleNavGraph
 
 @Composable
 internal fun MainNavHost(
-    navigator: MainNavigator,
+    appState: SixPackAppState,
+    onShowSnackbar: suspend (String, String?) -> Boolean,
     modifier: Modifier = Modifier
 ) {
+    val navigator = appState.navigator
+
     Box(
         modifier = modifier.fillMaxSize()
     ) {
@@ -25,5 +29,4 @@ internal fun MainNavHost(
             )
         }
     }
-
 }
