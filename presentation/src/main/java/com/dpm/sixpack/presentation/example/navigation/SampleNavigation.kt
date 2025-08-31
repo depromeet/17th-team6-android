@@ -11,7 +11,7 @@ fun NavController.navigateSample(navOptions: NavOptions? = null) {
     navigate(Route.Example, navOptions)
 }
 
-fun NavGraphBuilder.sampleNavGraph(
+fun NavGraphBuilder.addSampleNavGraph(
     onNextClick: () -> Unit,
     onBackClick: () -> Unit,
 ) {

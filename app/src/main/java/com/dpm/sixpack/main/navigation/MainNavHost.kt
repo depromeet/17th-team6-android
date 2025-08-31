@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.dpm.sixpack.SixPackAppState
-import com.dpm.sixpack.presentation.example.navigation.sampleNavGraph
+import com.dpm.sixpack.presentation.map.navigation.addMapNavGraph
 
 @Composable
 internal fun MainNavHost(
@@ -23,10 +23,7 @@ internal fun MainNavHost(
             navController = navigator.navController,
             startDestination = navigator.startDestination
         ) {
-            sampleNavGraph(
-                onNextClick = { },
-                onBackClick = { navigator.popBackStack() },
-            )
+            addMapNavGraph()
         }
     }
 }

@@ -2,10 +2,9 @@ package com.dpm.sixpack
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.dpm.sixpack.data.util.NetworkMonitor
 import com.dpm.sixpack.data.util.TimeZoneMonitor
 import com.dpm.sixpack.main.navigation.MainNavigator
@@ -17,19 +16,19 @@ import kotlinx.datetime.TimeZone
 
 @Composable
 fun rememberSixPackAppState(
+    navigator: MainNavigator,
     networkMonitor: NetworkMonitor,
     timeZoneMonitor: TimeZoneMonitor,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    navController: NavHostController = rememberNavController(),
 ): SixPackAppState {
     return remember(
-        navController,
+        navigator,
         coroutineScope,
         networkMonitor,
         timeZoneMonitor,
     ) {
         SixPackAppState(
-            navigator = MainNavigator(navController),
+            navigator = navigator,
             coroutineScope = coroutineScope,
             networkMonitor = networkMonitor,
             timeZoneMonitor = timeZoneMonitor,
@@ -61,3 +60,5 @@ class SixPackAppState(
 
 //    fun navigateToSearch() = navController.navigateTo
 }
+
+val LocalTimeZone = compositionLocalOf { TimeZone.currentSystemDefault() }

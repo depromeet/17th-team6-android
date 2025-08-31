@@ -7,10 +7,10 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.dpm.sixpack.presentation.example.navigation.navigateSample
+import com.dpm.sixpack.presentation.map.navigation.navigateMap
 import com.dpm.sixpack.presentation.routes.Route
 
 class MainNavigator(
@@ -32,7 +32,7 @@ class MainNavigator(
             } ?: previousDestination.value
         }
 
-    val startDestination = Route.Example // FIXME: Change to other when the start screen is implemented
+    val startDestination = Route.Map // FIXME: Change to other when the start screen is implemented
 
     fun navigateSample() {
         navController.navigateSample(
@@ -40,8 +40,10 @@ class MainNavigator(
         )
     }
 
-    fun navigateHome() {
-
+    fun navigateMap() {
+        navController.navigateMap(
+            navOptions = navOptions { launchSingleTop = true }
+        )
     }
 
     fun popBackStack() {

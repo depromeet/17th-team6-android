@@ -4,7 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.navigation.compose.rememberNavController
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.dpm.sixpack.LocalTimeZone
 import com.dpm.sixpack.data.util.NetworkMonitor
 import com.dpm.sixpack.data.util.TimeZoneMonitor
 import com.dpm.sixpack.main.navigation.rememberMainNavigator
@@ -27,14 +30,23 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
+            
             val appState = rememberSixPackAppState(
+                navigator = rememberMainNavigator(),
                 networkMonitor = networkMonitor,
                 timeZoneMonitor = timeZoneMonitor,
-                navController = rememberNavController(),
             )
-            SixpackTheme {
-                MainScreen(appState = appState)
+
+            val currentTimeZone by appState.currentTimeZone.collectAsStateWithLifecycle()
+
+            CompositionLocalProvider(
+                LocalTimeZone provides currentTimeZone,
+            ) {
+                SixpackTheme {
+                    MainScreen(appState = appState)
+                }
             }
+
         }
     }
 }
