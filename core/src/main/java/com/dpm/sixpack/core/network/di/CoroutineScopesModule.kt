@@ -1,7 +1,7 @@
-package com.dpm.sixpack.core.common.network.di
+package com.dpm.sixpack.core.network.di
 
-import com.dpm.sixpack.core.common.network.Dispatcher
-import com.dpm.sixpack.core.common.network.SixPackDispatchers.Default
+import com.dpm.sixpack.core.network.Dispatcher
+import com.dpm.sixpack.core.network.SixPackDispatchers
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,6 +23,6 @@ internal object CoroutineScopesModule {
     @Singleton
     @ApplicationScope
     fun providesCoroutineScope(
-        @Dispatcher(Default) dispatcher: CoroutineDispatcher,
+        @Dispatcher(SixPackDispatchers.Default) dispatcher: CoroutineDispatcher,
     ): CoroutineScope = CoroutineScope(SupervisorJob() + dispatcher)
 }

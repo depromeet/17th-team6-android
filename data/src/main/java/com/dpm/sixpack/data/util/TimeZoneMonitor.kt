@@ -5,9 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
-import com.dpm.sixpack.core.common.network.Dispatcher
-import com.dpm.sixpack.core.common.network.SixPackDispatchers
-import com.dpm.sixpack.core.common.network.di.ApplicationScope
+import com.dpm.sixpack.core.network.Dispatcher
+import com.dpm.sixpack.core.network.SixPackDispatchers
+import com.dpm.sixpack.core.network.di.ApplicationScope
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope

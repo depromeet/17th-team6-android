@@ -1,8 +1,7 @@
-package com.dpm.sixpack.core.common.network.di
+package com.dpm.sixpack.core.network.di
 
-import com.dpm.sixpack.core.common.network.Dispatcher
-import com.dpm.sixpack.core.common.network.SixPackDispatchers.Default
-import com.dpm.sixpack.core.common.network.SixPackDispatchers.IO
+import com.dpm.sixpack.core.network.Dispatcher
+import com.dpm.sixpack.core.network.SixPackDispatchers
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,10 +13,10 @@ import kotlinx.coroutines.Dispatchers
 @InstallIn(SingletonComponent::class)
 object DispatchersModule {
     @Provides
-    @Dispatcher(IO)
+    @Dispatcher(SixPackDispatchers.IO)
     fun providesIODispatcher(): CoroutineDispatcher = Dispatchers.IO
 
     @Provides
-    @Dispatcher(Default)
+    @Dispatcher(SixPackDispatchers.Default)
     fun providesDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
 }

@@ -1,4 +1,4 @@
-package com.dpm.sixpack.core.common.network
+package com.dpm.sixpack.core.network
 
 import javax.inject.Qualifier
 import kotlin.annotation.AnnotationRetention.RUNTIME
