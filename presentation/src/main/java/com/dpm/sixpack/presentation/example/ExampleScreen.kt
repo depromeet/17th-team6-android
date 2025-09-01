@@ -54,7 +54,7 @@ internal fun ExampleRoute(
 
     ExampleScreen(
         state = state.value,
-        onEvent = vm::onEvent,
+        onEvent = vm::onIntent,
     )
 }
 

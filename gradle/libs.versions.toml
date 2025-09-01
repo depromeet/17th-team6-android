@@ -55,6 +55,7 @@ roomVersion = "2.6.1"
 # Map
 mapSdk = "3.22.1"
 playServicesLocation = "21.0.1"
+naverMapLocation = "21.0.2"
 naverMapCompose = "1.8.2"
 
 # Material
@@ -139,7 +140,7 @@ androidx-room = { group = "androidx.room", name = "room-runtime", version.ref = 
 map-sdk = { module = "com.naver.maps:map-sdk", version.ref = "mapSdk" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 naver-map-compose = { module = "io.github.fornewid:naver-map-compose", version.ref = "naverMapCompose" }
-naver-map-location = { module = "io.github.fornewid:naver-map-location", version.ref = "playServicesLocation" }
+naver-map-location = { module = "io.github.fornewid:naver-map-location", version.ref = "naverMapLocation" }
 
 # Material
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }

@@ -12,5 +12,5 @@ abstract class BaseViewModel<UI_STATE : UiState, UI_INTENT : UiIntent, SIDE_EFFE
     abstract override val container: Container<UI_STATE, SIDE_EFFECT>
 
     // UI에서 호출하는 단일 진입점
-    abstract fun onEvent(intent: UI_INTENT): Job
+    abstract fun onIntent(intent: UI_INTENT)
 }

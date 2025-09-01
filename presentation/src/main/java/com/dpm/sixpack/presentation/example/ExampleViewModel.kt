@@ -27,24 +27,26 @@ class ExampleViewModel @Inject constructor(
         observeCount()
     }
 
-    override fun onEvent(intent: ExampleIntent) = intent {
-        when (intent) {
-            is ExampleIntent.Increment -> {
-                changeCount(intent.count)
-            }
+    override fun onIntent(intent: ExampleIntent) {
+        intent {
+            when (intent) {
+                is ExampleIntent.Increment -> {
+                    changeCount(intent.count)
+                }
 
-            is ExampleIntent.Decrement -> {
-                changeCount(intent.count * -1)
-            }
+                is ExampleIntent.Decrement -> {
+                    changeCount(intent.count * -1)
+                }
 
-            is ExampleIntent.clickNext -> {
-                postSideEffect(ExampleSideEffect.NavigateNext)
-                postSideEffect(ExampleSideEffect.ShowToast("Next"))
-            }
+                is ExampleIntent.clickNext -> {
+                    postSideEffect(ExampleSideEffect.NavigateNext)
+                    postSideEffect(ExampleSideEffect.ShowToast("Next"))
+                }
 
-            is ExampleIntent.clickBack -> {
-                postSideEffect(ExampleSideEffect.NavigateBack)
-                postSideEffect(ExampleSideEffect.ShowToast("Back"))
+                is ExampleIntent.clickBack -> {
+                    postSideEffect(ExampleSideEffect.NavigateBack)
+                    postSideEffect(ExampleSideEffect.ShowToast("Back"))
+                }
             }
         }
     }
