@@ -1,0 +1,21 @@
+name: ci_ktlint_to_develop
+
+on:
+  pull_request:
+    branches:
+      - init/#1-initial-setup-sr
+
+jobs:
+  ktlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Run ktlintFormat
+        run: ./gradlew ktlintFormat
+      - name: Run ktlintCheck
+        run: ./gradlew ktlintCheck
