@@ -38,12 +38,12 @@ class ExampleViewModel @Inject constructor(
                     changeCount(intent.count * -1)
                 }
 
-                is ExampleIntent.clickNext -> {
+                is ExampleIntent.ClickNext -> {
                     postSideEffect(ExampleSideEffect.NavigateNext)
                     postSideEffect(ExampleSideEffect.ShowToast("Next"))
                 }
 
-                is ExampleIntent.clickBack -> {
+                is ExampleIntent.ClickBack -> {
                     postSideEffect(ExampleSideEffect.NavigateBack)
                     postSideEffect(ExampleSideEffect.ShowToast("Back"))
                 }

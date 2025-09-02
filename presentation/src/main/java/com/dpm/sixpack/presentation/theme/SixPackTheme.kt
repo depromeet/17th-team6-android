@@ -1,34 +1,11 @@
 package com.dpm.sixpack.presentation.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.unit.dp
+import com.dpm.sixpack.core.BuildConfig
 
-@Immutable
-data class SixpackShapes(
-    val none: Shape,
-    val extraSmall: Shape,
-    val small: Shape,
-    val medium: Shape,
-    val large: Shape,
-    val extraLarge: Shape,
-    val full: Shape
-)
-
-private val SixpackShapesValue = SixpackShapes(
-    none = RoundedCornerShape(0.dp),
-    extraSmall = RoundedCornerShape(4.dp),
-    small = RoundedCornerShape(8.dp),
-    medium = RoundedCornerShape(12.dp),
-    large = RoundedCornerShape(16.dp),
-    extraLarge = RoundedCornerShape(28.dp),
-    full = RoundedCornerShape(50)
-)
 
 val LocalSixpackColors = staticCompositionLocalOf {
     SixPackLightColors
@@ -39,7 +16,7 @@ val LocalSixpackTypography = staticCompositionLocalOf {
 }
 
 val LocalSixpackShapes = staticCompositionLocalOf {
-    SixpackShapesValue
+    SixPackShapesValue
 }
 
 
@@ -53,10 +30,10 @@ fun SixpackTheme(
     CompositionLocalProvider(
         LocalSixpackColors provides colors,
         LocalSixpackTypography provides SixPackTypographyValue,
-        LocalSixpackShapes provides SixpackShapesValue,
+        LocalSixpackShapes provides SixPackShapesValue,
     ) {
         // BuildConfig.DEBUG
-        if (true) DebugColorTheme(content) else content
+        if (BuildConfig.DEBUG) DebugColorTheme(content) else content
     }
 }
 
@@ -67,6 +44,6 @@ object SixpackTheme {
     val typography: SixpackTypography
         @Composable get() = LocalSixpackTypography.current
 
-    val shapes: SixpackShapes
+    val shapes: SixPackShapes
         @Composable get() = LocalSixpackShapes.current
 }
