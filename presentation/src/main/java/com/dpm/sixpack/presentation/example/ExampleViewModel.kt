@@ -8,93 +8,57 @@ import com.dpm.sixpack.presentation.example.contract.ExampleIntent
 import com.dpm.sixpack.presentation.example.contract.ExampleSideEffect
 import com.dpm.sixpack.presentation.example.contract.ExampleState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.orbitmvi.orbit.syntax.Syntax
+import org.orbitmvi.orbit.Container
+import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 @HiltViewModel
-class ExampleViewModel
-    @Inject
-    constructor(
-        private val fetchCountUseCase: FetchCountUseCase,
-        private val changeCountUseCase: ChangeCountUseCase,
-        savedStateHandle: SavedStateHandle,
-    ) : BaseViewModel<ExampleState, ExampleIntent, ExampleSideEffect>(savedStateHandle) {
-        override val initialState: ExampleState = ExampleState()
+class ExampleViewModel @Inject constructor(
+    private val fetchCountUseCase: FetchCountUseCase,
+    private val changeCountUseCase: ChangeCountUseCase,
+    savedStateHandle: SavedStateHandle
+) : BaseViewModel<ExampleState, ExampleIntent, ExampleSideEffect>() {
 
-        init {
-            observeCount()
-        }
+    override val initialState: ExampleState = ExampleState()
+    override val container: Container<ExampleState, ExampleSideEffect> =
+        container(initialState = initialState, savedStateHandle = savedStateHandle)
 
-        override fun onIntent(intent: ExampleIntent) {
-            when (intent) {
-                is ExampleIntent.Increment ->
-                    intent {
-                        changeCount(state, intent.count)
-                        postSideEffect(ExampleSideEffect.ShowToast("Increment value"))
-                    }
+    init {
+        observeCount()
+    }
 
-                is ExampleIntent.Decrement ->
-                    intent {
-                        changeCount(state, intent.count * -1)
-                        postSideEffect(ExampleSideEffect.ShowToast("Decrement value"))
-                    }
-
-                is ExampleIntent.ClickNext ->
-                    intent {
-                        postSideEffect(ExampleSideEffect.NavigateNext)
-                    }
-
-                is ExampleIntent.ClickBack ->
-                    intent {
-                        postSideEffect(ExampleSideEffect.NavigateBack)
-                    }
-            }
-        }
-
-        private fun observeCount() =
-            intent {
-                fetchCountUseCase().collect { newCount ->
-                    reduce {
-                        state.copy(count = newCount)
-                    }
-                }
-            }
-
-        private fun changeCount(
-            state: ExampleState,
-            amount: Int,
-        ) = intent {
-            changeCountUseCase(amount)
-        }
-
-        override suspend fun Syntax<ExampleState, ExampleSideEffect>.handleEvent(intent: ExampleIntent) {
+    override fun onIntent(intent: ExampleIntent) {
+        intent {
             when (intent) {
                 is ExampleIntent.Increment -> {
-                    changeCount(state, intent.count)
-                    postSideEffect(ExampleSideEffect.ShowToast("Increment value"))
+                    changeCount(intent.count)
                 }
 
                 is ExampleIntent.Decrement -> {
-                    changeCount(state, intent.count * -1)
-                    postSideEffect(ExampleSideEffect.ShowToast("Decrement value"))
+                    changeCount(intent.count * -1)
                 }
 
-                is ExampleIntent.ClickNext -> {
+                is ExampleIntent.clickNext -> {
                     postSideEffect(ExampleSideEffect.NavigateNext)
-                    postSideEffect(ExampleSideEffect.ShowToast("Navigate to Next Page"))
+                    postSideEffect(ExampleSideEffect.ShowToast("Next"))
                 }
 
-                is ExampleIntent.ClickBack -> {
+                is ExampleIntent.clickBack -> {
                     postSideEffect(ExampleSideEffect.NavigateBack)
-                    postSideEffect(ExampleSideEffect.ShowToast("Navigate to Back Page"))
+                    postSideEffect(ExampleSideEffect.ShowToast("Back"))
                 }
             }
         }
+    }
 
-        private suspend fun Syntax<ExampleState, ExampleSideEffect>.changeCount(
-            state: ExampleState,
-            amount: Int,
-        ) {
-            changeCountUseCase(amount)
+    private fun observeCount() = intent {
+        fetchCountUseCase().collect { newCount ->
+            reduce {
+                state.copy(count = newCount)
+            }
         }
     }
+
+    private suspend fun changeCount(amount: Int) = changeCountUseCase(amount)
+}
+

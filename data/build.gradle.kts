@@ -7,8 +7,10 @@ android {
 }
 
 dependencies {
+    implementation(project(":domain"))
+    implementation(project(":core"))
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)
-
-    implementation(project(":domain"))
+    implementation(libs.kotlinx.datetime)
 }
