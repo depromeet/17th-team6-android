@@ -1,6 +1,7 @@
 package com.dpm.sixpack.presentation.example
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -64,7 +65,9 @@ private fun ExampleScreenContent(
     onEvent: (ExampleIntent) -> Unit,
 ) {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = SixpackTheme.colors.background),
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -76,6 +79,7 @@ private fun ExampleScreenContent(
             } else {
                 Text(
                     text = "Count: ${state.count}",
+                    color = SixpackTheme.colors.primary,
                     style = MaterialTheme.typography.headlineLarge,
                 )
 
@@ -83,11 +87,17 @@ private fun ExampleScreenContent(
 
                 Row {
                     Button(onClick = { onEvent(ExampleIntent.Decrement(1)) }) {
-                        Text("Decrement")
+                        Text(
+                            "Decrement",
+                            color = SixpackTheme.colors.primary,
+                        )
                     }
                     Spacer(modifier = Modifier.width(16.dp))
                     Button(onClick = { onEvent(ExampleIntent.Increment(1)) }) {
-                        Text("Increment")
+                        Text(
+                            "Increment",
+                            color = SixpackTheme.colors.primary,
+                        )
                     }
                 }
 
@@ -95,11 +105,17 @@ private fun ExampleScreenContent(
 
                 Row {
                     Button(onClick = { onEvent(ExampleIntent.ClickBack) }) {
-                        Text("Back")
+                        Text(
+                            "Back",
+                            color = SixpackTheme.colors.primary,
+                        )
                     }
                     Spacer(modifier = Modifier.width(16.dp))
                     Button(onClick = { onEvent(ExampleIntent.ClickNext) }) {
-                        Text("Next")
+                        Text(
+                            "Next",
+                            color = SixpackTheme.colors.primary,
+                        )
                     }
                 }
             }
