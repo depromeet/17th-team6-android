@@ -6,6 +6,7 @@ import com.dpm.sixpack.presentation.map.component.MapConstants.DEFAULT_ZOOM
 import com.dpm.sixpack.presentation.map.contract.MapIntent
 import com.dpm.sixpack.presentation.map.contract.MapSideEffect
 import com.dpm.sixpack.presentation.map.contract.MapState
+import com.dpm.sixpack.presentation.util.calculateDistance
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,6 +31,10 @@ class MapViewModel @Inject constructor(
                 setInitialLocation(intent.latLng)
             }
 
+            is MapIntent.UpdateUserLocation -> {
+                updateUserLocation(intent.latLng)
+            }
+
             is MapIntent.UpdateLocationPermission -> {
                 updateLocationPermission(intent.isGranted)
             }
@@ -42,6 +47,18 @@ class MapViewModel @Inject constructor(
                 isInitialLocationSet = true,
                 cameraPosition = CameraPosition(latLng, DEFAULT_ZOOM)
             )
+        }
+    }
+
+    private fun updateUserLocation(latLng: LatLng) = intent {
+        if (state.path.size <= 5 ||
+            state.path.lastOrNull()?.let {
+                calculateDistance(latLng, it) > 5.0
+            } == true
+        ) {
+            reduce {
+                state.copy(path = state.path + latLng)
+            }
         }
     }
 

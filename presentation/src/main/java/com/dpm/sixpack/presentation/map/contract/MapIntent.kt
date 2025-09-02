@@ -10,7 +10,8 @@ sealed interface MapIntent : UiIntent {
 
     // 위치
     data class SetInitialLocation(val latLng: LatLng) : MapIntent // 초기 기기 위치 설정
-
+    data class UpdateUserLocation(val latLng: LatLng) : MapIntent // 사용자 위치 업데이트
+ 
     // 카메라 이동
     data class MoveCameraToPosition(val latLng: LatLng) : MapIntent
 

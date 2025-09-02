@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -29,6 +31,7 @@ import com.naver.maps.map.compose.MapProperties
 import com.naver.maps.map.compose.MapType
 import com.naver.maps.map.compose.MapUiSettings
 import com.naver.maps.map.compose.NaverMap
+import com.naver.maps.map.compose.PathOverlay
 import com.naver.maps.map.compose.rememberCameraPositionState
 import com.naver.maps.map.compose.rememberFusedLocationSource
 import org.orbitmvi.orbit.compose.collectAsState
@@ -96,6 +99,9 @@ fun MapRoute(
         state = uiState.value,
         cameraPositionState = cameraPositionState,
         locationSource = locationSource,
+        onLocationChange = { latLng ->
+            viewModel.onIntent(MapIntent.UpdateUserLocation(latLng))
+        }
     )
 }
 
@@ -105,6 +111,7 @@ private fun MapScreen(
     state: MapState,
     cameraPositionState: CameraPositionState,
     locationSource: LocationSource,
+    onLocationChange: (LatLng) -> Unit,
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -126,8 +133,17 @@ private fun MapScreen(
                 isCompassEnabled = false,
             ),
             locationSource = locationSource,
+            onLocationChange = { location ->
+                onLocationChange(LatLng(location))
+            }
         ) {
-
+            if (state.path.size > 5) {
+                PathOverlay(
+                    coords = state.path,
+                    color = Color.Magenta,
+                    width = 5.dp
+                )
+            }
         }
     }
 }
