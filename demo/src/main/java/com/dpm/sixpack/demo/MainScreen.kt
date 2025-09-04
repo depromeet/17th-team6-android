@@ -18,7 +18,7 @@ import com.dpm.sixpack.demo.navigation.MainNavHost
 @Composable
 internal fun MainScreen(
     modifier: Modifier = Modifier,
-    appState: SixPackAppState,
+    appState: SixPackDemoAppState,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
@@ -44,7 +44,7 @@ internal fun MainScreen(
 
 @Composable
 internal fun MainScreenContent(
-    appState: SixPackAppState,
+    appState: SixPackDemoAppState,
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {

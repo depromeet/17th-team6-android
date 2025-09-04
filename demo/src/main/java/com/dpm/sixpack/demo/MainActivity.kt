@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val appState =
-                rememberSixPackAppState(
+                rememberSixPackDemoAppState(
                     navigator = rememberMainNavigator(),
                     networkMonitor = networkMonitor,
                     timeZoneMonitor = timeZoneMonitor,

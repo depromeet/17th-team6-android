@@ -5,12 +5,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
-import com.dpm.sixpack.demo.SixPackAppState
+import com.dpm.sixpack.demo.SixPackDemoAppState
 import com.dpm.sixpack.presentation.map.navigation.addMapNavGraph
 
 @Composable
 internal fun MainNavHost(
-    appState: SixPackAppState,
+    appState: SixPackDemoAppState,
     onShowSnackbar: suspend (String, String?) -> Boolean,
     modifier: Modifier = Modifier,
 ) {

@@ -15,19 +15,19 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.datetime.TimeZone
 
 @Composable
-fun rememberSixPackAppState(
+fun rememberSixPackDemoAppState(
     navigator: MainNavigator,
     networkMonitor: NetworkMonitor,
     timeZoneMonitor: TimeZoneMonitor,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-): SixPackAppState =
+): SixPackDemoAppState =
     remember(
         navigator,
         coroutineScope,
         networkMonitor,
         timeZoneMonitor,
     ) {
-        SixPackAppState(
+        SixPackDemoAppState(
             navigator = navigator,
             coroutineScope = coroutineScope,
             networkMonitor = networkMonitor,
@@ -36,7 +36,7 @@ fun rememberSixPackAppState(
     }
 
 @Stable
-class SixPackAppState(
+class SixPackDemoAppState(
     val navigator: MainNavigator,
     coroutineScope: CoroutineScope,
     networkMonitor: NetworkMonitor,
