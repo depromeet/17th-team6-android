@@ -6,7 +6,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -25,27 +24,30 @@ fun PermissionHandler(
     permissionsToRequest: List<String>,
     onPermissionResult: (Boolean) -> Unit,
 ) {
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions(),
-    ) { permissions ->
-        val isGranted = permissions.values.all { it }
-        onPermissionResult(isGranted)
-    }
+    val launcher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestMultiplePermissions(),
+        ) { permissions ->
+            val isGranted = permissions.values.all { it }
+            onPermissionResult(isGranted)
+        }
 
     // 화면이 다시 활성화될 때마다 권한을 체크
     DisposableEffect(lifecycleOwner, permissionsToRequest) {
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_RESUME) {
-                val allPermissionsGranted = permissionsToRequest.all {
-                    ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
-                }
-                if (allPermissionsGranted) {
-                    onPermissionResult(true)
-                } else {
-                    launcher.launch(permissionsToRequest.toTypedArray())
+        val observer =
+            LifecycleEventObserver { _, event ->
+                if (event == Lifecycle.Event.ON_RESUME) {
+                    val allPermissionsGranted =
+                        permissionsToRequest.all {
+                            ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+                        }
+                    if (allPermissionsGranted) {
+                        onPermissionResult(true)
+                    } else {
+                        launcher.launch(permissionsToRequest.toTypedArray())
+                    }
                 }
             }
-        }
         lifecycleOwner.lifecycle.addObserver(observer)
 
         onDispose {

@@ -39,9 +39,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 
 @OptIn(ExperimentalNaverMapApi::class)
 @Composable
-fun MapRoute(
-    viewModel: MapViewModel = hiltViewModel()
-) {
+fun MapRoute(viewModel: MapViewModel = hiltViewModel()) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -51,9 +49,10 @@ fun MapRoute(
 
     // State
     val uiState = viewModel.collectAsState()
-    val cameraPositionState = rememberCameraPositionState {
-        position = uiState.value.cameraPosition
-    }
+    val cameraPositionState =
+        rememberCameraPositionState {
+            position = uiState.value.cameraPosition
+        }
 
     PermissionHandler(
         context = context,
@@ -67,7 +66,6 @@ fun MapRoute(
     viewModel.collectSideEffect { mapSideEffect ->
         when (mapSideEffect) {
             is MapSideEffect.ShowToast -> {
-
             }
 
             is MapSideEffect.MoveCameraToPosition -> {
@@ -78,7 +76,8 @@ fun MapRoute(
                 if (ContextCompat.checkSelfPermission(
                         context,
                         Manifest.permission.ACCESS_FINE_LOCATION,
-                    ) == PackageManager.PERMISSION_GRANTED && !uiState.value.isInitialLocationSet
+                    ) == PackageManager.PERMISSION_GRANTED &&
+                    !uiState.value.isInitialLocationSet
                 ) {
                     // 권한이 허용되었으면
                     fusedLocationClient.lastLocation.addOnSuccessListener { location ->
@@ -101,7 +100,7 @@ fun MapRoute(
         locationSource = locationSource,
         onLocationChange = { latLng ->
             viewModel.onIntent(MapIntent.UpdateUserLocation(latLng))
-        }
+        },
     )
 }
 
@@ -119,29 +118,33 @@ private fun MapScreen(
         NaverMap(
             modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
-            properties = MapProperties(
-                locationTrackingMode = LocationTrackingMode.Follow,
-                isNightModeEnabled = isSystemInDarkTheme(),
-                mapType = MapType.Basic,
-            ),
-            uiSettings = MapUiSettings(
-                isZoomGesturesEnabled = true,
-                isZoomControlEnabled = false,
-                isLocationButtonEnabled = true,
-                isLogoClickEnabled = false,
-                isScaleBarEnabled = false,
-                isCompassEnabled = false,
-            ),
+            properties =
+                MapProperties(
+                    minZoom = MapConstants.MIN_ZOOM_LEVEL,
+                    maxZoom = MapConstants.MAX_ZOOM_LEVEL,
+                    locationTrackingMode = LocationTrackingMode.Follow,
+                    isNightModeEnabled = isSystemInDarkTheme(),
+                    mapType = MapType.Basic,
+                ),
+            uiSettings =
+                MapUiSettings(
+                    isZoomGesturesEnabled = true,
+                    isZoomControlEnabled = false,
+                    isLocationButtonEnabled = true,
+                    isLogoClickEnabled = false,
+                    isScaleBarEnabled = false,
+                    isCompassEnabled = false,
+                ),
             locationSource = locationSource,
             onLocationChange = { location ->
                 onLocationChange(LatLng(location))
-            }
+            },
         ) {
             if (state.path.size > 5) {
                 PathOverlay(
                     coords = state.path,
                     color = Color.Magenta,
-                    width = 5.dp
+                    width = 5.dp,
                 )
             }
         }

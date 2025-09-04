@@ -13,15 +13,16 @@ data class SixPackShapes(
     val medium: Shape,
     val large: Shape,
     val extraLarge: Shape,
-    val full: Shape
+    val full: Shape,
 )
 
-val SixPackShapesValue = SixPackShapes(
-    none = RoundedCornerShape(0.dp),
-    extraSmall = RoundedCornerShape(4.dp),
-    small = RoundedCornerShape(8.dp),
-    medium = RoundedCornerShape(12.dp),
-    large = RoundedCornerShape(16.dp),
-    extraLarge = RoundedCornerShape(28.dp),
-    full = RoundedCornerShape(50)
-)
+val SixPackShapesValue =
+    SixPackShapes(
+        none = RoundedCornerShape(0.dp),
+        extraSmall = RoundedCornerShape(4.dp),
+        small = RoundedCornerShape(8.dp),
+        medium = RoundedCornerShape(12.dp),
+        large = RoundedCornerShape(16.dp),
+        extraLarge = RoundedCornerShape(28.dp),
+        full = RoundedCornerShape(50),
+    )

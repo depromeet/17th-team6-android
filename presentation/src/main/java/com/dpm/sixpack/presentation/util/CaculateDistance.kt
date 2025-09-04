@@ -7,13 +7,13 @@ fun calculateDistance(
     toLng: Double,
     fromLat: Double,
     fromLng: Double,
-): Double = calculateDistance(
-    LatLng(toLat, toLng),
-    LatLng(fromLat, fromLng),
-)
+): Double =
+    calculateDistance(
+        LatLng(toLat, toLng),
+        LatLng(fromLat, fromLng),
+    )
 
 fun calculateDistance(
     toLatLng: LatLng,
     fromLatLng: LatLng,
 ): Double = fromLatLng.distanceTo(toLatLng)
-

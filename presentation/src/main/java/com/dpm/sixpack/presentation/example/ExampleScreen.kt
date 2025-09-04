@@ -65,9 +65,10 @@ private fun ExampleScreen(
     onEvent: (ExampleIntent) -> Unit,
 ) {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = SixpackTheme.colors.background),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(color = SixpackTheme.colors.background),
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),

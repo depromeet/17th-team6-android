@@ -1,9 +1,11 @@
 import java.io.FileInputStream
 import java.util.Properties
 
-val properties = Properties().apply {
-    load(FileInputStream(rootProject.file("local.properties")))
-}
+val properties =
+    Properties()
+        .apply {
+            load(FileInputStream(rootProject.file("local.properties")))
+        }
 
 plugins {
     alias(libs.plugins.sixpack.android.library)

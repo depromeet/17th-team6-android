@@ -9,10 +9,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class ConfigModule {
-
     @Binds
     @Singleton
-    abstract fun bindBuildConfigProvider(
-        impl: BuildConfigProviderImpl
-    ): BuildConfigProvider
+    abstract fun bindBuildConfigProvider(impl: BuildConfigProviderImpl): BuildConfigProvider
 }

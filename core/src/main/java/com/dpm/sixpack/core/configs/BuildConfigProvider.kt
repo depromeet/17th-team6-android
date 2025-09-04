@@ -9,6 +9,8 @@ interface BuildConfigProvider {
     // Add more methods for other build config values
 }
 
-class BuildConfigProviderImpl @Inject constructor() : BuildConfigProvider {
-    override fun getNaverMapClientId(): String = BuildConfig.NAVERMAP_CLIENT_ID
-}
+class BuildConfigProviderImpl
+    @Inject
+    constructor() : BuildConfigProvider {
+        override fun getNaverMapClientId(): String = BuildConfig.NAVERMAP_CLIENT_ID
+    }

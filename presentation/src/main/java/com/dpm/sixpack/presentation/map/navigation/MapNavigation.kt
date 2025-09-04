@@ -11,8 +11,7 @@ fun NavController.navigateMap(navOptions: NavOptions? = null) {
     navigate(Route.Map, navOptions)
 }
 
-fun NavGraphBuilder.addMapNavGraph(
-) {
+fun NavGraphBuilder.addMapNavGraph() {
     composable<Route.Map> {
         MapRoute(
             // fill
