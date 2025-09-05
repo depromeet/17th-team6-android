@@ -1,0 +1,31 @@
+package com.dpm.sixpack.data.util
+
+import android.os.Build
+import androidx.annotation.RequiresApi
+import java.time.Duration
+
+object TimeUtil {
+    /**
+     * Convert ms to "HH:mm:ss" or "mm:ss"
+     */
+    @RequiresApi(Build.VERSION_CODES.S)
+    fun formatMillisWithDuration(millis: Long): String {
+        val safeMillis = if (millis < 0) 0 else millis
+
+        val duration = Duration.ofMillis(safeMillis)
+
+        val hours = duration.toHours()
+        val minutes = duration.toMinutes() % 60
+        val seconds = duration.seconds % 60
+
+        return if (hours > 0) {
+            val paddedMinutes = minutes.toString().padStart(2, '0')
+            val paddedSeconds = seconds.toString().padStart(2, '0')
+            "$hours:$paddedMinutes:$paddedSeconds"
+        } else {
+            val totalMinutes = duration.toMinutes()
+            val paddedSeconds = seconds.toString().padStart(2, '0')
+            "$totalMinutes:$paddedSeconds"
+        }
+    }
+}
