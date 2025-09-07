@@ -6,6 +6,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -43,8 +44,6 @@ fun PermissionHandler(
                         }
                     if (allPermissionsGranted) {
                         onPermissionResult(true)
-                    } else {
-                        launcher.launch(permissionsToRequest.toTypedArray())
                     }
                 }
             }
@@ -56,13 +55,13 @@ fun PermissionHandler(
     }
 
     // 최초 진입 시 권한을 요청
-//    LaunchedEffect(permissionsToRequest) {
-//        val allPermissionsGranted = permissionsToRequest.all {
-//            ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
-//        }
-//
-//        if (!allPermissionsGranted) {
-//            launcher.launch(permissionsToRequest.toTypedArray())
-//        }
-//    }
+    LaunchedEffect(permissionsToRequest) {
+        val allPermissionsGranted = permissionsToRequest.all {
+            ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+        }
+
+        if (!allPermissionsGranted) {
+            launcher.launch(permissionsToRequest.toTypedArray())
+        }
+    }
 }
