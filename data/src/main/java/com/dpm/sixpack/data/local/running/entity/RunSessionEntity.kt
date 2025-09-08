@@ -12,14 +12,13 @@ import androidx.room.PrimaryKey
             entity = CourseEntity::class,
             parentColumns = ["id"],
             childColumns = ["courseId"],
-            onDelete = ForeignKey.CASCADE // FIXME: 외래키 제약 뭘로할지 모르겠음
-        )
-    ]
+            onDelete = ForeignKey.CASCADE, // FIXME: 외래키 제약 뭘로할지 모르겠음
+        ),
+    ],
 )
 data class RunSessionEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-
     val courseId: Long, // 세션에 어떤 코스를 달렸는지
     var isSynced: Boolean = false, // 서버 동기화 여부
     val startTime: Long,

@@ -11,11 +11,11 @@ import com.dpm.sixpack.data.local.running.entity.RunSessionEntity
     entities = [
         RunSessionEntity::class,
         CourseEntity::class,
-        LocationPointEntity::class
+        LocationPointEntity::class,
     ],
     version = 1,
-    exportSchema = false
+    exportSchema = false,
 )
-abstract class RunningDatabase : RoomDatabase() {
+abstract class RunningDataBase : RoomDatabase() {
     abstract fun runningDao(): RunningDao
 }

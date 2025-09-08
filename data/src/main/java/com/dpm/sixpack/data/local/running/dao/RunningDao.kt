@@ -31,9 +31,12 @@ interface RunningDao {
 
     @Insert
     suspend fun insertLocationPoint(locationPoint: LocationPointEntity)
-    
+
     @Update
-    suspend fun updateCourse(courseId: Long, distance: Double)
+    suspend fun updateCourse(
+        courseId: Long,
+        distance: Double,
+    )
 
     @Query("SELECT * FROM courses WHERE id = :courseId")
     suspend fun getCourseById(courseId: Long): CourseEntity?

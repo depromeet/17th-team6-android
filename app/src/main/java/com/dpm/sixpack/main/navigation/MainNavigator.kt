@@ -14,15 +14,16 @@ import com.dpm.sixpack.presentation.map.navigation.navigateMap
 import com.dpm.sixpack.presentation.routes.Route
 
 class MainNavigator(
-    val navController: NavHostController
+    val navController: NavHostController,
 ) {
     private val previousDestination = mutableStateOf<NavDestination?>(null)
 
     val currentDestination: NavDestination?
         @Composable get() {
             // Collect the currentBackStackEntryFlow as a state
-            val currentEntry = navController.currentBackStackEntryFlow
-                .collectAsState(initial = null)
+            val currentEntry =
+                navController.currentBackStackEntryFlow
+                    .collectAsState(initial = null)
 
             // Fallback to previousDestination if currentEntry is null
             return currentEntry.value?.destination.also { destination ->
@@ -36,13 +37,13 @@ class MainNavigator(
 
     fun navigateSample() {
         navController.navigateSample(
-            navOptions = navOptions { launchSingleTop = true }
+            navOptions = navOptions { launchSingleTop = true },
         )
     }
 
     fun navigateMap() {
         navController.navigateMap(
-            navOptions = navOptions { launchSingleTop = true }
+            navOptions = navOptions { launchSingleTop = true },
         )
     }
 
@@ -50,14 +51,12 @@ class MainNavigator(
         navController.popBackStack()
     }
 
-    private inline fun <reified T : Route> isSameCurrentDestination(): Boolean {
-        return navController.currentDestination?.hasRoute<T>() == true
-    }
+    private inline fun <reified T : Route> isSameCurrentDestination(): Boolean =
+        navController.currentDestination?.hasRoute<T>() == true
 }
 
 @Composable
-internal fun rememberMainNavigator(
-    navController: NavHostController = rememberNavController(),
-): MainNavigator = remember(navController) {
-    MainNavigator(navController)
-}
+internal fun rememberMainNavigator(navController: NavHostController = rememberNavController()): MainNavigator =
+    remember(navController) {
+        MainNavigator(navController)
+    }

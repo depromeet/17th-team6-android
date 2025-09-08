@@ -56,9 +56,10 @@ fun PermissionHandler(
 
     // 최초 진입 시 권한을 요청
     LaunchedEffect(permissionsToRequest) {
-        val allPermissionsGranted = permissionsToRequest.all {
-            ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
-        }
+        val allPermissionsGranted =
+            permissionsToRequest.all {
+                ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+            }
 
         if (!allPermissionsGranted) {
             launcher.launch(permissionsToRequest.toTypedArray())

@@ -12,16 +12,16 @@ import com.dpm.sixpack.presentation.map.navigation.addMapNavGraph
 internal fun MainNavHost(
     appState: SixPackAppState,
     onShowSnackbar: suspend (String, String?) -> Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val navigator = appState.navigator
 
     Box(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         NavHost(
             navController = navigator.navController,
-            startDestination = navigator.startDestination
+            startDestination = navigator.startDestination,
         ) {
             addMapNavGraph()
         }

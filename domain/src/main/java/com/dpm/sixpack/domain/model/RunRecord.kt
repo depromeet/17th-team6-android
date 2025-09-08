@@ -5,7 +5,7 @@ data class RunRecord(
     val startTime: Long,
     val endTime: Long,
     val durationMs: String,
-    val course: Course?
+    val course: Course?,
 ) {
     val distanceMeter: Double = course?.distanceMeter ?: 0.0
 }

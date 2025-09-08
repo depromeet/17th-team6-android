@@ -9,22 +9,20 @@ import com.dpm.sixpack.data.local.running.entity.RunSessionEntity
 data class CourseWithLocations(
     @Embedded
     val course: CourseEntity,
-
     @Relation(
         parentColumn = "id",
-        entityColumn = "courseId"
+        entityColumn = "courseId",
     )
-    val locations: List<LocationPointEntity>
+    val locations: List<LocationPointEntity>,
 )
 
 data class RunSessionWithCourseAndLocations(
     @Embedded
     val session: RunSessionEntity,
-
     @Relation(
         entity = CourseEntity::class,
         parentColumn = "courseId",
-        entityColumn = "id"
+        entityColumn = "id",
     )
-    val courseWithLocations: CourseWithLocations
+    val courseWithLocations: CourseWithLocations,
 )

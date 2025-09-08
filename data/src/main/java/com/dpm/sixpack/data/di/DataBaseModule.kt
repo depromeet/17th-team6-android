@@ -2,7 +2,7 @@ package com.dpm.sixpack.data.di
 
 import android.content.Context
 import androidx.room.Room
-import com.dpm.sixpack.data.local.running.RunningDatabase
+import com.dpm.sixpack.data.local.running.RunningDataBase
 import com.dpm.sixpack.data.local.running.dao.RunningDao
 import dagger.Module
 import dagger.Provides
@@ -14,23 +14,20 @@ import kotlin.jvm.java
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DatabaseModule {
-
+object DataBaseModule {
     @Provides
     @Singleton
     fun provideAppDatabase(
-        @ApplicationContext context: Context
-    ): RunningDatabase {
-        return Room.databaseBuilder(
-            context,
-            RunningDatabase::class.java,
-            "my-app-database"
-        ).build()
-    }
-    
+        @ApplicationContext context: Context,
+    ): RunningDataBase =
+        Room
+            .databaseBuilder(
+                context,
+                RunningDataBase::class.java,
+                "my-app-database",
+            ).build()
+
     @Provides
     @Singleton
-    fun providePostDao(db: RunningDatabase): RunningDao {
-        return db.runningDao()
-    }
+    fun providePostDao(db: RunningDataBase): RunningDao = db.runningDao()
 }

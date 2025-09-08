@@ -61,9 +61,10 @@ internal fun MainScreenContent(
                     duration = SnackbarDuration.Short,
                 ) == ActionPerformed
             },
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = paddingValue.calculateBottomPadding()),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(bottom = paddingValue.calculateBottomPadding()),
         )
     }
 }

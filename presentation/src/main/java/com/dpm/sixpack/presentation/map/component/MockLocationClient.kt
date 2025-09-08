@@ -7,7 +7,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.jetbrains.annotations.Debug
 import timber.log.Timber
 
 class MockLocationClient(
@@ -21,30 +20,38 @@ class MockLocationClient(
      * @param delayMillis 각 좌표 사이의 딜레이 시간 (ms)
      */
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
-    fun start(path: List<LatLng>, delayMillis: Long = 1000L) {
+    fun start(
+        path: List<LatLng>,
+        delayMillis: Long = 1000L,
+    ) {
         stop()
 
-        simulationJob = scope.launch {
-            try {
-                fusedLocationClient.setMockMode(true)
-                Timber.tag("MockLocationTester").d("Mock mode enabled.")
+        simulationJob =
+            scope.launch {
+                try {
+                    fusedLocationClient.setMockMode(true)
+                    Timber.tag("MockLocationTester").d("Mock mode enabled.")
 
-                for (point in path) {
-                    val mockLocation = Location("MockProvider").apply {
-                        latitude = point.latitude
-                        longitude = point.longitude
-                        accuracy = 1.0f
-                        elapsedRealtimeNanos = System.nanoTime()
+                    for (point in path) {
+                        val mockLocation =
+                            Location("MockProvider").apply {
+                                latitude = point.latitude
+                                longitude = point.longitude
+                                accuracy = 1.0f
+                                elapsedRealtimeNanos = System.nanoTime()
+                            }
+                        fusedLocationClient.setMockLocation(mockLocation)
+                        Timber
+                            .tag(
+                                "MockLocationTester",
+                            ).d("Set mock location to: ${point.latitude}, ${point.longitude}")
+                        delay(delayMillis)
                     }
-                    fusedLocationClient.setMockLocation(mockLocation)
-                    Timber.tag("MockLocationTester").d("Set mock location to: ${point.latitude}, ${point.longitude}")
-                    delay(delayMillis)
+                } finally {
+                    stopMockMode()
+                    Timber.tag("MockLocationTester").d("Simulation finished or stopped.")
                 }
-            } finally {
-                stopMockMode()
-                Timber.tag("MockLocationTester").d("Simulation finished or stopped.")
             }
-        }
     }
 
     fun stop() {
