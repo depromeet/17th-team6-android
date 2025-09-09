@@ -95,7 +95,7 @@ fun MapRoute(viewModel: MapViewModel = hiltViewModel()) {
                     Manifest.permission.ACCESS_COARSE_LOCATION,
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
-                mockLocationClient.start(COORDS_1)
+                mockLocationClient.startWithLatLng(COORDS_1)
             }
         } else {
             mockLocationClient.stop()
