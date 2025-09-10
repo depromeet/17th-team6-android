@@ -197,7 +197,6 @@ private fun MapScreen(
     Box(
         modifier = Modifier.fillMaxSize(),
     ) {
-//        key(uiState.mapResetTrigger) {
         NaverMap(
             modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
@@ -231,7 +230,6 @@ private fun MapScreen(
                 )
             }
         }
-//        }
 
         Column(
             modifier =

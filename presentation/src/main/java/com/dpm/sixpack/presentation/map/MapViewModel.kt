@@ -104,7 +104,6 @@ constructor(
             state.copy(
                 runningMode = mode,
                 path = curLatLng?.let { listOf(it) } ?: emptyList(),
-//                mapResetTrigger = if (mode) state.mapResetTrigger + 1 else state.mapResetTrigger
             )
         }
     }
