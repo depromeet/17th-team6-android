@@ -1,13 +1,11 @@
 package com.dpm.sixpack.presentation.common.permission
 
 import android.content.Context
-import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
@@ -22,7 +20,7 @@ import androidx.lifecycle.LifecycleOwner
 fun PermissionHandler(
     context: Context,
     lifecycleOwner: LifecycleOwner,
-    permissionsToRequest: List<String>,
+    permissionsToRequest: List<SixPackPermissions>,
     onPermissionResult: (Boolean) -> Unit,
 ) {
     val launcher =
@@ -38,12 +36,12 @@ fun PermissionHandler(
         val observer =
             LifecycleEventObserver { _, event ->
                 if (event == Lifecycle.Event.ON_RESUME) {
-                    val allPermissionsGranted =
-                        permissionsToRequest.all {
-                            ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
-                        }
+                    val allPermissionsGranted = PermissionUtil.hasPermissions(context, permissionsToRequest)
+
                     if (allPermissionsGranted) {
                         onPermissionResult(true)
+                    } else {
+                        // TODO: 권한이 없는 경우, 다시 요청 혹은 요청 기록이 있으면 설정 연결
                     }
                 }
             }
@@ -57,12 +55,10 @@ fun PermissionHandler(
     // 최초 진입 시 권한을 요청
     LaunchedEffect(permissionsToRequest) {
         val allPermissionsGranted =
-            permissionsToRequest.all {
-                ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
-            }
+            PermissionUtil.hasPermissions(context, permissionsToRequest)
 
         if (!allPermissionsGranted) {
-            launcher.launch(permissionsToRequest.toTypedArray())
+            PermissionUtil.requestPermission(context, launcher, permissionsToRequest)
         }
     }
 }

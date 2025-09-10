@@ -1,6 +1,6 @@
 package com.dpm.sixpack.presentation.map.component
 
-import android.Manifest
+import com.dpm.sixpack.presentation.common.permission.SixPackPermissions
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 
@@ -16,9 +16,5 @@ object MapConstants {
             DEFAULT_ZOOM,
         )
 
-    val MAP_PERMISSIONS =
-        listOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-        )
+    val MAP_PERMISSIONS = SixPackPermissions.LocationPermissions
 }
