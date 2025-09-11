@@ -9,6 +9,8 @@ android {
 
 dependencies {
     implementation(project(":core"))
+    implementation(project(":domain"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.play.services.location)
     implementation(libs.androidx.lifecycle.service)

@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.map.component.MapConstants
 import com.dpm.sixpack.presentation.map.component.MapConstants.MIN_LENGTH_PATH_ARRAY
 import com.dpm.sixpack.presentation.map.contract.MapState
-import com.dpm.sixpack.runningservice.RunningState
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.LocationSource
 import com.naver.maps.map.compose.CameraPositionState
@@ -41,14 +40,13 @@ import com.naver.maps.map.compose.rememberFusedLocationSource
 @Composable
 fun MapScreen(
     uiState: MapState,
-    runningDataState: RunningState,
-    runningTimeState: Long,
     cameraPositionState: CameraPositionState,
     locationSource: LocationSource,
     onLocationChange: (LatLng) -> Unit,
     onFabClick: () -> Unit,
 ) {
     val isSessionInProgress = uiState.runningMode || uiState.isMockSimulating
+    val runningState = uiState.runningState
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -94,10 +92,10 @@ fun MapScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            Text(color = Color.Black, text = "시간: ${runningTimeState / 1000}초")
-            Text(color = Color.Black, text = "거리: ${runningDataState.distance.toInt()}m")
-            Text(color = Color.Black, text = "페이스: ${runningDataState.paceInMoment}")
-            Text(color = Color.Black, text = "케이던스: ${runningDataState.cadence} SPM")
+            Text(color = Color.Black, text = "시간: ${runningState.duration / 1000}초")
+            Text(color = Color.Black, text = "거리: ${runningState.distance.toInt()}m")
+            Text(color = Color.Black, text = "페이스: ${runningState.paceInMoment}")
+            Text(color = Color.Black, text = "케이던스: ${runningState.cadence} SPM")
         }
 
         Column(
@@ -150,7 +148,5 @@ private fun MapScreenPreview() {
         },
         onFabClick = {
         },
-        runningDataState = RunningState(),
-        runningTimeState = 0L,
     )
 }

@@ -3,26 +3,33 @@ package com.dpm.sixpack.presentation.map
 import MockLocationClient
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.location.Location
 import androidx.annotation.RequiresPermission
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dpm.sixpack.core.permission.PermissionUtil
 import com.dpm.sixpack.core.permission.SixPackPermissions
+import com.dpm.sixpack.domain.running.RunningActions
+import com.dpm.sixpack.domain.running.usecase.FetchRunningDataUseCase
 import com.dpm.sixpack.presentation.base.BaseViewModel
 import com.dpm.sixpack.presentation.map.component.MapConstants.MIN_DISTANCE_BETWEEN_PATH
 import com.dpm.sixpack.presentation.map.component.MapConstants.MIN_LENGTH_PATH_ARRAY
 import com.dpm.sixpack.presentation.map.contract.MapIntent
 import com.dpm.sixpack.presentation.map.contract.MapSideEffect
 import com.dpm.sixpack.presentation.map.contract.MapState
+import com.dpm.sixpack.presentation.map.contract.toRunningUiState
 import com.dpm.sixpack.presentation.util.calculateDistance
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.naver.maps.geometry.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,7 +37,8 @@ class MapViewModel
 @Inject
 constructor(
     savedStateHandle: SavedStateHandle,
-    private val fusedLocationClient: FusedLocationProviderClient,
+    fusedLocationClient: FusedLocationProviderClient,
+    private val fetchRunningDataUseCase: FetchRunningDataUseCase,
     @ApplicationContext val context: Context,
 ) : BaseViewModel<MapState, MapIntent, MapSideEffect>() {
     private val mockLocationClient = MockLocationClient(fusedLocationClient, viewModelScope)
@@ -38,6 +46,18 @@ constructor(
     override val initialState: MapState = MapState()
     override val container: Container<MapState, MapSideEffect> =
         container(initialState = initialState, savedStateHandle = savedStateHandle)
+
+    init {
+        intent {
+            viewModelScope.launch {
+                fetchRunningDataUseCase().collect { runningState ->
+                    reduce {
+                        state.copy(runningState = runningState.toRunningUiState())
+                    }
+                }
+            }
+        }
+    }
 
     override fun onIntent(intent: MapIntent) {
         when (intent) {
@@ -66,14 +86,22 @@ constructor(
             }
 
             is MapIntent.ChangeRunningMode -> {
-                setRunningMode(intent.mode)
+                if (intent.mode) {
+                    startRunningService()
+                    setRunningMode(true)
+                } else {
+                    stopRunningService()
+                    setRunningMode(false)
+                }
             }
 
             is MapIntent.StartMockSimulation -> {
+                startRunningService()
                 startMockSimulation(intent.mockPath)
             }
 
             is MapIntent.StopMockSimulation -> {
+                stopRunningService()
                 stopMockSimulation()
             }
         }
@@ -126,6 +154,16 @@ constructor(
         }
     }
 
+    // RuninngService
+    private fun startRunningService() {
+        sendCommandToService(RunningActions.START_OR_RESUME)
+    }
+
+    private fun stopRunningService() {
+        sendCommandToService(RunningActions.STOP)
+    }
+
+    // MOCK SIMULATION
     @SuppressLint("MissingPermission")
     private fun startMockSimulation(mockPath: List<LatLng>) = intent {
         if (state.isMockSimulating) return@intent
@@ -163,6 +201,20 @@ constructor(
                     }
             }
         }
+    }
 
+    private fun sendCommandToService(action: String) {
+        val intent = Intent(action)
+        val pm = context.packageManager
+        val resolveInfo = pm.queryIntentServices(intent, 0).firstOrNull()
+
+        if (resolveInfo != null) {
+            val serviceInfo = resolveInfo.serviceInfo
+            val componentName = ComponentName(serviceInfo.packageName, serviceInfo.name)
+            intent.component = componentName
+            context.startService(intent)
+        } else {
+            Timber.e("MapViewModel: 서비스를 찾을 수 없습니다. Action: $action")
+        }
     }
 }

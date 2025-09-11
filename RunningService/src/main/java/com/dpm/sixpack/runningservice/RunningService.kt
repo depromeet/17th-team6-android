@@ -18,6 +18,8 @@ import androidx.lifecycle.lifecycleScope
 import com.dpm.sixpack.core.permission.PermissionUtil
 import com.dpm.sixpack.core.permission.SixPackPermissions
 import com.dpm.sixpack.core.util.TimeUtil
+import com.dpm.sixpack.domain.model.RunningState
+import com.dpm.sixpack.domain.running.RunningActions
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.Granularity
 import com.google.android.gms.location.LocationCallback
@@ -76,9 +78,6 @@ class RunningService : LifecycleService(), SensorEventListener {
     private val _runningDataState = MutableStateFlow(RunningState())
     val runningDataState = _runningDataState.asStateFlow()
 
-    private val _runningTimeState = MutableStateFlow(0L)
-    val runningTimeState = _runningTimeState.asStateFlow()
-
     private var initialSteps = -1L
     private var timerJob: Job? = null
     private var startTimeInMillis: Long = 0L
@@ -91,15 +90,15 @@ class RunningService : LifecycleService(), SensorEventListener {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.action?.let { action ->
             when (action) {
-                ACTION_START_OR_RESUME_SERVICE -> {
+                RunningActions.START_OR_RESUME -> {
                     startForegroundService()
                 }
 
-                ACTION_PAUSE_SERVICE -> {
-                    // TODO: 일시정지 로직
+                RunningActions.PAUSE -> {
+                    // TODO SK: 일시정지 로직
                 }
 
-                ACTION_STOP_SERVICE -> {
+                RunningActions.STOP -> {
                     stopService()
                 }
             }
@@ -115,7 +114,6 @@ class RunningService : LifecycleService(), SensorEventListener {
     private fun initStates() {
         // State
         _runningDataState.value = RunningState()
-        _runningTimeState.value = 0L
 
         // 거리
         lastLocation = null
@@ -138,8 +136,6 @@ class RunningService : LifecycleService(), SensorEventListener {
     private fun startForegroundService() {
         createNotificationChannel()
         startForeground(NOTIFICATION_ID, baseNotificationBuilder.build())
-
-        initStates()
         startListeners()
     }
 
@@ -155,8 +151,8 @@ class RunningService : LifecycleService(), SensorEventListener {
         sensorManager.unregisterListener(this)
 
         initStates()
-        postCurrentRunningDataState()
-        
+        postCurrentRunningDataState(0L)
+
         stopForeground(STOP_FOREGROUND_DETACH)
         stopSelf()
     }
@@ -167,16 +163,15 @@ class RunningService : LifecycleService(), SensorEventListener {
             startTimeInMillis = System.currentTimeMillis()
             while (true) {
                 val duration = System.currentTimeMillis() - startTimeInMillis
-                _runningTimeState.value = duration
-//                updateNotification(duration)
-                postCurrentRunningDataState()
+                postCurrentRunningDataState(duration)
                 delay(1000L)
             }
         }
     }
 
-    private fun postCurrentRunningDataState() {
+    private fun postCurrentRunningDataState(duration: Long) {
         _runningDataState.value = RunningState(
+            duration = duration,
             distance = this.totalDistance,
             paceInMoment = this.paceInMoment,
             paceAverage = this.paceAverage,
@@ -304,11 +299,5 @@ class RunningService : LifecycleService(), SensorEventListener {
             NotificationManager.IMPORTANCE_LOW
         )
         notificationManager.createNotificationChannel(channel)
-    }
-
-    companion object {
-        const val ACTION_START_OR_RESUME_SERVICE = "ACTION_START_OR_RESUME_SERVICE"
-        const val ACTION_PAUSE_SERVICE = "ACTION_PAUSE_SERVICE"
-        const val ACTION_STOP_SERVICE = "ACTION_STOP_SERVICE"
     }
 }

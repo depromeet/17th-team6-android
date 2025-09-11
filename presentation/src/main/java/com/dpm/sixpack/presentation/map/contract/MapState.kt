@@ -10,4 +10,5 @@ data class MapState(
     val isMockSimulating: Boolean = false,
     val isInitialLocationSet: Boolean = false, // 기기의 현재 위치가 초기 설정되었는지 여부
     val path: List<LatLng> = emptyList(), // 경로
+    val runningState: RunningUiState = RunningUiState(),
 ) : UiState

@@ -9,8 +9,6 @@ android {
 dependencies {
     implementation(project(":domain"))
     implementation(project(":core"))
-    implementation(project(":RunningService"))
 
     implementation(libs.bundles.navermap)
-    implementation(libs.androidx.lifecycle.service)
 }
