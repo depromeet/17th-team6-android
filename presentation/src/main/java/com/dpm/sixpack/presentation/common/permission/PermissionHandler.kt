@@ -9,6 +9,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
+import com.dpm.sixpack.core.permission.PermissionUtil
+import com.dpm.sixpack.core.permission.SixPackPermissions
 
 /**
  * General permission handler
@@ -41,6 +43,7 @@ fun PermissionHandler(
                     if (allPermissionsGranted) {
                         onPermissionResult(true)
                     } else {
+                        onPermissionResult(false)
                         // TODO: 권한이 없는 경우, 다시 요청 혹은 요청 기록이 있으면 설정 연결
                     }
                 }

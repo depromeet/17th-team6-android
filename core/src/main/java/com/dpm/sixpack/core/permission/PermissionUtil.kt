@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.common.permission
+package com.dpm.sixpack.core.permission
 
 import android.content.Context
 import android.content.SharedPreferences

@@ -1,4 +1,4 @@
-package com.dpm.sixpack.data.util
+package com.dpm.sixpack.core.util
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -8,7 +8,6 @@ object TimeUtil {
     /**
      * Convert ms to "HH:mm:ss" or "mm:ss"
      */
-    @RequiresApi(Build.VERSION_CODES.S)
     fun formatMillisWithDuration(millis: Long): String {
         val safeMillis = if (millis < 0) 0 else millis
 

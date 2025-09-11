@@ -1,6 +1,6 @@
 package com.dpm.sixpack.presentation.map.component
 
-import com.dpm.sixpack.presentation.common.permission.SixPackPermissions
+import com.dpm.sixpack.core.permission.SixPackPermissions
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 
