@@ -14,6 +14,7 @@ dependencies {
     implementation(project(":presentation"))
     implementation(project(":data"))
     implementation(project(":domain"))
+    implementation(project(":RunningService"))
 
     implementation(libs.bundles.androidx.core)
     testImplementation(libs.junit)

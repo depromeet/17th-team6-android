@@ -17,7 +17,7 @@ sealed interface MapSideEffect : SideEffect {
         val messageResId: Int,
     ) : MapSideEffect
 
-    data class SetInitialLocation(
+    data class UpdateLocationPermission(
         val isGranted: Boolean,
     ) : MapSideEffect
 }

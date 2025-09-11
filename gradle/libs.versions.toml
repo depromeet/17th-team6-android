@@ -21,6 +21,7 @@ coreKtx = "1.13.1"
 androidx-lifecycle-runtime-ktx = "2.8.2"
 androidx-datastore-preferences = "1.1.7"
 androidx-navigation-common-ktx = "2.7.7"
+lifecycleService = "2.9.3"
 
 # Coil
 coil = "2.6.0"
@@ -87,6 +88,7 @@ espressoCore = "3.5.0"
 # Others
 kotlinxDatetime = "0.7.1"
 
+
 [libraries]
 
 # Androidx
@@ -95,6 +97,7 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "androidx-datastore-preferences" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidx-lifecycle-runtime-ktx" }
 androidx-navigation-common-ktx = { group = "androidx.navigation", name = "navigation-common-ktx", version.ref = "androidx-navigation-common-ktx" }
+androidx-lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version.ref = "lifecycleService" }
 
 # Build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }

@@ -13,4 +13,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)
     implementation(libs.kotlinx.datetime)
+    implementation(libs.play.services.location)
 }
