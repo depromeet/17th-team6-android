@@ -27,4 +27,5 @@ android {
 dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)
+    implementation(libs.androidx.activity.compose)
 }

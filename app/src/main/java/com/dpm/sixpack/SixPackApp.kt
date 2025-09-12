@@ -9,7 +9,6 @@ import javax.inject.Inject
 
 @HiltAndroidApp
 class SixPackApp : Application() {
-
     @Inject
     lateinit var initializers: AppInitializer
 

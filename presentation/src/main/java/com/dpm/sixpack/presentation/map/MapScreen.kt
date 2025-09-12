@@ -1,28 +1,29 @@
 package com.dpm.sixpack.presentation.map
 
-import android.Manifest
-import android.content.pm.PackageManager
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import com.dpm.sixpack.presentation.common.permission.PermissionHandler
 import com.dpm.sixpack.presentation.map.component.MapConstants
-import com.dpm.sixpack.presentation.map.component.MapConstants.DEFAULT_ZOOM
-import com.dpm.sixpack.presentation.map.contract.MapIntent
-import com.dpm.sixpack.presentation.map.contract.MapSideEffect
+import com.dpm.sixpack.presentation.map.component.MapConstants.MIN_LENGTH_PATH_ARRAY
 import com.dpm.sixpack.presentation.map.contract.MapState
-import com.google.android.gms.location.LocationServices
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.LocationSource
 import com.naver.maps.map.compose.CameraPositionState
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
@@ -34,84 +35,19 @@ import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.PathOverlay
 import com.naver.maps.map.compose.rememberCameraPositionState
 import com.naver.maps.map.compose.rememberFusedLocationSource
-import org.orbitmvi.orbit.compose.collectAsState
-import org.orbitmvi.orbit.compose.collectSideEffect
 
 @OptIn(ExperimentalNaverMapApi::class)
 @Composable
-fun MapRoute(viewModel: MapViewModel = hiltViewModel()) {
-    val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
-
-    // Location
-    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
-    val locationSource = rememberFusedLocationSource()
-
-    // State
-    val uiState = viewModel.collectAsState()
-    val cameraPositionState =
-        rememberCameraPositionState {
-            position = uiState.value.cameraPosition
-        }
-
-    PermissionHandler(
-        context = context,
-        lifecycleOwner = lifecycleOwner,
-        permissionsToRequest = MapConstants.MAP_PERMISSIONS,
-        onPermissionResult = { isGranted ->
-            viewModel.onIntent(MapIntent.UpdateLocationPermission(isGranted))
-        },
-    )
-
-    viewModel.collectSideEffect { mapSideEffect ->
-        when (mapSideEffect) {
-            is MapSideEffect.ShowToast -> {
-            }
-
-            is MapSideEffect.MoveCameraToPosition -> {
-                cameraPositionState.position = CameraPosition(mapSideEffect.latLng, DEFAULT_ZOOM)
-            }
-
-            is MapSideEffect.SetInitialLocation -> {
-                if (ContextCompat.checkSelfPermission(
-                        context,
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                    ) == PackageManager.PERMISSION_GRANTED &&
-                    !uiState.value.isInitialLocationSet
-                ) {
-                    // 권한이 허용되었으면
-                    fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                        if (location != null) {
-                            val userLatLng = LatLng(location)
-                            viewModel.onIntent(MapIntent.SetInitialLocation(userLatLng))
-                            cameraPositionState.position = CameraPosition(userLatLng, DEFAULT_ZOOM)
-                        } else {
-                            println()
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    MapScreen(
-        state = uiState.value,
-        cameraPositionState = cameraPositionState,
-        locationSource = locationSource,
-        onLocationChange = { latLng ->
-            viewModel.onIntent(MapIntent.UpdateUserLocation(latLng))
-        },
-    )
-}
-
-@OptIn(ExperimentalNaverMapApi::class)
-@Composable
-private fun MapScreen(
-    state: MapState,
+fun MapScreen(
+    uiState: MapState,
     cameraPositionState: CameraPositionState,
     locationSource: LocationSource,
     onLocationChange: (LatLng) -> Unit,
+    onFabClick: () -> Unit,
 ) {
+    val isSessionInProgress = uiState.runningMode || uiState.isMockSimulating
+    val runningState = uiState.runningState
+
     Box(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -140,13 +76,77 @@ private fun MapScreen(
                 onLocationChange(LatLng(location))
             },
         ) {
-            if (state.path.size > 5) {
+            if (isSessionInProgress && uiState.path.size >= MIN_LENGTH_PATH_ARRAY) {
                 PathOverlay(
-                    coords = state.path,
+                    coords = uiState.path,
                     color = Color.Magenta,
                     width = 5.dp,
                 )
             }
         }
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 48.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ) {
+            Text(color = Color.Black, text = "시간: ${runningState.duration / 1000}초")
+            Text(color = Color.Black, text = "거리: ${runningState.distance.toInt()}m")
+            Text(color = Color.Black, text = "페이스: ${runningState.paceInMoment}")
+            Text(color = Color.Black, text = "케이던스: ${runningState.cadence} SPM")
+        }
+
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 48.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Bottom,
+        ) {
+            Row(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(end = 48.dp),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                FloatingActionButton(
+                    containerColor = Color(0xFFABABE7),
+                    onClick = {
+                        onFabClick()
+                    },
+                ) {
+                    Icon(
+                        imageVector =
+                            if (isSessionInProgress) {
+                                Icons.Default.Stop
+                            } else {
+                                Icons.Default.PlayArrow
+                            },
+                        contentDescription = "Start Running Button",
+                        tint = Color.Black,
+                    )
+                }
+            }
+        }
     }
+}
+
+@OptIn(ExperimentalNaverMapApi::class)
+@Preview
+@Composable
+private fun MapScreenPreview() {
+    MapScreen(
+        uiState = MapState(),
+        cameraPositionState = rememberCameraPositionState(),
+        locationSource = rememberFusedLocationSource(),
+        onLocationChange = {
+        },
+        onFabClick = {
+        },
+    )
 }

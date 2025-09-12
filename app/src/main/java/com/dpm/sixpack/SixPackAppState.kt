@@ -20,8 +20,8 @@ fun rememberSixPackAppState(
     networkMonitor: NetworkMonitor,
     timeZoneMonitor: TimeZoneMonitor,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-): SixPackAppState {
-    return remember(
+): SixPackAppState =
+    remember(
         navigator,
         coroutineScope,
         networkMonitor,
@@ -34,7 +34,6 @@ fun rememberSixPackAppState(
             timeZoneMonitor = timeZoneMonitor,
         )
     }
-}
 
 @Stable
 class SixPackAppState(
@@ -43,20 +42,22 @@ class SixPackAppState(
     networkMonitor: NetworkMonitor,
     timeZoneMonitor: TimeZoneMonitor,
 ) {
-    val isOffline = networkMonitor.isOnline
-        .map(Boolean::not)
-        .stateIn(
-            scope = coroutineScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = false,
-        )
+    val isOffline =
+        networkMonitor.isOnline
+            .map(Boolean::not)
+            .stateIn(
+                scope = coroutineScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = false,
+            )
 
-    val currentTimeZone = timeZoneMonitor.currentTimeZone
-        .stateIn(
-            coroutineScope,
-            SharingStarted.WhileSubscribed(5_000),
-            TimeZone.currentSystemDefault(),
-        )
+    val currentTimeZone =
+        timeZoneMonitor.currentTimeZone
+            .stateIn(
+                coroutineScope,
+                SharingStarted.WhileSubscribed(5_000),
+                TimeZone.currentSystemDefault(),
+            )
 
 //    fun navigateToSearch() = navController.navigateTo
 }

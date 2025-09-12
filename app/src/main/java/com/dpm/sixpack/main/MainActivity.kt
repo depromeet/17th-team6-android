@@ -18,7 +18,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     @Inject
     lateinit var networkMonitor: NetworkMonitor
 
@@ -30,12 +29,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            
-            val appState = rememberSixPackAppState(
-                navigator = rememberMainNavigator(),
-                networkMonitor = networkMonitor,
-                timeZoneMonitor = timeZoneMonitor,
-            )
+            val appState =
+                rememberSixPackAppState(
+                    navigator = rememberMainNavigator(),
+                    networkMonitor = networkMonitor,
+                    timeZoneMonitor = timeZoneMonitor,
+                )
 
             val currentTimeZone by appState.currentTimeZone.collectAsStateWithLifecycle()
 
@@ -46,7 +45,6 @@ class MainActivity : ComponentActivity() {
                     MainScreen(appState = appState)
                 }
             }
-
         }
     }
 }
