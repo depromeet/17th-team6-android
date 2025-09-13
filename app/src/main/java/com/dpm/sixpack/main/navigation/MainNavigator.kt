@@ -10,7 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.dpm.sixpack.presentation.routes.Route
-import com.dpm.sixpack.presentation.routes.map.navigation.navigateMap
+import com.dpm.sixpack.presentation.routes.session.navigation.navigateRunning
 
 class MainNavigator(
     val navController: NavHostController,
@@ -32,10 +32,10 @@ class MainNavigator(
             } ?: previousDestination.value
         }
 
-    val startDestination = Route.Map // FIXME: Change to other when the start screen is implemented
+    val startDestination = Route.Running // FIXME: Change to other when the start screen is implemented
 
-    fun navigateMap() {
-        navController.navigateMap(
+    fun navigateRunning() {
+        navController.navigateRunning(
             navOptions = navOptions { launchSingleTop = true },
         )
     }
