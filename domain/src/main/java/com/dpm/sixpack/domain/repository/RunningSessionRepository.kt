@@ -7,7 +7,8 @@ import com.dpm.sixpack.domain.util.DoRunResult
 import kotlinx.coroutines.flow.Flow
 
 interface RunningSessionRepository {
-    //    suspend fun start(): DoRunResult<Unit>
+
+    suspend fun start(): DoRunResult<Long>
 
     suspend fun getRealtimeData(): Flow<DoRunResult<RealtimeRunningData>>
 
