@@ -15,11 +15,10 @@ import dagger.hilt.android.scopes.ServiceScoped
 @Module
 @InstallIn(ServiceComponent::class)
 object ServiceModule {
-
     @ServiceScoped
     @Provides
     fun provideSensorManager(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): SensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
     @ServiceScoped
@@ -27,7 +26,8 @@ object ServiceModule {
     fun provideBaseNotificationBuilder(
         @ApplicationContext context: Context,
 //        pendingIntent: PendingIntent
-    ) = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
+    ) = NotificationCompat
+        .Builder(context, NOTIFICATION_CHANNEL_ID)
         .setAutoCancel(false)
         .setOngoing(true)
         .setSmallIcon(R.drawable.run_small_icon)

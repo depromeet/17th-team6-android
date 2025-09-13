@@ -6,8 +6,7 @@ import com.dpm.sixpack.domain.usecase.SaveRealtimeRunningDataResult
 import com.dpm.sixpack.domain.util.DoRunResult
 
 interface RunningSessionRepository {
-
-//    suspend fun start(): DoRunResult<Unit>
+    //    suspend fun start(): DoRunResult<Unit>
 
     suspend fun saveRealtimeData(data: RealtimeRunningData): DoRunResult<SaveRealtimeRunningDataResult.LocalResult>
 
@@ -15,4 +14,3 @@ interface RunningSessionRepository {
 
     suspend fun finish(sessionId: Long): DoRunResult<RunningSessionResult>
 }
-

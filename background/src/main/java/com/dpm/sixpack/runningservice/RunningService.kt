@@ -34,8 +34,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class RunningService : LifecycleService(), SensorEventListener {
-
+class RunningService :
+    LifecycleService(),
+    SensorEventListener {
     private val binder = RunningBinder()
 
     inner class RunningBinder : Binder() {
@@ -86,7 +87,11 @@ class RunningService : LifecycleService(), SensorEventListener {
         notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    override fun onStartCommand(
+        intent: Intent?,
+        flags: Int,
+        startId: Int,
+    ): Int {
 //        intent?.action?.let { action ->
 //            when (action) {
 //                RunningActions.START_OR_RESUME -> {
@@ -158,39 +163,42 @@ class RunningService : LifecycleService(), SensorEventListener {
 
     // 시간 측정
     private fun startTimer() {
-        timerJob = lifecycleScope.launch {
-            startTimeInMillis = System.currentTimeMillis()
-            while (true) {
-                val duration = System.currentTimeMillis() - startTimeInMillis
-                postCurrentRunningDataState(duration)
-                delay(1000L)
+        timerJob =
+            lifecycleScope.launch {
+                startTimeInMillis = System.currentTimeMillis()
+                while (true) {
+                    val duration = System.currentTimeMillis() - startTimeInMillis
+                    postCurrentRunningDataState(duration)
+                    delay(1000L)
+                }
             }
-        }
     }
 
     private fun postCurrentRunningDataState(duration: Long) {
-        _runningDataState.value = RunningState(
-            duration = duration,
-            distance = this.totalDistance,
-            paceInMoment = this.paceInMoment,
-            paceAverage = this.paceAverage,
-            cadence = this.cadence
-        )
+        _runningDataState.value =
+            RunningState(
+                duration = duration,
+                distance = this.totalDistance,
+                paceInMoment = this.paceInMoment,
+                paceAverage = this.paceAverage,
+                cadence = this.cadence,
+            )
     }
 
     // 위치 업데이트 (거리, 페이스 계산)
-    private val locationCallback = object : LocationCallback() {
-        override fun onLocationResult(result: LocationResult) {
-            super.onLocationResult(result)
+    private val locationCallback =
+        object : LocationCallback() {
+            override fun onLocationResult(result: LocationResult) {
+                super.onLocationResult(result)
 
-            updateTotalDistance(result.locations)
+                updateTotalDistance(result.locations)
 
-            val now = System.currentTimeMillis()
+                val now = System.currentTimeMillis()
 
-            calculatePaceInMoment(now)
-            calculateAvgPace(now)
+                calculatePaceInMoment(now)
+                calculateAvgPace(now)
+            }
         }
-    }
 
     private fun updateTotalDistance(locations: List<Location>) {
         locations.forEach { newLocation ->
@@ -235,18 +243,21 @@ class RunningService : LifecycleService(), SensorEventListener {
 
     @SuppressLint("MissingPermission")
     private fun startLocationUpdates() {
-        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000L).apply {
-            setMinUpdateIntervalMillis(2000L)
-            setMaxUpdateDelayMillis(5000L)
-            setGranularity(Granularity.GRANULARITY_PERMISSION_LEVEL)
-            setWaitForAccurateLocation(true)
-        }.build()
+        val locationRequest =
+            LocationRequest
+                .Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000L)
+                .apply {
+                    setMinUpdateIntervalMillis(2000L)
+                    setMaxUpdateDelayMillis(5000L)
+                    setGranularity(Granularity.GRANULARITY_PERMISSION_LEVEL)
+                    setWaitForAccurateLocation(true)
+                }.build()
 
         if (PermissionUtil.hasPermissions(this, SixPackPermissions.LocationPermissions)) {
             fusedLocationClient.requestLocationUpdates(
                 locationRequest,
                 locationCallback,
-                Looper.getMainLooper()
+                Looper.getMainLooper(),
             )
         }
     }
@@ -260,7 +271,10 @@ class RunningService : LifecycleService(), SensorEventListener {
     }
 
     // 센서 측정값의 정확도가 변경됐을때 - 사용 X
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+    override fun onAccuracyChanged(
+        sensor: Sensor?,
+        accuracy: Int,
+    ) {}
 
     // sensorManager.registerListener()에 등록한 센서가 새로운 측정값을 생성했을때
     override fun onSensorChanged(event: SensorEvent?) {
@@ -285,18 +299,20 @@ class RunningService : LifecycleService(), SensorEventListener {
     }
 
     private fun updateNotification(durationInMillis: Long) {
-        val notification = baseNotificationBuilder
-            .setContentText(TimeUtil.formatMillisWithDuration(durationInMillis))
-            .build()
+        val notification =
+            baseNotificationBuilder
+                .setContentText(TimeUtil.formatMillisWithDuration(durationInMillis))
+                .build()
         notificationManager.notify(NOTIFICATION_ID, notification)
     }
 
     private fun createNotificationChannel() {
-        val channel = NotificationChannel(
-            NOTIFICATION_CHANNEL_ID,
-            NOTIFICATION_CHANNEL_NAME,
-            NotificationManager.IMPORTANCE_LOW
-        )
+        val channel =
+            NotificationChannel(
+                NOTIFICATION_CHANNEL_ID,
+                NOTIFICATION_CHANNEL_NAME,
+                NotificationManager.IMPORTANCE_LOW,
+            )
         notificationManager.createNotificationChannel(channel)
     }
 }

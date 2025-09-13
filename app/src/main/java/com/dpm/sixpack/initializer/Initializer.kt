@@ -8,4 +8,3 @@ import android.app.Application
 interface Initializer {
     fun onAppCreate(application: Application)
 }
-

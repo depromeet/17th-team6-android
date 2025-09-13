@@ -5,15 +5,14 @@ package com.dpm.sixpack.domain.exception
  */
 sealed class DoRunException(
     message: String,
-    cause: Throwable? = null
+    cause: Throwable? = null,
 ) : Exception(message, cause) {
-
     /**
      * 네트워크 관련 에러
      */
     data class NetworkError(
         override val message: String,
-        override val cause: Throwable? = null
+        override val cause: Throwable? = null,
     ) : DoRunException(message, cause)
 
     /**
@@ -22,16 +21,15 @@ sealed class DoRunException(
     data class ServerError(
         val code: Int,
         override val message: String,
-        override val cause: Throwable? = null
+        override val cause: Throwable? = null,
     ) : DoRunException("Server Error ($code): $message", cause)
-
 
     /**
      * 데이터 파싱/변환 에러
      */
     data class DataError(
         override val message: String,
-        override val cause: Throwable? = null
+        override val cause: Throwable? = null,
     ) : DoRunException(message, cause)
 
     /**
@@ -40,7 +38,7 @@ sealed class DoRunException(
     data class BusinessError(
         override val message: String,
         val errorCode: String? = null,
-        override val cause: Throwable? = null
+        override val cause: Throwable? = null,
     ) : DoRunException(message, cause)
 
     /**
@@ -48,6 +46,6 @@ sealed class DoRunException(
      */
     data class UnknownError(
         override val message: String = "Unknown error occurred",
-        override val cause: Throwable? = null
+        override val cause: Throwable? = null,
     ) : DoRunException(message, cause)
 }

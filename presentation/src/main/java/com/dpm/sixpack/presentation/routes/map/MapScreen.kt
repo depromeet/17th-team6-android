@@ -86,11 +86,12 @@ fun MapScreen(
         }
 
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 48.dp),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(top = 48.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
+            verticalArrangement = Arrangement.Top,
         ) {
             Text(color = Color.Black, text = "시간: ${runningState.duration / 1000}초")
             Text(color = Color.Black, text = "거리: ${runningState.distance.toInt()}m")

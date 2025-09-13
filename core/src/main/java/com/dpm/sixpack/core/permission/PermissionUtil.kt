@@ -25,17 +25,22 @@ object PermissionUtil {
             else -> throw IllegalArgumentException("Invalid permission: $permission")
         }
 
-    private fun getPreferences(context: Context): SharedPreferences {
-        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-    }
+    private fun getPreferences(context: Context): SharedPreferences =
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
-    private fun savePermissionRequested(context: Context, permission: SixPackPermissions) {
+    private fun savePermissionRequested(
+        context: Context,
+        permission: SixPackPermissions,
+    ) {
         val key = mapPermissionToKey(permission)
         Timber.d("king : $key")
         getPreferences(context).edit { putBoolean(key, true) }
     }
 
-    private fun isPermissionRequested(context: Context, permission: SixPackPermissions): Boolean =
+    private fun isPermissionRequested(
+        context: Context,
+        permission: SixPackPermissions,
+    ): Boolean =
         if (permission is SixPackPermissions.NotificationPermission &&
             Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
         ) {
@@ -45,9 +50,13 @@ object PermissionUtil {
             getPreferences(context).getBoolean(mapPermissionToKey(permission), false)
         }
 
-    fun hasPermissions(context: Context, permissions: List<SixPackPermissions>): Boolean =
-        if (permissions.isEmpty()) true
-        else {
+    fun hasPermissions(
+        context: Context,
+        permissions: List<SixPackPermissions>,
+    ): Boolean =
+        if (permissions.isEmpty()) {
+            true
+        } else {
             permissions.toStringArray().all {
                 ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
             }
@@ -56,7 +65,7 @@ object PermissionUtil {
     fun requestPermission(
         context: Context,
         permissionsLauncher: ManagedActivityResultLauncher<Array<String>, Map<String, Boolean>>,
-        permissions: List<SixPackPermissions>
+        permissions: List<SixPackPermissions>,
     ) {
         permissions.forEach {
             savePermissionRequested(context, it)

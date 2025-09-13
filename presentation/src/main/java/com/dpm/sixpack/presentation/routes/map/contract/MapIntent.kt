@@ -35,7 +35,7 @@ sealed interface MapIntent : UiIntent {
     ) : MapIntent
 
     data class StartMockSimulation(
-        val mockPath: List<LatLng>
+        val mockPath: List<LatLng>,
     ) : MapIntent
 
     data object StopMockSimulation : MapIntent

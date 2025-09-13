@@ -5,5 +5,5 @@ data class RunningSessionResult(
     val totalDurationSec: Int, // 총 시간 (초 단위, 30분)
     val avgPace: String, // 평균 페이스 (예: "5'30\"")
     val avgCadence: Int, // 평균 케이던스 (steps per minute)
-    val maxCadence: Int // 최대 케이던스 (steps per minute)
+    val maxCadence: Int, // 최대 케이던스 (steps per minute)
 )

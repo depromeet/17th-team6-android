@@ -8,14 +8,12 @@ data class RunningGoal(
     val title: String, // 목표 제목 == 현재 플랜 (N주차 M회차)
     val distance: Double, // 목표 거리
     val duration: Int, // 목표 시간
-    val pace: Int // 목표 페이스
+    val pace: Int, // 목표 페이스
 ) {
     val paceString: String
         get() {
             val minutes = pace / 60
             val seconds = pace % 60
-            return "${minutes}'${seconds}\""
+            return "$minutes'${seconds}\""
         }
 }
-
-

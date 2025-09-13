@@ -4,8 +4,11 @@ import android.Manifest
 import android.os.Build
 import androidx.annotation.RequiresApi
 
-sealed class SixPackPermissions(val permission: String) {
+sealed class SixPackPermissions(
+    val permission: String,
+) {
     object FineLocationPermission : SixPackPermissions(Manifest.permission.ACCESS_FINE_LOCATION)
+
     object CourseLocationPermission : SixPackPermissions(Manifest.permission.ACCESS_COARSE_LOCATION)
 
     @RequiresApi(Build.VERSION_CODES.P)
@@ -21,10 +24,11 @@ sealed class SixPackPermissions(val permission: String) {
     object NotificationPermission : SixPackPermissions(Manifest.permission.POST_NOTIFICATIONS)
 
     companion object {
-        val LocationPermissions = listOf(
-            FineLocationPermission,
-            CourseLocationPermission
-        )
+        val LocationPermissions =
+            listOf(
+                FineLocationPermission,
+                CourseLocationPermission,
+            )
 
         val ForegroundServicePermissions by lazy {
             mutableListOf<SixPackPermissions>().apply {

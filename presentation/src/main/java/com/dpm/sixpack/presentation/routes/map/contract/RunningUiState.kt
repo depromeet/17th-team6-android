@@ -10,21 +10,23 @@ data class RunningUiState(
     val distance: Double = 0.0,
     val paceInMoment: Double = 0.0,
     val paceAverage: Double = 0.0,
-    val cadence: Int = 0
+    val cadence: Int = 0,
 ) : Parcelable
 
-fun RunningUiState.toRunningState(): RunningState = RunningState(
-    duration = duration,
-    distance = distance,
-    paceInMoment = paceInMoment,
-    paceAverage = paceAverage,
-    cadence = cadence
-)
+fun RunningUiState.toRunningState(): RunningState =
+    RunningState(
+        duration = duration,
+        distance = distance,
+        paceInMoment = paceInMoment,
+        paceAverage = paceAverage,
+        cadence = cadence,
+    )
 
-fun RunningState.toRunningUiState(): RunningUiState = RunningUiState(
-    duration = duration,
-    distance = distance,
-    paceInMoment = paceInMoment,
-    paceAverage = paceAverage,
-    cadence = cadence
-)
+fun RunningState.toRunningUiState(): RunningUiState =
+    RunningUiState(
+        duration = duration,
+        distance = distance,
+        paceInMoment = paceInMoment,
+        paceAverage = paceAverage,
+        cadence = cadence,
+    )
