@@ -1,7 +1,6 @@
 package com.dpm.sixpack.domain.model
 
 data class RealtimeRunningData(
-    val id: Long? = null, // auto generated ID
     val latitude: Double, // 위도
     val longitude: Double, // 경도
     val altitude: Double, // 고도

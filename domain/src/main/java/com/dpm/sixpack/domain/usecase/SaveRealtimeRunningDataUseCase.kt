@@ -5,30 +5,27 @@ import com.dpm.sixpack.domain.repository.RunningSessionRepository
 import com.dpm.sixpack.domain.util.DoRunResult
 import javax.inject.Inject
 
-class SaveRealtimeRunningDataUseCase
-    @Inject
-    constructor(
-        private val repository: RunningSessionRepository,
-    ) {
-        suspend operator fun invoke(param: SaveRealtimeRunningDataParam): DoRunResult<SaveRealtimeRunningDataResult> =
-            when (param) {
-                is SaveRealtimeRunningDataParam.LocalParam -> repository.saveRealtimeData(data = param.data)
-                is SaveRealtimeRunningDataParam.SyncParam -> repository.saveSegmentData(sessionId = param.sessionId)
-            }
+class SaveRealtimeRunningDataUseCase @Inject constructor(
+    private val repository: RunningSessionRepository
+) {
+    suspend operator fun invoke(param: SaveRealtimeRunningDataParam): DoRunResult<SaveRealtimeRunningDataResult> {
+        return when (param) {
+            is SaveRealtimeRunningDataParam.LocalParam -> repository.saveRealtimeData(data = param.data)
+            is SaveRealtimeRunningDataParam.SyncParam -> repository.saveSegmentData(sessionId = param.sessionId)
+        }
     }
+}
 
 sealed class SaveRealtimeRunningDataParam {
     data class LocalParam(
-        val sessionId: Long,
-        val data: RealtimeRunningData,
+        val data: RealtimeRunningData
     ) : SaveRealtimeRunningDataParam()
 
-    data class SyncParam(
-        val sessionId: Long,
-    ) : SaveRealtimeRunningDataParam()
+    data class SyncParam(val sessionId: Long) : SaveRealtimeRunningDataParam()
 }
 
 sealed class SaveRealtimeRunningDataResult {
+
     data object LocalResult : SaveRealtimeRunningDataResult()
 
     data class SyncResult(
@@ -36,3 +33,4 @@ sealed class SaveRealtimeRunningDataResult {
         val savedCount: Int, // 저장된 데이터 개수
     ) : SaveRealtimeRunningDataResult()
 }
+
