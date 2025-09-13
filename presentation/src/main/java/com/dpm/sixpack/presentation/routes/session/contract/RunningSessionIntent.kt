@@ -14,4 +14,6 @@ sealed interface RunningSessionIntent : UiIntent {
     data object Finish : RunningSessionIntent
 
     data object ConfirmFinish : RunningSessionIntent
+
+    data object ToggleFollowingMode : RunningSessionIntent
 }
