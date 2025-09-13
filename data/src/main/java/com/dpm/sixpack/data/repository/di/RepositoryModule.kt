@@ -1,7 +1,9 @@
 package com.dpm.sixpack.data.repository.di
 
 import com.dpm.sixpack.data.repository.RunningRepositoryImpl
+import com.dpm.sixpack.domain.repository.RunningGoalRepository
 import com.dpm.sixpack.domain.repository.RunningRepository
+import com.dpm.sixpack.domain.repository.RunningSessionRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,4 +16,13 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindRunningRepository(runningRepository: RunningRepositoryImpl): RunningRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsRunningGoalRepository(repositoryImpl: RunningGoalRepositoryImpl): RunningGoalRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsRunningSessionRepository(repositoryImpl: RunningSessionRepositoryImpl): RunningSessionRepository
+
 }
