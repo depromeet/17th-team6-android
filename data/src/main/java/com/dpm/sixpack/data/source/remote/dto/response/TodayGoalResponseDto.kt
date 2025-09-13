@@ -1,6 +1,7 @@
 package com.dpm.sixpack.data.source.remote.dto.response
 
 import android.annotation.SuppressLint
+import com.dpm.sixpack.domain.model.RunningGoal
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -24,11 +25,21 @@ data class TodayGoalResponseDto(
     @SerialName("pace")
     val pace: Int,
     @SerialName("distance")
-    val distance: Long,
+    val distance: Double,
     @SerialName("duration")
-    val duration: Long,
+    val duration: Int,
     @SerialName("repeatType")
     val repeatType: String,
     @SerialName("repeatFrequency")
     val repeatFrequency: Int
-)
+){
+    fun toRunningGoal() : RunningGoal = RunningGoal(
+        id =  id,
+        title = title,
+        distance = distance,
+        duration = duration,
+        pace = pace,
+
+    )
+}
+

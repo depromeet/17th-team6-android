@@ -1,6 +1,7 @@
 package com.dpm.sixpack.data.source.remote.dto.response
 
 import android.annotation.SuppressLint
+import com.dpm.sixpack.domain.model.RunningSessionResult
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -29,4 +30,12 @@ data class FinishRunningResponseDto(
     val avgCadence: Int,
     @SerialName("maxCadence")
     val maxCadence: Int
-)
+) {
+    fun toRunningSessionResult() = RunningSessionResult(
+        totalDistanceMeter = totalDistance.toFloat(),
+        totalDurationSec = totalDuration,
+        avgPace = avgPace,
+        avgCadence = avgCadence,
+        maxCadence = maxCadence
+    )
+}
