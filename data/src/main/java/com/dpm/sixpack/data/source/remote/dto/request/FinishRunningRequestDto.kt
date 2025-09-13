@@ -16,5 +16,5 @@ data class FinishRunningRequestDto(
     @SerialName("avgCadence")
     val avgCadence: Long,
     @SerialName("maxCadence")
-    val maxCadence: Int
+    val maxCadence: Int,
 )

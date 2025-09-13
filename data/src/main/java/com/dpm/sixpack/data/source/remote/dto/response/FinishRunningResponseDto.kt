@@ -29,13 +29,14 @@ data class FinishRunningResponseDto(
     @SerialName("avgCadence")
     val avgCadence: Long,
     @SerialName("maxCadence")
-    val maxCadence: Long
+    val maxCadence: Long,
 ) {
-    fun toRunningSessionResult() = RunningSessionResult(
-        totalDistanceMeter = totalDistance,
-        totalDurationSec = totalDuration,
-        avgPace = avgPace,
-        avgCadence = avgCadence,
-        maxCadence = maxCadence
-    )
+    fun toRunningSessionResult() =
+        RunningSessionResult(
+            totalDistanceMeter = totalDistance,
+            totalDurationSec = totalDuration,
+            avgPace = avgPace,
+            avgCadence = avgCadence,
+            maxCadence = maxCadence,
+        )
 }

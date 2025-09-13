@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class SaveSegmentDataRequestsDto(
@@ -13,7 +12,7 @@ data class SaveSegmentDataRequestsDto(
     @SerialName("isStopped")
     val isStopped: Boolean,
     @SerialName("isEnded")
-    val isEnded: Boolean
+    val isEnded: Boolean,
 )
 
 @SuppressLint("UnsafeOptInUsageError")
@@ -34,6 +33,5 @@ data class LocationDataRequestDto(
     @SerialName("distance")
     val distance: Int,
     @SerialName("time")
-    val time: String
+    val time: String,
 )
-

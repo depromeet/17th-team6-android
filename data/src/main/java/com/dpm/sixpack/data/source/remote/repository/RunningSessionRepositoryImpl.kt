@@ -13,63 +13,72 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class RunningSessionRepositoryImpl @Inject constructor(
-    private val runningSessionDataSource: RunningSessionDataSource
-) : RunningSessionRepository {
-    override suspend fun start(goalPlanId: Long): DoRunResult<Long> =
-        withContext(Dispatchers.IO) {
-            try {
-                val response =
-                    runningSessionDataSource.postStartRunning(StartRunningRequestDto(goalPlanId))
+class RunningSessionRepositoryImpl
+    @Inject
+    constructor(
+        private val runningSessionDataSource: RunningSessionDataSource,
+    ) : RunningSessionRepository {
+        override suspend fun start(goalPlanId: Long): DoRunResult<Long> =
+            withContext(Dispatchers.IO) {
+                try {
+                    val response =
+                        runningSessionDataSource.postStartRunning(StartRunningRequestDto(goalPlanId))
 
-                val sessionId = response.data?.sessionId
-                    ?: throw DoRunException.DataError("서버 응답 데이터가 비어 있습니다.")
+                    val sessionId =
+                        response.data?.sessionId
+                            ?: throw DoRunException.DataError("서버 응답 데이터가 비어 있습니다.")
 
-                DoRunResult.Success(sessionId)
-            } catch (e: Exception) {
-                DoRunResult.Failure(DoRunException.DataError("네트워크 요청에 실패했습니다: ${e.message}"))
+                    DoRunResult.Success(sessionId)
+                } catch (e: Exception) {
+                    DoRunResult.Failure(DoRunException.DataError("네트워크 요청에 실패했습니다: ${e.message}"))
+                }
             }
+
+        override suspend fun getRealtimeData(): Flow<DoRunResult<RealtimeRunningData>> {
+            TODO("Not yet implemented")
         }
 
-    override suspend fun getRealtimeData(): Flow<DoRunResult<RealtimeRunningData>> {
-        TODO("Not yet implemented")
+        override suspend fun saveRealtimeData(
+            data: RealtimeRunningData,
+        ): DoRunResult<SaveRealtimeRunningDataResult.LocalResult> {
+            TODO("Not yet implemented")
+        }
+
+        override suspend fun saveSegmentData(sessionId: Long): DoRunResult<SaveRealtimeRunningDataResult.SyncResult> =
+            withContext(Dispatchers.IO) {
+                try {
+                    val response =
+                        runningSessionDataSource.postSegmentData(
+                            sessionId,
+                            MockRequestDataFactory.createMockSaveSegmentRequest(),
+                        )
+
+                    val syncResult =
+                        response.data?.toSyncResult()
+                            ?: throw DoRunException.DataError("서버 응답 데이터가 비어 있습니다.")
+
+                    DoRunResult.Success(syncResult)
+                } catch (e: Exception) {
+                    DoRunResult.Failure(DoRunException.DataError("네트워크 요청에 실패했습니다: ${e.message}"))
+                }
+            }
+
+        override suspend fun finish(sessionId: Long): DoRunResult<RunningSessionResult> =
+            withContext(Dispatchers.IO) {
+                try {
+                    val response =
+                        runningSessionDataSource.postFinishRunning(
+                            sessionId,
+                            MockRequestDataFactory.createMockFinishRunningRequest(),
+                        )
+
+                    val runningSessionResult =
+                        response.data?.toRunningSessionResult()
+                            ?: throw DoRunException.DataError("서버 응답 데이터가 비어 있습니다.")
+
+                    DoRunResult.Success(runningSessionResult)
+                } catch (e: Exception) {
+                    DoRunResult.Failure(DoRunException.DataError("네트워크 요청에 실패했습니다: ${e.message}"))
+                }
+            }
     }
-
-    override suspend fun saveRealtimeData(data: RealtimeRunningData): DoRunResult<SaveRealtimeRunningDataResult.LocalResult> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun saveSegmentData(sessionId: Long): DoRunResult<SaveRealtimeRunningDataResult.SyncResult> =
-        withContext(Dispatchers.IO) {
-            try {
-                val response = runningSessionDataSource.postSegmentData(
-                    sessionId,
-                    MockRequestDataFactory.createMockSaveSegmentRequest()
-                )
-
-                val syncResult = response.data?.toSyncResult()
-                    ?: throw DoRunException.DataError("서버 응답 데이터가 비어 있습니다.")
-
-                DoRunResult.Success(syncResult)
-            } catch (e: Exception) {
-                DoRunResult.Failure(DoRunException.DataError("네트워크 요청에 실패했습니다: ${e.message}"))
-            }
-        }
-
-    override suspend fun finish(sessionId: Long): DoRunResult<RunningSessionResult> =
-        withContext(Dispatchers.IO) {
-            try {
-                val response = runningSessionDataSource.postFinishRunning(
-                    sessionId,
-                    MockRequestDataFactory.createMockFinishRunningRequest()
-                )
-
-                val runningSessionResult = response.data?.toRunningSessionResult()
-                    ?: throw DoRunException.DataError("서버 응답 데이터가 비어 있습니다.")
-
-                DoRunResult.Success(runningSessionResult)
-            } catch (e: Exception) {
-                DoRunResult.Failure(DoRunException.DataError("네트워크 요청에 실패했습니다: ${e.message}"))
-            }
-        }
-}

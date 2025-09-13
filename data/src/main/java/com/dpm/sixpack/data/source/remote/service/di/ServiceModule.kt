@@ -15,15 +15,11 @@ import kotlin.jvm.java
 object ServiceModule {
     @Provides
     @Singleton
-    fun provideRunningGoalService(
-         retrofit: Retrofit,
-    ): RunningGoalService =
+    fun provideRunningGoalService(retrofit: Retrofit): RunningGoalService =
         retrofit.create(RunningGoalService::class.java)
 
     @Provides
     @Singleton
-    fun provideRunningSessionService(
-         retrofit: Retrofit,
-    ): RunningSessionService =
+    fun provideRunningSessionService(retrofit: Retrofit): RunningSessionService =
         retrofit.create(RunningSessionService::class.java)
 }

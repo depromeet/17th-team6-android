@@ -8,6 +8,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class StartRunningResponseDto(
     @SerialName("sessionId")
-    val sessionId: Long
+    val sessionId: Long,
 )
-

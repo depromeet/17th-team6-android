@@ -31,15 +31,14 @@ data class TodayGoalResponseDto(
     @SerialName("repeatType")
     val repeatType: String,
     @SerialName("repeatFrequency")
-    val repeatFrequency: Int
-){
-    fun toRunningGoal() : RunningGoal = RunningGoal(
-        id =  id,
-        title = title,
-        distance = distance,
-        duration = duration,
-        pace = pace,
-
-    )
+    val repeatFrequency: Int,
+) {
+    fun toRunningGoal(): RunningGoal =
+        RunningGoal(
+            id = id,
+            title = title,
+            distance = distance,
+            duration = duration,
+            pace = pace,
+        )
 }
-

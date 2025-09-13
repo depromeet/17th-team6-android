@@ -21,12 +21,13 @@ import javax.inject.Singleton
 object RetrofitModule {
     @Provides
     @Singleton
-    fun providesJson(): Json = Json {
-        ignoreUnknownKeys = true
-        explicitNulls = false
-        isLenient = true
-        prettyPrint = true
-    }
+    fun providesJson(): Json =
+        Json {
+            ignoreUnknownKeys = true
+            explicitNulls = false
+            isLenient = true
+            prettyPrint = true
+        }
 
     @Provides
     @Singleton
@@ -35,18 +36,17 @@ object RetrofitModule {
             level = HttpLoggingInterceptor.Level.BODY
         }
 
-
     @Provides
     @Singleton
-    fun providesOkHttpClient(
-        loggingInterceptor: HttpLoggingInterceptor,
-    ): OkHttpClient =
-        OkHttpClient.Builder().apply {
-            connectTimeout(10, TimeUnit.SECONDS)
-            writeTimeout(10, TimeUnit.SECONDS)
-            readTimeout(10, TimeUnit.SECONDS)
-            if (DEBUG) addInterceptor(loggingInterceptor)
-        }.build()
+    fun providesOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient =
+        OkHttpClient
+            .Builder()
+            .apply {
+                connectTimeout(10, TimeUnit.SECONDS)
+                writeTimeout(10, TimeUnit.SECONDS)
+                readTimeout(10, TimeUnit.SECONDS)
+                if (DEBUG) addInterceptor(loggingInterceptor)
+            }.build()
 
     @OptIn(ExperimentalSerializationApi::class)
     @Provides
@@ -55,11 +55,11 @@ object RetrofitModule {
         okHttpClient: OkHttpClient,
         json: Json,
     ): Retrofit =
-        Retrofit.Builder()
+        Retrofit
+            .Builder()
             .baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(
-                json.asConverterFactory("application/json".toMediaType())
-            )
-            .build()
+                json.asConverterFactory("application/json".toMediaType()),
+            ).build()
 }

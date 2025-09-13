@@ -10,21 +10,24 @@ import com.dpm.sixpack.data.source.remote.service.RunningSessionService
 import com.dpm.sixpack.data.source.remote.util.base.BaseResponse
 import javax.inject.Inject
 
-class RunningSessionDataSource @Inject constructor(
-    private val runningSessionService: RunningSessionService,
-) {
-    suspend fun postFinishRunning(
-        sessionId: Long,
-        finishRunningRequestDto: FinishRunningRequestDto
-    ): BaseResponse<FinishRunningResponseDto> =
-        runningSessionService.postFinishRunning(sessionId, finishRunningRequestDto)
+class RunningSessionDataSource
+    @Inject
+    constructor(
+        private val runningSessionService: RunningSessionService,
+    ) {
+        suspend fun postFinishRunning(
+            sessionId: Long,
+            finishRunningRequestDto: FinishRunningRequestDto,
+        ): BaseResponse<FinishRunningResponseDto> =
+            runningSessionService.postFinishRunning(sessionId, finishRunningRequestDto)
 
-    suspend fun postSegmentData(
-        sessionId: Long,
-        saveSegmentDataRequestsDto: SaveSegmentDataRequestsDto
-    ): BaseResponse<SaveSegmentResponseDto> =
-        runningSessionService.postSegmentData(sessionId, saveSegmentDataRequestsDto)
+        suspend fun postSegmentData(
+            sessionId: Long,
+            saveSegmentDataRequestsDto: SaveSegmentDataRequestsDto,
+        ): BaseResponse<SaveSegmentResponseDto> =
+            runningSessionService.postSegmentData(sessionId, saveSegmentDataRequestsDto)
 
-    suspend fun postStartRunning(startRunningRequestDto: StartRunningRequestDto): BaseResponse<StartRunningResponseDto> =
-        runningSessionService.postStartRunning(startRunningRequestDto)
-}
+        suspend fun postStartRunning(
+            startRunningRequestDto: StartRunningRequestDto,
+        ): BaseResponse<StartRunningResponseDto> = runningSessionService.postStartRunning(startRunningRequestDto)
+    }

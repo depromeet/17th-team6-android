@@ -8,5 +8,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class StartRunningRequestDto(
     @SerialName("goalPlanId")
-    val goalPlanId: Long
+    val goalPlanId: Long,
 )

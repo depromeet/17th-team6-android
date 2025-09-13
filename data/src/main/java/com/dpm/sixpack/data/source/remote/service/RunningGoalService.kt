@@ -7,9 +7,7 @@ import com.dpm.sixpack.data.source.remote.util.constant.ApiConstants.GOALS
 import com.dpm.sixpack.data.source.remote.util.constant.ApiConstants.RUNS
 import retrofit2.http.GET
 
-
 interface RunningGoalService {
-    @GET("${API}/${RUNS}/${GOALS}/latest")
-    suspend fun getTodayRunningGoal(
-    ): BaseResponse<TodayGoalResponseDto>
+    @GET("$API/$RUNS/$GOALS/latest")
+    suspend fun getTodayRunningGoal(): BaseResponse<TodayGoalResponseDto>
 }

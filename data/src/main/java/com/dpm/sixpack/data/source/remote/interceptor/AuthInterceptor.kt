@@ -5,15 +5,16 @@ import okhttp3.Response
 import timber.log.Timber
 import javax.inject.Inject
 
-class UserIdInterceptor @Inject constructor(
+class AuthInterceptor
+    @Inject
+    constructor(
 //        TODO UserPrefrence 구현
 //    private val userPreferenceRepository: UserPreferenceRepository,
-) : Interceptor {
+    ) : Interceptor {
+        override fun intercept(chain: Interceptor.Chain): Response {
+            val originalRequest = chain.request()
 
-    override fun intercept(chain: Interceptor.Chain): Response {
-        val originalRequest = chain.request()
-
-        val mockUserId = "1"
+            val mockUserId = "1"
 //        TODO UserPrefrence 구현
 //        val userId = runBlocking {
 //            userPreferenceRepository.userPreferencesFlow
@@ -21,22 +22,22 @@ class UserIdInterceptor @Inject constructor(
 //                .firstOrNull()
 //        }
 
-        Timber.d("UserIdInterceptor: Retrieved UserId -> $mockUserId")
+            Timber.d("UserIdInterceptor: Retrieved UserId -> $mockUserId")
 
-        val requestBuilder = originalRequest.newBuilder()
+            val requestBuilder = originalRequest.newBuilder()
 
-        requestBuilder.addHeader(X_USER_ID, mockUserId)
+            requestBuilder.addHeader(X_USER_ID, mockUserId)
 
-        //        TODO UserPrefrence 구현
+            //        TODO UserPrefrence 구현
 //        if (!userId.isNullOrBlank()) {
 //            requestBuilder.addHeader(X_USER_ID, userId)
 //        }
 
-        val newRequest = requestBuilder.build()
-        return chain.proceed(newRequest)
-    }
+            val newRequest = requestBuilder.build()
+            return chain.proceed(newRequest)
+        }
 
-    companion object {
-        private const val X_USER_ID = "X-User-Id"
+        companion object {
+            private const val X_USER_ID = "X-User-Id"
+        }
     }
-}

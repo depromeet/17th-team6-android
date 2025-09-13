@@ -15,22 +15,20 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface RunningSessionService {
-    @POST("${API}/${RUNS}/${SESSIONS}/{sessionId}/complete")
+    @POST("$API/$RUNS/$SESSIONS/{sessionId}/complete")
     suspend fun postFinishRunning(
         @Path("sessionId") sessionId: Long,
-        @Body finishRunningRequestDto: FinishRunningRequestDto
+        @Body finishRunningRequestDto: FinishRunningRequestDto,
     ): BaseResponse<FinishRunningResponseDto>
 
-
-    @POST("${API}/${RUNS}/${SESSIONS}/{sessionId}/segments")
+    @POST("$API/$RUNS/$SESSIONS/{sessionId}/segments")
     suspend fun postSegmentData(
         @Path("sessionId") sessionId: Long,
-        @Body saveSegmentDataRequestsDto: SaveSegmentDataRequestsDto
+        @Body saveSegmentDataRequestsDto: SaveSegmentDataRequestsDto,
     ): BaseResponse<SaveSegmentResponseDto>
 
-
-    @POST("${API}/${RUNS}/${SESSIONS}/start")
+    @POST("$API/$RUNS/$SESSIONS/start")
     suspend fun postStartRunning(
-        @Body startRunningRequestDto: StartRunningRequestDto
+        @Body startRunningRequestDto: StartRunningRequestDto,
     ): BaseResponse<StartRunningResponseDto>
 }
