@@ -6,32 +6,38 @@ import com.naver.maps.geometry.LatLng
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-sealed class RunningSessionUiState :
+data class RunningSessionUiState(
+    val state: RunningSessionState = RunningSessionState.Initial,
+    val isFollowingModeEnabled: Boolean = true
+) : Parcelable
+
+@Parcelize
+sealed class RunningSessionState :
     UiState,
     Parcelable {
-    data object Initial : RunningSessionUiState() // 러닝 시작 버튼만 떠있는 상태.
+    data object Initial : RunningSessionState() // 러닝 시작 버튼만 떠있는 상태.
 
     data class MainReady(
         val countdown: Int = INITIAL_COUNTDOWN,
-    ) : RunningSessionUiState()
+    ) : RunningSessionState()
 
     data class MainRunning(
         val mapUiState: MapUiState = MapUiState(),
         val recordUiState: RecordUiState = RecordUiState(),
-    ) : RunningSessionUiState()
+    ) : RunningSessionState()
 
     data class MainPause(
         val mapUiState: MapUiState = MapUiState(),
         val recordUiState: RecordUiState = RecordUiState(),
         val showExitConfirmUi: Boolean = false,
-    ) : RunningSessionUiState()
+    ) : RunningSessionState()
 
     data class CoolDownReady(
         val mapUiState: MapUiState = MapUiState(),
         val countdown: Int = INITIAL_COUNTDOWN,
-    ) : RunningSessionUiState()
+    ) : RunningSessionState()
 
-    data object Finished : RunningSessionUiState()
+    data object Finished : RunningSessionState()
 
     companion object {
         const val INITIAL_COUNTDOWN = 3
@@ -50,5 +56,5 @@ data class RecordUiState(
 data class MapUiState(
     val paceColors: List<List<ULong>> = listOf(),
     val path: List<List<LatLng>> = listOf(),
-    val isFollowingModeEnabled: Boolean = true,
+
 ) : Parcelable
