@@ -1,4 +1,4 @@
-package com.dpm.sixpack.data.source.remote.repository
+package com.dpm.sixpack.data.repository.di
 
 import com.dpm.sixpack.data.source.remote.dto.request.FinishRunningRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.LocationDataRequestDto
