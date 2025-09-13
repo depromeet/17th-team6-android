@@ -37,78 +37,82 @@ class RunningSessionRepositoryImpl
                 }
             }
 
-        override fun getRealtimeData(): Flow<DoRunResult<RealtimeRunningData>> = flow {
-            // 서울 시청 근처
-            var lat = 37.5665
-            var lon = 126.9780
-            var bearingDeg = 45.0               // 진행 방향(도)
-            var speed = 0.0f                    // m/s
-            var totalDistance = 0f              // m
-            var durationSec = 0                 // s
+        override fun getRealtimeData(): Flow<DoRunResult<RealtimeRunningData>> =
+            flow {
+                // 서울 시청 근처
+                var lat = 37.5665
+                var lon = 126.9780
+                var bearingDeg = 45.0 // 진행 방향(도)
+                var speed = 0.0f // m/s
+                var totalDistance = 0f // m
+                var durationSec = 0 // s
 
-            val targetSpeed = 3.2f              // m/s (약 5'12"/km)
-            val accelPerSec = 0.25f             // 웜업 가속
-            val rnd = Random(System.currentTimeMillis())
+                val targetSpeed = 3.2f // m/s (약 5'12"/km)
+                val accelPerSec = 0.25f // 웜업 가속
+                val rnd = Random(System.currentTimeMillis())
 
-            while (kotlin.coroutines.coroutineContext.isActive) {
-                kotlinx.coroutines.delay(1000L)
+                while (kotlin.coroutines.coroutineContext.isActive) {
+                    kotlinx.coroutines.delay(1000L)
 
-                // 1) 속도 업데이트: 웜업(+노이즈) + 클램프
-                if (speed < targetSpeed) speed += accelPerSec
-                speed += (rnd.nextFloat() - 0.5f) * 0.15f     // ±0.075 m/s
-                speed = speed.coerceIn(0f, 4.5f)
+                    // 1) 속도 업데이트: 웜업(+노이즈) + 클램프
+                    if (speed < targetSpeed) speed += accelPerSec
+                    speed += (rnd.nextFloat() - 0.5f) * 0.15f // ±0.075 m/s
+                    speed = speed.coerceIn(0f, 4.5f)
 
-                // 2) 진행 방향 살짝 흔들림
-                bearingDeg += (rnd.nextDouble() - 0.5) * 4.0  // ±2도
-                val bearingRad = Math.toRadians(bearingDeg)
+                    // 2) 진행 방향 살짝 흔들림
+                    bearingDeg += (rnd.nextDouble() - 0.5) * 4.0 // ±2도
+                    val bearingRad = Math.toRadians(bearingDeg)
 
-                // 3) 1초 이동 벡터(m)
-                val dt = 1.0
-                val dist = speed * dt.toFloat()               // m
-                val dNorth = dist * kotlin.math.cos(bearingRad).toFloat()
-                val dEast  = dist * kotlin.math.sin(bearingRad).toFloat()
+                    // 3) 1초 이동 벡터(m)
+                    val dt = 1.0
+                    val dist = speed * dt.toFloat() // m
+                    val dNorth = dist * kotlin.math.cos(bearingRad).toFloat()
+                    val dEast = dist * kotlin.math.sin(bearingRad).toFloat()
 
-                // 4) m → deg 변환
-                val latRad = Math.toRadians(lat)
-                val dLatDeg = dNorth / 111_320.0
-                val dLonDeg = dEast  / (111_320.0 * kotlin.math.cos(latRad))
+                    // 4) m → deg 변환
+                    val latRad = Math.toRadians(lat)
+                    val dLatDeg = dNorth / 111_320.0
+                    val dLonDeg = dEast / (111_320.0 * kotlin.math.cos(latRad))
 
-                // 5) 좌표 갱신
-                lat += dLatDeg
-                lon += dLonDeg
+                    // 5) 좌표 갱신
+                    lat += dLatDeg
+                    lon += dLonDeg
 
-                // 6) 거리 적산(좌표 기반)
-                totalDistance += dist
+                    // 6) 거리 적산(좌표 기반)
+                    totalDistance += dist
 
-                // 7) 케이던스(속도 연동) - 보폭(개인 편차 + 노이즈)
-                val baseStepLen = 1.0 + (rnd.nextDouble() - 0.5) * 0.2 // 0.9~1.1 m/step
-                val cadence = if (speed > 0.2f) {
-                    val spm = (speed / baseStepLen) * 60.0
-                    spm.coerceIn(140.0, 190.0).toInt() // 현실 범위
-                } else 0
+                    // 7) 케이던스(속도 연동) - 보폭(개인 편차 + 노이즈)
+                    val baseStepLen = 1.0 + (rnd.nextDouble() - 0.5) * 0.2 // 0.9~1.1 m/step
+                    val cadence =
+                        if (speed > 0.2f) {
+                            val spm = (speed / baseStepLen) * 60.0
+                            spm.coerceIn(140.0, 190.0).toInt() // 현실 범위
+                        } else {
+                            0
+                        }
 
-                // 8) 페이스(sec/km)
-                val pace = if (speed > 0.3f) (1000.0 / speed).toInt() else 0
+                    // 8) 페이스(sec/km)
+                    val pace = if (speed > 0.3f) (1000.0 / speed).toInt() else 0
 
-                // 9) 해발/잔노이즈
-                val altitude = 25.0 + (rnd.nextDouble() - 0.5) * 0.8
+                    // 9) 해발/잔노이즈
+                    val altitude = 25.0 + (rnd.nextDouble() - 0.5) * 0.8
 
-                val data = RealtimeRunningData(
-                    latitude = lat,
-                    longitude = lon,
-                    altitude = altitude,
-                    speed = speed,                // m/s (API 보낼 땐 km/h로 변환!)
-                    pace = pace,                  // sec/km
-                    cadence = cadence,            // spm
-                    totalDistanceMeter = totalDistance,
-                    timestamp = System.currentTimeMillis(),
-                    duration = durationSec++      // 누적 러닝 시간(초)
-                )
+                    val data =
+                        RealtimeRunningData(
+                            latitude = lat,
+                            longitude = lon,
+                            altitude = altitude,
+                            speed = speed, // m/s (API 보낼 땐 km/h로 변환!)
+                            pace = pace, // sec/km
+                            cadence = cadence, // spm
+                            totalDistanceMeter = totalDistance,
+                            timestamp = System.currentTimeMillis(),
+                            duration = durationSec++, // 누적 러닝 시간(초)
+                        )
 
-                emit(DoRunResult.Success(data))
+                    emit(DoRunResult.Success(data))
+                }
             }
-        }
-
 
         override suspend fun saveRealtimeData(
             data: RealtimeRunningData,

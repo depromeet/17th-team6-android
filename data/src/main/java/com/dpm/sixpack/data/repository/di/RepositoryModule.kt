@@ -24,5 +24,4 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindsRunningSessionRepository(repositoryImpl: RunningSessionRepositoryImpl): RunningSessionRepository
-
 }
