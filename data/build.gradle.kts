@@ -9,7 +9,7 @@ android {
 dependencies {
     implementation(project(":domain"))
     implementation(project(":core"))
-    implementation(project(":RunningService"))
+    implementation(project(":background"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)

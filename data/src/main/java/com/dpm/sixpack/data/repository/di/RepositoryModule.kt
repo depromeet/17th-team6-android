@@ -1,0 +1,17 @@
+package com.dpm.sixpack.data.repository.di
+
+import com.dpm.sixpack.data.repository.RunningRepositoryImpl
+import com.dpm.sixpack.domain.repository.RunningRepository
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class RepositoryModule {
+    @Binds
+    @Singleton
+    abstract fun bindRunningRepository(runningRepository: RunningRepositoryImpl): RunningRepository
+}

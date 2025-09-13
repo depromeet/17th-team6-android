@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.dpm.sixpack.SixPackAppState
-import com.dpm.sixpack.presentation.map.navigation.addMapNavGraph
+import com.dpm.sixpack.presentation.routes.map.navigation.addMapNavGraph
 
 @Composable
 internal fun MainNavHost(

@@ -5,8 +5,8 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import com.dpm.sixpack.data.util.NetworkMonitor
-import com.dpm.sixpack.data.util.TimeZoneMonitor
+import com.dpm.sixpack.core.util.NetworkMonitor
+import com.dpm.sixpack.core.util.TimeZoneMonitor
 import com.dpm.sixpack.main.navigation.MainNavigator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted

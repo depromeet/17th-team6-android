@@ -5,8 +5,15 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed interface Route {
     @Serializable
-    data object Example : Route
+    data object Map : Route
+}
+
+@Serializable
+sealed interface MapRoute {
 
     @Serializable
-    data object Map : Route
+    data object Record : MapRoute
+
+    @Serializable
+    data object Setting: MapRoute
 }

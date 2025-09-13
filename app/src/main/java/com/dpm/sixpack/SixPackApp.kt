@@ -2,7 +2,7 @@ package com.dpm.sixpack
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.dpm.sixpack.presentation.map.navermap.AppInitializer
+import com.dpm.sixpack.initializer.Initializer
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 import javax.inject.Inject
@@ -10,7 +10,7 @@ import javax.inject.Inject
 @HiltAndroidApp
 class SixPackApp : Application() {
     @Inject
-    lateinit var initializers: AppInitializer
+    lateinit var initializers: Initializer
 
     override fun onCreate() {
         super.onCreate()

@@ -8,8 +8,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dpm.sixpack.LocalTimeZone
-import com.dpm.sixpack.data.util.NetworkMonitor
-import com.dpm.sixpack.data.util.TimeZoneMonitor
+import com.dpm.sixpack.core.util.NetworkMonitor
+import com.dpm.sixpack.core.util.TimeZoneMonitor
 import com.dpm.sixpack.main.navigation.rememberMainNavigator
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 import com.dpm.sixpack.rememberSixPackAppState
