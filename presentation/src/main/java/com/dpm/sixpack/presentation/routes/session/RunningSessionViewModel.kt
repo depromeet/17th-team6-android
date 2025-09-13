@@ -36,7 +36,7 @@ class RunningSessionViewModel @Inject constructor(
     val todayRunData = RunningGoal(
         id = 0L,
         title = "3주차 2회차 러닝",
-        distance = 15_000.0,
+        distance = 15_000,
         duration = 3_600,
         pace = 300,
     )
@@ -56,12 +56,13 @@ class RunningSessionViewModel @Inject constructor(
             RunningSessionIntent.CancelFinish -> handleCancelFinish()
             RunningSessionIntent.Finish -> handleFinish()
             RunningSessionIntent.ConfirmFinish -> handleConfirmFinish()
+            RunningSessionIntent.ToggleFollowingMode -> handleToggleFollowingMode()
         }
     }
 
     private fun handleStart() {
         viewModelScope.launch {
-            cachedSessionId = startRunningUseCase()
+            cachedSessionId = startRunningUseCase(todayRunData.id)
             intent {
                 var timer = 0
                 repeat(INITIAL_COUNTDOWN) {
@@ -223,6 +224,16 @@ class RunningSessionViewModel @Inject constructor(
                         timer++
                     }
                 }
+            }
+        }
+    }
+
+    fun handleToggleFollowingMode() {
+        intent {
+            reduce {
+                state.copy(
+                    isFollowingModeEnabled = !state.isFollowingModeEnabled
+                )
             }
         }
     }
