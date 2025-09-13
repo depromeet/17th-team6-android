@@ -9,12 +9,10 @@ import kotlinx.parcelize.Parcelize
 data class RunningSessionUiState(
     val state: RunningSessionState = RunningSessionState.Initial,
     val isFollowingModeEnabled: Boolean = true
-) : Parcelable
+) : UiState, Parcelable
 
 @Parcelize
-sealed class RunningSessionState :
-    UiState,
-    Parcelable {
+sealed class RunningSessionState : Parcelable {
     data object Initial : RunningSessionState() // 러닝 시작 버튼만 떠있는 상태.
 
     data class MainReady(
@@ -57,4 +55,4 @@ data class MapUiState(
     val paceColors: List<List<ULong>> = listOf(),
     val path: List<List<LatLng>> = listOf(),
 
-) : Parcelable
+    ) : Parcelable

@@ -3,7 +3,7 @@ package com.dpm.sixpack.presentation.routes.session
 import androidx.lifecycle.SavedStateHandle
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionIntent
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionSideEffect
-import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionState
+import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionUiState
 import com.dpm.sixpack.presentation.util.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
@@ -13,10 +13,10 @@ import javax.inject.Inject
 @HiltViewModel
 class RunningSessionViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-) : BaseViewModel<RunningSessionState, RunningSessionIntent, RunningSessionSideEffect>() {
-    override val initialState: RunningSessionState = RunningSessionState.Initial
+) : BaseViewModel<RunningSessionUiState, RunningSessionIntent, RunningSessionSideEffect>() {
+    override val initialState: RunningSessionUiState = RunningSessionUiState()
 
-    override val container: Container<RunningSessionState, RunningSessionSideEffect> =
+    override val container: Container<RunningSessionUiState, RunningSessionSideEffect> =
         container(initialState = initialState, savedStateHandle = savedStateHandle)
 
     override fun onIntent(intent: RunningSessionIntent) {
