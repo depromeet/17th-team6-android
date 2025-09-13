@@ -18,7 +18,6 @@ class SaveRealtimeRunningDataUseCase @Inject constructor(
 
 sealed class SaveRealtimeRunningDataParam {
     data class LocalParam(
-        val sessionId: Long,
         val data: RealtimeRunningData
     ) : SaveRealtimeRunningDataParam()
 
