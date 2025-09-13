@@ -1,4 +1,4 @@
-package com.dpm.sixpack.data.source.remote.dto.response
+package com.dpm.sixpack.data.source.remote.dto.request
 
 import android.annotation.SuppressLint
 import kotlinx.serialization.SerialName
@@ -6,19 +6,7 @@ import kotlinx.serialization.Serializable
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
-data class CompleteRunningResponseDto(
-    @SerialName("id")
-    val id: Long,
-    @SerialName("createdAt")
-    val createdAt: String,
-    @SerialName("updatedAt")
-    val updatedAt: String,
-    @SerialName("finalGoalId")
-    val finalGoalId: Long,
-    @SerialName("clearedAt")
-    val clearedAt: String? = null,
-    @SerialName("roundCount")
-    val roundCount: Int,
+data class FinishRunningRequestDto(
     @SerialName("totalDistance")
     val totalDistance: Long,
     @SerialName("totalDuration")
