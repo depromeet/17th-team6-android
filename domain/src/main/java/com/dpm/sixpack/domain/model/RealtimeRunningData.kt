@@ -8,5 +8,6 @@ data class RealtimeRunningData(
     val pace: Int, // 페이스 (예: "5'30\"")
     val cadence: Int, // 케이던스 (steps per minute)
     val totalDistanceMeter: Float, // 누적 거리 (m)
+    val duration: Int, // 누적 시간 (초)
     val timestamp: Long, // currentTimeMillis
 )

@@ -11,7 +11,7 @@ import javax.inject.Singleton
 class GetRealtimeRunningDataUseCase @Inject constructor(
     private val repository: RunningSessionRepository
 ) {
-    suspend operator fun invoke(): Flow<DoRunResult<RealtimeRunningData>> {
+    operator fun invoke(): Flow<DoRunResult<RealtimeRunningData>> {
         return repository.getRealtimeData()
     }
 }
