@@ -14,7 +14,8 @@ data class RunningSessionUiState(
 
 @Parcelize
 sealed class RunningSessionState : Parcelable {
-    data object Initial : RunningSessionState() // 러닝 시작 버튼만 떠있는 상태.
+    // 러닝 시작 버튼만 떠있는 상태.
+    data object Initial : RunningSessionState()
 
     data class MainReady(
         val countdown: Int = INITIAL_COUNTDOWN,
@@ -45,10 +46,14 @@ sealed class RunningSessionState : Parcelable {
 
 @Parcelize
 data class RecordUiState(
-    val currentDistance: String = "", // 1.50km
-    val remainingDuration: String = "", // 00:32:10
-    val avgPace: String = "", // 5'30"
-    val cadence: String = "", // 180
+    // 1.50km
+    val currentDistance: String = "",
+    // 00:32:10
+    val remainingDuration: String = "",
+    // 5'30"
+    val avgPace: String = "",
+    // 180
+    val cadence: String = "",
 ) : Parcelable
 
 @Parcelize

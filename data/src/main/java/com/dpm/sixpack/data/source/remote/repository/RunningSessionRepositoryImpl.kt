@@ -34,7 +34,7 @@ class RunningSessionRepositoryImpl
                 }
             }
 
-        override suspend fun getRealtimeData(): Flow<DoRunResult<RealtimeRunningData>> {
+        override fun getRealtimeData(): Flow<DoRunResult<RealtimeRunningData>> {
             TODO("Not yet implemented")
         }
 

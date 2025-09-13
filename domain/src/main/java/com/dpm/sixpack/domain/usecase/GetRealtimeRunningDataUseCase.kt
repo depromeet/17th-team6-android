@@ -13,5 +13,5 @@ class GetRealtimeRunningDataUseCase
     constructor(
         private val repository: RunningSessionRepository,
     ) {
-        suspend operator fun invoke(): Flow<DoRunResult<RealtimeRunningData>> = repository.getRealtimeData()
+        operator fun invoke(): Flow<DoRunResult<RealtimeRunningData>> = repository.getRealtimeData()
     }
