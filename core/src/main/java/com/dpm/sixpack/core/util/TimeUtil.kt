@@ -1,7 +1,5 @@
 package com.dpm.sixpack.core.util
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import java.time.Duration
 
 object TimeUtil {

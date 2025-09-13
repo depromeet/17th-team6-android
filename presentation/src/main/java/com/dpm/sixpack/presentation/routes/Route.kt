@@ -10,10 +10,9 @@ sealed interface Route {
 
 @Serializable
 sealed interface MapRoute {
-
     @Serializable
     data object Record : MapRoute
 
     @Serializable
-    data object Setting: MapRoute
+    data object Setting : MapRoute
 }

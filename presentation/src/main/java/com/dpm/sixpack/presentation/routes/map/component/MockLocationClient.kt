@@ -44,25 +44,27 @@ class MockLocationClient(
         converter: (T) -> Location,
     ) {
         stop()
-        simulationJob = scope.launch {
-            try {
-                fusedLocationClient.setMockMode(true)
-                Timber.tag("MockLocationClient").d("Mock mode enabled.")
+        simulationJob =
+            scope.launch {
+                try {
+                    fusedLocationClient.setMockMode(true)
+                    Timber.tag("MockLocationClient").d("Mock mode enabled.")
 
-                for (point in path) {
-                    val mockLocation = converter(point)
+                    for (point in path) {
+                        val mockLocation = converter(point)
 
-                    fusedLocationClient.setMockLocation(mockLocation)
-                    Timber.tag("MockLocationClient")
-                        .d("Set mock location to: ${mockLocation.latitude}, ${mockLocation.longitude}")
+                        fusedLocationClient.setMockLocation(mockLocation)
+                        Timber
+                            .tag("MockLocationClient")
+                            .d("Set mock location to: ${mockLocation.latitude}, ${mockLocation.longitude}")
 
-                    delay(delayMillis)
+                        delay(delayMillis)
+                    }
+                } finally {
+                    stopMockMode()
+                    Timber.tag("MockLocationClient").d("Simulation finished or stopped.")
                 }
-            } finally {
-                stopMockMode()
-                Timber.tag("MockLocationClient").d("Simulation finished or stopped.")
             }
-        }
     }
 
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
@@ -70,13 +72,12 @@ class MockLocationClient(
         fusedLocationClient.setMockMode(false)
     }
 
-    private fun LatLng.toMockLocation(): Location {
-        return Location("MockProvider").apply {
+    private fun LatLng.toMockLocation(): Location =
+        Location("MockProvider").apply {
             latitude = this@toMockLocation.latitude
             longitude = this@toMockLocation.longitude
             accuracy = 1.0f
             time = System.currentTimeMillis()
             elapsedRealtimeNanos = SystemClock.elapsedRealtimeNanos()
         }
-    }
 }

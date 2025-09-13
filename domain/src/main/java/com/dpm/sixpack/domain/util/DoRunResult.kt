@@ -10,12 +10,16 @@ sealed class DoRunResult<out T> {
     /**
      * 성공 케이스
      */
-    data class Success<T>(val data: T) : DoRunResult<T>()
+    data class Success<T>(
+        val data: T,
+    ) : DoRunResult<T>()
 
     /**
      * 실패 케이스
      */
-    data class Failure(val exception: DoRunException) : DoRunResult<Nothing>()
+    data class Failure(
+        val exception: DoRunException,
+    ) : DoRunResult<Nothing>()
 
     /**
      * 성공 여부 확인
@@ -32,18 +36,20 @@ sealed class DoRunResult<out T> {
     /**
      * 성공 데이터 반환 (실패시 null)
      */
-    fun getOrNull(): T? = when (this) {
-        is Success -> data
-        is Failure -> null
-    }
+    fun getOrNull(): T? =
+        when (this) {
+            is Success -> data
+            is Failure -> null
+        }
 
     /**
      * 성공시 변환 수행
      */
-    inline fun <R> map(transform: (T) -> R): DoRunResult<R> = when (this) {
-        is Success -> Success(transform(data))
-        is Failure -> this
-    }
+    inline fun <R> map(transform: (T) -> R): DoRunResult<R> =
+        when (this) {
+            is Success -> Success(transform(data))
+            is Failure -> this
+        }
 
     /**
      * 성공시 액션 수행
@@ -66,10 +72,10 @@ sealed class DoRunResult<out T> {
      */
     inline fun <R> fold(
         onSuccess: (T) -> R,
-        onError: (DoRunException) -> R
-    ): R = when (this) {
-        is Success -> onSuccess(data)
-        is Failure -> onError(exception)
-    }
+        onError: (DoRunException) -> R,
+    ): R =
+        when (this) {
+            is Success -> onSuccess(data)
+            is Failure -> onError(exception)
+        }
 }
-

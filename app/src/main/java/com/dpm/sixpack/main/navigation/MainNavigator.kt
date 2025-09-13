@@ -9,8 +9,8 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.dpm.sixpack.presentation.routes.map.navigation.navigateMap
 import com.dpm.sixpack.presentation.routes.Route
+import com.dpm.sixpack.presentation.routes.map.navigation.navigateMap
 
 class MainNavigator(
     val navController: NavHostController,

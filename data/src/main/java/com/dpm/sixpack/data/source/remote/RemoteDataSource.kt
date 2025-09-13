@@ -4,5 +4,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class RemoteDataSource @Inject constructor() {
-}
+class RemoteDataSource
+    @Inject
+    constructor()
