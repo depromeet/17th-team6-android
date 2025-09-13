@@ -21,6 +21,7 @@ android {
 
     defaultConfig {
         buildConfigField("String", "NAVERMAP_CLIENT_ID", "\"${properties.getProperty("NAVERMAP_CLIENT_ID")}\"")
+        buildConfigField("String", "BASE_URL", "\"${properties.getProperty("BASE_URL")}\"")
     }
 }
 
