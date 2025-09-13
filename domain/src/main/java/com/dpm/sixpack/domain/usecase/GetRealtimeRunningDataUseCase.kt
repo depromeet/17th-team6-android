@@ -8,10 +8,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class GetRealtimeRunningDataUseCase @Inject constructor(
-    private val repository: RunningSessionRepository
-) {
-    operator fun invoke(): Flow<DoRunResult<RealtimeRunningData>> {
-        return repository.getRealtimeData()
+class GetRealtimeRunningDataUseCase
+    @Inject
+    constructor(
+        private val repository: RunningSessionRepository,
+    ) {
+        operator fun invoke(): Flow<DoRunResult<RealtimeRunningData>> = repository.getRealtimeData()
     }
-}
