@@ -8,8 +8,9 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class RunningSessionUiState(
     val state: RunningSessionState = RunningSessionState.Initial,
-    val isFollowingModeEnabled: Boolean = true
-) : UiState, Parcelable
+    val isFollowingModeEnabled: Boolean = true,
+) : UiState,
+    Parcelable
 
 @Parcelize
 sealed class RunningSessionState : Parcelable {
@@ -54,5 +55,4 @@ data class RecordUiState(
 data class MapUiState(
     val paceColors: List<List<ULong>> = listOf(),
     val path: List<List<LatLng>> = listOf(),
-
-    ) : Parcelable
+) : Parcelable

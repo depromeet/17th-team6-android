@@ -14,4 +14,3 @@ class GetRealtimeRunningDataUseCase @Inject constructor(
     operator fun invoke(): Flow<DoRunResult<RealtimeRunningData>> {
         return repository.getRealtimeData()
     }
-}
