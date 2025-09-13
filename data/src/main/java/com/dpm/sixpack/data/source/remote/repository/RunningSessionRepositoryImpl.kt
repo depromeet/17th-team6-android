@@ -1,6 +1,7 @@
 package com.dpm.sixpack.data.source.remote.repository
 
 import com.dpm.sixpack.data.source.remote.datasoruce.RunningSessionDataSource
+import com.dpm.sixpack.data.source.remote.dto.request.StartRunningRequestDto
 import com.dpm.sixpack.domain.exception.DoRunException
 import com.dpm.sixpack.domain.model.RealtimeRunningData
 import com.dpm.sixpack.domain.model.RunningSessionResult
@@ -15,10 +16,11 @@ import javax.inject.Inject
 class RunningSessionRepositoryImpl @Inject constructor(
     private val runningSessionDataSource: RunningSessionDataSource
 ) : RunningSessionRepository {
-    override suspend fun start(): DoRunResult<Long> =
+    override suspend fun start(goalPlanId: Long): DoRunResult<Long> =
         withContext(Dispatchers.IO) {
             try {
-                val response = runningSessionDataSource.postStartRunning()
+                val response =
+                    runningSessionDataSource.postStartRunning(StartRunningRequestDto(goalPlanId))
 
                 val sessionId = response.data?.sessionId
                     ?: throw DoRunException.DataError("서버 응답 데이터가 비어 있습니다.")

@@ -11,7 +11,9 @@ data class SaveSegmentDataRequestsDto(
     @SerialName("segments")
     val segment: List<LocationDataRequestDto>,
     @SerialName("isStopped")
-    val isStopped: Boolean
+    val isStopped: Boolean,
+    @SerialName("isEnded")
+    val isEnded: Boolean
 )
 
 @SuppressLint("UnsafeOptInUsageError")

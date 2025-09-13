@@ -6,8 +6,8 @@ import javax.inject.Inject
 class StartRunningUseCase @Inject constructor(
     private val repository: RunningSessionRepository
 ) {
-    suspend operator fun invoke(): Long {
-        repository.start()
+    suspend operator fun invoke(goalPlanId: Long): Long {
+        repository.start(goalPlanId)
         return 1L
     }
 }
