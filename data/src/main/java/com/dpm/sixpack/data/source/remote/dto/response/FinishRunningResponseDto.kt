@@ -20,9 +20,9 @@ data class FinishRunningResponseDto(
     @SerialName("roundCount")
     val roundCount: Int,
     @SerialName("totalDistance")
-    val totalDistance: Long,
+    val totalDistance: Double,
     @SerialName("totalDuration")
-    val totalDuration: Long,
+    val totalDuration: Int,
     @SerialName("avgPace")
     val avgPace: Int,
     @SerialName("avgCadence")

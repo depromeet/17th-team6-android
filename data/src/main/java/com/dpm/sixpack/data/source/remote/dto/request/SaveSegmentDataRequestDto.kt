@@ -28,7 +28,7 @@ data class LocationDataRequestDto(
     @SerialName("cadence")
     val cadence: Int,
     @SerialName("distance")
-    val distance: Long,
+    val distance: Double,
     @SerialName("time")
     val time: String
 )
