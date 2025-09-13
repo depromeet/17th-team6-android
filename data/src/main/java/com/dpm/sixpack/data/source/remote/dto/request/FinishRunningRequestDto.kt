@@ -8,13 +8,13 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class FinishRunningRequestDto(
     @SerialName("totalDistance")
-    val totalDistance: Double,
+    val totalDistance: Int,
     @SerialName("totalDuration")
     val totalDuration: Int,
     @SerialName("avgPace")
     val avgPace: Int,
     @SerialName("avgCadence")
-    val avgCadence: Int,
+    val avgCadence: Long,
     @SerialName("maxCadence")
     val maxCadence: Int
 )

@@ -9,7 +9,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class SaveSegmentDataRequestsDto(
     @SerialName("segments")
-    val segment: List<LocationDataRequestDto>
+    val segment: List<LocationDataRequestDto>,
+    @SerialName("isStopped")
+    val isStopped: Boolean
 )
 
 @SuppressLint("UnsafeOptInUsageError")
@@ -26,9 +28,9 @@ data class LocationDataRequestDto(
     @SerialName("pace")
     val pace: Int,
     @SerialName("cadence")
-    val cadence: Int,
+    val cadence: Long,
     @SerialName("distance")
-    val distance: Double,
+    val distance: Int,
     @SerialName("time")
     val time: String
 )

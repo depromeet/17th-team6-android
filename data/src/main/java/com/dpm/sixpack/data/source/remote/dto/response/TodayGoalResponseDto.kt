@@ -25,7 +25,7 @@ data class TodayGoalResponseDto(
     @SerialName("pace")
     val pace: Int,
     @SerialName("distance")
-    val distance: Double,
+    val distance: Int,
     @SerialName("duration")
     val duration: Int,
     @SerialName("repeatType")
