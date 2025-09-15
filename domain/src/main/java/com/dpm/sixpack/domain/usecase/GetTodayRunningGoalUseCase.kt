@@ -10,6 +10,6 @@ class GetTodayRunningGoalUseCase
     constructor(
         private val runningGoalRepository: RunningGoalRepository,
     ) {
-        suspend operator fun invoke(userId: Long): DoRunResult<RunningGoal> =
-            runningGoalRepository.getTodayRunningGoal(userId = userId)
+        suspend operator fun invoke(): DoRunResult<RunningGoal> =
+            runningGoalRepository.getTodayRunningGoal()
     }

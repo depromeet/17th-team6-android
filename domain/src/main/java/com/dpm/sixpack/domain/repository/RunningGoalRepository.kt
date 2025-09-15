@@ -4,5 +4,5 @@ import com.dpm.sixpack.domain.model.RunningGoal
 import com.dpm.sixpack.domain.util.DoRunResult
 
 interface RunningGoalRepository {
-    suspend fun getTodayRunningGoal(userId: Long): DoRunResult<RunningGoal>
+    suspend fun getTodayRunningGoal(): DoRunResult<RunningGoal>
 }
