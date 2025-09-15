@@ -179,6 +179,7 @@ class RunningSessionRepositoryImpl
                         response.data?.toRunningSessionResult()
                             ?: throw DoRunException.DataError("서버 응답 데이터가 비어 있습니다.")
 
+                    userPreferenceRepository.clearSessionId()
                     DoRunResult.Success(runningSessionResult)
                 } catch (e: Exception) {
                     DoRunResult.Failure(DoRunException.DataError("네트워크 요청에 실패했습니다: ${e.message}"))

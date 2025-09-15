@@ -24,4 +24,8 @@ class UserPreferenceRepositoryImpl @Inject constructor(
     override suspend fun updateSessionId(sessionId: Long) {
         userPreferenceDataSource.updateSessionId(sessionId = sessionId)
     }
+
+    override suspend fun clearSessionId() {
+        userPreferenceDataSource.clearSessionId()
+    }
 }

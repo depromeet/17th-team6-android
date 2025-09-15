@@ -5,4 +5,5 @@ interface UserPreferenceRepository {
     suspend fun getSessionId(): Long?
     suspend fun updateUserId(userId: Long)
     suspend fun updateSessionId(sessionId: Long)
+    suspend fun clearSessionId()
 }
