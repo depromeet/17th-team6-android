@@ -26,7 +26,7 @@ data class SixPackColors(
 
 val SixPackLightColors =
     SixPackColors(
-        primary = Color(0xFF6750A4),
+        primary = Color(0xFF3E4FFF),
         onPrimary = Color.White,
         secondary = Color(0xFF625B71),
         onSecondary = Color.White,
@@ -47,7 +47,7 @@ val SixPackLightColors =
 
 val SixPackDarkColors =
     SixPackColors(
-        primary = Color(0xFFD0BCFF),
+        primary = Color(0xFF3E4FFF),
         onPrimary = Color(0xFF381E72),
         secondary = Color(0xFFCCC2DC),
         onSecondary = Color(0xFF332D41),
