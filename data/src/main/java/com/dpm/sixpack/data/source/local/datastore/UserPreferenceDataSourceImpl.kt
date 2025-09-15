@@ -4,15 +4,15 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
-import com.dpm.sixpack.data.source.local.datastore.api.PreferenceDataSource
+import com.dpm.sixpack.data.source.local.datastore.api.UserPreferenceDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class PreferenceDataSourceImpl
+class UserPreferenceDataSourceImpl
 @Inject constructor(
     private val dataStore: DataStore<Preferences>,
-) : PreferenceDataSource {
+) : UserPreferenceDataSource {
 
     override val userId: Flow<Long> = dataStore.data.map { preferences ->
         preferences[USER_ID] ?: 1L

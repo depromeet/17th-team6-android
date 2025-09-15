@@ -2,7 +2,7 @@ package com.dpm.sixpack.data.source.local.datastore.api
 
 import kotlinx.coroutines.flow.Flow
 
-interface PreferenceDataSource {
+interface UserPreferenceDataSource {
     val userId: Flow<Long>
 
     val sessionId: Flow<Long>
