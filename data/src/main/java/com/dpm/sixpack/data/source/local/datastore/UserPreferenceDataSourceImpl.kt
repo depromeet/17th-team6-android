@@ -8,17 +8,18 @@ import com.dpm.sixpack.data.source.local.datastore.api.UserPreferenceDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import javax.inject.Named
 
 class UserPreferenceDataSourceImpl
 @Inject constructor(
-    private val dataStore: DataStore<Preferences>,
+    @Named("user") private val dataStore: DataStore<Preferences>,
 ) : UserPreferenceDataSource {
 
     override val userId: Flow<Long> = dataStore.data.map { preferences ->
         preferences[USER_ID] ?: 1L
     }
 
-    override val sessionId: Flow<Long> = dataStore.data.map{ preferences ->
+    override val sessionId: Flow<Long> = dataStore.data.map { preferences ->
         preferences[SESSION_ID] ?: 1L
     }
 
