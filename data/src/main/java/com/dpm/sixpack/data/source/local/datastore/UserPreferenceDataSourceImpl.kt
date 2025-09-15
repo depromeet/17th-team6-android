@@ -16,11 +16,11 @@ class UserPreferenceDataSourceImpl
 ) : UserPreferenceDataSource {
 
     override val userId: Flow<Long> = dataStore.data.map { preferences ->
-        preferences[USER_ID] ?: 1L
+        preferences[USER_ID] ?: -1L
     }
 
-    override val sessionId: Flow<Long> = dataStore.data.map { preferences ->
-        preferences[SESSION_ID] ?: 1L
+    override val sessionId: Flow<Long?> = dataStore.data.map { preferences ->
+        preferences[SESSION_ID]
     }
 
     override suspend fun updateUserId(userId: Long) {
@@ -32,6 +32,12 @@ class UserPreferenceDataSourceImpl
     override suspend fun updateSessionId(sessionId: Long) {
         dataStore.edit { preferences ->
             preferences[SESSION_ID] = sessionId
+        }
+    }
+
+    override suspend fun clearSessionId() {
+        dataStore.edit { preferences ->
+            preferences.remove(SESSION_ID)
         }
     }
 

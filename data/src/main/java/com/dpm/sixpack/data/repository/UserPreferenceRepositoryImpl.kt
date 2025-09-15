@@ -3,6 +3,7 @@ package com.dpm.sixpack.data.repository
 import com.dpm.sixpack.data.source.local.datastore.api.UserPreferenceDataSource
 import com.dpm.sixpack.domain.repository.UserPreferenceRepository
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
 class UserPreferenceRepositoryImpl @Inject constructor(
@@ -13,7 +14,7 @@ class UserPreferenceRepositoryImpl @Inject constructor(
     override suspend fun getUserId(): Long = userId.first()
 
 
-    override suspend fun getSessionId(): Long = sessionId.first()
+    override suspend fun getSessionId(): Long? = sessionId.firstOrNull()
 
 
     override suspend fun updateUserId(userId: Long) {
@@ -22,6 +23,5 @@ class UserPreferenceRepositoryImpl @Inject constructor(
 
     override suspend fun updateSessionId(sessionId: Long) {
         userPreferenceDataSource.updateSessionId(sessionId = sessionId)
-
     }
 }
