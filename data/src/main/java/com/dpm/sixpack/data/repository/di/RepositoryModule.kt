@@ -1,6 +1,8 @@
 package com.dpm.sixpack.data.repository.di
 
+import com.dpm.sixpack.data.repository.RunningGoalRepositoryImpl
 import com.dpm.sixpack.data.repository.RunningRepositoryImpl
+import com.dpm.sixpack.data.repository.RunningSessionRepositoryImpl
 import com.dpm.sixpack.domain.repository.RunningGoalRepository
 import com.dpm.sixpack.domain.repository.RunningRepository
 import com.dpm.sixpack.domain.repository.RunningSessionRepository

@@ -1,5 +1,6 @@
-package com.dpm.sixpack.data.repository.di
+package com.dpm.sixpack.data.repository
 
+import com.dpm.sixpack.data.repository.di.MockRequestDataFactory
 import com.dpm.sixpack.data.source.remote.datasoruce.RunningSessionDataSource
 import com.dpm.sixpack.data.source.remote.dto.request.StartRunningRequestDto
 import com.dpm.sixpack.domain.exception.DoRunException
@@ -9,11 +10,15 @@ import com.dpm.sixpack.domain.repository.RunningSessionRepository
 import com.dpm.sixpack.domain.usecase.SaveRealtimeRunningDataResult
 import com.dpm.sixpack.domain.util.DoRunResult
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.coroutines.coroutineContext
+import kotlin.math.cos
+import kotlin.math.sin
 import kotlin.random.Random
 
 class RunningSessionRepositoryImpl
@@ -51,8 +56,8 @@ class RunningSessionRepositoryImpl
                 val accelPerSec = 0.25f // 웜업 가속
                 val rnd = Random(System.currentTimeMillis())
 
-                while (kotlin.coroutines.coroutineContext.isActive) {
-                    kotlinx.coroutines.delay(1000L)
+                while (coroutineContext.isActive) {
+                    delay(1000L)
 
                     // 1) 속도 업데이트: 웜업(+노이즈) + 클램프
                     if (speed < targetSpeed) speed += accelPerSec
@@ -66,13 +71,13 @@ class RunningSessionRepositoryImpl
                     // 3) 1초 이동 벡터(m)
                     val dt = 1.0
                     val dist = speed * dt.toFloat() // m
-                    val dNorth = dist * kotlin.math.cos(bearingRad).toFloat()
-                    val dEast = dist * kotlin.math.sin(bearingRad).toFloat()
+                    val dNorth = dist * cos(bearingRad).toFloat()
+                    val dEast = dist * sin(bearingRad).toFloat()
 
                     // 4) m → deg 변환
                     val latRad = Math.toRadians(lat)
                     val dLatDeg = dNorth / 111_320.0
-                    val dLonDeg = dEast / (111_320.0 * kotlin.math.cos(latRad))
+                    val dLonDeg = dEast / (111_320.0 * cos(latRad))
 
                     // 5) 좌표 갱신
                     lat += dLatDeg

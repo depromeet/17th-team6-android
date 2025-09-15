@@ -1,4 +1,4 @@
-package com.dpm.sixpack.data.repository.di
+package com.dpm.sixpack.data.repository
 
 import com.dpm.sixpack.data.source.remote.datasoruce.RunningGoalDataSource
 import com.dpm.sixpack.domain.exception.DoRunException
