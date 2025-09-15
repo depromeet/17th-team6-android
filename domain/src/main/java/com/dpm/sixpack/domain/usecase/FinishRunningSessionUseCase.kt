@@ -10,6 +10,5 @@ class FinishRunningSessionUseCase
     constructor(
         private val repository: RunningSessionRepository,
     ) {
-        suspend operator fun invoke(): DoRunResult<RunningSessionResult> =
-            repository.finish()
+        suspend operator fun invoke(): DoRunResult<RunningSessionResult> = repository.finish()
     }

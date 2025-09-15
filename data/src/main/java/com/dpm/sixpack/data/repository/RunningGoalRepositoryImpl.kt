@@ -1,6 +1,5 @@
 package com.dpm.sixpack.data.repository
 
-import com.dpm.sixpack.data.source.local.datastore.api.UserPreferenceDataSource
 import com.dpm.sixpack.data.source.remote.datasoruce.RunningGoalDataSource
 import com.dpm.sixpack.domain.exception.DoRunException
 import com.dpm.sixpack.domain.model.RunningGoal

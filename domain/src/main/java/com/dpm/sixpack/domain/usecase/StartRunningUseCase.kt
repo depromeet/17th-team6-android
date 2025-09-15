@@ -5,11 +5,9 @@ import com.dpm.sixpack.domain.util.DoRunResult
 import javax.inject.Inject
 
 class StartRunningUseCase
-@Inject
-constructor(
-    private val repository: RunningSessionRepository,
-) {
-    suspend operator fun invoke(goalPlanId: Long): DoRunResult<Long> {
-       return repository.start(goalPlanId)
+    @Inject
+    constructor(
+        private val repository: RunningSessionRepository,
+    ) {
+        suspend operator fun invoke(goalPlanId: Long): DoRunResult<Long> = repository.start(goalPlanId)
     }
-}

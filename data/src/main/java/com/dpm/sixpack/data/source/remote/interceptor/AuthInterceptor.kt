@@ -8,35 +8,36 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class AuthInterceptor
-@Inject
-constructor(
-    private val userPreferenceRepository: UserPreferenceRepository,
-) : Interceptor {
-    override fun intercept(chain: Interceptor.Chain): Response {
-        val originalRequest = chain.request()
+    @Inject
+    constructor(
+        private val userPreferenceRepository: UserPreferenceRepository,
+    ) : Interceptor {
+        override fun intercept(chain: Interceptor.Chain): Response {
+            val originalRequest = chain.request()
 
-        val userId = runBlocking {
-            try {
-                userPreferenceRepository.getUserId().toString()
-            } catch (e: Exception) {
-                Timber.e("AuthInterceptor: Failed to get UserId from DataStore. message: ${e.message}")
-                null
+            val userId =
+                runBlocking {
+                    try {
+                        userPreferenceRepository.getUserId().toString()
+                    } catch (e: Exception) {
+                        Timber.e("AuthInterceptor: Failed to get UserId from DataStore. message: ${e.message}")
+                        null
+                    }
+                }
+
+            val requestBuilder = originalRequest.newBuilder()
+
+            if (userId != null) {
+                requestBuilder.addHeader(X_USER_ID, userId)
+            } else {
+                Timber.e("AuthInterceptor: UserId is null, proceeding without X-User-Id header.")
             }
+
+            val newRequest = requestBuilder.build()
+            return chain.proceed(newRequest)
         }
 
-        val requestBuilder = originalRequest.newBuilder()
-
-        if (userId != null) {
-            requestBuilder.addHeader(X_USER_ID, userId)
-        } else {
-            Timber.e("AuthInterceptor: UserId is null, proceeding without X-User-Id header.")
+        companion object {
+            private const val X_USER_ID = "X-User-Id"
         }
-
-        val newRequest = requestBuilder.build()
-        return chain.proceed(newRequest)
     }
-
-    companion object {
-        private const val X_USER_ID = "X-User-Id"
-    }
-}

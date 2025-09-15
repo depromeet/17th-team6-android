@@ -47,7 +47,7 @@ class RunningSessionRepositoryImpl
                     } catch (e: Exception) {
                         DoRunResult.Failure(DoRunException.DataError("네트워크 요청에 실패했습니다: ${e.message}"))
                     }
-                }else{
+                } else {
                     Timber.d("local에 sessionId가 존재합니다. localData를 호출합니다.")
                     DoRunResult.Success(localSessionId)
                 }
@@ -141,7 +141,9 @@ class RunningSessionRepositoryImpl
                 val sessionId = userPreferenceRepository.getSessionId()
 
                 if (sessionId == null) {
-                    return@withContext DoRunResult.Failure(DoRunException.DataError("SessionRepository : 저장된 SessionId가 존재하지 않습니다."))
+                    return@withContext DoRunResult.Failure(
+                        DoRunException.DataError("SessionRepository : 저장된 SessionId가 존재하지 않습니다."),
+                    )
                 }
 
                 try {
@@ -167,7 +169,9 @@ class RunningSessionRepositoryImpl
                     val sessionId = userPreferenceRepository.getSessionId()
 
                     if (sessionId == null) {
-                        return@withContext DoRunResult.Failure(DoRunException.DataError("SessionRepository : 저장된 SessionId가 존재하지 않습니다."))
+                        return@withContext DoRunResult.Failure(
+                            DoRunException.DataError("SessionRepository : 저장된 SessionId가 존재하지 않습니다."),
+                        )
                     }
                     val response =
                         runningSessionDataSource.postFinishRunning(

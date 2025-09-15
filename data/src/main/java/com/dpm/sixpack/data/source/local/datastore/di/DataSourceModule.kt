@@ -11,7 +11,5 @@ import dagger.hilt.components.SingletonComponent
 @Module
 internal abstract class DataSourceModule {
     @Binds
-    abstract fun bindsDataSource(
-        dataSource: UserPreferenceDataSourceImpl,
-    ): UserPreferenceDataSource
+    abstract fun bindsDataSource(dataSource: UserPreferenceDataSourceImpl): UserPreferenceDataSource
 }

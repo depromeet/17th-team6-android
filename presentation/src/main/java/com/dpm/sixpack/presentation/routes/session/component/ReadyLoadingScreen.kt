@@ -18,7 +18,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionState
-import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionUiState
 
 @Composable
 fun ReadyLoadingScreen(
@@ -29,7 +28,7 @@ fun ReadyLoadingScreen(
         modifier
             .fillMaxSize()
             .background(
-                color = Color.Black.copy(alpha = 0.3f)
+                color = Color.Black.copy(alpha = 0.3f),
             ),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -44,18 +43,20 @@ fun ReadyLoadingScreen(
             )
 
             Text(
-                text = "웜업 운동을 종료하고\n" +
-                    "본 러닝이 시작됩니다.",
+                text =
+                    "웜업 운동을 종료하고\n" +
+                        "본 러닝이 시작됩니다.",
                 color = Color.White,
             )
 
             Box(
                 modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(350.dp)
+                    modifier =
+                        Modifier
+                            .size(350.dp),
                 )
                 Text(
                     text = readyState.countdown.toString(),
@@ -64,14 +65,12 @@ fun ReadyLoadingScreen(
                 )
             }
         }
-
-
     }
 }
 
 @Preview
 @Composable
-private fun PreviewReadyLoadingScreen(){
+private fun PreviewReadyLoadingScreen() {
     ReadyLoadingScreen(
         readyState = RunningSessionState.MainReady(),
     )

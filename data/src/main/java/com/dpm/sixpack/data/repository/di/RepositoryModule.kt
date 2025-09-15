@@ -32,5 +32,4 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindsUserPreferenceRepository(repositoryImpl: UserPreferenceRepositoryImpl): UserPreferenceRepository
-
 }
