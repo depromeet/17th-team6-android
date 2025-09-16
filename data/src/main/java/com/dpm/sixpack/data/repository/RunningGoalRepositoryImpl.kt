@@ -1,4 +1,4 @@
-package com.dpm.sixpack.data.source.remote.repository
+package com.dpm.sixpack.data.repository
 
 import com.dpm.sixpack.data.source.remote.datasoruce.RunningGoalDataSource
 import com.dpm.sixpack.domain.exception.DoRunException
@@ -14,7 +14,7 @@ class RunningGoalRepositoryImpl
     constructor(
         private val runningGoalDataSource: RunningGoalDataSource,
     ) : RunningGoalRepository {
-        override suspend fun getTodayRunningGoal(userId: Long): DoRunResult<RunningGoal> =
+        override suspend fun getTodayRunningGoal(): DoRunResult<RunningGoal> =
             withContext(Dispatchers.IO) {
                 try {
                     val response = runningGoalDataSource.getTodayRunningGoal()

@@ -21,7 +21,6 @@ import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
-import kotlin.Long
 import kotlin.random.Random
 import kotlin.random.nextULong
 
@@ -44,8 +43,6 @@ class RunningSessionViewModel
                 pace = 300,
             )
 
-        private var cachedSessionId: Long? = null
-
         override val initialState: RunningSessionUiState = RunningSessionUiState()
 
         override val container: Container<RunningSessionUiState, RunningSessionSideEffect> =
@@ -65,7 +62,8 @@ class RunningSessionViewModel
 
         private fun handleStart() {
             viewModelScope.launch {
-                cachedSessionId = startRunningUseCase(todayRunData.id)
+                startRunningUseCase(goalPlanId = todayRunData.id)
+
                 intent {
                     var timer = 0
                     repeat(INITIAL_COUNTDOWN) {
@@ -222,8 +220,7 @@ class RunningSessionViewModel
 
         private fun handleConfirmFinish() {
             viewModelScope.launch {
-                val sessionId = cachedSessionId ?: throw IllegalStateException("세션 ID가 설정되지 않았습니다.")
-                finishRunningSessionUseCase(sessionId)
+                finishRunningSessionUseCase()
                 intent {
                     val currentState = state.state
                     if (currentState is RunningSessionState.MainPause) {
