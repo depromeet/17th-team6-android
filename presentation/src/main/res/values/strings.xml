@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">sixpack</string>
 
-    <string name="nav_tab_home_description">홈</string>
-    <string name="nav_tab_session_description">러닝</string>
-    <string name="nav_tab_record_description">기록</string>
-    <string name="nav_tab_mypage_description">내 정보</string>
+    <string name="nav_tab_home_title">홈</string>
+    <string name="nav_tab_running_title">러닝</string>
+    <string name="nav_tab_record_title">기록</string>
+    <string name="nav_tab_mypage_title">내 정보</string>
 </resources>

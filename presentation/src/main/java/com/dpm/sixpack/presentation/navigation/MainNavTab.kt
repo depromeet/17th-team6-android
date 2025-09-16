@@ -1,32 +1,29 @@
 package com.dpm.sixpack.presentation.navigation
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.routes.MainRoute
 
 enum class MainNavTab(
-    val iconResId: Int,
-    internal val descriptionResId: Int,
+    @DrawableRes val iconResId: Int,
+    @StringRes val titleResId: Int,
     val route: MainRoute,
 ) {
-    HOME(
-        iconResId = R.drawable.ic_home_nav,
-        descriptionResId = R.string.nav_tab_home_description,
-        route = MainRoute.Home,
-    ),
-    SESSION(
+    RUNNING(
         iconResId = R.drawable.ic_running_nav,
-        descriptionResId = R.string.nav_tab_session_description,
-        route = MainRoute.Session,
+        titleResId = R.string.nav_tab_running_title,
+        route = MainRoute.Running,
     ),
     RECORD(
         iconResId = R.drawable.ic_record_nav,
-        descriptionResId = R.string.nav_tab_record_description,
+        titleResId = R.string.nav_tab_record_title,
         route = MainRoute.Record,
     ),
     MY_PAGE(
         iconResId = R.drawable.ic_mypage_nav,
-        descriptionResId = R.string.nav_tab_mypage_description,
+        titleResId = R.string.nav_tab_mypage_title,
         route = MainRoute.MyPage,
     ),
     ;

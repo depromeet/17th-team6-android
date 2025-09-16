@@ -1,6 +1,5 @@
 package com.dpm.sixpack.presentation.navigation
 
-import android.R.attr.text
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -53,13 +52,13 @@ fun RowScope.BottomNavTabItem(
 
         Icon(
             painter = painterResource(id = tab.iconResId),
-            contentDescription = stringResource(tab.descriptionResId),
+            contentDescription = stringResource(tab.titleResId),
             tint = if (isSelected) selectedColor else unselectedColor,
         )
 
         // FIXME SK: Change to SixpackTypo
         Text(
-            text = stringResource(tab.descriptionResId),
+            text = stringResource(tab.titleResId),
             color = if (isSelected) selectedColor else unselectedColor,
             fontSize = 12.sp,
             fontWeight = FontWeight.Medium,
