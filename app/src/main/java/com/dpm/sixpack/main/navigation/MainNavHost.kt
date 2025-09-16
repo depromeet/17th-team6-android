@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.dpm.sixpack.SixPackAppState
-import com.dpm.sixpack.presentation.routes.map.navigation.addMapNavGraph
+import com.dpm.sixpack.presentation.routes.session.navigation.addRunningSessionNavGraph
 
 @Composable
 internal fun MainNavHost(
@@ -23,7 +23,7 @@ internal fun MainNavHost(
             navController = navigator.navController,
             startDestination = navigator.startDestination,
         ) {
-            addMapNavGraph()
+            addRunningSessionNavGraph()
         }
     }
 }

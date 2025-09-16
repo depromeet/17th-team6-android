@@ -6,11 +6,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.dpm.sixpack.presentation.navigation.MainNavTab
+import com.dpm.sixpack.presentation.routes.MainRoute
 import com.dpm.sixpack.presentation.routes.Route
-import com.dpm.sixpack.presentation.routes.map.navigation.navigateMap
+import com.dpm.sixpack.presentation.routes.session.navigation.navigateRunningSession
+import timber.log.Timber
 
 class MainNavigator(
     val navController: NavHostController,
@@ -32,20 +36,51 @@ class MainNavigator(
             } ?: previousDestination.value
         }
 
-    val startDestination = Route.Map // FIXME: Change to other when the start screen is implemented
+    val currentTab: MainNavTab?
+        @Composable get() =
+            MainNavTab.find { tab ->
+                currentDestination?.hasRoute(tab::class) == true
+            }
 
-    fun navigateMap() {
-        navController.navigateMap(
-            navOptions = navOptions { launchSingleTop = true },
-        )
-    }
+    // FIXME: Change to other when the start screen is implemented
+    val startDestination = MainRoute.Running
 
     fun popBackStack() {
         navController.popBackStack()
     }
 
+    fun navigate(tab: MainNavTab) {
+        val navOptions =
+            navOptions {
+                popUpTo(navController.graph.findStartDestination().id) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+
+        when (tab) {
+            MainNavTab.RUNNING -> navController.navigateRunningSession(navOptions)
+            MainNavTab.RECORD -> {
+                // TODO
+                Timber.d("Navigate to Record Screen")
+            }
+
+            MainNavTab.MY_PAGE -> {
+                // TODO
+                Timber.d("Navigate to MyPage Screen")
+            }
+        }
+    }
+
     private inline fun <reified T : Route> isSameCurrentDestination(): Boolean =
         navController.currentDestination?.hasRoute<T>() == true
+
+    @Composable
+    fun shouldShowBottomBar() =
+        MainNavTab.contains {
+            currentDestination?.hasRoute(it::class) == true
+        }
 }
 
 @Composable
