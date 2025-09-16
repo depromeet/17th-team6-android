@@ -45,7 +45,7 @@ fun RowScope.BottomNavTabItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        // FIXME SK: ColorScheme
+        // FIXME SK: Change to ColorScheme
         val selectedColor = LocalSixpackColors.current.primary
         val unselectedColor = Color(0xFFCBD0DA)
 
@@ -57,6 +57,7 @@ fun RowScope.BottomNavTabItem(
             tint = if (isSelected) selectedColor else unselectedColor,
         )
 
+        // FIXME SK: Change to SixpackTypo
         Text(
             text = stringResource(tab.descriptionResId),
             color = if (isSelected) selectedColor else unselectedColor,

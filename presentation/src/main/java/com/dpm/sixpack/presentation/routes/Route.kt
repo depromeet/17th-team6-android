@@ -4,15 +4,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed interface Route {
+    // FIXME: Remove this when Map Screen is deleted
     @Serializable
     data object Map : Route
-}
-
-@Serializable
-sealed interface MapRoute {
-    @Serializable
-    data object Record : MapRoute
 
     @Serializable
-    data object Setting : MapRoute
+    data object Main : Route
 }

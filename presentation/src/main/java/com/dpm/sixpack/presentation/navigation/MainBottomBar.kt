@@ -38,6 +38,7 @@ fun MainBottomBar(
                     .height(70.dp)
                     .border(
                         width = 1.dp,
+                        // FIXME SK: Change to ColorScheme
                         color = Color(0xFFF0F2F7),
                     ).background(color = Color.White),
             horizontalArrangement = Arrangement.SpaceBetween,

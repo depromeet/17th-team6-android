@@ -13,8 +13,8 @@ import androidx.navigation.navOptions
 import com.dpm.sixpack.presentation.navigation.MainNavTab
 import com.dpm.sixpack.presentation.routes.MainRoute
 import com.dpm.sixpack.presentation.routes.Route
-import com.dpm.sixpack.presentation.routes.map.navigation.navigateMap
 import com.dpm.sixpack.presentation.routes.session.navigation.navigateRunningSession
+import timber.log.Timber
 
 class MainNavigator(
     val navController: NavHostController,
@@ -45,12 +45,6 @@ class MainNavigator(
     // FIXME: Change to other when the start screen is implemented
     val startDestination = MainRoute.Session
 
-    fun navigateMap() {
-        navController.navigateMap(
-            navOptions = navOptions { launchSingleTop = true },
-        )
-    }
-
     fun popBackStack() {
         navController.popBackStack()
     }
@@ -67,13 +61,19 @@ class MainNavigator(
 
         when (tab) {
             MainNavTab.HOME -> {
+                // TODO
+                Timber.d("Navigate to Home Screen")
             }
 
             MainNavTab.SESSION -> navController.navigateRunningSession(navOptions)
             MainNavTab.RECORD -> {
+                // TODO
+                Timber.d("Navigate to Record Screen")
             }
 
             MainNavTab.MY_PAGE -> {
+                // TODO
+                Timber.d("Navigate to MyPage Screen")
             }
         }
     }
