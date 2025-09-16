@@ -6,35 +6,34 @@ import com.dpm.sixpack.presentation.routes.MainRoute
 
 enum class MainNavTab(
     val iconResId: Int,
-    internal val contentDescription: String,
+    internal val descriptionResId: Int,
     val route: MainRoute,
 ) {
     HOME(
         iconResId = R.drawable.ic_home_nav,
-        contentDescription = "홈",
+        descriptionResId = R.string.nav_tab_home_description,
         route = MainRoute.Home,
     ),
     SESSION(
         iconResId = R.drawable.ic_running_nav,
-        contentDescription = "러닝",
+        descriptionResId = R.string.nav_tab_session_description,
         route = MainRoute.Session,
     ),
     RECORD(
         iconResId = R.drawable.ic_record_nav,
-        contentDescription = "기록",
+        descriptionResId = R.string.nav_tab_record_description,
         route = MainRoute.Record,
     ),
     MY_PAGE(
         iconResId = R.drawable.ic_mypage_nav,
-        contentDescription = "내 정보",
+        descriptionResId = R.string.nav_tab_mypage_description,
         route = MainRoute.MyPage,
     ),
     ;
 
     companion object {
         @Composable
-        fun find(predicate: @Composable (MainRoute) -> Boolean): MainNavTab? =
-            entries.find { predicate(it.route) }
+        fun find(predicate: @Composable (MainRoute) -> Boolean): MainNavTab? = entries.find { predicate(it.route) }
 
         @Composable
         fun contains(predicate: @Composable (MainRoute) -> Boolean): Boolean =

@@ -1,5 +1,6 @@
 package com.dpm.sixpack.presentation.navigation
 
+import android.R.attr.text
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,11 +17,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dpm.sixpack.presentation.theme.LocalSixpackColors
-import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 fun RowScope.BottomNavTabItem(
@@ -30,16 +31,17 @@ fun RowScope.BottomNavTabItem(
     onClick: () -> Unit,
 ) {
     Column(
-        modifier = modifier
-            .weight(1f)
-            .fillMaxHeight()
-            .selectable(
-                selected = isSelected,
-                indication = null,
-                role = null,
-                interactionSource = remember { MutableInteractionSource() },
-                onClick = onClick,
-            ),
+        modifier =
+            modifier
+                .weight(1f)
+                .fillMaxHeight()
+                .selectable(
+                    selected = isSelected,
+                    indication = null,
+                    role = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                    onClick = onClick,
+                ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
@@ -51,12 +53,12 @@ fun RowScope.BottomNavTabItem(
 
         Icon(
             painter = painterResource(id = tab.iconResId),
-            contentDescription = tab.contentDescription,
+            contentDescription = stringResource(tab.descriptionResId),
             tint = if (isSelected) selectedColor else unselectedColor,
         )
 
         Text(
-            text = tab.contentDescription,
+            text = stringResource(tab.descriptionResId),
             color = if (isSelected) selectedColor else unselectedColor,
             fontSize = 12.sp,
             fontWeight = FontWeight.Medium,
