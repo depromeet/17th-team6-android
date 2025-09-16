@@ -13,7 +13,7 @@ class SaveRealtimeRunningDataUseCase
         suspend operator fun invoke(param: SaveRealtimeRunningDataParam): DoRunResult<SaveRealtimeRunningDataResult> =
             when (param) {
                 is SaveRealtimeRunningDataParam.LocalParam -> repository.saveRealtimeData(data = param.data)
-                is SaveRealtimeRunningDataParam.SyncParam -> repository.saveSegmentData(sessionId = param.sessionId)
+                is SaveRealtimeRunningDataParam.SyncParam -> repository.saveSegmentData()
             }
     }
 
