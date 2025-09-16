@@ -13,13 +13,13 @@ interface AppInitializer {
 }
 
 class NaverMapInitializer
-@Inject
-constructor(
-    private val buildConfigProvider: BuildConfigProvider,
-) : AppInitializer {
-    override fun onAppCreate(application: Application) {
-        NaverMapSdk.getInstance(application).setClient(
-            NaverMapSdk.NcpKeyClient(buildConfigProvider.getNaverMapClientId()),
-        )
+    @Inject
+    constructor(
+        private val buildConfigProvider: BuildConfigProvider,
+    ) : AppInitializer {
+        override fun onAppCreate(application: Application) {
+            NaverMapSdk.getInstance(application).setClient(
+                NaverMapSdk.NcpKeyClient(buildConfigProvider.getNaverMapClientId()),
+            )
+        }
     }
-}
