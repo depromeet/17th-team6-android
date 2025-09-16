@@ -32,14 +32,14 @@ fun MainBottomBar(
         exit = fadeOut(),
     ) {
         Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .height(70.dp)
-                .border(
-                    width = 1.dp,
-                    color = Color(0xFFF0F2F7),
-                )
-                .background(color = Color.White),
+            modifier =
+                modifier
+                    .fillMaxWidth()
+                    .height(70.dp)
+                    .border(
+                        width = 1.dp,
+                        color = Color(0xFFF0F2F7),
+                    ).background(color = Color.White),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {

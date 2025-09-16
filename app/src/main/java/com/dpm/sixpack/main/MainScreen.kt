@@ -62,9 +62,9 @@ internal fun MainScreenContent(
                 currentTab = appState.navigator.currentTab,
                 onTabSelected = { tab ->
                     appState.navigator.navigate(tab)
-                }
+                },
             )
-        }
+        },
     ) { paddingValue ->
         MainNavHost(
             appState = appState,

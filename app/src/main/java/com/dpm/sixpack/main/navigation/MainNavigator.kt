@@ -37,9 +37,10 @@ class MainNavigator(
         }
 
     val currentTab: MainNavTab?
-        @Composable get() = MainNavTab.find { tab ->
-            currentDestination?.hasRoute(tab::class) == true
-        }
+        @Composable get() =
+            MainNavTab.find { tab ->
+                currentDestination?.hasRoute(tab::class) == true
+            }
 
     // FIXME: Change to other when the start screen is implemented
     val startDestination = MainRoute.Session
@@ -55,19 +56,25 @@ class MainNavigator(
     }
 
     fun navigate(tab: MainNavTab) {
-        val navOptions = navOptions {
-            popUpTo(navController.graph.findStartDestination().id) {
-                saveState = true
+        val navOptions =
+            navOptions {
+                popUpTo(navController.graph.findStartDestination().id) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
             }
-            launchSingleTop = true
-            restoreState = true
-        }
 
         when (tab) {
-            MainNavTab.HOME -> {}
+            MainNavTab.HOME -> {
+            }
+
             MainNavTab.SESSION -> navController.navigateRunningSession(navOptions)
-            MainNavTab.RECORD -> {}
-            MainNavTab.MY_PAGE -> {}
+            MainNavTab.RECORD -> {
+            }
+
+            MainNavTab.MY_PAGE -> {
+            }
         }
     }
 
@@ -75,9 +82,10 @@ class MainNavigator(
         navController.currentDestination?.hasRoute<T>() == true
 
     @Composable
-    fun shouldShowBottomBar() = MainNavTab.contains {
-        currentDestination?.hasRoute(it::class) == true
-    }
+    fun shouldShowBottomBar() =
+        MainNavTab.contains {
+            currentDestination?.hasRoute(it::class) == true
+        }
 }
 
 @Composable
