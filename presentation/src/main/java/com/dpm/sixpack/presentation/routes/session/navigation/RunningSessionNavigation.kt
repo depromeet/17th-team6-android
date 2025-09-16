@@ -8,11 +8,11 @@ import com.dpm.sixpack.presentation.routes.MainRoute
 import com.dpm.sixpack.presentation.routes.session.RunningSessionRoute
 
 fun NavController.navigateRunningSession(navOptions: NavOptions? = null) {
-    navigate(MainRoute.Session, navOptions)
+    navigate(MainRoute.Running, navOptions)
 }
 
 fun NavGraphBuilder.addRunningSessionNavGraph() {
-    composable<MainRoute.Session> {
+    composable<MainRoute.Running> {
         RunningSessionRoute(
             // fill
         )

@@ -43,7 +43,7 @@ class MainNavigator(
             }
 
     // FIXME: Change to other when the start screen is implemented
-    val startDestination = MainRoute.Session
+    val startDestination = MainRoute.Running
 
     fun popBackStack() {
         navController.popBackStack()
@@ -60,12 +60,7 @@ class MainNavigator(
             }
 
         when (tab) {
-            MainNavTab.HOME -> {
-                // TODO
-                Timber.d("Navigate to Home Screen")
-            }
-
-            MainNavTab.SESSION -> navController.navigateRunningSession(navOptions)
+            MainNavTab.RUNNING -> navController.navigateRunningSession(navOptions)
             MainNavTab.RECORD -> {
                 // TODO
                 Timber.d("Navigate to Record Screen")
