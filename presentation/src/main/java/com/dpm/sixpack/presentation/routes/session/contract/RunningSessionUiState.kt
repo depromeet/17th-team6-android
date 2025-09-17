@@ -1,7 +1,7 @@
 package com.dpm.sixpack.presentation.routes.session.contract
 
 import android.os.Parcelable
-import com.dpm.sixpack.presentation.util.base.UiState
+import com.dpm.sixpack.presentation.common.util.base.UiState
 import com.naver.maps.geometry.LatLng
 import kotlinx.parcelize.Parcelize
 

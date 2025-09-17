@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.common.permission
+package com.dpm.sixpack.presentation.common.util
 
 import android.content.Context
 import androidx.activity.compose.rememberLauncherForActivityResult

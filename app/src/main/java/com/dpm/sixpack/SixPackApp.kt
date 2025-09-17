@@ -2,7 +2,7 @@ package com.dpm.sixpack
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.dpm.sixpack.presentation.navermap.AppInitializer
+import com.dpm.sixpack.presentation.common.util.navermap.AppInitializer
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 import javax.inject.Inject

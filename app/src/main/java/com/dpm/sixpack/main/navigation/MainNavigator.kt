@@ -10,9 +10,9 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.dpm.sixpack.presentation.destinations.MainRoute
+import com.dpm.sixpack.presentation.destinations.Route
 import com.dpm.sixpack.presentation.navigation.MainNavTab
-import com.dpm.sixpack.presentation.routes.MainRoute
-import com.dpm.sixpack.presentation.routes.Route
 import com.dpm.sixpack.presentation.routes.session.navigation.navigateRunningSession
 import timber.log.Timber
 

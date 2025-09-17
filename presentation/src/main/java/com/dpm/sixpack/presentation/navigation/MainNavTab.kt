@@ -4,7 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import com.dpm.sixpack.presentation.R
-import com.dpm.sixpack.presentation.routes.MainRoute
+import com.dpm.sixpack.presentation.destinations.MainRoute
 
 enum class MainNavTab(
     @DrawableRes val iconResId: Int,
