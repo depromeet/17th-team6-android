@@ -57,6 +57,9 @@ class RunningSessionViewModel
                 RunningSessionIntent.MainRunningFinish -> handleFinish()
                 RunningSessionIntent.MainRunningConfirmFinish -> handleConfirmFinish()
                 RunningSessionIntent.ToggleFollowingMode -> handleToggleFollowingMode()
+                else -> {
+                    // No-Op
+                }
             }
         }
 
@@ -230,7 +233,7 @@ class RunningSessionViewModel
                                 state.copy(
                                     state =
                                         RunningSessionState.WarmUpReady(
-                                            mapUiState = currentState.mapUiState,
+//                                            mapUiState = currentState.mapUiState,
                                             countdown = INITIAL_COUNTDOWN - timer,
                                         ),
                                 )

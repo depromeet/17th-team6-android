@@ -94,16 +94,6 @@ sealed class RunningSessionState : Parcelable {
     }
 }
 
-// FIXME : string 리소스 연결 필요
-enum class ReadyPhase(
-    @StringRes val title: Int,
-    @StringRes val description: Int,
-) {
-    WarmUp(title = 0, description = 0),
-    Main(title = 0, description = 0),
-    CoolDown(title = 0, description = 0),
-}
-
 @Parcelize
 data class RecordUiState(
     val currentDistance: String = "",
