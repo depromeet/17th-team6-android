@@ -70,7 +70,7 @@ sealed class RunningSessionState : Parcelable {
     data class CoolDownReady(
         val countdown: Int = INITIAL_COUNTDOWN,
         val onlyText: Boolean = countdown > NUMBER_COUNTDOWN,
-        val mapUiState: MapUiState = MapUiState()
+        val mapUiState: MapUiState = MapUiState(),
     ) : RunningSessionState()
 
     data class CoolDown(
@@ -95,7 +95,10 @@ sealed class RunningSessionState : Parcelable {
 }
 
 // FIXME : string 리소스 연결 필요
-enum class ReadyPhase(@StringRes val title: Int, @StringRes val description: Int) {
+enum class ReadyPhase(
+    @StringRes val title: Int,
+    @StringRes val description: Int,
+) {
     WarmUp(title = 0, description = 0),
     Main(title = 0, description = 0),
     CoolDown(title = 0, description = 0),
