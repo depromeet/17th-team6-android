@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.util.base
+package com.dpm.sixpack.presentation.common.util.base
 
 import android.os.Parcelable
 

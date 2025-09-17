@@ -1,7 +1,7 @@
-package com.dpm.sixpack.presentation.navermap.di
+package com.dpm.sixpack.presentation.common.util.navermap.di
 
-import com.dpm.sixpack.presentation.navermap.AppInitializer
-import com.dpm.sixpack.presentation.navermap.NaverMapInitializer
+import com.dpm.sixpack.presentation.common.util.navermap.AppInitializer
+import com.dpm.sixpack.presentation.common.util.navermap.NaverMapInitializer
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
