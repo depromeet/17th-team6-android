@@ -50,12 +50,12 @@ class RunningSessionViewModel
 
         override fun onIntent(intent: RunningSessionIntent) {
             when (intent) {
-                RunningSessionIntent.Start -> handleStart()
-                RunningSessionIntent.Pause -> handlePause()
-                RunningSessionIntent.Resume -> handleResume()
-                RunningSessionIntent.CancelFinish -> handleCancelFinish()
-                RunningSessionIntent.Finish -> handleFinish()
-                RunningSessionIntent.ConfirmFinish -> handleConfirmFinish()
+                RunningSessionIntent.SessionStart -> handleStart()
+                RunningSessionIntent.MainRunningPause -> handlePause()
+                RunningSessionIntent.MainRunningResume -> handleResume()
+                RunningSessionIntent.MainRunningCancelFinish -> handleCancelFinish()
+                RunningSessionIntent.MainRunningFinish -> handleFinish()
+                RunningSessionIntent.MainRunningConfirmFinish -> handleConfirmFinish()
                 RunningSessionIntent.ToggleFollowingMode -> handleToggleFollowingMode()
             }
         }
@@ -70,7 +70,7 @@ class RunningSessionViewModel
                         reduce {
                             state.copy(
                                 state =
-                                    RunningSessionState.MainReady(
+                                    RunningSessionState.WarmUpReady(
                                         countdown = INITIAL_COUNTDOWN - timer,
                                     ),
                             )
@@ -154,14 +154,14 @@ class RunningSessionViewModel
                     reduce {
                         state.copy(
                             state =
-                                RunningSessionState.MainPause(
+                                RunningSessionState.MainRunningPause(
                                     mapUiState =
                                         currentState.mapUiState.copy(
                                             paceColors = currentState.mapUiState.paceColors + listOf(),
                                             path = currentState.mapUiState.path + listOf(),
                                         ),
                                     recordUiState = currentState.recordUiState,
-                                    showExitConfirmUi = false,
+                                    showFinishSessionConfirmUi = false,
                                 ),
                         )
                     }
@@ -172,7 +172,7 @@ class RunningSessionViewModel
         private fun handleResume() {
             intent {
                 val currentState = state.state
-                if (currentState is RunningSessionState.MainPause) {
+                if (currentState is RunningSessionState.MainRunningPause) {
                     reduce {
                         state.copy(
                             state =
@@ -189,12 +189,12 @@ class RunningSessionViewModel
         private fun handleCancelFinish() {
             intent {
                 val currentState = state.state
-                if (currentState is RunningSessionState.MainPause) {
+                if (currentState is RunningSessionState.MainRunningPause) {
                     reduce {
                         state.copy(
                             state =
                                 currentState.copy(
-                                    showExitConfirmUi = false,
+                                    showFinishSessionConfirmUi = false,
                                 ),
                         )
                     }
@@ -205,12 +205,12 @@ class RunningSessionViewModel
         private fun handleFinish() {
             intent {
                 val currentState = state.state
-                if (currentState is RunningSessionState.MainPause) {
+                if (currentState is RunningSessionState.MainRunningPause) {
                     reduce {
                         state.copy(
                             state =
                                 currentState.copy(
-                                    showExitConfirmUi = true,
+                                    showFinishSessionConfirmUi = true,
                                 ),
                         )
                     }
@@ -223,13 +223,13 @@ class RunningSessionViewModel
                 finishRunningSessionUseCase()
                 intent {
                     val currentState = state.state
-                    if (currentState is RunningSessionState.MainPause) {
+                    if (currentState is RunningSessionState.MainRunningPause) {
                         var timer = 0
                         repeat(INITIAL_COUNTDOWN) {
                             reduce {
                                 state.copy(
                                     state =
-                                        RunningSessionState.CoolDownReady(
+                                        RunningSessionState.WarmUpReady(
                                             mapUiState = currentState.mapUiState,
                                             countdown = INITIAL_COUNTDOWN - timer,
                                         ),

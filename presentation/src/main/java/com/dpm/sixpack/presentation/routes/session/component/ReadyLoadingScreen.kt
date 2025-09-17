@@ -21,7 +21,7 @@ import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionState
 
 @Composable
 fun ReadyLoadingScreen(
-    readyState: RunningSessionState.MainReady,
+    warmUpReadyState: RunningSessionState.WarmUpReady,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -59,7 +59,7 @@ fun ReadyLoadingScreen(
                             .size(350.dp),
                 )
                 Text(
-                    text = readyState.countdown.toString(),
+                    text = warmUpReadyState.countdown.toString(),
                     fontSize = 16.sp,
                     color = Color.White,
                 )
@@ -72,6 +72,6 @@ fun ReadyLoadingScreen(
 @Composable
 private fun PreviewReadyLoadingScreen() {
     ReadyLoadingScreen(
-        readyState = RunningSessionState.MainReady(),
+        warmUpReadyState = RunningSessionState.WarmUpReady(),
     )
 }
