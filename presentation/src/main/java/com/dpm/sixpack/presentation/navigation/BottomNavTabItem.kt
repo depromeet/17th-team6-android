@@ -14,13 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.dpm.sixpack.presentation.theme.LocalSixpackColors
+import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 fun RowScope.BottomNavTabItem(
@@ -44,9 +41,8 @@ fun RowScope.BottomNavTabItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        // FIXME SK: Change to ColorScheme
-        val selectedColor = LocalSixpackColors.current.primary
-        val unselectedColor = Color(0xFFCBD0DA)
+        val selectedColor = SixpackTheme.colors.blue600
+        val unselectedColor = SixpackTheme.colors.gray300
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -56,12 +52,10 @@ fun RowScope.BottomNavTabItem(
             tint = if (isSelected) selectedColor else unselectedColor,
         )
 
-        // FIXME SK: Change to SixpackTypo
         Text(
             text = stringResource(tab.titleResId),
             color = if (isSelected) selectedColor else unselectedColor,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Medium,
+            style = SixpackTheme.typography.c1Regular,
         )
     }
 }
