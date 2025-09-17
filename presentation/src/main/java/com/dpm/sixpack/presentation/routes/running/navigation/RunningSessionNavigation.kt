@@ -1,19 +1,19 @@
-package com.dpm.sixpack.presentation.routes.session.navigation
+package com.dpm.sixpack.presentation.routes.running.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.dpm.sixpack.presentation.destinations.MainRoute
-import com.dpm.sixpack.presentation.routes.session.RunningSessionRoute
+import com.dpm.sixpack.presentation.routes.running.RunningRoute
 
-fun NavController.navigateRunningSession(navOptions: NavOptions? = null) {
+fun NavController.navigateRunning(navOptions: NavOptions? = null) {
     navigate(MainRoute.Running, navOptions)
 }
 
-fun NavGraphBuilder.addRunningSessionNavGraph() {
+fun NavGraphBuilder.addRunningNavGraph() {
     composable<MainRoute.Running> {
-        RunningSessionRoute(
+        RunningRoute(
             // fill
         )
     }

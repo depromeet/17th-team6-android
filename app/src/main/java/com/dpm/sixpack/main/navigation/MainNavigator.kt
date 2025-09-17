@@ -13,7 +13,7 @@ import androidx.navigation.navOptions
 import com.dpm.sixpack.presentation.destinations.MainRoute
 import com.dpm.sixpack.presentation.destinations.Route
 import com.dpm.sixpack.presentation.navigation.MainNavTab
-import com.dpm.sixpack.presentation.routes.session.navigation.navigateRunningSession
+import com.dpm.sixpack.presentation.routes.running.navigation.navigateRunning
 import timber.log.Timber
 
 class MainNavigator(
@@ -60,7 +60,7 @@ class MainNavigator(
             }
 
         when (tab) {
-            MainNavTab.RUNNING -> navController.navigateRunningSession(navOptions)
+            MainNavTab.RUNNING -> navController.navigateRunning(navOptions)
             MainNavTab.RECORD -> {
                 // TODO
                 Timber.d("Navigate to Record Screen")

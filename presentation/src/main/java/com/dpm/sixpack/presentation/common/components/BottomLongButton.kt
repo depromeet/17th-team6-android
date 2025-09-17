@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.common.component
+package com.dpm.sixpack.presentation.common.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,12 +26,13 @@ fun BottomLongTextButton(
         },
         shape = RoundedCornerShape(12.dp),
         enabled = enabled,
-        colors = ButtonColors(
-            containerColor = DEFAULT_CONTAINER_COLOR,
-            contentColor = textColor,
-            disabledContainerColor = DEFAULT_CONTAINER_COLOR,
-            disabledContentColor = Color.Gray,
-        ),
+        colors =
+            ButtonColors(
+                containerColor = DEFAULT_CONTAINER_COLOR,
+                contentColor = textColor,
+                disabledContainerColor = DEFAULT_CONTAINER_COLOR,
+                disabledContentColor = Color.Gray,
+            ),
     ) {
         Text(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),

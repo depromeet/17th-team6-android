@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.session.contract
+package com.dpm.sixpack.presentation.routes.running.contract
 
 import com.dpm.sixpack.presentation.common.util.base.SideEffect
 

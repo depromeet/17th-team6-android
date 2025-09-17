@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.session.contract
+package com.dpm.sixpack.presentation.routes.running.contract
 
 import android.os.Parcelable
 import com.dpm.sixpack.presentation.common.util.base.UiState
@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class RunningSessionUiState(
-    val state: RunningSessionState = RunningSessionState.Initial,
+    val sessionState: RunningSessionState = RunningSessionState.Initial,
     val isFollowingModeEnabled: Boolean = true,
 ) : UiState,
     Parcelable
@@ -40,7 +40,7 @@ sealed class RunningSessionState : Parcelable {
     data object Finished : RunningSessionState()
 
     companion object {
-        const val INITIAL_COUNTDOWN = 3
+        const val INITIAL_COUNTDOWN = 5
     }
 }
 

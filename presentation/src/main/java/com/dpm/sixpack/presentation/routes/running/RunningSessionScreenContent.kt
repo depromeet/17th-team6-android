@@ -1,12 +1,10 @@
-package com.dpm.sixpack.presentation.routes.session
+package com.dpm.sixpack.presentation.routes.running
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -18,9 +16,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.dpm.sixpack.presentation.common.component.BottomLongTextButton
-import com.dpm.sixpack.presentation.routes.map.component.MapConstants
-import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionUiState
+import com.dpm.sixpack.presentation.routes.running.component.MapConstants
+import com.dpm.sixpack.presentation.routes.running.component.ReadyLoadingScreen
+import com.dpm.sixpack.presentation.routes.running.contract.RunningSessionState
+import com.dpm.sixpack.presentation.routes.running.contract.RunningSessionUiState
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.LocationSource
 import com.naver.maps.map.compose.CameraPositionState
@@ -34,8 +33,8 @@ import com.naver.maps.map.compose.rememberFusedLocationSource
 
 @OptIn(ExperimentalNaverMapApi::class)
 @Composable
-fun RunningSessionScreen(
-    runningSessionUiState: RunningSessionUiState,
+fun RunningSessionScreenContent(
+    uiState: RunningSessionUiState,
     cameraPositionState: CameraPositionState,
     locationSource: LocationSource,
     onLocationChange: (LatLng) -> Unit,
@@ -81,30 +80,50 @@ fun RunningSessionScreen(
 //            }
         }
 
+        when (uiState.sessionState) {
+            RunningSessionState.Initial -> {
+            }
+
+            is RunningSessionState.MainReady -> {
+            }
+
+            is RunningSessionState.MainRunning -> {
+            }
+
+            is RunningSessionState.MainPause -> {
+            }
+
+            is RunningSessionState.CoolDownReady -> {
+            }
+
+            is RunningSessionState.Finished -> {
+            }
+        }
+
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            // 상단 탭
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-
-            }
-
             // 바텀 버튼
-            BottomLongTextButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-                text = "러닝시작",
-                onClick = {
-                    showBottomSheet = true
-                    onStartClick()
-                },
+//            BottomLongTextButton(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(10.dp),
+//                text = "러닝시작",
+//                onClick = {
+//                    showBottomSheet = true
+//                    onStartClick()
+//                },
+//            )
+        }
+
+        if (uiState.sessionState is RunningSessionState.MainReady) {
+            ReadyLoadingScreen(
+                uiState.sessionState,
             )
         }
     }
@@ -113,9 +132,12 @@ fun RunningSessionScreen(
 @OptIn(ExperimentalNaverMapApi::class)
 @Preview
 @Composable
-private fun PreviewRunningSessionScreen() {
-    RunningSessionScreen(
-        runningSessionUiState = RunningSessionUiState(),
+private fun PreviewRunningSessionScreenContent() {
+    RunningSessionScreenContent(
+        uiState =
+            RunningSessionUiState(
+                sessionState = RunningSessionState.MainReady(),
+            ),
         cameraPositionState = CameraPositionState(),
         locationSource = rememberFusedLocationSource(),
         onLocationChange = { },
