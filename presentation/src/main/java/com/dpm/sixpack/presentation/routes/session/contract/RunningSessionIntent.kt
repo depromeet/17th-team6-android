@@ -1,6 +1,6 @@
 package com.dpm.sixpack.presentation.routes.session.contract
 
-import com.dpm.sixpack.presentation.util.base.UiIntent
+import com.dpm.sixpack.presentation.common.util.base.UiIntent
 
 sealed interface RunningSessionIntent : UiIntent {
     data object Start : RunningSessionIntent

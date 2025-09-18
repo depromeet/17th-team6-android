@@ -1,6 +1,7 @@
 package com.dpm.sixpack.main
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
@@ -15,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dpm.sixpack.SixPackAppState
 import com.dpm.sixpack.main.navigation.MainNavHost
+import com.dpm.sixpack.presentation.navigation.MainBottomBar
+import com.dpm.sixpack.presentation.navigation.MainNavTab
 
 @Composable
 internal fun MainScreen(
@@ -51,6 +54,17 @@ internal fun MainScreenContent(
 ) {
     Scaffold(
         modifier = modifier,
+        bottomBar = {
+            MainBottomBar(
+                modifier = Modifier.navigationBarsPadding(),
+                visible = appState.navigator.shouldShowBottomBar(),
+                mainNavTabs = MainNavTab.entries,
+                currentTab = appState.navigator.currentTab,
+                onTabSelected = { tab ->
+                    appState.navigator.navigate(tab)
+                },
+            )
+        },
     ) { paddingValue ->
         MainNavHost(
             appState = appState,

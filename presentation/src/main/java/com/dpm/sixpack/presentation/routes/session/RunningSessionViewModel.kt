@@ -6,6 +6,7 @@ import com.dpm.sixpack.domain.model.RunningGoal
 import com.dpm.sixpack.domain.usecase.FinishRunningSessionUseCase
 import com.dpm.sixpack.domain.usecase.GetRealtimeRunningDataUseCase
 import com.dpm.sixpack.domain.usecase.StartRunningUseCase
+import com.dpm.sixpack.presentation.common.util.base.BaseViewModel
 import com.dpm.sixpack.presentation.routes.session.contract.MapUiState
 import com.dpm.sixpack.presentation.routes.session.contract.RecordUiState
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionIntent
@@ -13,7 +14,6 @@ import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionSideEf
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionState
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionState.Companion.INITIAL_COUNTDOWN
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionUiState
-import com.dpm.sixpack.presentation.util.base.BaseViewModel
 import com.naver.maps.geometry.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch

@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.util
+package com.dpm.sixpack.presentation.common.util
 
 import com.naver.maps.geometry.LatLng
 

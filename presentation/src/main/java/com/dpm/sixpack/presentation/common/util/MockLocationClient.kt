@@ -1,3 +1,5 @@
+package com.dpm.sixpack.presentation.common.util
+
 import android.Manifest
 import android.location.Location
 import android.os.SystemClock
@@ -48,13 +50,13 @@ class MockLocationClient(
             scope.launch {
                 try {
                     fusedLocationClient.setMockMode(true)
-                    Timber.tag("MockLocationClient").d("Mock mode enabled.")
+                    Timber.Forest.tag("MockLocationClient").d("Mock mode enabled.")
 
                     for (point in path) {
                         val mockLocation = converter(point)
 
                         fusedLocationClient.setMockLocation(mockLocation)
-                        Timber
+                        Timber.Forest
                             .tag("MockLocationClient")
                             .d("Set mock location to: ${mockLocation.latitude}, ${mockLocation.longitude}")
 
@@ -62,7 +64,7 @@ class MockLocationClient(
                     }
                 } finally {
                     stopMockMode()
-                    Timber.tag("MockLocationClient").d("Simulation finished or stopped.")
+                    Timber.Forest.tag("MockLocationClient").d("Simulation finished or stopped.")
                 }
             }
     }

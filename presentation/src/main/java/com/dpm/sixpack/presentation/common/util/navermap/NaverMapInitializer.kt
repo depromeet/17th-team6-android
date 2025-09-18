@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.navermap
+package com.dpm.sixpack.presentation.common.util.navermap
 
 import android.app.Application
 import com.dpm.sixpack.core.configs.BuildConfigProvider
