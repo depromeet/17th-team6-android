@@ -1,4 +1,4 @@
-package com.dpm.sixpack.data.source.local.sensor.di
+package com.dpm.sixpack.data.source.local.sensor
 
 import android.hardware.Sensor
 import android.hardware.SensorEvent
