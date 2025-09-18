@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.dpm.sixpack.presentation.routes.running.contract.RunningSessionUiState
+import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionUiState
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
 
 @OptIn(ExperimentalNaverMapApi::class)

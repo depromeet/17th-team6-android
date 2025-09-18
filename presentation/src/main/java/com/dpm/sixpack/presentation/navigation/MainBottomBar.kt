@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dpm.sixpack.presentation.theme.SixpackTheme
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
@@ -38,8 +39,7 @@ fun MainBottomBar(
                     .height(70.dp)
                     .border(
                         width = 1.dp,
-                        // FIXME SK: Change to ColorScheme
-                        color = Color(0xFFF0F2F7),
+                        color = SixpackTheme.colors.gray50,
                     ).background(color = Color.White),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,

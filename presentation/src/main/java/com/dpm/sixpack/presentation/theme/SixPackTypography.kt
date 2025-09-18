@@ -1,150 +1,203 @@
-package com.dpm.sixpack.presentation.theme
-
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
 @Immutable
 data class SixpackTypography(
-    val displayLarge: TextStyle,
-    val displayMedium: TextStyle,
-    val displaySmall: TextStyle,
-    val headlineLarge: TextStyle,
-    val headlineMedium: TextStyle,
-    val headlineSmall: TextStyle,
-    val titleLarge: TextStyle,
-    val titleMedium: TextStyle,
-    val titleSmall: TextStyle,
-    val bodyLarge: TextStyle,
-    val bodyMedium: TextStyle,
-    val bodySmall: TextStyle,
-    val labelLarge: TextStyle,
-    val labelMedium: TextStyle,
-    val labelSmall: TextStyle,
+    val h1Bold: TextStyle,
+    val h1Medium: TextStyle,
+    val h2Bold: TextStyle,
+    val h2Medium: TextStyle,
+    val h2Regular: TextStyle,
+    val t1Bold: TextStyle,
+    val t1Medium: TextStyle,
+    val t1Regular: TextStyle,
+    val t2Bold: TextStyle,
+    val t2Medium: TextStyle,
+    val t2Regular: TextStyle,
+    val b1Bold: TextStyle,
+    val b1Medium: TextStyle,
+    val b1Regular: TextStyle,
+    val b2Bold: TextStyle,
+    val b2Medium: TextStyle,
+    val b2Regular: TextStyle,
+    val c1Bold: TextStyle,
+    val c1Medium: TextStyle,
+    val c1Regular: TextStyle,
 )
+
+private val pretendard = null
+//    FontFamily(
+//        Font(R.font.pretendard_regular, FontWeight.Normal),
+//        Font(R.font.pretendard_medium, FontWeight.Medium),
+//        Font(R.font.pretendard_bold, FontWeight.Bold),
+//    )
 
 val SixPackTypographyValue =
     SixpackTypography(
-        displayLarge =
+        // Headline
+        h1Bold =
             TextStyle(
-                fontFamily = FontFamily.Default,
-                fontWeight = FontWeight.Normal,
-                fontSize = 57.sp,
-                lineHeight = 64.sp,
-                letterSpacing = (-0.25).sp,
-            ),
-        displayMedium =
-            TextStyle(
-                fontFamily = FontFamily.Default,
-                fontWeight = FontWeight.Normal,
-                fontSize = 45.sp,
-                lineHeight = 52.sp,
-                letterSpacing = 0.sp,
-            ),
-        displaySmall =
-            TextStyle(
-                fontFamily = FontFamily.Default,
-                fontWeight = FontWeight.Normal,
-                fontSize = 36.sp,
-                lineHeight = 44.sp,
-                letterSpacing = 0.sp,
-            ),
-        headlineLarge =
-            TextStyle(
-                fontFamily = FontFamily.Default,
-                fontWeight = FontWeight.Normal,
-                fontSize = 32.sp,
-                lineHeight = 40.sp,
-                letterSpacing = 0.sp,
-            ),
-        headlineMedium =
-            TextStyle(
-                fontFamily = FontFamily.Default,
-                fontWeight = FontWeight.Normal,
+                fontFamily = pretendard,
+                fontWeight = FontWeight.Bold,
                 fontSize = 28.sp,
-                lineHeight = 36.sp,
-                letterSpacing = 0.sp,
+                lineHeight = 38.sp,
+                letterSpacing = (-0.2).sp,
             ),
-        headlineSmall =
+        h1Medium =
             TextStyle(
-                fontFamily = FontFamily.Default,
+                fontFamily = pretendard,
+                fontWeight = FontWeight.Medium,
+                fontSize = 28.sp,
+                lineHeight = 38.sp,
+                letterSpacing = (-0.2).sp,
+            ),
+        h2Bold =
+            TextStyle(
+                fontFamily = pretendard,
+                fontWeight = FontWeight.Bold,
+                fontSize = 24.sp,
+                lineHeight = 34.sp,
+                letterSpacing = (-0.2).sp,
+            ),
+        h2Medium =
+            TextStyle(
+                fontFamily = pretendard,
+                fontWeight = FontWeight.Medium,
+                fontSize = 24.sp,
+                lineHeight = 34.sp,
+                letterSpacing = (-0.2).sp,
+            ),
+        h2Regular =
+            TextStyle(
+                fontFamily = pretendard,
                 fontWeight = FontWeight.Normal,
                 fontSize = 24.sp,
-                lineHeight = 32.sp,
-                letterSpacing = 0.sp,
+                lineHeight = 34.sp,
+                letterSpacing = (-0.2).sp,
             ),
-        titleLarge =
+        // Title
+        t1Bold =
             TextStyle(
-                fontFamily = FontFamily.Default,
-                fontWeight = FontWeight.Medium,
-                fontSize = 22.sp,
+                fontFamily = pretendard,
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
                 lineHeight = 28.sp,
-                letterSpacing = 0.sp,
+                letterSpacing = (-0.2).sp,
             ),
-        titleMedium =
+        t1Medium =
             TextStyle(
-                fontFamily = FontFamily.Default,
+                fontFamily = pretendard,
+                fontWeight = FontWeight.Medium,
+                fontSize = 20.sp,
+                lineHeight = 28.sp,
+                letterSpacing = (-0.2).sp,
+            ),
+        t1Regular =
+            TextStyle(
+                fontFamily = pretendard,
+                fontWeight = FontWeight.Normal,
+                fontSize = 20.sp,
+                lineHeight = 28.sp,
+                letterSpacing = (-0.2).sp,
+            ),
+        t2Bold =
+            TextStyle(
+                fontFamily = pretendard,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                lineHeight = 26.sp,
+                letterSpacing = (-0.2).sp,
+            ),
+        t2Medium =
+            TextStyle(
+                fontFamily = pretendard,
+                fontWeight = FontWeight.Medium,
+                fontSize = 18.sp,
+                lineHeight = 26.sp,
+                letterSpacing = (-0.2).sp,
+            ),
+        t2Regular =
+            TextStyle(
+                fontFamily = pretendard,
+                fontWeight = FontWeight.Normal,
+                fontSize = 18.sp,
+                lineHeight = 26.sp,
+                letterSpacing = (-0.2).sp,
+            ),
+        // Body
+        b1Bold =
+            TextStyle(
+                fontFamily = pretendard,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                lineHeight = 24.sp,
+                letterSpacing = (-0.2).sp,
+            ),
+        b1Medium =
+            TextStyle(
+                fontFamily = pretendard,
                 fontWeight = FontWeight.Medium,
                 fontSize = 16.sp,
                 lineHeight = 24.sp,
-                letterSpacing = 0.15.sp,
+                letterSpacing = (-0.2).sp,
             ),
-        titleSmall =
+        b1Regular =
             TextStyle(
-                fontFamily = FontFamily.Default,
-                fontWeight = FontWeight.Medium,
-                fontSize = 14.sp,
-                lineHeight = 20.sp,
-                letterSpacing = 0.1.sp,
-            ),
-        bodyLarge =
-            TextStyle(
-                fontFamily = FontFamily.Default,
+                fontFamily = pretendard,
                 fontWeight = FontWeight.Normal,
                 fontSize = 16.sp,
                 lineHeight = 24.sp,
-                letterSpacing = 0.5.sp,
+                letterSpacing = (-0.2).sp,
             ),
-        bodyMedium =
+        b2Bold =
             TextStyle(
-                fontFamily = FontFamily.Default,
-                fontWeight = FontWeight.Normal,
+                fontFamily = pretendard,
+                fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
-                lineHeight = 20.sp,
-                letterSpacing = 0.25.sp,
+                lineHeight = 21.sp,
+                letterSpacing = (-0.2).sp,
             ),
-        bodySmall =
+        b2Medium =
             TextStyle(
-                fontFamily = FontFamily.Default,
-                fontWeight = FontWeight.Normal,
-                fontSize = 12.sp,
-                lineHeight = 16.sp,
-                letterSpacing = 0.4.sp,
-            ),
-        labelLarge =
-            TextStyle(
-                fontFamily = FontFamily.Default,
+                fontFamily = pretendard,
                 fontWeight = FontWeight.Medium,
                 fontSize = 14.sp,
-                lineHeight = 20.sp,
-                letterSpacing = 0.1.sp,
+                lineHeight = 21.sp,
+                letterSpacing = (-0.2).sp,
             ),
-        labelMedium =
+        b2Regular =
             TextStyle(
-                fontFamily = FontFamily.Default,
+                fontFamily = pretendard,
+                fontWeight = FontWeight.Normal,
+                fontSize = 14.sp,
+                lineHeight = 21.sp,
+                letterSpacing = (-0.2).sp,
+            ),
+        // Caption
+        c1Bold =
+            TextStyle(
+                fontFamily = pretendard,
+                fontWeight = FontWeight.Bold,
+                fontSize = 12.sp,
+                lineHeight = 18.sp,
+                letterSpacing = (-0.2).sp,
+            ),
+        c1Medium =
+            TextStyle(
+                fontFamily = pretendard,
                 fontWeight = FontWeight.Medium,
                 fontSize = 12.sp,
-                lineHeight = 16.sp,
-                letterSpacing = 0.5.sp,
+                lineHeight = 18.sp,
+                letterSpacing = (-0.2).sp,
             ),
-        labelSmall =
+        c1Regular =
             TextStyle(
-                fontFamily = FontFamily.Default,
-                fontWeight = FontWeight.Medium,
-                fontSize = 11.sp,
-                lineHeight = 16.sp,
-                letterSpacing = 0.5.sp,
+                fontFamily = pretendard,
+                fontWeight = FontWeight.Normal,
+                fontSize = 12.sp,
+                lineHeight = 18.sp,
+                letterSpacing = (-0.2).sp,
             ),
     )

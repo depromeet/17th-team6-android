@@ -18,8 +18,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.routes.running.component.MapConstants
 import com.dpm.sixpack.presentation.routes.running.component.ReadyLoadingScreen
-import com.dpm.sixpack.presentation.routes.running.contract.RunningSessionState
-import com.dpm.sixpack.presentation.routes.running.contract.RunningSessionUiState
+import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionState
+import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionUiState
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.LocationSource
 import com.naver.maps.map.compose.CameraPositionState
@@ -81,23 +81,15 @@ fun RunningSessionScreenContent(
         }
 
         when (uiState.sessionState) {
-            RunningSessionState.Initial -> {
-            }
-
-            is RunningSessionState.MainReady -> {
-            }
-
-            is RunningSessionState.MainRunning -> {
-            }
-
-            is RunningSessionState.MainPause -> {
-            }
-
-            is RunningSessionState.CoolDownReady -> {
-            }
-
-            is RunningSessionState.Finished -> {
-            }
+            is RunningSessionState.CoolDown -> {}
+            is RunningSessionState.CoolDownPause -> {}
+            is RunningSessionState.CoolDownReady -> {}
+            RunningSessionState.Initial -> {}
+            is RunningSessionState.MainRunning -> {}
+            is RunningSessionState.MainRunningPause -> {}
+            is RunningSessionState.MainRunningReady -> {}
+            is RunningSessionState.WarmUp -> {}
+            is RunningSessionState.WarmUpReady -> {}
         }
 
         Column(
@@ -121,7 +113,7 @@ fun RunningSessionScreenContent(
 //            )
         }
 
-        if (uiState.sessionState is RunningSessionState.MainReady) {
+        if (uiState.sessionState is RunningSessionState.WarmUpReady) {
             ReadyLoadingScreen(
                 uiState.sessionState,
             )
@@ -136,7 +128,7 @@ private fun PreviewRunningSessionScreenContent() {
     RunningSessionScreenContent(
         uiState =
             RunningSessionUiState(
-                sessionState = RunningSessionState.MainReady(),
+                sessionState = RunningSessionState.WarmUpReady(),
             ),
         cameraPositionState = CameraPositionState(),
         locationSource = rememberFusedLocationSource(),
