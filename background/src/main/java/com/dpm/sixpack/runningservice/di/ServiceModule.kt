@@ -1,7 +1,6 @@
 package com.dpm.sixpack.runningservice.di
 
 import android.content.Context
-import android.hardware.SensorManager
 import androidx.core.app.NotificationCompat
 import com.dpm.sixpack.runningservice.NOTIFICATION_CHANNEL_ID
 import com.dpm.sixpack.runningservice.R

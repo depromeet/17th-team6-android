@@ -2,8 +2,6 @@ package com.dpm.sixpack.data.source.local.sensor.di
 
 import android.content.Context
 import android.hardware.SensorManager
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
