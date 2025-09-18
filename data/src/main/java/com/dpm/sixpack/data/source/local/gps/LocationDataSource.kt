@@ -19,7 +19,6 @@ class LocationDataSource
 constructor(
     private val locationClient: FusedLocationProviderClient,
 ) {
-
     @SuppressLint("MissingPermission")
      fun getLocationFlow(): Flow<Location> = callbackFlow {
         val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000L)

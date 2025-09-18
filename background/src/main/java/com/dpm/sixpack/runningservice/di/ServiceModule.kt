@@ -17,12 +17,6 @@ import dagger.hilt.android.scopes.ServiceScoped
 object ServiceModule {
     @ServiceScoped
     @Provides
-    fun provideSensorManager(
-        @ApplicationContext context: Context,
-    ): SensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-
-    @ServiceScoped
-    @Provides
     fun provideBaseNotificationBuilder(
         @ApplicationContext context: Context,
 //        pendingIntent: PendingIntent
