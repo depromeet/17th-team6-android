@@ -1,6 +1,7 @@
 package com.dpm.sixpack.presentation.routes.session.component.ready
 
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,10 +15,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,7 +36,7 @@ internal fun BaseReadyOverlay(
         modifier
             .fillMaxSize()
             .background(
-                color = Color.Black.copy(alpha = 0.3f),
+                color = Color.Black.copy(alpha = 0.7f),
             ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -74,17 +72,13 @@ private fun CircularLoadingIndicator(
     countdown: Int,
     modifier: Modifier = Modifier,
 ) {
-    var progress by remember { mutableFloatStateOf(0f) }
-
-    val animatedProgress by animateFloatAsState(
-        targetValue = progress,
-        animationSpec = tween(durationMillis = 1000),
-        label = "ProgressAnimation",
-    )
+    val animatable = remember(countdown) { Animatable(0f) }
 
     LaunchedEffect(countdown) {
-        progress = 0f
-        progress = 1f
+        animatable.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(durationMillis = 1000, easing = FastOutSlowInEasing),
+        )
     }
 
     Box(
@@ -95,7 +89,7 @@ private fun CircularLoadingIndicator(
             modifier =
                 Modifier
                     .size(300.dp),
-            progress = { animatedProgress },
+            progress = { animatable.value },
             strokeWidth = 10.dp,
             color = SixpackTheme.colors.lime600,
             trackColor = SixpackTheme.colors.gray900,
