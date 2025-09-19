@@ -16,10 +16,12 @@ import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionState.
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionUiState
 import com.naver.maps.geometry.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
+import timber.log.Timber
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.random.Random
@@ -70,8 +72,9 @@ class RunningSessionViewModel
 
                 intent {
                     var timer = 0
-                    repeat(RunningSessionState.Companion.INITIAL_COUNTDOWN) {
+                    repeat(INITIAL_COUNTDOWN) {
                         reduce {
+                            Timber.d("countdown: ${INITIAL_COUNTDOWN - timer}")
                             state.copy(
                                 sessionState =
                                     RunningSessionState.WarmUp.Ready(
@@ -80,6 +83,7 @@ class RunningSessionViewModel
                             )
                         }
                         timer++
+                        delay(1000L)
                     }
 
                     reduce {

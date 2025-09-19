@@ -90,7 +90,7 @@ internal fun RunningRecordPanel(
                     Modifier
                         .fillMaxWidth()
                         .height(56.dp),
-                buttonText = "기록 중지",
+                text = "기록 중지",
             )
         }
 
@@ -103,8 +103,8 @@ internal fun RunningRecordPanel(
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .height(56.dp)
-                            .weight(1f),
+                            .weight(1f)
+                            .height(56.dp),
                     onClick = { /* 기록 중지 로직 */ },
                 )
 
@@ -114,9 +114,9 @@ internal fun RunningRecordPanel(
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .height(56.dp)
-                            .weight(1f),
-                    buttonText = stringResource(R.string.panel_record_resume),
+                            .weight(1f)
+                            .height(56.dp),
+                    text = stringResource(R.string.panel_record_resume),
                     onClick = { /* 기록 재개 로직 */ },
                 )
             }

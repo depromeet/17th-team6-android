@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dpm.sixpack.presentation.routes.session.component.MapConstants
+import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionIntent
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
 import com.naver.maps.map.compose.rememberCameraPositionState
 import com.naver.maps.map.compose.rememberFusedLocationSource
@@ -16,7 +17,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 @OptIn(ExperimentalNaverMapApi::class)
 @Composable
 fun RunningSessionScreen(
-    onSessionStart: (Boolean) -> Unit,
+    onSessionStart: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: RunningSessionViewModel = hiltViewModel(),
 ) {
@@ -38,8 +39,10 @@ fun RunningSessionScreen(
         cameraPositionState = cameraPositionState,
         locationSource = locationSource,
         onLocationChange = { },
-        onStartClick = { },
-        onSessionStart = onSessionStart,
+        onStartClick = {
+            onSessionStart()
+            viewModel.onIntent(RunningSessionIntent.SessionStart)
+        },
     )
 }
 

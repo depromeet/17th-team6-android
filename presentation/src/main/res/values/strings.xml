@@ -8,10 +8,10 @@
     <string name="nav_tab_mypage_title">내 정보</string>
     <!--BottomNav End-->
 
-    <!--Running -->
+    <!--Screen Selection Tab-->
     <string name="screen_tab_goal_title">목표</string>
     <string name="screen_tab_map_title">지도</string>
-    <!--Running End -->
+    <!--Screen Selection Tab End -->
 
     <!--Running Record-->
     <string name="record_current_distance">현재 거리</string>
@@ -36,4 +36,8 @@
     <string name="ready_cooldown_primary">잠시 후 쿨다운 시작</string>
     <string name="ready_cooldown_secondary">러닝 후 가볍게 걸어보세요</string>
     <!--Ready Loading End-->
+
+    <!--RunningSessionScreen -->
+    <string name="session_start_running_button">러닝 시작</string>
+    <!--RunningSessionScreen End-->
 </resources>

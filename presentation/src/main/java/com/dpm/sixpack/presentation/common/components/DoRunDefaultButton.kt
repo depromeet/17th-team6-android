@@ -1,8 +1,8 @@
 package com.dpm.sixpack.presentation.common.components
 
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -11,14 +11,14 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 fun DoRunDefaultButton(
-    buttonText: String,
+    text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     textColor: Color = SixpackTheme.colors.gray0,
     containerColor: Color = SixpackTheme.colors.blue600,
 ) {
-    TextButton(
+    Button(
         modifier = modifier,
         onClick = {
             onClick()
@@ -28,7 +28,7 @@ fun DoRunDefaultButton(
         colors = ButtonDefaults.buttonColors(containerColor = containerColor),
     ) {
         Text(
-            text = buttonText,
+            text = text,
             style = SixpackTheme.typography.b1Bold,
             color = textColor,
         )
@@ -40,6 +40,6 @@ fun DoRunDefaultButton(
 private fun BottomLongButtonPreview() {
     DoRunDefaultButton(
         onClick = { },
-        buttonText = "Text",
+        text = "Text",
     )
 }

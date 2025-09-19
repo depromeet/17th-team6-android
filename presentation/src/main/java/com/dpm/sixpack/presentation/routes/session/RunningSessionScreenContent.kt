@@ -1,17 +1,21 @@
 package com.dpm.sixpack.presentation.routes.session
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dpm.sixpack.presentation.R
+import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.routes.session.component.MapConstants
+import com.dpm.sixpack.presentation.routes.session.component.ready.ReadyOverlay
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionState
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionUiState
 import com.naver.maps.geometry.LatLng
@@ -24,6 +28,7 @@ import com.naver.maps.map.compose.MapType
 import com.naver.maps.map.compose.MapUiSettings
 import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.rememberFusedLocationSource
+import timber.log.Timber
 
 @OptIn(ExperimentalNaverMapApi::class)
 @Composable
@@ -33,7 +38,6 @@ fun RunningSessionScreenContent(
     locationSource: LocationSource,
     onLocationChange: (LatLng) -> Unit,
     onStartClick: () -> Unit,
-    onSessionStart: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -52,6 +56,7 @@ fun RunningSessionScreenContent(
                 ),
             uiSettings =
                 MapUiSettings(
+                    isScrollGesturesEnabled = false,
                     isZoomGesturesEnabled = true,
                     isZoomControlEnabled = false,
                     isLocationButtonEnabled = false,
@@ -74,27 +79,49 @@ fun RunningSessionScreenContent(
         }
 
         when (uiState.sessionState) {
-            RunningSessionState.Initial -> {}
-            is RunningSessionState.WarmUp.Ready -> {}
+            RunningSessionState.Initial -> {
+                InitialContent(onStartClick = {
+                    onStartClick()
+                })
+            }
+
+            is RunningSessionState.ReadyState -> {
+                ReadyOverlay(
+                    modifier = Modifier.fillMaxSize(),
+                    readyState = uiState.sessionState,
+                )
+            }
+
             is RunningSessionState.WarmUp.Running -> {}
             is RunningSessionState.WarmUp.Pause -> {}
-            is RunningSessionState.Main.Ready -> {}
             is RunningSessionState.Main.Running -> {}
             is RunningSessionState.Main.Pause -> {}
-            is RunningSessionState.CoolDown.Ready -> {}
             is RunningSessionState.CoolDown.Pause -> TODO()
             is RunningSessionState.CoolDown.Running -> TODO()
         }
+    }
+}
 
-        Column(
+@Composable
+private fun InitialContent(onStartClick: () -> Unit) {
+    Box(
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(24.dp),
+        contentAlignment = Alignment.BottomCenter,
+    ) {
+        DoRunDefaultButton(
             modifier =
                 Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-            verticalArrangement = Arrangement.SpaceBetween,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-        }
+                    .fillMaxWidth()
+                    .height(56.dp),
+            onClick = {
+                Timber.d("Running Session Start Clicked")
+                onStartClick()
+            },
+            text = stringResource(id = R.string.session_start_running_button),
+        )
     }
 }
 
@@ -111,6 +138,5 @@ private fun PreviewRunningSessionScreenContent() {
         locationSource = rememberFusedLocationSource(),
         onLocationChange = { },
         onStartClick = { },
-        onSessionStart = { },
     )
 }

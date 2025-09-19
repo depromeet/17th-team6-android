@@ -15,7 +15,7 @@ internal fun RecordStopButton(
 ) {
     DoRunDefaultButton(
         modifier = modifier,
-        buttonText = stringResource(R.string.panel_record_cease),
+        text = stringResource(R.string.panel_record_cease),
         onClick = onClick,
         textColor = SixpackTheme.colors.red,
         containerColor = SixpackTheme.colors.redLight,
