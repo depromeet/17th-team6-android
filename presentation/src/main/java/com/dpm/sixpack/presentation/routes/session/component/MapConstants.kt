@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.running.component
+package com.dpm.sixpack.presentation.routes.session.component
 
 import com.dpm.sixpack.core.permission.SixPackPermissions
 import com.naver.maps.geometry.LatLng

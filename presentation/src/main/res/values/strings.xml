@@ -1,8 +1,39 @@
 <resources>
     <string name="app_name">sixpack</string>
 
+    <!--BottomNav-->
     <string name="nav_tab_home_title">홈</string>
     <string name="nav_tab_running_title">러닝</string>
     <string name="nav_tab_record_title">기록</string>
     <string name="nav_tab_mypage_title">내 정보</string>
+    <!--BottomNav End-->
+
+    <!--Running -->
+    <string name="screen_tab_goal_title">목표</string>
+    <string name="screen_tab_map_title">지도</string>
+    <!--Running End -->
+
+    <!--Running Record-->
+    <string name="record_current_distance">현재 거리</string>
+    <string name="record_running_duration">러닝 시간</string>
+    <string name="record_average_pace">평균 페이스</string>
+    <string name="record_cadence">케이던스</string>
+    <!--Running Record End-->
+
+    <!--Running Record Panel-->
+    <string name="panel_skip">건너뛰기</string>
+    <string name="panel_target_distance">목표거리</string>
+    <string name="panel_record_pause">기록중지</string>
+    <string name="panel_record_resume">계속 운동하기</string>
+    <string name="panel_record_cease">러닝 기록 종료</string>
+    <!--Running Record Panel End-->
+
+    <!--Ready Loading -->
+    <string name="ready_warmup_primary">5분 웜업 시작</string>
+    <string name="ready_warmup_secondary">러닝 전 가볍게 달려보세요</string>
+    <string name="ready_main_primary">잠시 후 러닝 시작</string>
+    <string name="ready_main_secondary">웜업을 종료하고 러닝이 시작됩니다</string>
+    <string name="ready_cooldown_primary">잠시 후 쿨다운 시작</string>
+    <string name="ready_cooldown_secondary">러닝 후 가볍게 걸어보세요</string>
+    <!--Ready Loading End-->
 </resources>

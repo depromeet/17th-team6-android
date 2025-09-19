@@ -1,8 +1,7 @@
-package com.dpm.sixpack.presentation.routes.running
+package com.dpm.sixpack.presentation.routes.session
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 internal fun RunningGoalScreen(

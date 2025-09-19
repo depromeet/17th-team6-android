@@ -1,6 +1,6 @@
-package com.dpm.sixpack.presentation.routes.running.contract
+package com.dpm.sixpack.presentation.routes.session.contract
 
-import com.dpm.sixpack.presentation.common.util.base.UiIntent
+import com.dpm.sixpack.presentation.common.base.UiIntent
 
 sealed interface RunningSessionIntent : UiIntent {
     //region Common

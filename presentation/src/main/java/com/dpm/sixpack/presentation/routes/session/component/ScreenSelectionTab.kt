@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.running.component
+package com.dpm.sixpack.presentation.routes.session.component
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,7 +49,7 @@ fun ContentDrawScope.drawWithLayer(block: ContentDrawScope.() -> Unit) {
 internal fun ScreenSelectionTab(
     modifier: Modifier = Modifier,
     selectedIndex: Int,
-    items: List<String>,
+    items: List<RunningScreenTabItems>,
     onSelectionChange: (Int) -> Unit,
 ) {
     BoxWithConstraints(
@@ -106,7 +107,7 @@ internal fun ScreenSelectionTab(
                             }
                         },
             ) {
-                items.forEachIndexed { index, text ->
+                items.forEachIndexed { index, tab ->
                     Box(
                         modifier =
                             Modifier
@@ -125,7 +126,7 @@ internal fun ScreenSelectionTab(
                         contentAlignment = Alignment.Center,
                     ) {
                         Text(
-                            text = text,
+                            text = stringResource(tab.title),
                             fontSize = 20.sp,
                             color = Color.Gray,
                         )
@@ -141,7 +142,7 @@ internal fun ScreenSelectionTab(
 private fun ScreenSelectionTabPreview() {
     ScreenSelectionTab(
         selectedIndex = 0,
-        items = listOf("목표", "지도"),
-        onSelectionChange = { }
+        items = RunningScreenTabItems.entries,
+        onSelectionChange = { },
     )
 }

@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.running
+package com.dpm.sixpack.presentation.routes.session
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -6,18 +6,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.dpm.sixpack.presentation.routes.running.component.MapConstants
-import com.dpm.sixpack.presentation.routes.running.component.ReadyLoadingScreen
+import com.dpm.sixpack.presentation.routes.session.component.MapConstants
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionState
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionUiState
 import com.naver.maps.geometry.LatLng
@@ -39,12 +33,11 @@ fun RunningSessionScreenContent(
     locationSource: LocationSource,
     onLocationChange: (LatLng) -> Unit,
     onStartClick: () -> Unit,
+    onSessionStart: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    val sheetState = rememberModalBottomSheetState()
-    var showBottomSheet by remember { mutableStateOf(false) }
-
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
     ) {
         NaverMap(
             modifier = Modifier.fillMaxSize(),
@@ -81,15 +74,16 @@ fun RunningSessionScreenContent(
         }
 
         when (uiState.sessionState) {
-            is RunningSessionState.CoolDown -> {}
-            is RunningSessionState.CoolDownPause -> {}
-            is RunningSessionState.CoolDownReady -> {}
             RunningSessionState.Initial -> {}
-            is RunningSessionState.MainRunning -> {}
-            is RunningSessionState.MainRunningPause -> {}
-            is RunningSessionState.MainRunningReady -> {}
-            is RunningSessionState.WarmUp -> {}
-            is RunningSessionState.WarmUpReady -> {}
+            is RunningSessionState.WarmUp.Ready -> {}
+            is RunningSessionState.WarmUp.Running -> {}
+            is RunningSessionState.WarmUp.Pause -> {}
+            is RunningSessionState.Main.Ready -> {}
+            is RunningSessionState.Main.Running -> {}
+            is RunningSessionState.Main.Pause -> {}
+            is RunningSessionState.CoolDown.Ready -> {}
+            is RunningSessionState.CoolDown.Pause -> TODO()
+            is RunningSessionState.CoolDown.Running -> TODO()
         }
 
         Column(
@@ -100,23 +94,6 @@ fun RunningSessionScreenContent(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            // 바텀 버튼
-//            BottomLongTextButton(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(10.dp),
-//                text = "러닝시작",
-//                onClick = {
-//                    showBottomSheet = true
-//                    onStartClick()
-//                },
-//            )
-        }
-
-        if (uiState.sessionState is RunningSessionState.WarmUpReady) {
-            ReadyLoadingScreen(
-                uiState.sessionState,
-            )
         }
     }
 }
@@ -128,11 +105,12 @@ private fun PreviewRunningSessionScreenContent() {
     RunningSessionScreenContent(
         uiState =
             RunningSessionUiState(
-                sessionState = RunningSessionState.WarmUpReady(),
+                sessionState = RunningSessionState.WarmUp.Ready(),
             ),
         cameraPositionState = CameraPositionState(),
         locationSource = rememberFusedLocationSource(),
         onLocationChange = { },
         onStartClick = { },
+        onSessionStart = { },
     )
 }
