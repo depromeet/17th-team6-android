@@ -44,5 +44,4 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindsSensorRepository(repositoryImpl: SensorRepositoryImpl): SensorRepository
-
 }

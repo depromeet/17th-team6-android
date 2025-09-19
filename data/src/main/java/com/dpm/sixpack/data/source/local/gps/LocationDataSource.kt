@@ -15,34 +15,38 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class LocationDataSource
-@Inject
-constructor(
-    private val locationClient: FusedLocationProviderClient,
-) {
-    @SuppressLint("MissingPermission")
-     fun getLocationFlow(): Flow<Location> = callbackFlow {
-        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000L)
-            .setWaitForAccurateLocation(true)
-            .build()
+    @Inject
+    constructor(
+        private val locationClient: FusedLocationProviderClient,
+    ) {
+        @SuppressLint("MissingPermission")
+        fun getLocationFlow(): Flow<Location> =
+            callbackFlow {
+                val locationRequest =
+                    LocationRequest
+                        .Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000L)
+                        .setWaitForAccurateLocation(true)
+                        .build()
 
-        val locationCallback = object : LocationCallback() {
-            override fun onLocationResult(result: LocationResult) {
-                result.lastLocation?.let { location ->
-                    trySend(location)
+                val locationCallback =
+                    object : LocationCallback() {
+                        override fun onLocationResult(result: LocationResult) {
+                            result.lastLocation?.let { location ->
+                                trySend(location)
+                            }
+                        }
+                    }
+
+                Timber.d("Data : Location 수집을 시작합니다.")
+                locationClient.requestLocationUpdates(
+                    locationRequest,
+                    locationCallback,
+                    Looper.getMainLooper(),
+                )
+
+                awaitClose {
+                    Timber.d("Data : Location 수집을 중단합니다.")
+                    locationClient.removeLocationUpdates(locationCallback)
                 }
             }
-        }
-
-        Timber.d("Data : Location 수집을 시작합니다.")
-        locationClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.getMainLooper()
-        )
-
-        awaitClose {
-            Timber.d("Data : Location 수집을 중단합니다.")
-            locationClient.removeLocationUpdates(locationCallback)
-        }
     }
-}

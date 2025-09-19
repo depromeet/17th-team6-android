@@ -15,7 +15,7 @@ object SensorModule {
     @Singleton
     @Provides
     fun provideSensorManager(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): SensorManager {
         val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as? SensorManager
 
