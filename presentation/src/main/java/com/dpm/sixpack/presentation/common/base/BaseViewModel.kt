@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.common.util.base
+package com.dpm.sixpack.presentation.common.base
 
 import androidx.lifecycle.ViewModel
 import org.orbitmvi.orbit.Container

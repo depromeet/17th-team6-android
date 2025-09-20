@@ -6,7 +6,7 @@ import com.dpm.sixpack.domain.model.RunningGoal
 import com.dpm.sixpack.domain.usecase.FinishRunningSessionUseCase
 import com.dpm.sixpack.domain.usecase.GetRealtimeRunningDataUseCase
 import com.dpm.sixpack.domain.usecase.StartRunningUseCase
-import com.dpm.sixpack.presentation.common.util.base.BaseViewModel
+import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.routes.session.contract.MapUiState
 import com.dpm.sixpack.presentation.routes.session.contract.RecordUiState
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionIntent
@@ -16,11 +16,14 @@ import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionState.
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionUiState
 import com.naver.maps.geometry.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
+import timber.log.Timber
 import javax.inject.Inject
+import kotlin.math.abs
 import kotlin.random.Random
 import kotlin.random.nextULong
 
@@ -50,13 +53,16 @@ class RunningSessionViewModel
 
         override fun onIntent(intent: RunningSessionIntent) {
             when (intent) {
-                RunningSessionIntent.Start -> handleStart()
-                RunningSessionIntent.Pause -> handlePause()
-                RunningSessionIntent.Resume -> handleResume()
-                RunningSessionIntent.CancelFinish -> handleCancelFinish()
-                RunningSessionIntent.Finish -> handleFinish()
-                RunningSessionIntent.ConfirmFinish -> handleConfirmFinish()
+                RunningSessionIntent.SessionStart -> handleStart()
+                RunningSessionIntent.MainRunningPause -> handlePause()
+                RunningSessionIntent.MainRunningResume -> handleResume()
+                RunningSessionIntent.MainRunningCancelFinish -> handleCancelFinish()
+                RunningSessionIntent.MainRunningFinish -> handleFinish()
+                RunningSessionIntent.MainRunningConfirmFinish -> handleConfirmFinish()
                 RunningSessionIntent.ToggleFollowingMode -> handleToggleFollowingMode()
+                else -> {
+                    // No-Op
+                }
             }
         }
 
@@ -68,20 +74,22 @@ class RunningSessionViewModel
                     var timer = 0
                     repeat(INITIAL_COUNTDOWN) {
                         reduce {
+                            Timber.d("countdown: ${INITIAL_COUNTDOWN - timer}")
                             state.copy(
-                                state =
-                                    RunningSessionState.MainReady(
+                                sessionState =
+                                    RunningSessionState.WarmUp.Ready(
                                         countdown = INITIAL_COUNTDOWN - timer,
                                     ),
                             )
                         }
                         timer++
+                        delay(1000L)
                     }
 
                     reduce {
                         state.copy(
-                            state =
-                                RunningSessionState.MainRunning(
+                            sessionState =
+                                RunningSessionState.Main.Running(
                                     mapUiState = MapUiState(),
                                     recordUiState = RecordUiState(),
                                 ),
@@ -91,9 +99,9 @@ class RunningSessionViewModel
                     getRealtimeRunningDataUseCase()
                         .catch { }
                         .collect { result ->
-                            val currentState = state.state
+                            val currentState = state.sessionState
                             val realtimeData = result.getOrNull()
-                            if (currentState is RunningSessionState.MainRunning && realtimeData != null) {
+                            if (currentState is RunningSessionState.Main.Running && realtimeData != null) {
                                 val currentPaceColors =
                                     currentState.mapUiState.paceColors.lastOrNull() ?: listOf()
                                 val newPaceColors =
@@ -108,7 +116,7 @@ class RunningSessionViewModel
                                         )
                                 reduce {
                                     state.copy(
-                                        state =
+                                        sessionState =
                                             currentState.copy(
                                                 mapUiState =
                                                     currentState.mapUiState.copy(
@@ -130,7 +138,7 @@ class RunningSessionViewModel
                                                 recordUiState =
                                                     currentState.recordUiState.copy(
                                                         currentDistance = "${realtimeData.totalDistanceMeter}m",
-                                                        remainingDuration = formatSecondsToTime(realtimeData.duration),
+                                                        currentDuration = formatSecondsToTime(realtimeData.duration),
                                                         avgPace =
                                                             calculatePace(
                                                                 totalTimeInSeconds = realtimeData.duration,
@@ -149,19 +157,19 @@ class RunningSessionViewModel
 
         private fun handlePause() {
             intent {
-                val currentState = state.state
-                if (currentState is RunningSessionState.MainRunning) {
+                val currentState = state.sessionState
+                if (currentState is RunningSessionState.Main.Running) {
                     reduce {
                         state.copy(
-                            state =
-                                RunningSessionState.MainPause(
+                            sessionState =
+                                RunningSessionState.Main.Pause(
                                     mapUiState =
                                         currentState.mapUiState.copy(
                                             paceColors = currentState.mapUiState.paceColors + listOf(),
                                             path = currentState.mapUiState.path + listOf(),
                                         ),
                                     recordUiState = currentState.recordUiState,
-                                    showExitConfirmUi = false,
+                                    showFinishSessionConfirmUi = false,
                                 ),
                         )
                     }
@@ -171,12 +179,12 @@ class RunningSessionViewModel
 
         private fun handleResume() {
             intent {
-                val currentState = state.state
-                if (currentState is RunningSessionState.MainPause) {
+                val currentState = state.sessionState
+                if (currentState is RunningSessionState.Main.Pause) {
                     reduce {
                         state.copy(
-                            state =
-                                RunningSessionState.MainRunning(
+                            sessionState =
+                                RunningSessionState.Main.Running(
                                     mapUiState = currentState.mapUiState,
                                     recordUiState = currentState.recordUiState,
                                 ),
@@ -188,13 +196,13 @@ class RunningSessionViewModel
 
         private fun handleCancelFinish() {
             intent {
-                val currentState = state.state
-                if (currentState is RunningSessionState.MainPause) {
+                val currentState = state.sessionState
+                if (currentState is RunningSessionState.Main.Pause) {
                     reduce {
                         state.copy(
-                            state =
+                            sessionState =
                                 currentState.copy(
-                                    showExitConfirmUi = false,
+                                    showFinishSessionConfirmUi = false,
                                 ),
                         )
                     }
@@ -204,13 +212,13 @@ class RunningSessionViewModel
 
         private fun handleFinish() {
             intent {
-                val currentState = state.state
-                if (currentState is RunningSessionState.MainPause) {
+                val currentState = state.sessionState
+                if (currentState is RunningSessionState.Main.Pause) {
                     reduce {
                         state.copy(
-                            state =
+                            sessionState =
                                 currentState.copy(
-                                    showExitConfirmUi = true,
+                                    showFinishSessionConfirmUi = true,
                                 ),
                         )
                     }
@@ -222,15 +230,15 @@ class RunningSessionViewModel
             viewModelScope.launch {
                 finishRunningSessionUseCase()
                 intent {
-                    val currentState = state.state
-                    if (currentState is RunningSessionState.MainPause) {
+                    val currentState = state.sessionState
+                    if (currentState is RunningSessionState.Main.Pause) {
                         var timer = 0
-                        repeat(INITIAL_COUNTDOWN) {
+                        repeat(RunningSessionState.Companion.INITIAL_COUNTDOWN) {
                             reduce {
                                 state.copy(
-                                    state =
-                                        RunningSessionState.CoolDownReady(
-                                            mapUiState = currentState.mapUiState,
+                                    sessionState =
+                                        RunningSessionState.WarmUp.Ready(
+//                                            mapUiState = currentState.mapUiState,
                                             countdown = INITIAL_COUNTDOWN - timer,
                                         ),
                                 )
@@ -253,7 +261,7 @@ class RunningSessionViewModel
         }
 
         private fun formatSecondsToTime(totalSeconds: Int): String {
-            val seconds = kotlin.math.abs(totalSeconds)
+            val seconds = abs(totalSeconds)
 
             val hours = seconds / 3600
             val minutes = (seconds % 3600) / 60
