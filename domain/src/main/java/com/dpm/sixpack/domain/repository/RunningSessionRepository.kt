@@ -13,7 +13,7 @@ interface RunningSessionRepository {
 
     suspend fun saveRealtimeData(data: RealtimeRunningData): DoRunResult<SaveRealtimeRunningDataResult.LocalResult>
 
-    suspend fun saveSegmentData(): DoRunResult<SaveRealtimeRunningDataResult.SyncResult>
+    suspend fun saveSegmentData(sessionId: Long): DoRunResult<SaveRealtimeRunningDataResult.SyncResult>
 
-    suspend fun finish(): DoRunResult<RunningSessionResult>
+    suspend fun finish(sessionId: Long): DoRunResult<RunningSessionResult>
 }
