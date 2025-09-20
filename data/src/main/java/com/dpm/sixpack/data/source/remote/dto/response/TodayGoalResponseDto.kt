@@ -1,7 +1,7 @@
 package com.dpm.sixpack.data.source.remote.dto.response
 
 import android.annotation.SuppressLint
-import com.dpm.sixpack.domain.model.RunningGoal
+import com.dpm.sixpack.domain.model.RunningSessionGoal
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -33,12 +33,15 @@ data class TodayGoalResponseDto(
     @SerialName("repeatFrequency")
     val repeatFrequency: Int,
 ) {
-    fun toRunningGoal(): RunningGoal =
-        RunningGoal(
+    // TODO FIXME - 실제 데이터로 변경
+    fun toRunningGoal(): RunningSessionGoal =
+        RunningSessionGoal(
             id = id,
-            title = title,
-            distance = distance,
-            duration = duration,
-            pace = pace,
+            sessionNumber = 0,
+            warmUpDuration = 0,
+            mainRunningDuration = duration,
+            mainRunningDistance = distance,
+            mainRunningPace = pace,
+            coolDownDuration = 0
         )
 }

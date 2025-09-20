@@ -2,7 +2,7 @@ package com.dpm.sixpack.data.repository
 
 import com.dpm.sixpack.data.source.remote.datasoruce.RunningGoalDataSource
 import com.dpm.sixpack.domain.exception.DoRunException
-import com.dpm.sixpack.domain.model.RunningGoal
+import com.dpm.sixpack.domain.model.RunningSessionGoal
 import com.dpm.sixpack.domain.repository.RunningGoalRepository
 import com.dpm.sixpack.domain.util.DoRunResult
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +14,7 @@ class RunningGoalRepositoryImpl
     constructor(
         private val runningGoalDataSource: RunningGoalDataSource,
     ) : RunningGoalRepository {
-        override suspend fun getTodayRunningGoal(): DoRunResult<RunningGoal> =
+        override suspend fun getTodayRunningGoal(): DoRunResult<RunningSessionGoal> =
             withContext(Dispatchers.IO) {
                 try {
                     val response = runningGoalDataSource.getTodayRunningGoal()

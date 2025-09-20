@@ -1,6 +1,6 @@
 package com.dpm.sixpack.domain.usecase
 
-import com.dpm.sixpack.domain.model.RunningGoal
+import com.dpm.sixpack.domain.model.RunningSessionGoal
 import com.dpm.sixpack.domain.repository.RunningGoalRepository
 import com.dpm.sixpack.domain.util.DoRunResult
 import javax.inject.Inject
@@ -10,5 +10,5 @@ class GetTodayRunningGoalUseCase
     constructor(
         private val runningGoalRepository: RunningGoalRepository,
     ) {
-        suspend operator fun invoke(): DoRunResult<RunningGoal> = runningGoalRepository.getTodayRunningGoal()
+        suspend operator fun invoke(): DoRunResult<RunningSessionGoal> = runningGoalRepository.getTodayRunningGoal()
     }
