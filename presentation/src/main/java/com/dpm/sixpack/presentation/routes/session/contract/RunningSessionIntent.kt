@@ -1,9 +1,14 @@
 package com.dpm.sixpack.presentation.routes.session.contract
 
 import com.dpm.sixpack.presentation.common.base.UiIntent
+import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningScreenTabItem
 
 sealed interface RunningSessionIntent : UiIntent {
     //region Common
+
+    data class TabChange(
+        val tab: RunningScreenTabItem,
+    ) : RunningSessionIntent
 
     data object SessionStart : RunningSessionIntent
 

@@ -36,7 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningScreenTabItems
+import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningScreenTabItem
 
 fun ContentDrawScope.drawWithLayer(block: ContentDrawScope.() -> Unit) {
     with(drawContext.canvas.nativeCanvas) {
@@ -50,7 +50,7 @@ fun ContentDrawScope.drawWithLayer(block: ContentDrawScope.() -> Unit) {
 internal fun ScreenSelectionTab(
     modifier: Modifier = Modifier,
     selectedIndex: Int,
-    items: List<RunningScreenTabItems>,
+    items: List<RunningScreenTabItem>,
     onSelectionChange: (Int) -> Unit,
 ) {
     BoxWithConstraints(
@@ -143,7 +143,7 @@ internal fun ScreenSelectionTab(
 private fun ScreenSelectionTabPreview() {
     ScreenSelectionTab(
         selectedIndex = 0,
-        items = RunningScreenTabItems.entries,
+        items = RunningScreenTabItem.entries,
         onSelectionChange = { },
     )
 }

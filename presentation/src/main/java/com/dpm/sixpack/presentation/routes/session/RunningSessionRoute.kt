@@ -18,13 +18,13 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningScreenTabItems
 import com.dpm.sixpack.presentation.routes.session.component.ScreenSelectionTab
+import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningScreenTabItem
 import kotlinx.coroutines.launch
 
 @Composable
 fun RunningSessionRoute(modifier: Modifier = Modifier) {
-    val tabItems = RunningScreenTabItems.entries
+    val tabItems = RunningScreenTabItem.entries
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { tabItems.size })
     val coroutineScope = rememberCoroutineScope()
 
