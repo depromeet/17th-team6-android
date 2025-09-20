@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.session.component
+package com.dpm.sixpack.presentation.routes.session.contract.uistate
 
 import androidx.annotation.StringRes
 import com.dpm.sixpack.presentation.R

@@ -16,8 +16,8 @@ import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.routes.session.component.MapConstants
 import com.dpm.sixpack.presentation.routes.session.component.ready.ReadyOverlay
-import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionState
-import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionUiState
+import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningSessionState
+import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningSessionUiState
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.LocationSource
 import com.naver.maps.map.compose.CameraPositionState

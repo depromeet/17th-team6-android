@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.dpm.sixpack.presentation.routes.session.component.RunningScreenTabItems
+import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningScreenTabItems
 import com.dpm.sixpack.presentation.routes.session.component.ScreenSelectionTab
 import kotlinx.coroutines.launch
 

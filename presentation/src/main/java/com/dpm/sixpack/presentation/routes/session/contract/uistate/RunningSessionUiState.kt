@@ -1,13 +1,13 @@
-package com.dpm.sixpack.presentation.routes.session.contract
+package com.dpm.sixpack.presentation.routes.session.contract.uistate
 
 import android.os.Parcelable
+import com.dpm.sixpack.domain.model.RunningGoal
 import com.dpm.sixpack.presentation.common.base.UiState
-import com.naver.maps.geometry.LatLng
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class RunningSessionUiState(
-    val sessionState: RunningSessionState = RunningSessionState.Initial,
+    val sessionState: RunningSessionState = RunningSessionState.Initial(),
     val isFollowingModeEnabled: Boolean = true,
 ) : UiState,
     Parcelable
@@ -22,7 +22,10 @@ sealed interface RunningSessionState : Parcelable {
      * [러닝 지도 뷰](https://www.figma.com/design/2gOt25L1n1LkFz15uvRapV/%EB%94%94%ED%94%84%EB%A7%8C-17%EA%B8%B0-6%ED%8C%80?node-id=1548-5420&m=dev)
      * 러닝 시작 버튼만 떠있는 상태.
      */
-    data object Initial : RunningSessionState
+    data class Initial(
+        val tabItems: RunningScreenTabItems = RunningScreenTabItems.GOAL,
+        val goal: RunningGoalUiState = RunningGoalUiState()
+    ) : RunningSessionState
 
     sealed interface HasRecord : RunningSessionState {
         val recordUiState: RecordUiState
@@ -129,19 +132,3 @@ sealed interface RunningSessionState : Parcelable {
     }
 }
 
-@Parcelize
-data class RecordUiState(
-    val currentDistance: String = "",
-    // 00:32:10
-    val currentDuration: String = "",
-    // 5'30"
-    val avgPace: String = "",
-    // 180
-    val cadence: String = "",
-) : Parcelable
-
-@Parcelize
-data class MapUiState(
-    val paceColors: List<List<ULong>> = listOf(),
-    val path: List<List<LatLng>> = listOf(),
-) : Parcelable

@@ -36,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningScreenTabItems
 
 fun ContentDrawScope.drawWithLayer(block: ContentDrawScope.() -> Unit) {
     with(drawContext.canvas.nativeCanvas) {

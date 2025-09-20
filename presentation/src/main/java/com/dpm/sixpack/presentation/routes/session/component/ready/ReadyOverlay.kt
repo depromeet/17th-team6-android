@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.dpm.sixpack.presentation.R
-import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionState
+import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningSessionState
 
 @Composable
 internal fun ReadyOverlay(
