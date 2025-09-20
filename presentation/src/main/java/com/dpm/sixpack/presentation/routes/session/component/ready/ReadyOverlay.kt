@@ -45,6 +45,7 @@ internal fun ReadyOverlay(
         modifier = modifier,
         primaryText = primaryText,
         secondaryText = secondaryText,
+        onlyText = readyState.onlyText,
         countdown = readyState.countdown,
     )
 }

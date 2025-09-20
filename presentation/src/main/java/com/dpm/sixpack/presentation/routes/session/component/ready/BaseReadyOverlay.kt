@@ -30,6 +30,7 @@ internal fun BaseReadyOverlay(
     primaryText: String,
     secondaryText: String,
     countdown: Int,
+    onlyText: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -57,7 +58,7 @@ internal fun BaseReadyOverlay(
                 color = SixpackTheme.colors.gray0,
             )
 
-            if (countdown <= 3 && countdown > 0) {
+            if (!onlyText) {
                 CircularLoadingIndicator(
                     modifier = Modifier.padding(top = 12.dp, bottom = 100.dp),
                     countdown = countdown,
@@ -111,6 +112,7 @@ private fun PreviewReadyLoadingScreenNoCount() {
         primaryText = "잠시 후 러닝 시작",
         secondaryText = "웜업 운동을 종료하고\n본 러닝이 시작됩니다.",
         countdown = 5,
+        onlyText = true,
     )
 }
 
@@ -121,5 +123,6 @@ private fun PreviewReadyLoadingScreenWithCount() {
         primaryText = "잠시 후 러닝 시작",
         secondaryText = "웜업 운동을 종료하고\n본 러닝이 시작됩니다.",
         countdown = 2,
+        onlyText = false,
     )
 }
