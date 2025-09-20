@@ -59,8 +59,8 @@ val SixPackLightColors =
         gray0 = Color(0xFFFFFFFF),
         red = Color(0xFFFF443B),
         redLight = Color(0xFFFFE5E4),
-        yellow = Color(0xFF3B3E43),
-        green = Color(0xFF494D54),
+        yellow = Color(0xFFFFE14D),
+        green = Color(0xFF2DDD93),
     )
 
 // 현재 다크 테마 지원하지 않음. 추후 지원 예정.
@@ -89,7 +89,7 @@ val SixPackDarkColors =
         gray10 = Color(0xFFF9FAFB),
         gray0 = Color(0xFFFFFFFF),
         red = Color(0xFFFF443B),
-        redLight = Color(0xFFFD4E46),
-        yellow = Color(0xFF3B3E43),
-        green = Color(0xFF494D54),
+        redLight = Color(0xFFFFE5E4),
+        yellow = Color(0xFFFFE14D),
+        green = Color(0xFF2DDD93),
     )
