@@ -41,7 +41,7 @@
     <string name="dialog_warmup_stop_title">웜업 종료</string>
     <string name="dialog_warmup_stop_content">웜업은 기록되지 않아요.\n기록을 종료하고 홈으로 이동하시겠어요?</string>
     <string name="dialog_running_stop_title">러닝기록 종료</string>
-    <string name="dialog_running_stop_content">아직 목표까지 달리지 않았어요.\n이대로 기록을 종료하시겠어요?</string>
+    <string name="dialog_running_stop_content">아직 목표까지 %1$s 남았어요.\n이대로 기록을 종료하시겠어요?</string>
     <string name="dialog_cooldown_stop_content">이대로 기록을 종료하고\n러닝을 마무리하시겠어요?</string>
     <!--RunningDialog End-->
 

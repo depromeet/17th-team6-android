@@ -37,6 +37,11 @@ fun calculatePace(
 fun formatDistanceToKm(distanceInMeters: Int): String {
     if (distanceInMeters < 1000) return "${distanceInMeters}m"
     val km = distanceInMeters / 1000.0
-    return String.format("%.2f km", km)
-}
+    val formattedString = String.format("%.2f", km)
 
+    return if (formattedString.endsWith("0")) {
+        "${formattedString.dropLast(1)}km"
+    } else {
+        "${formattedString}km"
+    }
+}

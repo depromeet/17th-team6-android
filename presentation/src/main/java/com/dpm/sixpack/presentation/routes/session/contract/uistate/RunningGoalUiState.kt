@@ -17,12 +17,12 @@ data class RunningGoalUiState(
     val coolDownDuration: String = "", // 정리운동 시간
 ) : Parcelable
 
-fun RunningSessionGoal.toUiState() = RunningGoalUiState(
-    sessionNumber = sessionNumber,
-    mainRunningDistance = formatDistanceToKm(mainRunningDistance),
-    mainRunningDuration = formatSecondsToTime(mainRunningDuration),
-    mainRunningPace = formatSecondsToPace(mainRunningPace),
-    warmUpDuration = formatSecondsToTime(mainRunningDuration),
-    coolDownDuration = formatSecondsToTime(coolDownDuration),
-)
-
+fun RunningSessionGoal.toUiState() =
+    RunningGoalUiState(
+        sessionNumber = sessionNumber,
+        mainRunningDistance = formatDistanceToKm(mainRunningDistance),
+        mainRunningDuration = formatSecondsToTime(mainRunningDuration),
+        mainRunningPace = formatSecondsToPace(mainRunningPace),
+        warmUpDuration = formatSecondsToTime(mainRunningDuration),
+        coolDownDuration = formatSecondsToTime(coolDownDuration),
+    )

@@ -13,3 +13,11 @@ data class RecordUiState(
     // 180
     val cadence: String = "",
 ) : Parcelable
+
+internal val INITIAL_RECORD_STATE =
+    RecordUiState(
+        currentDistance = "0.0km",
+        currentDuration = "00:00:00",
+        avgPace = "0'00\"",
+        cadence = "0",
+    )

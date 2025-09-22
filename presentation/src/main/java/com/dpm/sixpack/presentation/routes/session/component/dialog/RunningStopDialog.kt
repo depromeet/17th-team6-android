@@ -11,14 +11,15 @@ import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.routes.session.component.panel.RecordStopButton
 
 @Composable
-internal fun RunningTerminateDialog(
+internal fun RunningStopDialog(
+    remainDistance: String,
     onCancelClick: () -> Unit,
     onStopConfirmClick: () -> Unit,
 ) {
     RunningDialog(
         onDismissRequest = {},
         title = stringResource(R.string.dialog_running_stop_title),
-        contentText = stringResource(R.string.dialog_running_stop_content),
+        contentText = stringResource(R.string.dialog_running_stop_content, remainDistance),
         onCancelClick = onCancelClick,
     ) {
         RecordStopButton(
@@ -34,8 +35,9 @@ internal fun RunningTerminateDialog(
 
 @Preview
 @Composable
-private fun RunningTerminateDialogPreview() {
-    RunningTerminateDialog(
+private fun RunningStopDialogPreview() {
+    RunningStopDialog(
+        remainDistance = "200m",
         onCancelClick = {},
         onStopConfirmClick = {},
     )

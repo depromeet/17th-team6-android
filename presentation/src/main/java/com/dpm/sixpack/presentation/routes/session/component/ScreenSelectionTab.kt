@@ -50,8 +50,8 @@ fun ContentDrawScope.drawWithLayer(block: ContentDrawScope.() -> Unit) {
 internal fun ScreenSelectionTab(
     modifier: Modifier = Modifier,
     selectedIndex: Int,
-    items: List<RunningScreenTabItem>,
-    onSelectionChange: (Int) -> Unit,
+    tabItems: List<RunningScreenTabItem>,
+    onSelectionChange: (RunningScreenTabItem) -> Unit,
 ) {
     BoxWithConstraints(
         modifier
@@ -61,9 +61,9 @@ internal fun ScreenSelectionTab(
             .background(Color(0xfff3f3f2))
             .padding(8.dp),
     ) {
-        if (items.isNotEmpty()) {
+        if (tabItems.isNotEmpty()) {
             val maxWidth = this.maxWidth
-            val tabWidth = maxWidth / items.size
+            val tabWidth = maxWidth / tabItems.size
 
             val indicatorOffset by animateDpAsState(
                 targetValue = tabWidth * selectedIndex,
@@ -108,7 +108,7 @@ internal fun ScreenSelectionTab(
                             }
                         },
             ) {
-                items.forEachIndexed { index, tab ->
+                tabItems.forEachIndexed { index, tab ->
                     Box(
                         modifier =
                             Modifier
@@ -121,7 +121,7 @@ internal fun ScreenSelectionTab(
                                         },
                                     indication = null,
                                     onClick = {
-                                        onSelectionChange(index)
+                                        onSelectionChange(tabItems[index])
                                     },
                                 ),
                         contentAlignment = Alignment.Center,
@@ -143,7 +143,7 @@ internal fun ScreenSelectionTab(
 private fun ScreenSelectionTabPreview() {
     ScreenSelectionTab(
         selectedIndex = 0,
-        items = RunningScreenTabItem.entries,
+        tabItems = RunningScreenTabItem.entries,
         onSelectionChange = { },
     )
 }

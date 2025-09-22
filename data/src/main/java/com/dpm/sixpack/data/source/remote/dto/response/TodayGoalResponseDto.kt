@@ -42,6 +42,6 @@ data class TodayGoalResponseDto(
             mainRunningDuration = duration,
             mainRunningDistance = distance,
             mainRunningPace = pace,
-            coolDownDuration = 0
+            coolDownDuration = 0,
         )
 }

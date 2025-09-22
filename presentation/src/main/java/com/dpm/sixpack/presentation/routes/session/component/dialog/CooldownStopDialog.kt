@@ -11,7 +11,7 @@ import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.routes.session.component.panel.RecordStopButton
 
 @Composable
-internal fun CooldownTerminateDialog(
+internal fun CooldownStopDialog(
     onCancelClick: () -> Unit,
     onStopClick: () -> Unit,
 ) {
@@ -34,8 +34,8 @@ internal fun CooldownTerminateDialog(
 
 @Preview
 @Composable
-private fun CooldownTerminateDialogPreview() {
-    CooldownTerminateDialog(
+private fun CooldownStopDialogPreview() {
+    CooldownStopDialog(
         onCancelClick = {},
         onStopClick = {},
     )
