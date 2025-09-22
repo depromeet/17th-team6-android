@@ -11,8 +11,8 @@ class StartRunningUseCase
     constructor(
         private val runningSessionRepository: RunningSessionRepository,
         private val userPreferenceRepository: UserPreferenceRepository,
-        ) {
-        suspend operator fun invoke(goalPlanId: Long): DoRunResult<Long>  {
+    ) {
+        suspend operator fun invoke(goalPlanId: Long): DoRunResult<Long> {
             val localSessionId = userPreferenceRepository.getSessionId()
 
             return if (localSessionId == null) {
