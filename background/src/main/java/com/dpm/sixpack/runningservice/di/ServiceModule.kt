@@ -1,7 +1,6 @@
 package com.dpm.sixpack.runningservice.di
 
 import android.content.Context
-import android.hardware.SensorManager
 import androidx.core.app.NotificationCompat
 import com.dpm.sixpack.runningservice.NOTIFICATION_CHANNEL_ID
 import com.dpm.sixpack.runningservice.R
@@ -15,12 +14,6 @@ import dagger.hilt.android.scopes.ServiceScoped
 @Module
 @InstallIn(ServiceComponent::class)
 object ServiceModule {
-    @ServiceScoped
-    @Provides
-    fun provideSensorManager(
-        @ApplicationContext context: Context,
-    ): SensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-
     @ServiceScoped
     @Provides
     fun provideBaseNotificationBuilder(

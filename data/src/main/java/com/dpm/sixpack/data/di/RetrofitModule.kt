@@ -51,7 +51,7 @@ object RetrofitModule {
     @OptIn(ExperimentalSerializationApi::class)
     @Provides
     @Singleton
-    fun providesBbangZipRetrofit(
+    fun providesDoRunRetrofit(
         okHttpClient: OkHttpClient,
         json: Json,
     ): Retrofit =
