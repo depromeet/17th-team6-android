@@ -14,7 +14,7 @@ class SensorRepositoryImpl
     constructor(
         private val sensorDataSource: SensorDataSource,
     ) : SensorRepository {
-        override fun getTotalStep(): Flow<DoRunResult<Long>> =
+        override fun getTotalStep(): Flow<DoRunResult<Int>> =
             sensorDataSource
                 .getTotalStepsFlow()
                 .map { stepCount ->

@@ -15,18 +15,18 @@ class SensorDataSource
     constructor(
         private val sensorManager: SensorManager,
     ) {
-        fun getTotalStepsFlow(): Flow<Long> =
+        fun getTotalStepsFlow(): Flow<Int> =
             callbackFlow {
                 val stepCounterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
 
-                var initialSteps = -1L
+                var initialSteps = -1
 
                 val sensorEventListener =
                     object : SensorEventListener {
                         override fun onSensorChanged(event: SensorEvent) {
                             if (event.sensor.type == Sensor.TYPE_STEP_COUNTER) {
-                                val totalSteps = event.values[0].toLong()
-                                if (initialSteps == -1L) {
+                                val totalSteps = event.values[0].toInt()
+                                if (initialSteps == -1) {
                                     initialSteps = totalSteps
                                 }
                                 trySend(totalSteps - initialSteps)
