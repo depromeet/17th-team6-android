@@ -8,18 +8,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
-import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.routes.session.component.panel.RecordStopButton
 
 @Composable
-internal fun RunningTerminateDialog(
+internal fun CooldownTerminateDialog(
     onCancelClick: () -> Unit,
     onStopClick: () -> Unit,
 ) {
     RunningDialog(
         onDismissRequest = {},
-        title = stringResource(R.string.dialog_running_terminate_title),
-        contentText = stringResource(R.string.dialog_running_terminate_content),
+        title = stringResource(R.string.dialog_running_stop_title),
+        contentText = stringResource(R.string.dialog_cooldown_stop_content),
         onCancelClick = onCancelClick,
     ) {
         RecordStopButton(
@@ -35,8 +34,8 @@ internal fun RunningTerminateDialog(
 
 @Preview
 @Composable
-private fun RunningTerminateDialogPreview() {
-    RunningTerminateDialog(
+private fun CooldownTerminateDialogPreview() {
+    CooldownTerminateDialog(
         onCancelClick = {},
         onStopClick = {},
     )

@@ -11,14 +11,14 @@ import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.routes.session.component.panel.RecordStopButton
 
 @Composable
-internal fun CooldownTerminateDialog(
+internal fun RunningTerminateDialog(
     onCancelClick: () -> Unit,
-    onStopClick: () -> Unit,
+    onStopConfirmClick: () -> Unit,
 ) {
     RunningDialog(
         onDismissRequest = {},
-        title = stringResource(R.string.dialog_running_terminate_title),
-        contentText = stringResource(R.string.dialog_cooldown_terminate_content),
+        title = stringResource(R.string.dialog_running_stop_title),
+        contentText = stringResource(R.string.dialog_running_stop_content),
         onCancelClick = onCancelClick,
     ) {
         RecordStopButton(
@@ -27,16 +27,16 @@ internal fun CooldownTerminateDialog(
                     .fillMaxWidth()
                     .weight(1f)
                     .height(56.dp),
-            onClick = onStopClick,
+            onClick = onStopConfirmClick,
         )
     }
 }
 
 @Preview
 @Composable
-private fun CooldownTerminateDialogPreview() {
-    CooldownTerminateDialog(
+private fun RunningTerminateDialogPreview() {
+    RunningTerminateDialog(
         onCancelClick = {},
-        onStopClick = {},
+        onStopConfirmClick = {},
     )
 }
