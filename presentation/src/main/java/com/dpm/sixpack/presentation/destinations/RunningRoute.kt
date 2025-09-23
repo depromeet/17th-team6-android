@@ -4,6 +4,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed interface RunningRoute : Route {
+    // 홈 화면
+    @Serializable
+    data object Home : RunningRoute
+
     // 러닝 세션 화면
     @Serializable
     data object Session : RunningRoute

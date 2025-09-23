@@ -43,7 +43,7 @@ class MainNavigator(
             }
 
     // FIXME: Change to other when the start screen is implemented
-    val startDestination = RunningRoute.Session
+    val startDestination = RunningRoute.Home
 
     fun popBackStack() {
         navController.popBackStack()
