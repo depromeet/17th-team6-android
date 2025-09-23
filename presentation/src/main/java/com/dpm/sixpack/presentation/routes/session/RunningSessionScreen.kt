@@ -105,7 +105,6 @@ fun RunningSessionScreen(
             is RunningSessionState.RunningState -> {
                 RunningRecordPanel(
                     modifier = Modifier.fillMaxWidth(),
-                    isPaused = false,
                     sessionState = uiState.sessionState,
                     onPauseClick = onPauseClick,
                     onResumeClick = onResumeClick,
@@ -119,7 +118,6 @@ fun RunningSessionScreen(
             is RunningSessionState.PausedState -> {
                 RunningRecordPanel(
                     modifier = Modifier.fillMaxWidth(),
-                    isPaused = true,
                     sessionState = uiState.sessionState,
                     onPauseClick = onPauseClick,
                     onResumeClick = onResumeClick,

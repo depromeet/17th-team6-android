@@ -27,7 +27,6 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 @Composable
 internal fun RunningRecordPanel(
     sessionState: RunningSessionState.HasRecord,
-    isPaused: Boolean,
     onPauseClick: (RunningSessionIntent.PauseIntent) -> Unit,
     onResumeClick: (RunningSessionIntent.ResumeIntent) -> Unit,
     onStopClick: (RunningSessionIntent.StopIntent) -> Unit,
@@ -35,28 +34,9 @@ internal fun RunningRecordPanel(
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier.fillMaxSize(), // 외부에서 전달된 modifier를 여기에 적용
+        modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter,
     ) {
-        val isMain = sessionState is RunningSessionState.Main
-        val isWarmUp = sessionState is RunningSessionState.WarmUp
-        val isCoolDown = sessionState is RunningSessionState.CoolDown
-
-        val primaryInfo =
-            when (sessionState) {
-                is RunningSessionState.WarmUp -> {
-                    stringResource(R.string.running_phase_warmup_title)
-                }
-
-                is RunningSessionState.Main -> {
-                    stringResource(R.string.running_phase_main_title)
-                }
-
-                is RunningSessionState.CoolDown -> {
-                    stringResource(R.string.running_phase_cooldown_title)
-                }
-            }
-
         Column(
             modifier =
                 Modifier
@@ -64,110 +44,129 @@ internal fun RunningRecordPanel(
                     .background(SixpackTheme.colors.gray0, shape = SixpackTheme.shapes.round20)
                     .padding(horizontal = 24.dp, vertical = 20.dp),
         ) {
-            // 세션 정보
-            if (isMain) {
-                val goalDistance =
-                    when (sessionState) {
-                        is RunningSessionState.Main.Running -> sessionState.goalDistance
-                        is RunningSessionState.Main.Pause -> sessionState.goalDistance
-                        else -> ""
-                    }
-                MainSessionInfo(
-                    primaryInfo = primaryInfo,
-                    secondaryInfo = goalDistance,
-                )
-            }
-            if (isWarmUp) {
-                PrePostSessionInfo(
-                    primaryInfo = primaryInfo,
-                    showSkip = true,
-                    onSkipClick = onSkipClick,
-                )
-            }
-            if (isCoolDown) {
-                PrePostSessionInfo(
-                    primaryInfo = primaryInfo,
-                    showSkip = false,
-                    onSkipClick = {},
-                )
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // 기록 그리드
-            if (isMain) {
-                MainRunningRecordGrid(
-                    recordUiState = sessionState.recordUiState,
-                )
-            }
-            if (isWarmUp || isCoolDown) {
-                PrePostRunningRecordGrid(
-                    recordUiState = sessionState.recordUiState,
-                )
-            }
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // 하단 버튼
-            if (isPaused && sessionState is RunningSessionState.PausedState) {
-                val resumeIntent =
-                    when (sessionState) {
-                        is RunningSessionState.WarmUp.Pause -> RunningSessionIntent.WarmUpResume
-                        is RunningSessionState.Main.Pause -> RunningSessionIntent.MainRunningResume
-                        is RunningSessionState.CoolDown.Pause -> RunningSessionIntent.CoolDownResume
-                    }
-                val stopIntent =
-                    when (sessionState) {
-                        is RunningSessionState.CoolDown.Pause -> RunningSessionIntent.CoolDownStop
-                        is RunningSessionState.Main.Pause -> RunningSessionIntent.MainRunningStop
-                        is RunningSessionState.WarmUp.Pause -> RunningSessionIntent.WarmUpStop
-                    }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    RecordStopButton(
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .weight(1f)
-                                .height(56.dp),
-                        onClick = { onStopClick(stopIntent) },
+            when (sessionState) {
+                // --- WarmUp 상태 ---
+                is RunningSessionState.WarmUp.Running -> {
+                    PrePostSessionInfo(
+                        primaryInfo = stringResource(R.string.running_phase_warmup_title),
+                        showSkip = true,
+                        onSkipClick = onSkipClick,
                     )
+                    Spacer(modifier = Modifier.height(20.dp))
+                    PrePostRunningRecordGrid(recordUiState = sessionState.recordUiState)
+                    Spacer(modifier = Modifier.height(32.dp))
+                    RunningButton(onPauseClick = { onPauseClick(RunningSessionIntent.WarmUpPause) })
+                }
 
-                    Spacer(modifier = Modifier.width(10.dp))
-
-                    DoRunDefaultButton(
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .weight(1f)
-                                .height(56.dp),
-                        text = stringResource(R.string.panel_record_resume),
-                        onClick = { onResumeClick(resumeIntent) },
+                is RunningSessionState.WarmUp.Pause -> {
+                    PrePostSessionInfo(
+                        primaryInfo = stringResource(R.string.running_phase_warmup_title),
+                        showSkip = true,
+                        onSkipClick = onSkipClick,
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+                    PrePostRunningRecordGrid(recordUiState = sessionState.recordUiState)
+                    Spacer(modifier = Modifier.height(32.dp))
+                    PausedButtons(
+                        onResumeClick = { onResumeClick(RunningSessionIntent.WarmUpResume) },
+                        onStopClick = { onStopClick(RunningSessionIntent.WarmUpStop) },
                     )
                 }
-            } else {
-                // 달리는 중
-                if (sessionState is RunningSessionState.RunningState) {
-                    val pauseIntent =
-                        when (sessionState) {
-                            is RunningSessionState.CoolDown.Running -> RunningSessionIntent.CoolDownPause
-                            is RunningSessionState.Main.Running -> RunningSessionIntent.MainRunningPause
-                            is RunningSessionState.WarmUp.Running -> RunningSessionIntent.WarmUpPause
-                        }
 
-                    DoRunDefaultButton(
-                        onClick = { onPauseClick(pauseIntent) },
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .height(56.dp),
-                        text = stringResource(R.string.panel_record_pause),
+                // --- Main Running 상태 ---
+                is RunningSessionState.Main.Running -> {
+                    MainSessionInfo(
+                        primaryInfo = stringResource(R.string.running_phase_main_title),
+                        secondaryInfo = sessionState.goalDistance,
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+                    MainRunningRecordGrid(recordUiState = sessionState.recordUiState)
+                    Spacer(modifier = Modifier.height(32.dp))
+                    RunningButton(onPauseClick = { onPauseClick(RunningSessionIntent.MainRunningPause) })
+                }
+
+                is RunningSessionState.Main.Pause -> {
+                    MainSessionInfo(
+                        primaryInfo = stringResource(R.string.running_phase_main_title),
+                        secondaryInfo = sessionState.goalDistance,
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+                    MainRunningRecordGrid(recordUiState = sessionState.recordUiState)
+                    Spacer(modifier = Modifier.height(32.dp))
+                    PausedButtons(
+                        onResumeClick = { onResumeClick(RunningSessionIntent.MainRunningResume) },
+                        onStopClick = { onStopClick(RunningSessionIntent.MainRunningStop) },
+                    )
+                }
+
+                // --- CoolDown 상태 ---
+                is RunningSessionState.CoolDown.Running -> {
+                    PrePostSessionInfo(
+                        primaryInfo = stringResource(R.string.running_phase_cooldown_title),
+                        showSkip = false,
+                        onSkipClick = {},
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+                    PrePostRunningRecordGrid(recordUiState = sessionState.recordUiState)
+                    Spacer(modifier = Modifier.height(32.dp))
+                    RunningButton(onPauseClick = { onPauseClick(RunningSessionIntent.CoolDownPause) })
+                }
+
+                is RunningSessionState.CoolDown.Pause -> {
+                    PrePostSessionInfo(
+                        primaryInfo = stringResource(R.string.running_phase_cooldown_title),
+                        showSkip = false,
+                        onSkipClick = {},
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+                    PrePostRunningRecordGrid(recordUiState = sessionState.recordUiState)
+                    Spacer(modifier = Modifier.height(32.dp))
+                    PausedButtons(
+                        onResumeClick = { onResumeClick(RunningSessionIntent.CoolDownResume) },
+                        onStopClick = { onStopClick(RunningSessionIntent.CoolDownStop) },
                     )
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun RunningButton(onPauseClick: () -> Unit) {
+    DoRunDefaultButton(
+        onClick = onPauseClick,
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+        text = stringResource(R.string.panel_record_pause),
+    )
+}
+
+@Composable
+private fun PausedButtons(
+    onResumeClick: () -> Unit,
+    onStopClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        RecordStopButton(
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .height(56.dp),
+            onClick = onStopClick,
+        )
+        DoRunDefaultButton(
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .height(56.dp),
+            text = stringResource(R.string.panel_record_resume),
+            onClick = onResumeClick,
+        )
     }
 }
 
@@ -191,7 +190,6 @@ private fun PreviewMainRunningStatsPanel() {
         onResumeClick = {},
         onStopClick = {},
         onSkipClick = {},
-        isPaused = false,
     )
 }
 
@@ -215,7 +213,6 @@ private fun PreviewMainRunningStatsPanelPause() {
         onResumeClick = {},
         onStopClick = {},
         onSkipClick = {},
-        isPaused = true,
     )
 }
 
@@ -239,6 +236,5 @@ private fun PreviewPrePostRunningStatsPanel() {
         onResumeClick = {},
         onStopClick = {},
         onSkipClick = {},
-        isPaused = false,
     )
 }
