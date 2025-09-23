@@ -26,6 +26,7 @@ private val LocalSixpackShapes =
 @Composable
 fun SixpackTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    isDebug: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     val colors = if (darkTheme) SixPackDarkColors else SixPackLightColors
@@ -36,7 +37,7 @@ fun SixpackTheme(
         LocalSixpackShapes provides SixPackShapesValue,
     ) {
         // BuildConfig.DEBUG
-        if (BuildConfig.DEBUG) DebugColorTheme(content) else content
+        if (isDebug) DebugColorTheme(content) else content
     }
 }
 

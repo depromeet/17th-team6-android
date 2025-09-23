@@ -6,6 +6,9 @@
     <string name="common_session_total_count">총 %d회</string>
     <string name="common_next">다음</string>
     <string name="common_complete">완료</string>
+    <string name="common_recommended_duration">권장 러닝 시간</string>
+    <string name="common_recommended_pace">권장 페이스</string>
+
     <!-- endregion -->
 
     <!--BottomNav-->
@@ -19,8 +22,7 @@
     <string name="home_title">홈</string>
     <string name="home_goal_list">목표 목록</string>
     <string name="home_goal_distance">목표 거리</string>
-    <string name="home_goal_recommended_running_time">권장 러닝 시간</string>
-    <string name="home_goal_recommended_pace">권장 페이스</string>
+    <string name="home_goal_session_count">%d회차 목표</string>
     <string name="home_goal_run_again_title_condition">한 번 달린 목표로 달리고 싶다면,</string>
     <string name="home_goal_run_again_title">이전 목표로 달리기</string>
     <string name="home_goal_run">러닝하러 가기</string>
@@ -35,12 +37,22 @@
     <string name="home_goal_edit_title">목표 변경</string>
     <string name="home_goal_edit_question_title">어떤 목표로 도전할까요?</string>
     <string name="home_goal_edit_question_description">목표를 변경하면, 이전 기록은 리셋됩니다.</string>
+    <string name="home_goal_edit_result_title">나에게 꼭 맞는\n목표가 준비되었어요!</string>
+    <string name="home_goal_edit_recommend">추천</string>
+    <string name="home_goal_edit_total_session_count">추천</string>
     <string name="home_goal_edit_for_marathon_title">마라톤에 도전할래요</string>
     <string name="home_goal_edit_for_marathon_description">10km · 21km · 42km</string>
     <string name="home_goal_edit_for_stamina_title">체력을 키울래요</string>
     <string name="home_goal_edit_for_stamina_description">30분 달리기</string>
     <string name="home_goal_edit_for_endurance_title">지구력을 키울래요</string>
     <string name="home_goal_edit_for_endurance_description">Zone2 러닝</string>
+
+    <string name="home_goal_cheer_up_0_1">시작이 반이에요! 같이 달려볼까요?</string>
+    <string name="home_goal_cheer_up_1_25">몸이 점점 풀리고 있어요! 힘차게 달려볼까요?</string>
+    <string name="home_goal_cheer_up_26_50">지금처럼만 달리면 충분해요!</string>
+    <string name="home_goal_cheer_up_51_75">목표까지 얼마 남지 않았어요!</string>
+    <string name="home_goal_cheer_up_76_100">거의 다 왔어요. 끝까지 함께 달려요!</string>
+
     <!-- endregion-->
 
     <!--Screen Selection Tab-->

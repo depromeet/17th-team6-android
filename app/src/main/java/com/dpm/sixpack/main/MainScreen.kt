@@ -18,6 +18,7 @@ import com.dpm.sixpack.SixPackAppState
 import com.dpm.sixpack.main.navigation.MainNavHost
 import com.dpm.sixpack.presentation.navigation.MainBottomBar
 import com.dpm.sixpack.presentation.navigation.MainNavTab
+import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 internal fun MainScreen(
@@ -65,6 +66,7 @@ internal fun MainScreenContent(
                 },
             )
         },
+        containerColor = SixpackTheme.colors.gray0
     ) { paddingValue ->
         MainNavHost(
             appState = appState,
