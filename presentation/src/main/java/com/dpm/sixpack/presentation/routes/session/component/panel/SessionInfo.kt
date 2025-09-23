@@ -2,12 +2,16 @@ package com.dpm.sixpack.presentation.routes.session.component.panel
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
@@ -65,12 +69,20 @@ internal fun PrePostSessionInfo(
             color = SixpackTheme.colors.gray900,
         )
         if (showSkip) {
-            Text(
-                modifier = Modifier.clickable(onClick = onSkipClick),
-                text = stringResource(R.string.panel_skip),
-                style = SixpackTheme.typography.t2Bold,
-                color = SixpackTheme.colors.blue500,
-            )
+            Box(
+                modifier =
+                    Modifier
+                        .clip(SixpackTheme.shapes.round8)
+                        .clickable(onClick = onSkipClick),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                    text = stringResource(R.string.panel_skip),
+                    style = SixpackTheme.typography.t2Bold,
+                    color = SixpackTheme.colors.blue500,
+                )
+            }
         }
     }
 }
