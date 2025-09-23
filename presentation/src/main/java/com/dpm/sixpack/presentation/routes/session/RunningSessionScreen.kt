@@ -197,8 +197,7 @@ fun RunningSessionScreen(
 
                         is RunningSessionState.Main.Pause -> {
                             RunningStopDialog(
-                                // FIXME: 실제 남은거리로 수정, 지금 목표거리임
-                                remainDistance = uiState.sessionState.goalDistance,
+                                remainDistance = uiState.sessionState.remainingDistance,
                                 onCancelClick = {
                                     onStopCancelClick(RunningSessionIntent.MainRunningStopCancel)
                                 },

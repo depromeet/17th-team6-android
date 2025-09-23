@@ -245,7 +245,7 @@ class RunningSessionViewModel @Inject constructor(
     private fun getNewRecordUiState(realtimeRunningData: RealtimeRunningData): RecordUiState {
         val newRecord =
             RecordUiState(
-                currentDistance = "${realtimeRunningData.totalDistanceMeter}m",
+                currentDistance = formatDistanceToKm(realtimeRunningData.totalDistanceMeter.toInt()),
                 currentDuration = formatSecondsToTime(realtimeRunningData.duration),
                 avgPace =
                     calculatePace(
@@ -274,9 +274,24 @@ class RunningSessionViewModel @Inject constructor(
             val currentState = state.sessionState
             if (currentState is RunningSessionState.PausedState) {
                 reduce {
-                    state.copy(
-                        sessionState = currentState.withNewShowStopConfirmDialog(showStopConfirmDialog),
-                    )
+                    when (currentState) {
+                        is RunningSessionState.Main.Pause -> {
+                            state.copy(
+                                sessionState =
+                                    currentState.copy(
+                                        // TODO 진짜 남은 거리 계산
+                                        remainingDistance = currentState.goalDistance,
+                                        showStopSessionConfirmDialog = showStopConfirmDialog,
+                                    ),
+                            )
+                        }
+
+                        else -> {
+                            state.copy(
+                                sessionState = currentState.withNewShowStopConfirmDialog(showStopConfirmDialog),
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -387,7 +402,7 @@ class RunningSessionViewModel @Inject constructor(
     // FIXME SK: 임시 조치로 Cooldown 으로 넘어가게함
     private fun handleMainRunningStopConfirm() =
         intent {
-//            finishRunningSessionUseCase()
+            finishRunningSessionUseCase()
 //                val currentState = state.sessionState
 //                if (currentState is RunningSessionState.Main.Pause) {
 //                    var timer = 0

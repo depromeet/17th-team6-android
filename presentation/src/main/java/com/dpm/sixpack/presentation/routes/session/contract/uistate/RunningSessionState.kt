@@ -101,7 +101,6 @@ sealed interface RunningSessionState : Parcelable {
         }
 
         data class Pause(
-            val remainDistance: String = "",
             val goalDistance: String = "",
             val mapUiState: MapUiState = MapUiState(),
             override val showStopSessionConfirmDialog: Boolean = false,
