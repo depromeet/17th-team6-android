@@ -121,7 +121,8 @@ fun RunningSessionRoute(
                     Modifier
                         .align(Alignment.TopCenter)
                         .windowInsetsPadding(insets = WindowInsets.statusBars)
-                        .padding(horizontal = 48.dp),
+                        .padding(horizontal = 48.dp)
+                        .padding(top = 12.dp),
                 tabItems = tabItems,
                 selectedIndex = pagerState.currentPage,
                 onSelectionChange = { tab ->
