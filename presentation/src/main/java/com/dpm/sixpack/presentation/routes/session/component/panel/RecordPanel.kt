@@ -65,10 +65,16 @@ internal fun RunningRecordPanel(
                     .padding(horizontal = 24.dp, vertical = 20.dp),
         ) {
             // 세션 정보
-            if (sessionState is RunningSessionState.Main.Running) {
+            if (isMain) {
+                val goalDistance =
+                    when (sessionState) {
+                        is RunningSessionState.Main.Running -> sessionState.goalDistance
+                        is RunningSessionState.Main.Pause -> sessionState.goalDistance
+                        else -> ""
+                    }
                 MainSessionInfo(
                     primaryInfo = primaryInfo,
-                    secondaryInfo = sessionState.goalDistance,
+                    secondaryInfo = goalDistance,
                 )
             }
             if (isWarmUp) {
