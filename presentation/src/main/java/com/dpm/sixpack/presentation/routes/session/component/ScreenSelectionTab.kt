@@ -44,6 +44,9 @@ private fun ContentDrawScope.drawWithLayer(block: ContentDrawScope.() -> Unit) {
     }
 }
 
+/* 저수준 draw api로 구현한 스크린 전환 탭
+ * 현재 사용은 안하지만 일단 보류 (추후 완전히 필요없어지면 삭제)
+ */
 @Composable
 internal fun ScreenSelectionTab(
     modifier: Modifier = Modifier,

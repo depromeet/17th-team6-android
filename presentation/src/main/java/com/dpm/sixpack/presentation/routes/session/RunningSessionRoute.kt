@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
-import com.dpm.sixpack.presentation.routes.session.component.ScreenSelectionTab
+import com.dpm.sixpack.presentation.routes.session.component.ScreenSelectTab
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionIntent
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionSideEffect
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningScreenTabItem
@@ -116,7 +116,7 @@ fun RunningSessionRoute(
         }
 
         if (uiState.sessionState is RunningSessionState.Initial) {
-            ScreenSelectionTab(
+            ScreenSelectTab(
                 modifier =
                     Modifier
                         .align(Alignment.TopCenter)
