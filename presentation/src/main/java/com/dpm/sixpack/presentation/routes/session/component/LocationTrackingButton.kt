@@ -1,6 +1,5 @@
 package com.dpm.sixpack.presentation.routes.session.component
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource

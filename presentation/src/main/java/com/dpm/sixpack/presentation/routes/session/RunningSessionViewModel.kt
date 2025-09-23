@@ -315,8 +315,8 @@ class RunningSessionViewModel @Inject constructor(
         }
 
     /*
-    웜업 중단 -> 홈화면
-    FIXME SK: 임시 조치로 Initial 상태로 돌아가게 함
+     * 웜업 중단 -> 홈화면
+     * FIXME SK: 임시 조치로 Initial 상태로 돌아가게 함
      */
     private fun handleWarmUpStopConfirm() =
         intent {
