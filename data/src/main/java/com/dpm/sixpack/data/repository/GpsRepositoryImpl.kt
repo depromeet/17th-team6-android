@@ -10,19 +10,17 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class GpsRepositoryImpl
-    @Inject
-    constructor(
-        private val locationDataSource: LocationDataSource,
-    ) : GpsRepository {
-        override fun getLocationFlow(): Flow<DoRunResult<Location>> =
-            locationDataSource
-                .getLocationFlow()
-                .map { location ->
-                    DoRunResult.Success(location)
-                }.catch { throwable ->
-                    DoRunResult.Failure(
-                        DoRunException.DataError(throwable.message ?: " repository : location 정보가 존재하지않습니다."),
-                    )
-                }
-    }
+class GpsRepositoryImpl @Inject constructor(
+    private val locationDataSource: LocationDataSource,
+) : GpsRepository {
+    override fun getLocationFlow(): Flow<DoRunResult<Location>> =
+        locationDataSource
+            .getLocationFlow()
+            .map { location ->
+                DoRunResult.Success(location)
+            }.catch { throwable ->
+                DoRunResult.Failure(
+                    DoRunException.DataError(throwable.message ?: " repository : location 정보가 존재하지않습니다."),
+                )
+            }
+}
