@@ -30,6 +30,7 @@ coil = "2.6.0"
 activityCompose = "1.9.0"
 composeBom = "2024.09.00"
 navigationCompose = "2.8.7"
+constraintlayoutCompose = "1.1.1"
 
 # Convention
 ktlint = "13.1.0"
@@ -121,6 +122,7 @@ compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling
 compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 
 # Coroutines
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesCore" }

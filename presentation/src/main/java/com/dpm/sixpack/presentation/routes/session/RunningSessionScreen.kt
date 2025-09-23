@@ -1,13 +1,15 @@
 package com.dpm.sixpack.presentation.routes.session
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
+import com.dpm.sixpack.presentation.routes.session.component.LocationTrackingButton
 import com.dpm.sixpack.presentation.routes.session.component.MapConstants
 import com.dpm.sixpack.presentation.routes.session.component.dialog.CooldownStopDialog
 import com.dpm.sixpack.presentation.routes.session.component.dialog.RunningStopDialog
@@ -47,11 +49,20 @@ fun RunningSessionScreen(
     onSkipConfirmClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = modifier.fillMaxSize(),
-    ) {
+    ConstraintLayout(modifier = modifier.fillMaxSize()) {
+        val (naverMapRef, panelRef, trackingButtonRef) = createRefs()
+
         NaverMap(
-            modifier = Modifier.fillMaxSize(),
+            modifier =
+                Modifier
+                    .constrainAs(naverMapRef) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        width = Dimension.fillToConstraints
+                        height = Dimension.fillToConstraints
+                    },
             cameraPositionState = cameraPositionState,
             properties =
                 MapProperties(
@@ -90,6 +101,31 @@ fun RunningSessionScreen(
             }
         }
 
+        LocationTrackingButton(
+            onClick = {
+                // TODO
+            },
+            modifier =
+                Modifier
+                    .constrainAs(trackingButtonRef) {
+                        end.linkTo(parent.end, margin = 24.dp)
+
+                        when (uiState.sessionState) {
+                            is RunningSessionState.Initial -> {
+                                bottom.linkTo(parent.bottom, margin = 100.dp)
+                            }
+
+                            !is RunningSessionState.ReadyState -> {
+                                bottom.linkTo(panelRef.top, margin = 24.dp)
+                            }
+
+                            else -> {
+                                bottom.linkTo(parent.bottom, margin = 24.dp)
+                            }
+                        }
+                    },
+        )
+
         when (uiState.sessionState) {
             is RunningSessionState.Initial -> {
                 // do nothing
@@ -104,7 +140,13 @@ fun RunningSessionScreen(
 
             is RunningSessionState.RunningState -> {
                 RunningRecordPanel(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier =
+                        Modifier.constrainAs(panelRef) {
+                            bottom.linkTo(parent.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            width = Dimension.fillToConstraints
+                        },
                     sessionState = uiState.sessionState,
                     onPauseClick = onPauseClick,
                     onResumeClick = onResumeClick,
@@ -117,13 +159,20 @@ fun RunningSessionScreen(
 
             is RunningSessionState.PausedState -> {
                 RunningRecordPanel(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier =
+                        Modifier.constrainAs(panelRef) {
+                            bottom.linkTo(parent.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            width = Dimension.fillToConstraints
+                        },
                     sessionState = uiState.sessionState,
                     onPauseClick = onPauseClick,
                     onResumeClick = onResumeClick,
                     onStopClick = onStopClick,
                     onSkipClick = onSkipClick,
                 )
+
                 if (uiState.sessionState is RunningSessionState.WarmUp.Pause &&
                     uiState.sessionState.showSkipConfirmDialog
                 ) {
