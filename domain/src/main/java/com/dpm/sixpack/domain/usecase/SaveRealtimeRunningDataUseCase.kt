@@ -5,17 +5,15 @@ import com.dpm.sixpack.domain.repository.RunningSessionRepository
 import com.dpm.sixpack.domain.util.DoRunResult
 import javax.inject.Inject
 
-class SaveRealtimeRunningDataUseCase
-    @Inject
-    constructor(
-        private val repository: RunningSessionRepository,
-    ) {
-        suspend operator fun invoke(param: SaveRealtimeRunningDataParam): DoRunResult<SaveRealtimeRunningDataResult> =
-            when (param) {
-                is SaveRealtimeRunningDataParam.LocalParam -> repository.saveRealtimeData(data = param.data)
-                is SaveRealtimeRunningDataParam.SyncParam -> repository.saveSegmentData()
-            }
-    }
+class SaveRealtimeRunningDataUseCase @Inject constructor(
+    private val repository: RunningSessionRepository,
+) {
+    suspend operator fun invoke(param: SaveRealtimeRunningDataParam): DoRunResult<SaveRealtimeRunningDataResult> =
+        when (param) {
+            is SaveRealtimeRunningDataParam.LocalParam -> repository.saveRealtimeData(data = param.data)
+            is SaveRealtimeRunningDataParam.SyncParam -> repository.saveSegmentData()
+        }
+}
 
 sealed class SaveRealtimeRunningDataParam {
     data class LocalParam(
