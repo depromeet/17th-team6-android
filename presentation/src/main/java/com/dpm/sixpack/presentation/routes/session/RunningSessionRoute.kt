@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dpm.sixpack.presentation.R
@@ -166,10 +165,4 @@ private fun InitialContent(onStartClick: () -> Unit) {
             text = stringResource(id = R.string.session_start_running_button),
         )
     }
-}
-
-@Preview
-@Composable
-fun PreviewRunningRoute() {
-    RunningSessionRoute()
 }
