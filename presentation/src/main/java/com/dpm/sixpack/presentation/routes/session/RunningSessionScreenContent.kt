@@ -79,7 +79,7 @@ fun RunningSessionScreenContent(
         }
 
         when (uiState.sessionState) {
-            RunningSessionState.Initial -> {
+            is RunningSessionState.Initial -> {
                 InitialContent(onStartClick = {
                     onStartClick()
                 })
