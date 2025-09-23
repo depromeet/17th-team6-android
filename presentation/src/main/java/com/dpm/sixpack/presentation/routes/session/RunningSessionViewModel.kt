@@ -384,10 +384,10 @@ class RunningSessionViewModel @Inject constructor(
 
     // 메인러닝 중단 -> 홈화면
 
-    // FIXME SK: 임시 조치로 Initial 상태로 돌아가게 함
+    // FIXME SK: 임시 조치로 Cooldown 으로 넘어가게함
     private fun handleMainRunningStopConfirm() =
         intent {
-            finishRunningSessionUseCase()
+//            finishRunningSessionUseCase()
 //                val currentState = state.sessionState
 //                if (currentState is RunningSessionState.Main.Pause) {
 //                    var timer = 0
@@ -403,9 +403,28 @@ class RunningSessionViewModel @Inject constructor(
 //                        timer++
 //                    }
 //                }
+//            reduce {
+//                state.copy(RunningSessionState.Initial())
+//            }
+
+            handleReadyState(RunningSessionState.CoolDown.Ready())
             reduce {
-                state.copy(RunningSessionState.Initial())
+                val sessionState = state.sessionState
+
+                state.copy(
+                    sessionState =
+                        RunningSessionState.CoolDown.Running(
+                            mapUiState =
+                                if (sessionState is RunningSessionState.Main.Pause) {
+                                    sessionState.mapUiState
+                                } else {
+                                    MapUiState()
+                                },
+                            recordUiState = INITIAL_RECORD_STATE,
+                        ),
+                )
             }
+            startObservingRealtimeData()
         }
 
     // endregion
@@ -417,7 +436,7 @@ class RunningSessionViewModel @Inject constructor(
                 reduce {
                     state.copy(
                         sessionState =
-                            RunningSessionState.CoolDown.Running(
+                            RunningSessionState.CoolDown.Pause(
                                 mapUiState = currentState.mapUiState,
                                 recordUiState = currentState.recordUiState,
                             ),
