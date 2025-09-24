@@ -7,6 +7,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.dpm.sixpack.presentation.destinations.OnboardingRoute
+import com.dpm.sixpack.presentation.routes.onboarding.permission.OnboardingPermissionRoute
 
 
 fun NavController.navigateOnboarding(navOptions: NavOptions? = null) {
@@ -21,7 +22,14 @@ fun NavGraphBuilder.addOnboardingNavGraph(
         startDestination = OnboardingRoute.Permission,
     ) {
         composable<OnboardingRoute.Permission> {
-
+            OnboardingPermissionRoute(
+                navigateToNext = {
+                    navController.navigate(OnboardingRoute.LevelSelection)
+                },
+                navigateToBack = {
+                    navController.popBackStack()
+                },
+            )
         }
 
         composable<OnboardingRoute.LevelSelection> {
