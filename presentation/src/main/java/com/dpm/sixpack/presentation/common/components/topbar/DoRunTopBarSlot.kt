@@ -3,6 +3,7 @@ package com.dpm.sixpack.presentation.common.components.topbar
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,6 +18,7 @@ fun DoRunTopBarSlot(
 ) {
     Box(
         modifier = modifier
+            .statusBarsPadding()
             .fillMaxWidth()
             .height(44.dp)
     ) {

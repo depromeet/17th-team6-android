@@ -2,8 +2,8 @@ package com.dpm.sixpack.presentation.common.components.topbar
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -20,25 +20,20 @@ import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
-fun DoRunTitleTopBar(
-    navigateToBack : () -> Unit,
-    @StringRes title : Int,
-    modifier: Modifier = Modifier
+fun DoRunNavigationTopBar(
+    navigateToBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    titleContent: @Composable (() -> Unit)? = null,
 ) {
     DoRunTopBarSlot(
-        modifier = modifier.statusBarsPadding(),
+        modifier = modifier,
         leadingContent = {
             NavigateBackButton(
                 onClick = navigateToBack
             )
-        }
-        ,
-        content = {
-            Text(
-                text = stringResource(id = title),
-                style = SixpackTheme.typography.t2Bold,
-            )
-        }
+        },
+
+        content = titleContent
     )
 }
 
@@ -50,14 +45,15 @@ fun NavigateBackButton(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .size(24.dp)
+            .size(44.dp)
             .noRippleClickable(onClick = onClick),
     ) {
-            Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_left),
-                contentDescription = null,
-                tint = SixpackTheme.colors.gray800,
-            )
+        Icon(
+            imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_left),
+            contentDescription = null,
+            modifier = Modifier.size(24.dp),
+            tint = SixpackTheme.colors.gray800,
+        )
     }
 }
 
@@ -66,11 +62,23 @@ fun NavigateBackButton(
 private fun DoRunTitleTopBarPreview() {
     SixpackTheme {
         Surface(color = SixpackTheme.colors.gray0) {
-            DoRunTitleTopBar(
-                navigateToBack = {},
-                title = R.string.app_name,
-                modifier = Modifier
-            )
+            Column {
+                DoRunNavigationTopBar(
+                    navigateToBack = {},
+                    modifier = Modifier,
+                    titleContent = {
+                        Text(
+                            text = stringResource(id = R.string.app_name),
+                            style = SixpackTheme.typography.h2Bold,
+                            color = SixpackTheme.colors.gray900,
+                        )
+                    }
+                )
+                DoRunNavigationTopBar(
+                    navigateToBack = {},
+                    modifier = Modifier
+                )
+            }
         }
     }
 }
