@@ -17,9 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
-import com.dpm.sixpack.presentation.routes.home.component.HomeNextSessionComponent
-import com.dpm.sixpack.presentation.routes.home.component.HomePreviousSessionComponent
-import com.dpm.sixpack.presentation.routes.home.component.HomeTotalGoalComponent
+import com.dpm.sixpack.presentation.routes.home.component.session.edit.HomeGoalEditComponent
+import com.dpm.sixpack.presentation.routes.home.component.session.next.HomeNextSessionComponent
+import com.dpm.sixpack.presentation.routes.home.component.session.previous.HomePreviousSessionComponent
+import com.dpm.sixpack.presentation.routes.home.component.total.HomeTotalGoalComponent
 import com.dpm.sixpack.presentation.routes.home.contract.HomeScreenState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
@@ -45,7 +46,8 @@ fun HomeScreen(
                         color = SixpackTheme.colors.gray900
                     )
                 },
-                colors = TopAppBarDefaults.topAppBarColors().copy(containerColor = SixpackTheme.colors.gray0)
+                colors = TopAppBarDefaults.topAppBarColors()
+                    .copy(containerColor = SixpackTheme.colors.gray0)
             )
         }
     ) { paddingValues ->
@@ -73,19 +75,27 @@ fun HomeScreen(
                     .padding(top = 18.dp, bottom = 56.dp)
                     .padding(horizontal = 20.dp)
             ) {
-                HomeNextSessionComponent(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    state = uiState.sessionComponentState,
-                    onClick = onClickNextSession
-                )
-
-                if (uiState.sessionComponentState.showPreviousSession) {
-                    HomePreviousSessionComponent(
+                if (uiState.totalGoalCompleted.not()) {
+                    HomeNextSessionComponent(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 16.dp),
-                        onClick = onClickPreviousSession
+                            .fillMaxWidth(),
+                        state = uiState.sessionComponentState,
+                        onClick = onClickNextSession
+                    )
+
+                    if (uiState.sessionComponentState.showPreviousSession) {
+                        HomePreviousSessionComponent(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 16.dp),
+                            onClick = onClickPreviousSession
+                        )
+                    }
+                } else {
+                    HomeGoalEditComponent(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        onClick = onNavigateToGoalEdit
                     )
                 }
             }

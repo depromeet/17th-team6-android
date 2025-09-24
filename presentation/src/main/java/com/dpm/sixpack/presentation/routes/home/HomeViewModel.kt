@@ -30,7 +30,9 @@ class HomeViewModel @Inject constructor(
                         title = "이번 달 목표",
                         distance = "10km",
                         duration = "1시간 30분",
-                        pace = "8'30\""
+                        pace = "8'30\"",
+                        totalSessionCount = 20,
+                        completedSessionCount = 4
                     ),
                     sessionComponentState = state.sessionComponentState.copy(
                         loading = false,
