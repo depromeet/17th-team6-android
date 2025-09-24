@@ -18,14 +18,13 @@
     <string name="onboarding_permission_term_privacy">[필수] 개인정보 수집/이용 동의</string>
     <string name="onboarding_permission_term_marketing">[선택] 마케팅 정보 수신 동의</string>
 
-
+    <string name="onboarding_level_title">평소 러닝 수준을 알려주세요</string>
     <string name="onboarding_level_beginner_title">이제 막 시작했어요</string>
     <string name="onboarding_level_beginner_sub_title">최근 달린 경험이 없어요</string>
     <string name="onboarding_level_occasional_title">가끔 달려요</string>
     <string name="onboarding_level_occasional_sub_title">주 1-2회 이하로 가볍게 달려요.</string>
     <string name="onboarding_level_consistent_title">꾸준히 달려요</string>
     <string name="onboarding_level_consistent_sub_title">주 3회 이상 루틴대로 달려요</string>
-
     <!-- Onboadring End-->
 
 
