@@ -26,13 +26,13 @@ import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.routes.onboarding.component.OnboardingNextButton
 import com.dpm.sixpack.presentation.routes.onboarding.component.OnboardingPage
 import com.dpm.sixpack.presentation.routes.onboarding.component.OnboardingPageIndicator
-import com.dpm.sixpack.presentation.routes.onboarding.level.contract.uistate.OnboardingLevelUiState
-import com.dpm.sixpack.presentation.routes.onboarding.level.contract.uistate.RunningLevel
+import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.OnboardingUiState
+import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.level.RunningLevel
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 fun OnboardingLevelScreen(
-    uiState: State<OnboardingLevelUiState>,
+    uiState: State<OnboardingUiState>,
     onSelectLevel: (RunningLevel) -> Unit,
     onClickNextButton: () -> Unit,
     onClickBackButton: () -> Unit,
@@ -77,7 +77,7 @@ fun OnboardingLevelScreen(
 
             OnboardingNextButton(
                 onClick = onClickNextButton,
-                enabled = uiState.value.isButtonEnabled,
+                enabled = uiState.value.isLevelNextEnabled,
                 modifier = Modifier.fillMaxWidth(),
             )
 

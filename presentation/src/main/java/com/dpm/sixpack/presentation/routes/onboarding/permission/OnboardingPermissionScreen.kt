@@ -34,13 +34,13 @@ import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.routes.onboarding.component.OnboardingNextButton
 import com.dpm.sixpack.presentation.routes.onboarding.component.OnboardingPage
 import com.dpm.sixpack.presentation.routes.onboarding.component.OnboardingPageIndicator
-import com.dpm.sixpack.presentation.routes.onboarding.permission.contract.uistate.OnboardingPermissionUiState
-import com.dpm.sixpack.presentation.routes.onboarding.permission.contract.uistate.TermType
+import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.OnboardingUiState
+import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.permission.TermType
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 fun OnboardingPermissionScreen(
-    uiState: State<OnboardingPermissionUiState>,
+    uiState: State<OnboardingUiState>,
     onToggleAllTerms: (Boolean) -> Unit,
     onToggleTerm: (type: TermType, isChecked: Boolean) -> Unit,
     onClickNextButton: () -> Unit,
@@ -86,7 +86,7 @@ fun OnboardingPermissionScreen(
 
             OnboardingNextButton(
                 onClick = onClickNextButton,
-                enabled = uiState.value.isNextButtonEnabled,
+                enabled = uiState.value.isPermissionNextEnabled,
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -240,7 +240,7 @@ private fun OnboardingPermissionScreenPreview() {
     SixpackTheme {
         Surface(color = Color.White) {
             OnboardingPermissionScreen(
-                uiState = remember { mutableStateOf(OnboardingPermissionUiState()) },
+                uiState = remember { mutableStateOf(OnboardingUiState()) },
                 onToggleAllTerms = {},
                 onToggleTerm = { _, _ -> },
                 onClickNextButton = { /* TODO: 다음 버튼 클릭됨 */ },

@@ -1,8 +1,9 @@
-package com.dpm.sixpack.presentation.routes.onboarding.level.contract.uistate
+package com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.level
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.dpm.sixpack.presentation.R
+import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.level.RunningLevelConstants
 
 enum class RunningLevel(
     val runningLevel: String,
@@ -28,5 +29,3 @@ enum class RunningLevel(
         img = R.drawable.ill_level_consistent
     ),
 }
-
-

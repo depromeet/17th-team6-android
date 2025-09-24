@@ -36,7 +36,7 @@ fun SixpackTheme(
         LocalSixpackShapes provides SixPackShapesValue,
     ) {
         // BuildConfig.DEBUG
-        if (BuildConfig.DEBUG) DebugColorTheme(content) else content
+        content()
     }
 }
 

@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.onboarding.level.contract.uistate
+package com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.level
 
 object RunningLevelConstants {
     const val BEGINNER = "BEGINNER"
