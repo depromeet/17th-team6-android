@@ -18,7 +18,7 @@ fun OnboardingPermissionRoute(
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
             is OnboardingPermissionSideEffect.NavigateToNext -> navigateToNext()
-            is OnboardingPermissionSideEffect.NavigateToBack -> navigateToBack()
+            is OnboardingPermissionSideEffect.NavigateToBack -> {}
         }
     }
 

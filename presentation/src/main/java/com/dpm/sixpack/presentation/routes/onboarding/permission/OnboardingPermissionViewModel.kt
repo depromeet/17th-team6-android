@@ -43,7 +43,7 @@ class OnboardingPermissionViewModel @Inject constructor(
         }
     }
 
-    fun handleToggleAllTerms(isChecked: Boolean) {
+    private fun handleToggleAllTerms(isChecked: Boolean) {
         intent {
             reduce {
                 state.copy(
@@ -53,7 +53,7 @@ class OnboardingPermissionViewModel @Inject constructor(
         }
     }
 
-    fun handleToggleTerm(
+    private fun handleToggleTerm(
         type: TermType,
         isChecked: Boolean,
     ) {
