@@ -9,21 +9,19 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class SensorRepositoryImpl
-    @Inject
-    constructor(
-        private val sensorDataSource: SensorDataSource,
-    ) : SensorRepository {
-        override fun getTotalStep(): Flow<DoRunResult<Long>> =
-            sensorDataSource
-                .getTotalStepsFlow()
-                .map { stepCount ->
-                    DoRunResult.Success(stepCount)
-                }.catch { throwable ->
-                    DoRunResult.Failure(
-                        DoRunException.DataError(
-                            throwable.message ?: " repository : totalStep이 존재하지 않습니다.",
-                        ),
-                    )
-                }
-    }
+class SensorRepositoryImpl @Inject constructor(
+    private val sensorDataSource: SensorDataSource,
+) : SensorRepository {
+    override fun getTotalStep(): Flow<DoRunResult<Long>> =
+        sensorDataSource
+            .getTotalStepsFlow()
+            .map { stepCount ->
+                DoRunResult.Success(stepCount)
+            }.catch { throwable ->
+                DoRunResult.Failure(
+                    DoRunException.DataError(
+                        throwable.message ?: " repository : totalStep이 존재하지 않습니다.",
+                    ),
+                )
+            }
+}

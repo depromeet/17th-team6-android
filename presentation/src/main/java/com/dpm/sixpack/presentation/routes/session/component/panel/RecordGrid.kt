@@ -17,7 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
-import com.dpm.sixpack.presentation.routes.session.contract.RecordUiState
+import com.dpm.sixpack.presentation.routes.session.contract.uistate.RecordUiState
 
 @Composable
 internal fun MainRunningRecordGrid(
