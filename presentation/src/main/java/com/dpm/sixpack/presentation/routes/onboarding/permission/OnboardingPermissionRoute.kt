@@ -31,10 +31,10 @@ fun OnboardingPermissionRoute(
             viewModel.onIntent(OnboardingPermissionIntent.ToggleTerm(type, isChecked))
         },
         onClickNextButton = {
-            viewModel.onIntent(OnboardingPermissionIntent.OnClickNextButton)
+            viewModel.onIntent(OnboardingPermissionIntent.ClickNextButton)
         },
         onClickBackButton = {
-            viewModel.onIntent(OnboardingPermissionIntent.OnClickBackButton)
+            viewModel.onIntent(OnboardingPermissionIntent.ClickBackButton)
         },
     )
 }

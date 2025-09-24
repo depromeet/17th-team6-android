@@ -21,13 +21,13 @@ class OnboardingPermissionViewModel @Inject constructor(
 
     override fun onIntent(intent: OnboardingPermissionIntent) {
         when (intent) {
-            is OnboardingPermissionIntent.OnClickBackButton -> {
+            is OnboardingPermissionIntent.ClickBackButton -> {
                 intent {
                     postSideEffect(OnboardingPermissionSideEffect.NavigateToBack)
                 }
             }
 
-            is OnboardingPermissionIntent.OnClickNextButton -> {
+            is OnboardingPermissionIntent.ClickNextButton -> {
                 intent {
                     postSideEffect(OnboardingPermissionSideEffect.NavigateToNext)
                 }

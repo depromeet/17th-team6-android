@@ -17,7 +17,7 @@ sealed interface OnboardingPermissionIntent : UiIntent {
         val type: TermType,
     ) : OnboardingPermissionIntent
 
-    data object OnClickNextButton : OnboardingPermissionIntent
+    data object ClickNextButton : OnboardingPermissionIntent
 
-    data object OnClickBackButton : OnboardingPermissionIntent
+    data object ClickBackButton : OnboardingPermissionIntent
 }
