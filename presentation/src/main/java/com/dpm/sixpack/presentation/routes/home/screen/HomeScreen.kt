@@ -15,23 +15,27 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
+import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.routes.home.component.session.edit.HomeGoalEditComponent
 import com.dpm.sixpack.presentation.routes.home.component.session.next.HomeNextSessionComponent
 import com.dpm.sixpack.presentation.routes.home.component.session.previous.HomePreviousSessionComponent
 import com.dpm.sixpack.presentation.routes.home.component.total.HomeTotalGoalComponent
 import com.dpm.sixpack.presentation.routes.home.contract.HomeScreenState
+import com.dpm.sixpack.presentation.routes.home.contract.HomeSessionComponentState
+import com.dpm.sixpack.presentation.routes.home.contract.HomeTotalGoalComponentState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     uiState: HomeScreenState,
-    onClickPreviousSession: () -> Unit,
-    onClickNextSession: () -> Unit,
-    onNavigateToGoalList: () -> Unit,
-    onNavigateToGoalEdit: () -> Unit
+    onClickPreviousSession: () -> Unit = {},
+    onClickNextSession: () -> Unit = {},
+    onNavigateToGoalList: () -> Unit = {},
+    onNavigateToGoalEdit: () -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
     Scaffold(
@@ -100,6 +104,35 @@ fun HomeScreen(
                 }
             }
         }
+    }
+}
 
+@Preview
+@Composable
+private fun HomeScreenPreview() {
+    DoRunPreviewWrapper {
+        HomeScreen(
+            uiState = HomeScreenState(
+                totalGoalComponentState = HomeTotalGoalComponentState(
+                    loading = false,
+                    imageRes = R.drawable.ill_marathon_10km,
+                    title = "이번 달 목표",
+                    distance = "10km",
+                    duration = "1시간 30분",
+                    pace = "8'30\"",
+                    totalSessionCount = 20,
+                    completedSessionCount = 4
+                ),
+                sessionComponentState = HomeSessionComponentState(
+                    loading = false,
+                    sessionCount = 3,
+                    cheerUpStringRes = R.string.home_goal_cheer_up_1_25,
+                    distance = "5km",
+                    duration = "45분",
+                    pace = "9'00\""
+                ),
+                totalGoalCompleted = false
+            ),
+        )
     }
 }
