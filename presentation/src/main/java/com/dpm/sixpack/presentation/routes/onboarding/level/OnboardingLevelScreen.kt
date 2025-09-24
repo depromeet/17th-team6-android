@@ -11,14 +11,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
@@ -70,7 +74,6 @@ fun OnboardingLevelScreen(
                 onSelectLevel = onSelectLevel,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
             )
 
             Spacer(Modifier.weight(1f))
@@ -135,7 +138,9 @@ fun LevelCard(
 
         Spacer(Modifier.width(12.dp))
 
-        Column(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp)) {
             Text(
                 text = stringResource(level.title),
                 style = SixpackTheme.typography.t2Bold,
@@ -148,6 +153,22 @@ fun LevelCard(
                 text = stringResource(level.subTitle),
                 style = SixpackTheme.typography.b2Regular,
                 color = SixpackTheme.colors.gray600
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun OnboardingLevelScreenPreview() {
+    SixpackTheme {
+        Surface(color = SixpackTheme.colors.gray0) {
+            OnboardingLevelScreen(
+                uiState = remember { mutableStateOf(OnboardingUiState()) },
+                onSelectLevel = { selectedLevel ->
+                },
+                onClickNextButton = { },
+                onClickBackButton = { },
             )
         }
     }

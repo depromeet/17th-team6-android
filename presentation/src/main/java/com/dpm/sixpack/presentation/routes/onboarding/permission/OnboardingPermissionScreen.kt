@@ -1,6 +1,5 @@
 package com.dpm.sixpack.presentation.routes.onboarding.permission
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -192,12 +191,13 @@ private fun CheckToggle(
     isChecked: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val checked =
+    val color=
         if (isChecked) {
-            R.drawable.ill_session_completed
+            SixpackTheme.colors.blue600
         } else {
-            R.drawable.ill_session_uncompleted
+            SixpackTheme.colors.gray200
         }
+
     Box(
         contentAlignment = Alignment.Center,
         modifier =
@@ -205,10 +205,10 @@ private fun CheckToggle(
                 .size(32.dp)
                 .noRippleClickable(onClick = { onClick(!isChecked) }),
     ) {
-        Image(
-            imageVector = ImageVector.vectorResource(checked),
+        Icon(
+            imageVector = ImageVector.vectorResource(R.drawable.ic_check),
             contentDescription = null,
-            modifier = Modifier.size(24.dp),
+            tint = color,
         )
     }
 }
