@@ -8,5 +8,7 @@ sealed interface OnboardingLevelUiIntent : UiIntent{
         val level: RunningLevel,
     ) : OnboardingLevelUiIntent
 
-    data object ClickNextBtn : OnboardingLevelUiIntent
+    data object ClickNextButton : OnboardingLevelUiIntent
+
+    data object ClickBackButton : OnboardingLevelUiIntent
 }
