@@ -48,7 +48,7 @@ internal fun BaseReadyOverlay(
         ) {
             Text(
                 text = primaryText,
-                style = SixpackTheme.typography.h1Bold,
+                style = SixpackTheme.typography.h4Bold,
                 color = SixpackTheme.colors.lime600,
             )
 
@@ -99,7 +99,7 @@ private fun CircularLoadingIndicator(
         Text(
             text = countdown.toString(),
             fontWeight = FontWeight.Bold,
-            fontSize = 56.sp,
+            fontSize = 96.sp,
             color = SixpackTheme.colors.lime600,
         )
     }
