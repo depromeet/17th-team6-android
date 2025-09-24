@@ -8,6 +8,15 @@
     <string name="nav_tab_mypage_title">내 정보</string>
     <!--BottomNav End-->
 
+    <!-- Onboadring Permission -->
+    <string name="onboarding_permission_title">서비스 이용을 위해 앱 권한을 허용해 주세요.</string>
+    <string name="onboarding_permission_agree_all">약관 전체 동의</string>
+    <string name="onboarding_permission_term_location">[필수] 위치기반 정보 수집 동의</string>
+    <string name="onboarding_permission_term_privacy">[필수] 개인정보 수집/이용 동의</string>
+    <string name="onboarding_permission_term_marketing">[선택] 마케팅 정보 수신 동의</string>
+    <!-- Onboadring Permission End-->
+
+
     <!--Screen Selection Tab-->
     <string name="screen_tab_goal_title">목표</string>
     <string name="screen_tab_map_title">지도</string>
@@ -40,4 +49,7 @@
     <!--RunningSessionScreen -->
     <string name="session_start_running_button">러닝 시작</string>
     <!--RunningSessionScreen End-->
+
+    <!-- Button Default Text -->
+    <string name="button_default_next">다음</string>
 </resources>
