@@ -17,5 +17,7 @@ sealed interface OnboardingRoute : Route {
     data object GoalSelection : OnboardingRoute
 
     @Serializable
-    data class  GoalTarget(val goalId : Int) : OnboardingRoute
+    data class GoalTarget(
+        val goalId: Int,
+    ) : OnboardingRoute
 }

@@ -1,6 +1,5 @@
 package com.dpm.sixpack.presentation.common.components.topbar
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
@@ -29,11 +28,10 @@ fun DoRunNavigationTopBar(
         modifier = modifier,
         leadingContent = {
             NavigateBackButton(
-                onClick = navigateToBack
+                onClick = navigateToBack,
             )
         },
-
-        content = titleContent
+        content = titleContent,
     )
 }
 
@@ -44,9 +42,10 @@ fun NavigateBackButton(
 ) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier
-            .size(44.dp)
-            .noRippleClickable(onClick = onClick),
+        modifier =
+            modifier
+                .size(44.dp)
+                .noRippleClickable(onClick = onClick),
     ) {
         Icon(
             imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_left),
@@ -72,11 +71,11 @@ private fun DoRunTitleTopBarPreview() {
                             style = SixpackTheme.typography.h2Bold,
                             color = SixpackTheme.colors.gray900,
                         )
-                    }
+                    },
                 )
                 DoRunNavigationTopBar(
                     navigateToBack = {},
-                    modifier = Modifier
+                    modifier = Modifier,
                 )
             }
         }

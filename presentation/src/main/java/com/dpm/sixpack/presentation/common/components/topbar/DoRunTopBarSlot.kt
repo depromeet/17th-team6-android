@@ -17,10 +17,11 @@ fun DoRunTopBarSlot(
     trailingContent: @Composable (() -> Unit)? = null,
 ) {
     Box(
-        modifier = modifier
-            .statusBarsPadding()
-            .fillMaxWidth()
-            .height(44.dp)
+        modifier =
+            modifier
+                .statusBarsPadding()
+                .fillMaxWidth()
+                .height(44.dp),
     ) {
         if (leadingContent != null) {
             Box(modifier = Modifier.align(Alignment.CenterStart)) {

@@ -59,7 +59,7 @@ class MainNavigator(
         navController.navigateRunning(
             navOptions {
                 popUpTo(OnboardingRoute.Onboarding) { inclusive = true }
-            }
+            },
         )
     }
 

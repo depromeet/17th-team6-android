@@ -9,7 +9,7 @@
     <!--BottomNav End-->
 
     <!-- Onboadring -->
-    <string name="onboarding_permission_title">서비스 이용을 위해 \n 앱 권한을 허용해 주세요.</string>
+    <string name="onboarding_permission_title">서비스 이용을 위해 \n앱 권한을 허용해 주세요.</string>
     <string name="onboarding_permission_agree_all">약관 전체 동의</string>
     <string name="onboarding_permission_term_location">[필수] 위치기반 정보 수집 동의</string>
     <string name="onboarding_permission_term_privacy">[필수] 개인정보 수집/이용 동의</string>

@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OnboardingPermissionViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<OnboardingPermissionUiState, OnboardingPermissionIntent, OnboardingPermissionSideEffect>() {
     override val initialState: OnboardingPermissionUiState = OnboardingPermissionUiState()
     override val container: Container<OnboardingPermissionUiState, OnboardingPermissionSideEffect> =
@@ -47,19 +47,23 @@ class OnboardingPermissionViewModel @Inject constructor(
         intent {
             reduce {
                 state.copy(
-                    termsState = state.termsState.mapValues { isChecked }
+                    termsState = state.termsState.mapValues { isChecked },
                 )
             }
         }
     }
 
-    fun handleToggleTerm(type: TermType, isChecked: Boolean) {
+    fun handleToggleTerm(
+        type: TermType,
+        isChecked: Boolean,
+    ) {
         intent {
             reduce {
                 state.copy(
-                    termsState = state.termsState.toMutableMap().apply {
-                        this[type] = isChecked
-                    }
+                    termsState =
+                        state.termsState.toMutableMap().apply {
+                            this[type] = isChecked
+                        },
                 )
             }
         }

@@ -1,5 +1,6 @@
 package com.dpm.sixpack.presentation.routes.onboarding.permission
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -47,9 +48,10 @@ fun OnboardingPermissionScreen(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(color = SixpackTheme.colors.gray0)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(color = SixpackTheme.colors.gray0),
     ) {
         DoRunNavigationTopBar(
             navigateToBack = onClickBackButton,
@@ -58,7 +60,7 @@ fun OnboardingPermissionScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         Column(
-            modifier = Modifier.padding(horizontal = 20.dp)
+            modifier = Modifier.padding(horizontal = 20.dp),
         ) {
             OnboardingPageIndicator(page = OnboardingPage.PERMISSION)
 
@@ -67,7 +69,7 @@ fun OnboardingPermissionScreen(
             Text(
                 text = stringResource(R.string.onboarding_permission_title),
                 style = SixpackTheme.typography.h2Bold,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Spacer(modifier = Modifier.height(40.dp))
@@ -77,15 +79,15 @@ fun OnboardingPermissionScreen(
                 isAllTermsChecked = uiState.value.isAllTermsChecked,
                 onToggleAllTerms = onToggleAllTerms,
                 onToggle = onToggleTerm,
-                modifier = Modifier
+                modifier = Modifier,
             )
 
             Spacer(Modifier.weight(1f))
 
             OnboardingNextButton(
                 onClick = onClickNextButton,
-                enabled = uiState.value.isAllTermsChecked,
-                modifier = Modifier.fillMaxWidth()
+                enabled = uiState.value.isNextButtonEnabled,
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -99,12 +101,12 @@ fun TermsAgreementGroup(
     isAllTermsChecked: Boolean,
     onToggleAllTerms: (Boolean) -> Unit,
     onToggle: (TermType, Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
         AgreeAllTermsRow(
             isChecked = isAllTermsChecked,
-            onClickToggle = onToggleAllTerms
+            onClickToggle = onToggleAllTerms,
         )
 
         Spacer(Modifier.height(20.dp))
@@ -112,7 +114,7 @@ fun TermsAgreementGroup(
         Spacer(
             Modifier
                 .fillMaxWidth()
-                .border(width = 1.dp, color = SixpackTheme.colors.gray50)
+                .border(width = 1.dp, color = SixpackTheme.colors.gray50),
         )
 
         Spacer(Modifier.height(20.dp))
@@ -123,7 +125,7 @@ fun TermsAgreementGroup(
                 isChecked = termsState[term] ?: false,
                 onClickToggle = { isChecked ->
                     onToggle(term, isChecked)
-                }
+                },
             )
 
             Spacer(Modifier.height(16.dp))
@@ -135,11 +137,11 @@ fun TermsAgreementGroup(
 fun AgreeAllTermsRow(
     isChecked: Boolean,
     onClickToggle: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         CheckToggle(
             onClick = onClickToggle,
@@ -160,11 +162,11 @@ fun TermRow(
     term: TermType,
     isChecked: Boolean,
     onClickToggle: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         CheckToggle(
             onClick = onClickToggle,
@@ -188,20 +190,22 @@ fun TermRow(
 private fun CheckToggle(
     onClick: (Boolean) -> Unit,
     isChecked: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val checked = if (isChecked) {
-        R.drawable.ill_session_completed
-    } else {
-        R.drawable.ill_session_uncompleted
-    }
+    val checked =
+        if (isChecked) {
+            R.drawable.ill_session_completed
+        } else {
+            R.drawable.ill_session_uncompleted
+        }
     Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier
-            .size(32.dp)
-            .noRippleClickable(onClick = { onClick(!isChecked) }),
+        modifier =
+            modifier
+                .size(32.dp)
+                .noRippleClickable(onClick = { onClick(!isChecked) }),
     ) {
-        Icon(
+        Image(
             imageVector = ImageVector.vectorResource(checked),
             contentDescription = null,
             modifier = Modifier.size(24.dp),
@@ -216,19 +220,19 @@ private fun TermDetailButton(
 ) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier
-            .size(32.dp)
-            .noRippleClickable(onClick = onClick),
+        modifier =
+            modifier
+                .size(32.dp)
+                .noRippleClickable(onClick = onClick),
     ) {
         Icon(
             imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_right),
             contentDescription = null,
             modifier = Modifier.size(24.dp),
-            tint = SixpackTheme.colors.gray200
+            tint = SixpackTheme.colors.gray200,
         )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

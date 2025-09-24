@@ -19,7 +19,7 @@ fun DoRunDefaultButton(
     textColor: Color = SixpackTheme.colors.gray0,
     containerColor: Color = SixpackTheme.colors.blue600,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
-    ) {
+) {
     Button(
         modifier = modifier,
         onClick = {
@@ -28,7 +28,7 @@ fun DoRunDefaultButton(
         shape = SixpackTheme.shapes.round12,
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(containerColor = containerColor),
-        contentPadding = contentPadding
+        contentPadding = contentPadding,
     ) {
         Text(
             text = text,

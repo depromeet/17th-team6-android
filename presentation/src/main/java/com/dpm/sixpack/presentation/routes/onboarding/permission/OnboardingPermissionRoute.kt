@@ -28,7 +28,7 @@ fun OnboardingPermissionRoute(
             viewModel.onIntent(OnboardingPermissionIntent.ToggleAllTerms(isChecked))
         },
         onToggleTerm = { type, isChecked ->
-            viewModel.onIntent(OnboardingPermissionIntent.ToggleTerm(type,isChecked))
+            viewModel.onIntent(OnboardingPermissionIntent.ToggleTerm(type, isChecked))
         },
         onClickNextButton = {
             viewModel.onIntent(OnboardingPermissionIntent.OnClickNextButton)

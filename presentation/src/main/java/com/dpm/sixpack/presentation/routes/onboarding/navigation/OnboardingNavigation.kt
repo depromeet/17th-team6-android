@@ -9,7 +9,6 @@ import androidx.navigation.compose.navigation
 import com.dpm.sixpack.presentation.destinations.OnboardingRoute
 import com.dpm.sixpack.presentation.routes.onboarding.permission.OnboardingPermissionRoute
 
-
 fun NavController.navigateOnboarding(navOptions: NavOptions? = null) {
     navigate(OnboardingRoute.Onboarding, navOptions)
 }
@@ -33,14 +32,12 @@ fun NavGraphBuilder.addOnboardingNavGraph(
         }
 
         composable<OnboardingRoute.LevelSelection> {
-
         }
 
         composable<OnboardingRoute.GoalSelection> {
         }
 
         composable<OnboardingRoute.GoalTarget> {
-        
         }
     }
 }

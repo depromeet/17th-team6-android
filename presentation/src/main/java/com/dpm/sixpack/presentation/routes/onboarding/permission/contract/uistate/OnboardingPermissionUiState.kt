@@ -6,15 +6,15 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class OnboardingPermissionUiState(
-    val termsState: Map<TermType, Boolean> = TermType.entries.associateWith { false }
+    val termsState: Map<TermType, Boolean> = TermType.entries.associateWith { false },
 ) : UiState,
-    Parcelable{
-        val isAllTermsChecked: Boolean
+    Parcelable {
+    val isAllTermsChecked: Boolean
         get() = termsState.values.all { it }
 
     val isNextButtonEnabled: Boolean
-        get() = TermType.entries
-            .filter { it.isRequired }
-            .all { termsState[it] == true }
+        get() =
+            TermType.entries
+                .filter { it.isRequired }
+                .all { termsState[it] == true }
 }
-

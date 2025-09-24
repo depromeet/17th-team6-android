@@ -13,21 +13,25 @@ import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
-fun OnboardingPageIndicator(page: OnboardingPage, modifier: Modifier = Modifier) {
-    val annotatedString = buildAnnotatedString {
-        withStyle(style = SpanStyle(color = SixpackTheme.colors.blue600)) {
-            append(stringResource(R.string.onboarding_current_page_index, page.index))
+fun OnboardingPageIndicator(
+    page: OnboardingPage,
+    modifier: Modifier = Modifier,
+) {
+    val annotatedString =
+        buildAnnotatedString {
+            withStyle(style = SpanStyle(color = SixpackTheme.colors.blue600)) {
+                append(stringResource(R.string.onboarding_current_page_index, page.index))
+            }
+            withStyle(style = SpanStyle(color = SixpackTheme.colors.gray400)) {
+                append(stringResource(R.string.onboarding_page_size, OnboardingPage.entries.size))
+            }
         }
-        withStyle(style = SpanStyle(color = SixpackTheme.colors.gray400)) {
-            append(stringResource(R.string.onboarding_page_size, OnboardingPage.entries.size))
-        }
-    }
     Row(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
     ) {
         Text(
             text = annotatedString,
-            style = SixpackTheme.typography.b2Medium
+            style = SixpackTheme.typography.b2Medium,
         )
     }
 }
@@ -39,4 +43,3 @@ enum class OnboardingPage(
     LEVEL(2),
     GOAL(3),
 }
-

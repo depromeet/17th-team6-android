@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.dpm.sixpack.SixPackAppState
-import com.dpm.sixpack.presentation.navigation.MainNavTab
 import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
 import com.dpm.sixpack.presentation.routes.session.navigation.addRunningNavGraph
 
@@ -29,7 +28,7 @@ internal fun MainNavHost(
 
             addOnboardingNavGraph(
                 navController = navigator.navController,
-                onCompleteOnboarding = navigator::navigateToHome
+                onCompleteOnboarding = navigator::navigateToHome,
             )
         }
     }

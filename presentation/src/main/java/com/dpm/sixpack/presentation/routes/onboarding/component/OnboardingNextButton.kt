@@ -1,7 +1,6 @@
 package com.dpm.sixpack.presentation.routes.onboarding.component
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,17 +17,19 @@ fun OnboardingNextButton(
     enabled: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val buttonColor = if (enabled) {
-        SixpackTheme.colors.gray0
-    } else {
-        SixpackTheme.colors.gray400
-    }
+    val buttonColor =
+        if (enabled) {
+            SixpackTheme.colors.gray0
+        } else {
+            SixpackTheme.colors.gray400
+        }
 
-    val contatinerColor = if (enabled) {
-        SixpackTheme.colors.blue600
-    } else {
-        SixpackTheme.colors.gray100
-    }
+    val contatinerColor =
+        if (enabled) {
+            SixpackTheme.colors.blue600
+        } else {
+            SixpackTheme.colors.gray100
+        }
 
     DoRunDefaultButton(
         text = stringResource(R.string.button_default_next),
@@ -37,7 +38,7 @@ fun OnboardingNextButton(
         enabled = enabled,
         textColor = buttonColor,
         containerColor = contatinerColor,
-        contentPadding = PaddingValues(top = 16.dp , bottom = 16.dp)
+        contentPadding = PaddingValues(top = 16.dp, bottom = 16.dp),
     )
 }
 
@@ -47,6 +48,6 @@ private fun OnboardingNextButtonPreview() {
     OnboardingNextButton(
         onClick = { },
         enabled = true,
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier.padding(16.dp),
     )
 }
