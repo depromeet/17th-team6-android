@@ -73,6 +73,7 @@ fun OnboardingPermissionScreen(
 
             Spacer(modifier = Modifier.height(40.dp))
 
+
             TermsAgreementGroup(
                 termsState = uiState.value.termsState,
                 isAllTermsChecked = uiState.value.isAllTermsChecked,
@@ -107,16 +108,17 @@ fun TermsAgreementGroup(
             isChecked = isAllTermsChecked,
             onClickToggle = onToggleAllTerms,
         )
-
-        Spacer(Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         Spacer(
-            Modifier
+            modifier = Modifier
                 .fillMaxWidth()
-                .border(width = 1.dp, color = SixpackTheme.colors.gray50),
+                .height(1.dp)
+                .background(color = SixpackTheme.colors.gray50)
         )
 
-        Spacer(Modifier.height(20.dp))
+
+        Spacer(modifier = Modifier.height(20.dp))
 
         TermType.entries.forEach { term ->
             TermRow(
@@ -191,7 +193,7 @@ private fun CheckToggle(
     isChecked: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val color=
+    val color =
         if (isChecked) {
             SixpackTheme.colors.blue600
         } else {
