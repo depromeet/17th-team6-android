@@ -17,7 +17,7 @@ fun OnboardingLevelRoute(
 
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
-            is OnboardingSideEffect.NavigateToGoalScreen -> navigateToGoal()
+            is OnboardingSideEffect.NavigateToGoal -> navigateToGoal()
             is OnboardingSideEffect.NavigateToBack -> navigateToBack()
             else -> {}
         }

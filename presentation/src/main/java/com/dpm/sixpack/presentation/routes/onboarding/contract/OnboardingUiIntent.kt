@@ -35,7 +35,7 @@ sealed interface OnboardingUiIntent : UiIntent{
     data object ClickGoalNextButton : OnboardingUiIntent
 
     // Finish
-    data object ClickFinishButton : OnboardingUiIntent
+    data object CompleteOnboarding : OnboardingUiIntent
 
     data class SelectRecommendedGoal(
         val id: Int,

@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import com.dpm.sixpack.presentation.routes.onboarding.OnboardingViewModel
 import com.dpm.sixpack.presentation.routes.onboarding.contract.OnboardingSideEffect
 import com.dpm.sixpack.presentation.routes.onboarding.contract.OnboardingUiIntent
-import com.dpm.sixpack.presentation.routes.onboarding.routes.level.OnboardingLevelScreen
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -18,7 +17,7 @@ fun OnboardingGoalRoute(
 
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
-            is OnboardingSideEffect.NavigateToFinishScreen -> navigateToFinish()
+            is OnboardingSideEffect.NavigateToFinish -> navigateToFinish()
             is OnboardingSideEffect.NavigateToBack -> navigateToBack()
             else -> {}
         }

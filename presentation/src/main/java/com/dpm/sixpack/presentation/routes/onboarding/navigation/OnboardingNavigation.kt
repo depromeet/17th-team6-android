@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.dpm.sixpack.presentation.destinations.OnboardingRoute
 import com.dpm.sixpack.presentation.routes.onboarding.OnboardingViewModel
+import com.dpm.sixpack.presentation.routes.onboarding.routes.finish.OnboardingFinishRoute
 import com.dpm.sixpack.presentation.routes.onboarding.routes.goal.OnboardingGoalRoute
 import com.dpm.sixpack.presentation.routes.onboarding.routes.level.OnboardingLevelRoute
 import com.dpm.sixpack.presentation.routes.onboarding.routes.permission.OnboardingPermissionRoute
@@ -19,7 +20,7 @@ fun NavController.navigateOnboarding(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.addOnboardingNavGraph(
     navController: NavHostController,
-    onCompleteOnboarding: () -> Unit,
+    navigateToHome: () -> Unit,
 ) {
     navigation<OnboardingRoute.Onboarding>(
         startDestination = OnboardingRoute.Permission,
@@ -70,6 +71,18 @@ fun NavGraphBuilder.addOnboardingNavGraph(
         }
 
         composable<OnboardingRoute.Finish> {
+            val backStackEntry = navController.getBackStackEntry(OnboardingRoute.Onboarding)
+            val viewModel: OnboardingViewModel = hiltViewModel(backStackEntry)
+
+            OnboardingFinishRoute(
+                viewModel = viewModel,
+                navigateToHome = {
+                    navigateToHome()
+                },
+                navigateToBack = {
+                    navController.popBackStack()
+                },
+            )
         }
     }
 }
