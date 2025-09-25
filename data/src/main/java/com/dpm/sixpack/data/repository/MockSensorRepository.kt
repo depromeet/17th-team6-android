@@ -14,8 +14,8 @@ class MockSensorRepository
             flow {
                 var totalSteps = 0
                 while (true) {
-                    totalSteps += 3
                     emit(DoRunResult.Success(totalSteps))
+                    totalSteps += 3
                     delay(1000L)
                 }
             }

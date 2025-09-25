@@ -21,15 +21,17 @@ object DeviceDataRepositoryModule {
     @Provides
     @Singleton
     fun provideGpsRepository(locationDataSource: LocationDataSource): GpsRepository =
-        if (BuildConfig.DEBUG) {
-            MockGpsRepository()
-        } else {
-            GpsRepositoryImpl(locationDataSource)
-        }
+        GpsRepositoryImpl(locationDataSource)
+//        if (BuildConfig.DEBUG) {
+//            MockGpsRepository()
+//        } else {
+//            GpsRepositoryImpl(locationDataSource)
+//        }
 
     @Provides
     @Singleton
     fun provideSensorRepository(sensorDataSource: SensorDataSource): SensorRepository =
+//        SensorRepositoryImpl(sensorDataSource)
         if (BuildConfig.DEBUG) {
             MockSensorRepository()
         } else {
