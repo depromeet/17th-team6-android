@@ -7,7 +7,7 @@ interface UserPreferenceRepository {
 
     suspend fun getSessionId(): Long?
 
-    suspend fun getIsOnboardingComplete(): Flow<Boolean>
+     suspend fun getIsOnboardingComplete(): Boolean
 
     suspend fun updateUserId(userId: Long)
 

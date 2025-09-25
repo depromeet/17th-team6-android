@@ -7,5 +7,5 @@ import javax.inject.Inject
 class GetOnboardingStatusUseCase @Inject constructor(
     private val userPreferenceRepository: UserPreferenceRepository,
 ) {
-    suspend operator fun invoke(): Flow<Boolean> = userPreferenceRepository.getIsOnboardingComplete()
+    suspend operator fun invoke(): Boolean = userPreferenceRepository.getIsOnboardingComplete()
 }

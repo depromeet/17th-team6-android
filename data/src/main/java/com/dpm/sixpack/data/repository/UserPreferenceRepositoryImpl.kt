@@ -19,7 +19,7 @@ class UserPreferenceRepositoryImpl @Inject constructor(
 
     override suspend fun getSessionId(): Long? = sessionId.firstOrNull()
 
-    override suspend fun getIsOnboardingComplete(): Flow<Boolean> = isOnboardingComplete
+    override suspend fun getIsOnboardingComplete(): Boolean = isOnboardingComplete.first()
 
     override suspend fun updateUserId(userId: Long) {
         userPreferenceDataSource.updateUserId(userId = userId)

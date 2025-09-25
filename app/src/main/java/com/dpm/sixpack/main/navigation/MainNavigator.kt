@@ -11,23 +11,20 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.dpm.sixpack.presentation.destinations.MainRoute
-import com.dpm.sixpack.presentation.destinations.OnboardingRoute
 import com.dpm.sixpack.presentation.destinations.Route
 import com.dpm.sixpack.presentation.navigation.MainNavTab
 import com.dpm.sixpack.presentation.routes.home.navigation.navigateHome
-import com.dpm.sixpack.presentation.routes.onboarding.navigation.navigateOnboarding
-import com.dpm.sixpack.presentation.routes.session.navigation.navigateRunning
 import com.dpm.sixpack.presentation.routes.sessionlist.navigation.navigateSessionList
 import timber.log.Timber
 
 class MainNavigator(
     val navController: NavHostController,
+    val startDestination: Route,
 ) {
     private val previousDestination = mutableStateOf<NavDestination?>(null)
 
     val currentDestination: NavDestination?
         @Composable get() {
-            // Collect the currentBackStackEntryFlow as a state
             val currentEntry =
                 navController.currentBackStackEntryFlow
                     .collectAsState(initial = null)
@@ -47,22 +44,13 @@ class MainNavigator(
             }
 
     // FIXME: Change to other when the start screen is implemented
-    val startDestination = MainRoute.Home
 
     fun popBackStack() {
         navController.popBackStack()
     }
 
-    fun navigateOnboarding() {
-        navController.navigateOnboarding()
-    }
-
     fun navigateToHome() {
-        navController.navigateRunning(
-            navOptions {
-                popUpTo(OnboardingRoute.Finish) { inclusive = true }
-            },
-        )
+        navController.navigate(MainRoute.Home)
     }
 
     fun navigateToSessionList(goalId: Long) {
@@ -104,7 +92,10 @@ class MainNavigator(
 }
 
 @Composable
-internal fun rememberMainNavigator(navController: NavHostController = rememberNavController()): MainNavigator =
-    remember(navController) {
-        MainNavigator(navController)
+internal fun rememberMainNavigator(
+    startDestination: Route,
+    navController: NavHostController = rememberNavController()
+): MainNavigator =
+    remember(navController, startDestination) {
+        MainNavigator(navController, startDestination)
     }
