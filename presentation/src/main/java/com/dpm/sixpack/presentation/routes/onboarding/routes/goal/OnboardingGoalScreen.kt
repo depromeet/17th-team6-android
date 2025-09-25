@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.onboarding.routes.level
+package com.dpm.sixpack.presentation.routes.onboarding.routes.goal
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -11,18 +11,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
@@ -31,13 +27,13 @@ import com.dpm.sixpack.presentation.routes.onboarding.component.OnboardingNextBu
 import com.dpm.sixpack.presentation.routes.onboarding.component.OnboardingPage
 import com.dpm.sixpack.presentation.routes.onboarding.component.OnboardingPageIndicator
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.OnboardingUiState
-import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.level.LevelType
+import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.goal.GoalType
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
-fun OnboardingLevelScreen(
+fun OnboardingGoalScreen(
     uiState: State<OnboardingUiState>,
-    onSelectLevel: (LevelType) -> Unit,
+    onSelectGoal: (GoalType) -> Unit,
     onClickNextButton: () -> Unit,
     onClickBackButton: () -> Unit,
     modifier: Modifier = Modifier
@@ -57,21 +53,21 @@ fun OnboardingLevelScreen(
         Column(
             modifier = Modifier.padding(horizontal = 20.dp),
         ) {
-            OnboardingPageIndicator(page = OnboardingPage.LEVEL)
+            OnboardingPageIndicator(page = OnboardingPage.GOAL)
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = stringResource(R.string.onboarding_level_title),
+                text = stringResource(R.string.onboarding_goal_title),
                 style = SixpackTheme.typography.h2Bold,
                 modifier = Modifier.fillMaxWidth(),
             )
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            LevelCardList(
-                selectedLevel = uiState.value.selectedLevel,
-                onSelectLevel = onSelectLevel,
+            GoalCardList(
+                selectedGoal = uiState.value.selectedGoal,
+                onSelectGoal = onSelectGoal,
                 modifier = Modifier
                     .fillMaxWidth()
             )
@@ -80,7 +76,7 @@ fun OnboardingLevelScreen(
 
             OnboardingNextButton(
                 onClick = onClickNextButton,
-                enabled = uiState.value.isLevelNextEnabled,
+                enabled = uiState.value.isGoalNextEnabled,
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -90,16 +86,16 @@ fun OnboardingLevelScreen(
 }
 
 @Composable
-private fun LevelCardList(
-    selectedLevel: LevelType?,
-    onSelectLevel: (LevelType) -> Unit,
+private fun GoalCardList(
+    selectedGoal: GoalType?,
+    onSelectGoal: (GoalType) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LevelType.entries.forEach { level ->
-        LevelCard(
-            level = level,
-            isSelected = level == selectedLevel,
-            onSelectLevel = onSelectLevel,
+    GoalType.entries.forEach { goal ->
+        GoalCard(
+            goal = goal,
+            isSelected = goal == selectedGoal,
+            onSelectGoal = onSelectGoal,
             modifier = modifier
         )
 
@@ -108,10 +104,10 @@ private fun LevelCardList(
 }
 
 @Composable
-private fun LevelCard(
-    level: LevelType,
+fun GoalCard(
+    goal: GoalType,
     isSelected: Boolean,
-    onSelectLevel: (LevelType) -> Unit,
+    onSelectGoal: (GoalType) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val borderColor = if (isSelected) {
@@ -126,23 +122,25 @@ private fun LevelCard(
         modifier = modifier
             .fillMaxWidth()
             .border(width = 1.dp, color = borderColor, shape = borderShape)
-            .noRippleClickable(onClick = { onSelectLevel(level) }),
+            .noRippleClickable(onClick = { onSelectGoal(goal) }),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(Modifier.width(16.dp))
 
         Image(
-            imageVector = ImageVector.vectorResource(level.img),
+            imageVector = ImageVector.vectorResource(goal.img),
             contentDescription = null,
         )
 
         Spacer(Modifier.width(12.dp))
 
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp)
+        ) {
             Text(
-                text = stringResource(level.title),
+                text = stringResource(goal.title),
                 style = SixpackTheme.typography.t2Bold,
                 color = SixpackTheme.colors.gray900
             )
@@ -150,25 +148,9 @@ private fun LevelCard(
             Spacer(Modifier.width(4.dp))
 
             Text(
-                text = stringResource(level.subTitle),
+                text = stringResource(goal.subTitle),
                 style = SixpackTheme.typography.b2Regular,
                 color = SixpackTheme.colors.gray600
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun OnboardingLevelScreenPreview() {
-    SixpackTheme {
-        Surface(color = SixpackTheme.colors.gray0) {
-            OnboardingLevelScreen(
-                uiState = remember { mutableStateOf(OnboardingUiState()) },
-                onSelectLevel = { selectedLevel ->
-                },
-                onClickNextButton = { },
-                onClickBackButton = { },
             )
         }
     }

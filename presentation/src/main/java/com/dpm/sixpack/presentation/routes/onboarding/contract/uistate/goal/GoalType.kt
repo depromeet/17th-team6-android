@@ -20,12 +20,12 @@ enum class GoalType(
         RunningGoalConstants.STAMINA,
         R.string.onboarding_goal_stamina_title,
         R.string.onboarding_goal_stamina_sub_title,
-        R.drawable.ill_marathon
+        R.drawable.ill_stamina
     ),
     ZONE_2(
         RunningGoalConstants.ZONE_2,
         R.string.onboarding_goal_zone_title,
         R.string.onboarding_goal_zone2_sub_title,
-        R.drawable.ill_endurance
+        R.drawable.ill_zone
     ),
 }

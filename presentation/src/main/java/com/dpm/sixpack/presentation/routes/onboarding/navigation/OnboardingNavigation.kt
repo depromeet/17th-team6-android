@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.dpm.sixpack.presentation.destinations.OnboardingRoute
 import com.dpm.sixpack.presentation.routes.onboarding.OnboardingViewModel
+import com.dpm.sixpack.presentation.routes.onboarding.routes.goal.OnboardingGoalRoute
 import com.dpm.sixpack.presentation.routes.onboarding.routes.level.OnboardingLevelRoute
 import com.dpm.sixpack.presentation.routes.onboarding.routes.permission.OnboardingPermissionRoute
 
@@ -54,9 +55,21 @@ fun NavGraphBuilder.addOnboardingNavGraph(
         }
 
         composable<OnboardingRoute.GoalSelection> {
+            val backStackEntry = navController.getBackStackEntry(OnboardingRoute.Onboarding)
+            val viewModel: OnboardingViewModel = hiltViewModel(backStackEntry)
+
+            OnboardingGoalRoute(
+                viewModel = viewModel,
+                navigateToFinish = {
+                    navController.navigate(OnboardingRoute.Finish)
+                },
+                navigateToBack = {
+                    navController.popBackStack()
+                },
+            )
         }
 
-        composable<OnboardingRoute.GoalTarget> {
+        composable<OnboardingRoute.Finish> {
         }
     }
 }

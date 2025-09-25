@@ -1,35 +1,36 @@
-package com.dpm.sixpack.presentation.routes.onboarding.routes.level
+package com.dpm.sixpack.presentation.routes.onboarding.routes.goal
 
 import androidx.compose.runtime.Composable
 import com.dpm.sixpack.presentation.routes.onboarding.OnboardingViewModel
 import com.dpm.sixpack.presentation.routes.onboarding.contract.OnboardingSideEffect
 import com.dpm.sixpack.presentation.routes.onboarding.contract.OnboardingUiIntent
+import com.dpm.sixpack.presentation.routes.onboarding.routes.level.OnboardingLevelScreen
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
-fun OnboardingLevelRoute(
+fun OnboardingGoalRoute(
     viewModel: OnboardingViewModel,
-    navigateToGoal: () -> Unit,
+    navigateToFinish: () -> Unit,
     navigateToBack: () -> Unit,
 ) {
     val uiState = viewModel.collectAsState()
 
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
-            is OnboardingSideEffect.NavigateToGoalScreen -> navigateToGoal()
+            is OnboardingSideEffect.NavigateToFinishScreen -> navigateToFinish()
             is OnboardingSideEffect.NavigateToBack -> navigateToBack()
             else -> {}
         }
     }
 
-    OnboardingLevelScreen(
+    OnboardingGoalScreen(
         uiState = uiState,
-        onSelectLevel = { level ->
-            viewModel.onIntent(OnboardingUiIntent.SelectLevel(level))
+        onSelectGoal = { goal ->
+            viewModel.onIntent(OnboardingUiIntent.SelectGoal(goal))
         },
         onClickNextButton = {
-            viewModel.onIntent(OnboardingUiIntent.ClickLevelNextButton)
+            viewModel.onIntent(OnboardingUiIntent.ClickGoalNextButton)
         },
         onClickBackButton = {
             viewModel.onIntent(OnboardingUiIntent.ClickBackButton)

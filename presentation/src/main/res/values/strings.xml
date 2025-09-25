@@ -25,6 +25,14 @@
     <string name="onboarding_level_occasional_sub_title">주 1-2회 이하로 가볍게 달려요.</string>
     <string name="onboarding_level_consistent_title">꾸준히 달려요</string>
     <string name="onboarding_level_consistent_sub_title">주 3회 이상 루틴대로 달려요</string>
+
+    <string name="onboarding_goal_marathon_title">마라톤에 도전할래요</string>
+    <string name="onboarding_goal_marathon_sub_title">10km · 21km · 42km</string>
+    <string name="onboarding_goal_stamina_title">체력을 키울래요</string>
+    <string name="onboarding_goal_stamina_sub_title">30분 달리기</string>
+    <string name="onboarding_goal_zone_title">지구력을 키울래요</string>
+    <string name="onboarding_goal_zone2_sub_title">Zone2 러닝</string>
+    <string name="onboarding_goal_title">도전하고 싶은 목표가 있나요?</string>
     <!-- Onboadring End-->
 
 
