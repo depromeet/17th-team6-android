@@ -6,6 +6,6 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class MapUiState(
-    val paceColors: List<List<ULong>> = listOf(),
+    val paceColors: List<List<Int>> = listOf(),
     val path: List<List<LatLng>> = listOf(),
 ) : Parcelable

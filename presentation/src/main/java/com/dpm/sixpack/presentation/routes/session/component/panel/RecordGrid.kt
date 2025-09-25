@@ -17,6 +17,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
+import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
+import com.dpm.sixpack.presentation.common.util.formatPaceToString
+import com.dpm.sixpack.presentation.common.util.formatSecondsToTime
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.RecordUiState
 
 @Composable
@@ -35,12 +38,12 @@ internal fun MainRunningRecordGrid(
         ) {
             RecordItem(
                 label = stringResource(R.string.record_current_distance),
-                recordValue = recordUiState.currentDistance,
+                recordValue = formatDistanceToKm(recordUiState.currentDistance),
             )
             Spacer(modifier = Modifier.height(20.dp))
             RecordItem(
                 label = stringResource(R.string.record_average_pace),
-                recordValue = recordUiState.avgPace,
+                recordValue = formatPaceToString(recordUiState.avgPace),
             )
         }
         // 오른쪽 열
@@ -50,12 +53,12 @@ internal fun MainRunningRecordGrid(
         ) {
             RecordItem(
                 label = stringResource(R.string.record_running_duration),
-                recordValue = recordUiState.currentDuration,
+                recordValue = formatSecondsToTime(recordUiState.currentDuration),
             )
             Spacer(modifier = Modifier.height(20.dp))
             RecordItem(
                 label = stringResource(R.string.record_cadence),
-                recordValue = recordUiState.cadence,
+                recordValue = "${recordUiState.cadence}",
             )
         }
     }
@@ -77,7 +80,7 @@ internal fun PrePostRunningRecordGrid(
         ) {
             RecordItem(
                 label = stringResource(R.string.record_running_duration),
-                recordValue = recordUiState.currentDuration,
+                recordValue = formatSecondsToTime(recordUiState.currentDuration),
             )
         }
     }
@@ -94,10 +97,10 @@ private fun PreviewMainRecordGrid() {
     ) {
         MainRunningRecordGrid(
             RecordUiState(
-                currentDistance = "1.54km",
-                currentDuration = "00:23:17",
-                avgPace = "7'20\"",
-                cadence = "154",
+                currentDistance = 15400,
+                currentDuration = 1530,
+                avgPace = 440,
+                cadence = 154,
             ),
         )
     }
@@ -114,10 +117,10 @@ private fun PreviewPrePostRecordGrid() {
     ) {
         PrePostRunningRecordGrid(
             RecordUiState(
-                currentDistance = "1.54km",
-                currentDuration = "00:23:17",
-                avgPace = "7'20\"",
-                cadence = "154",
+                currentDistance = 15400,
+                currentDuration = 1530,
+                avgPace = 440,
+                cadence = 154,
             ),
         )
     }

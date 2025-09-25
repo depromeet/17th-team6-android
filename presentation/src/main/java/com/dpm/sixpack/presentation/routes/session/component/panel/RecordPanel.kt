@@ -176,10 +176,10 @@ private fun PreviewMainRunningStatsPanel() {
             RunningSessionState.Main.Running(
                 recordUiState =
                     RecordUiState(
-                        currentDistance = "1.54km",
-                        currentDuration = "00:23:17",
-                        avgPace = "7'20\"",
-                        cadence = "154",
+                        currentDistance = 15400,
+                        currentDuration = 1530,
+                        avgPace = 440,
+                        cadence = 154,
                     ),
             ),
 //        primaryInfo = "러닝",
@@ -199,10 +199,10 @@ private fun PreviewMainRunningStatsPanelPause() {
             RunningSessionState.Main.Pause(
                 recordUiState =
                     RecordUiState(
-                        currentDistance = "1.54km",
-                        currentDuration = "00:23:17",
-                        avgPace = "7'20\"",
-                        cadence = "154",
+                        currentDistance = 15400,
+                        currentDuration = 1530,
+                        avgPace = 440,
+                        cadence = 154,
                     ),
             ),
 //        primaryInfo = "러닝",
@@ -222,10 +222,10 @@ private fun PreviewPrePostRunningStatsPanel() {
             RunningSessionState.WarmUp.Running(
                 recordUiState =
                     RecordUiState(
-                        currentDistance = "1.54km",
-                        currentDuration = "00:23:17",
-                        avgPace = "7'20\"",
-                        cadence = "154",
+                        currentDistance = 15400,
+                        currentDuration = 1530,
+                        avgPace = 440,
+                        cadence = 154,
                     ),
             ),
 //        primaryInfo = "쿨다운",
