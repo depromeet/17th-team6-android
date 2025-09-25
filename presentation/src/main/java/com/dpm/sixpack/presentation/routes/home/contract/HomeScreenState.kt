@@ -71,7 +71,6 @@ fun RunningTotalGoal.asHomeTotalGoalComponentState() =
 
 @Parcelize
 data class HomeSessionComponentState(
-    val loading: Boolean = false,
     val sessionCount: Int? = null,
     @StringRes val cheerUpStringRes: Int? = null, // TODO enum 으로 변경?
     val distance: String = "",
@@ -85,7 +84,6 @@ data class HomeSessionComponentState(
 fun RunningSessionGoal.asHomeSessionComponentState(totalRoundCount: Int): HomeSessionComponentState {
     val roundProgress = roundCount / totalRoundCount.toFloat()
     return HomeSessionComponentState(
-        loading = false,
         sessionCount = roundCount,
         cheerUpStringRes = when {
             roundProgress <= 0.01f -> R.string.home_goal_cheer_up_0_1
@@ -98,5 +96,4 @@ fun RunningSessionGoal.asHomeSessionComponentState(totalRoundCount: Int): HomeSe
         duration = formatSecondsToTime(duration),
         pace = formatSecondsToPace(pace)
     )
-
 }

@@ -4,11 +4,12 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.dpm.sixpack.presentation.destinations.MainRoute
 import com.dpm.sixpack.presentation.destinations.RunningRoute
 import com.dpm.sixpack.presentation.routes.home.HomeRoute
 
 fun NavController.navigateHome(navOptions: NavOptions? = null) {
-    navigate(RunningRoute.Home, navOptions)
+    navigate(MainRoute.Home, navOptions)
 }
 
 fun NavGraphBuilder.addHomeNavGraph(
@@ -16,7 +17,7 @@ fun NavGraphBuilder.addHomeNavGraph(
     onNavigateToGoalList: (goalId: Long) -> Unit,
     onNavigateToGoalEdit: () -> Unit
 ) {
-    composable<RunningRoute.Home> {
+    composable<MainRoute.Home> {
         HomeRoute(
             onNavigateToSession = onNavigateToSession,
             onNavigateToGoalList = onNavigateToGoalList,

@@ -14,7 +14,7 @@ class RunningGoalRepositoryImpl @Inject constructor(
     private val runningGoalDataSource: RunningGoalDataSource,
 ) : RunningGoalRepository {
     override suspend fun getTodayRunningSessionGoal(): DoRunResult<RunningSessionGoal> {
-        TODO("Not yet implemented")
+        return DoRunResult.Failure(DoRunException.DataError("네트워크 요청에 실패했습니다"))
     }
 
     override suspend fun getRunningTotalGoal(): DoRunResult<RunningTotalGoal> =
