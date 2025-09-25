@@ -1,6 +1,7 @@
 package com.dpm.sixpack.presentation.common.util
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.location.Location
 import android.os.SystemClock
 import androidx.annotation.RequiresPermission
@@ -11,14 +12,27 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
 class MockLocationClient(
-    private val fusedLocationClient: FusedLocationProviderClient,
     private val scope: CoroutineScope,
 ) {
+    @Inject
+    lateinit var fusedLocationClient: FusedLocationProviderClient
+
     private var simulationJob: Job? = null
 
-    @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
+    @RequiresPermission(
+        allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION],
+    )
+    fun startMockMode() {
+        fusedLocationClient.setMockMode(true)
+        Timber.Forest.tag("MockLocationClient").d("Mock mode enabled.")
+    }
+
+    @RequiresPermission(
+        allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION],
+    )
     fun startWithLocation(
         path: List<Location>,
         delayMillis: Long = 1000L,
@@ -26,7 +40,9 @@ class MockLocationClient(
         startSimulation(path, delayMillis) { it }
     }
 
-    @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
+    @RequiresPermission(
+        allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION],
+    )
     fun startWithLatLng(
         path: List<LatLng>,
         delayMillis: Long = 1000L,
@@ -34,12 +50,16 @@ class MockLocationClient(
         startSimulation(path, delayMillis) { it.toMockLocation() }
     }
 
+    @SuppressLint("MissingPermission")
     fun stop() {
+        stopMockMode()
         simulationJob?.cancel()
         simulationJob = null
     }
 
-    @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
+    @RequiresPermission(
+        allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION],
+    )
     private fun <T> startSimulation(
         path: List<T>,
         delayMillis: Long,
@@ -69,9 +89,20 @@ class MockLocationClient(
             }
     }
 
-    @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
+    @RequiresPermission(
+        allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION],
+    )
     private fun stopMockMode() {
         fusedLocationClient.setMockMode(false)
+    }
+
+    @RequiresPermission(
+        allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION],
+    )
+    fun addLocation(newPoint: LatLng) {
+        scope.launch {
+            fusedLocationClient.setMockLocation(newPoint.toMockLocation())
+        }
     }
 
     private fun LatLng.toMockLocation(): Location =

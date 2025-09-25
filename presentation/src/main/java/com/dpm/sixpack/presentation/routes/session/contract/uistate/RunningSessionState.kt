@@ -17,6 +17,7 @@ sealed interface RunningSessionState : Parcelable {
         val goal: RunningGoalUiState = RunningGoalUiState(),
     ) : RunningSessionState
 
+    // 러닝 패널에 표시될 기록이 있는 상태
     sealed interface HasRecord : RunningSessionState {
         val recordUiState: RecordUiState
     }
@@ -26,15 +27,23 @@ sealed interface RunningSessionState : Parcelable {
         Parcelable {
         val countdown: Int
         val onlyText get() = countdown > NUMBER_COUNTDOWN
+
+        fun withNewCountdown(newCountdown: Int): ReadyState
     }
 
     sealed interface RunningState :
         RunningSessionState,
-        HasRecord
+        HasRecord {
+        fun withNewRecordUiState(newRecordUiState: RecordUiState): RunningState
+    }
 
     sealed interface PausedState :
         RunningSessionState,
-        HasRecord
+        HasRecord {
+        val showStopSessionConfirmDialog: Boolean
+
+        fun withNewShowStopConfirmDialog(newShowStopConfirmDialog: Boolean): PausedState
+    }
 
     //region WarmUp
 
@@ -43,21 +52,27 @@ sealed interface RunningSessionState : Parcelable {
         data class Ready(
             override val countdown: Int = INITIAL_COUNTDOWN,
         ) : ReadyState,
-            WarmUp
+            WarmUp {
+            override fun withNewCountdown(newCountdown: Int): ReadyState = this.copy(countdown = newCountdown)
+        }
 
         data class Running(
-            val showSkipConfirmUi: Boolean = false,
-            val remainingDistance: String = "",
             override val recordUiState: RecordUiState = RecordUiState(),
         ) : RunningState,
-            WarmUp
+            WarmUp {
+            override fun withNewRecordUiState(newRecordUiState: RecordUiState): RunningState =
+                this.copy(recordUiState = newRecordUiState)
+        }
 
         data class Pause(
-            val mapUiState: MapUiState = MapUiState(),
-            val showFinishSessionConfirmUi: Boolean = false,
+            val showSkipConfirmDialog: Boolean = false,
+            override val showStopSessionConfirmDialog: Boolean = false,
             override val recordUiState: RecordUiState = RecordUiState(),
         ) : PausedState,
-            WarmUp
+            WarmUp {
+            override fun withNewShowStopConfirmDialog(newShowStopConfirmDialog: Boolean): PausedState =
+                this.copy(showStopSessionConfirmDialog = newShowStopConfirmDialog)
+        }
     }
 
     //endregion
@@ -69,24 +84,34 @@ sealed interface RunningSessionState : Parcelable {
         data class Ready(
             override val countdown: Int = INITIAL_COUNTDOWN,
         ) : ReadyState,
-            Main
+            Main {
+            override fun withNewCountdown(newCountdown: Int): ReadyState = this.copy(countdown = newCountdown)
+        }
 
         data class Running(
             val goalDistance: String = "",
             val mapUiState: MapUiState = MapUiState(),
             override val recordUiState: RecordUiState = RecordUiState(),
         ) : RunningState,
-            Main
+            Main {
+            override fun withNewRecordUiState(newRecordUiState: RecordUiState): RunningState =
+                this.copy(recordUiState = newRecordUiState)
+
+            fun withNewMapUiState(newMapUiState: MapUiState): RunningState = this.copy(mapUiState = newMapUiState)
+        }
 
         data class Pause(
             val goalDistance: String = "",
             val mapUiState: MapUiState = MapUiState(),
-            val showFinishSessionConfirmUi: Boolean = false,
+            override val showStopSessionConfirmDialog: Boolean = false,
             override val recordUiState: RecordUiState = RecordUiState(),
             // 다이얼로그에서 사용.
             val remainingDistance: String = "",
         ) : PausedState,
-            Main
+            Main {
+            override fun withNewShowStopConfirmDialog(newShowStopConfirmDialog: Boolean): PausedState =
+                this.copy(showStopSessionConfirmDialog = newShowStopConfirmDialog)
+        }
     }
 
     //endregion
@@ -96,22 +121,31 @@ sealed interface RunningSessionState : Parcelable {
     @Parcelize
     sealed interface CoolDown : Parcelable {
         data class Ready(
-            override val countdown: Int = INITIAL_COUNTDOWN,
             val mapUiState: MapUiState = MapUiState(),
+            override val countdown: Int = INITIAL_COUNTDOWN,
         ) : ReadyState,
-            CoolDown
+            CoolDown {
+            override fun withNewCountdown(newCountdown: Int): ReadyState = this.copy(countdown = newCountdown)
+        }
 
         data class Running(
+            val mapUiState: MapUiState = MapUiState(),
             override val recordUiState: RecordUiState = RecordUiState(),
         ) : RunningState,
-            CoolDown
+            CoolDown {
+            override fun withNewRecordUiState(newRecordUiState: RecordUiState): RunningState =
+                this.copy(recordUiState = newRecordUiState)
+        }
 
         data class Pause(
             val mapUiState: MapUiState = MapUiState(),
-            val showFinishSessionConfirmUi: Boolean = false,
+            override val showStopSessionConfirmDialog: Boolean = false,
             override val recordUiState: RecordUiState = RecordUiState(),
         ) : PausedState,
-            CoolDown
+            CoolDown {
+            override fun withNewShowStopConfirmDialog(newShowStopConfirmDialog: Boolean): PausedState =
+                this.copy(showStopSessionConfirmDialog = newShowStopConfirmDialog)
+        }
     }
 
     //endregion

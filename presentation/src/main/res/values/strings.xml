@@ -25,6 +25,12 @@
     <string name="screen_tab_map_title">지도</string>
     <!--Screen Selection Tab End -->
 
+    <!--Running Phase-->
+    <string name="running_phase_warmup_title">웜업</string>
+    <string name="running_phase_main_title">러닝</string>
+    <string name="running_phase_cooldown_title">쿨다운</string>
+    <!--Running Phase End-->
+
     <!--Running Record-->
     <string name="record_current_distance">현재 거리</string>
     <string name="record_running_duration">러닝 시간</string>
@@ -35,10 +41,21 @@
     <!--Running Record Panel-->
     <string name="panel_skip">건너뛰기</string>
     <string name="panel_target_distance">목표거리</string>
-    <string name="panel_record_pause">기록중지</string>
+    <string name="panel_record_pause">기록 중지</string>
     <string name="panel_record_resume">계속 운동하기</string>
-    <string name="panel_record_cease">러닝 기록 종료</string>
+    <string name="panel_record_terminate">기록 종료</string>
     <!--Running Record Panel End-->
+
+    <!--RunningDialog -->
+    <string name="dialog_cancel">취소</string>
+    <string name="dialog_warmup_skip_title">건너뛰기</string>
+    <string name="dialog_warmup_skip_content">안전한 러닝을 위해 웜업을 권장해요.\n건너뛰고 본 러닝을 시작할까요?</string>
+    <string name="dialog_warmup_stop_title">웜업 종료</string>
+    <string name="dialog_warmup_stop_content">웜업은 기록되지 않아요.\n기록을 종료하고 홈으로 이동하시겠어요?</string>
+    <string name="dialog_running_stop_title">러닝기록 종료</string>
+    <string name="dialog_running_stop_content">아직 목표까지 %1$s 남았어요.\n이대로 기록을 종료하시겠어요?</string>
+    <string name="dialog_cooldown_stop_content">이대로 기록을 종료하고\n러닝을 마무리하시겠어요?</string>
+    <!--RunningDialog End-->
 
     <!--Ready Loading -->
     <string name="ready_warmup_primary">5분 웜업 시작</string>

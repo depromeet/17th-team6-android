@@ -12,4 +12,5 @@ dependencies {
     implementation(project(":background"))
 
     implementation(libs.bundles.navermap)
+    implementation(libs.constraintlayout.compose)
 }
