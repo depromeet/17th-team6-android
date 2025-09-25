@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.common.util
+package com.dpm.sixpack.presentation.routes.session
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
