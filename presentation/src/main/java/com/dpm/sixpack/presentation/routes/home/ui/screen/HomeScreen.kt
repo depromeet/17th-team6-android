@@ -19,13 +19,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
+import com.dpm.sixpack.presentation.routes.home.contract.HomeScreenState
+import com.dpm.sixpack.presentation.routes.home.contract.HomeSessionComponentState
+import com.dpm.sixpack.presentation.routes.home.contract.HomeTotalGoalComponentState
 import com.dpm.sixpack.presentation.routes.home.ui.component.session.edit.HomeGoalEditComponent
 import com.dpm.sixpack.presentation.routes.home.ui.component.session.next.HomeNextSessionComponent
 import com.dpm.sixpack.presentation.routes.home.ui.component.session.previous.HomePreviousSessionComponent
 import com.dpm.sixpack.presentation.routes.home.ui.component.total.HomeTotalGoalComponent
-import com.dpm.sixpack.presentation.routes.home.contract.HomeScreenState
-import com.dpm.sixpack.presentation.routes.home.contract.HomeSessionComponentState
-import com.dpm.sixpack.presentation.routes.home.contract.HomeTotalGoalComponentState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable

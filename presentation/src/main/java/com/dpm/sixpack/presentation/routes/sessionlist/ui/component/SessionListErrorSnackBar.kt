@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.session_list.ui.component
+package com.dpm.sixpack.presentation.routes.sessionlist.ui.component
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
@@ -20,24 +20,24 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 fun SessionListErrorSnackBar(
     modifier: Modifier = Modifier,
     @DrawableRes iconRes: Int,
-    title: String
+    title: String,
 ) {
     Row(
-        modifier = modifier
-            .wrapContentSize()
-            .background(
-                color = SixpackTheme.colors.gray900.copy(alpha = 0.73f),
-                shape = SixpackTheme.shapes.round12
-            )
-            .padding(
-                horizontal = 20.dp,
-                vertical = 12.dp
-            ),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            modifier
+                .wrapContentSize()
+                .background(
+                    color = SixpackTheme.colors.gray900.copy(alpha = 0.73f),
+                    shape = SixpackTheme.shapes.round12,
+                ).padding(
+                    horizontal = 20.dp,
+                    vertical = 12.dp,
+                ),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Image(
             painter = painterResource(iconRes),
-            contentDescription = ""
+            contentDescription = "",
         )
         Text(
             modifier = Modifier.padding(start = 8.dp),
@@ -53,6 +53,6 @@ fun SessionListErrorSnackBar(
 private fun SessionListErrorSnackBarPreview() {
     SessionListErrorSnackBar(
         iconRes = R.drawable.ill_warning,
-        title = "이전 회차를 끝내야 도전할 수 있어요."
+        title = "이전 회차를 끝내야 도전할 수 있어요.",
     )
 }

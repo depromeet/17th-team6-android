@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.session_list
+package com.dpm.sixpack.presentation.routes.sessionlist
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -8,9 +8,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dpm.sixpack.presentation.R
-import com.dpm.sixpack.presentation.routes.session_list.contract.SessionListIntent
-import com.dpm.sixpack.presentation.routes.session_list.contract.SessionListSideEffect
-import com.dpm.sixpack.presentation.routes.session_list.ui.screen.SessionListScreen
+import com.dpm.sixpack.presentation.routes.sessionlist.contract.SessionListIntent
+import com.dpm.sixpack.presentation.routes.sessionlist.contract.SessionListSideEffect
+import com.dpm.sixpack.presentation.routes.sessionlist.ui.screen.SessionListScreen
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -61,6 +61,6 @@ fun SessionListRoute(
         },
         onClickStartPreviousSession = {
             viewModel.onIntent(SessionListIntent.StartRunningSessionClick(it))
-        }
+        },
     )
 }

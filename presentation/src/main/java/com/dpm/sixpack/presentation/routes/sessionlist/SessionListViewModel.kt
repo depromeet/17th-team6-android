@@ -1,14 +1,14 @@
-package com.dpm.sixpack.presentation.routes.session_list
+package com.dpm.sixpack.presentation.routes.sessionlist
 
 import androidx.lifecycle.SavedStateHandle
 import com.dpm.sixpack.domain.usecase.GetSessionListUseCase
 import com.dpm.sixpack.domain.usecase.GetTotalGoalUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
-import com.dpm.sixpack.presentation.routes.session_list.contract.SessionListIntent
-import com.dpm.sixpack.presentation.routes.session_list.contract.SessionListScreenState
-import com.dpm.sixpack.presentation.routes.session_list.contract.SessionListSideEffect
-import com.dpm.sixpack.presentation.routes.session_list.contract.SessionListTotalGoalComponentState
-import com.dpm.sixpack.presentation.routes.session_list.contract.asUiState
+import com.dpm.sixpack.presentation.routes.sessionlist.contract.SessionListIntent
+import com.dpm.sixpack.presentation.routes.sessionlist.contract.SessionListScreenState
+import com.dpm.sixpack.presentation.routes.sessionlist.contract.SessionListSideEffect
+import com.dpm.sixpack.presentation.routes.sessionlist.contract.SessionListTotalGoalComponentState
+import com.dpm.sixpack.presentation.routes.sessionlist.contract.asUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
@@ -18,9 +18,8 @@ import javax.inject.Inject
 class SessionListViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getTotalGoalUseCase: GetTotalGoalUseCase,
-    private val getSessionListUseCase: GetSessionListUseCase
+    private val getSessionListUseCase: GetSessionListUseCase,
 ) : BaseViewModel<SessionListScreenState, SessionListIntent, SessionListSideEffect>() {
-
     private val goalId by lazy {
         savedStateHandle.get<Long>("goalId") ?: -1L
     }
@@ -45,7 +44,7 @@ class SessionListViewModel @Inject constructor(
                 state.copy(
                     loading = false,
                     totalGoalComponentState = totalGoal?.asUiState() ?: SessionListTotalGoalComponentState(),
-                    sessionList = sessionList?.map { it.asUiState() } ?: emptyList()
+                    sessionList = sessionList?.map { it.asUiState() } ?: emptyList(),
                 )
             }
         }
@@ -90,13 +89,14 @@ class SessionListViewModel @Inject constructor(
                 // 클릭된 세션이 완료된 세션이라면 선택/선택해제 상태 변경
                 else -> {
                     // 완료된 세션이 선택된 상태라면, 다른 세션이 선택되지 않도록 함
-                    val newSessionList = sessionList.map {
-                        if (it.id == intent.sessionId) {
-                            it.copy(isSelected = true)
-                        } else {
-                            it.copy(isSelected = false)
+                    val newSessionList =
+                        sessionList.map {
+                            if (it.id == intent.sessionId) {
+                                it.copy(isSelected = true)
+                            } else {
+                                it.copy(isSelected = false)
+                            }
                         }
-                    }
                     reduce {
                         state.copy(sessionList = newSessionList)
                     }
@@ -110,5 +110,4 @@ class SessionListViewModel @Inject constructor(
             postSideEffect(SessionListSideEffect.NavigateToSession(sessionId = intent.sessionId))
         }
     }
-
 }

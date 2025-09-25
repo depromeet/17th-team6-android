@@ -6,8 +6,7 @@ import javax.inject.Singleton
 
 @Singleton
 class GetTotalGoalUseCase @Inject constructor(
-    private val runningGoalRepository: RunningGoalRepository
+    private val runningGoalRepository: RunningGoalRepository,
 ) {
-    suspend operator fun invoke() =
-        runningGoalRepository.getRunningTotalGoal()
+    suspend operator fun invoke() = runningGoalRepository.getRunningTotalGoal()
 }

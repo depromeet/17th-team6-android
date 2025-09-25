@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.session_list.ui.component
+package com.dpm.sixpack.presentation.routes.sessionlist.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunTotalGoalProgress
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
-import com.dpm.sixpack.presentation.routes.session_list.contract.SessionListTotalGoalComponentState
+import com.dpm.sixpack.presentation.routes.sessionlist.contract.SessionListTotalGoalComponentState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
@@ -31,17 +31,17 @@ fun SessionListTotalGoalComponent(
     onClickEdit: () -> Unit = {},
 ) {
     Column(
-        modifier = modifier
-            .background(
-                color = SixpackTheme.colors.blue100,
-                shape = SixpackTheme.shapes.round16,
-            )
-            .padding(20.dp)
+        modifier =
+            modifier
+                .background(
+                    color = SixpackTheme.colors.blue100,
+                    shape = SixpackTheme.shapes.round16,
+                ).padding(20.dp),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Row(
                 modifier = Modifier.weight(1f),
@@ -59,15 +59,16 @@ fun SessionListTotalGoalComponent(
                     style = SixpackTheme.typography.t1Bold,
                     color = SixpackTheme.colors.gray900,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
 
             Icon(
-                modifier = Modifier
-                    .size(32.dp)
-                    .clickable(onClick = onClickEdit)
-                    .padding(4.dp),
+                modifier =
+                    Modifier
+                        .size(32.dp)
+                        .clickable(onClick = onClickEdit)
+                        .padding(4.dp),
                 painter = painterResource(R.drawable.ic_edit),
                 contentDescription = "운동 목표 편집 아이콘", // TODO: 접근성 resource 추가
                 tint = SixpackTheme.colors.gray800,
@@ -91,12 +92,13 @@ fun SessionListTotalGoalComponent(
 private fun SessionListTotalGoalComponentPreview() {
     DoRunPreviewWrapper {
         SessionListTotalGoalComponent(
-            state = SessionListTotalGoalComponentState(
-                title = "초보자 러닝 목표",
-                imageRes = R.drawable.ill_marathon_10km,
-                completedSessionCount = 3,
-                totalSessionCount = 8,
-            )
+            state =
+                SessionListTotalGoalComponentState(
+                    title = "초보자 러닝 목표",
+                    imageRes = R.drawable.ill_marathon_10km,
+                    completedSessionCount = 3,
+                    totalSessionCount = 8,
+                ),
         )
     }
 }

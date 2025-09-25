@@ -6,8 +6,7 @@ import javax.inject.Singleton
 
 @Singleton
 class GetSessionListUseCase @Inject constructor(
-    private val runningGoalRepository: RunningGoalRepository
+    private val runningGoalRepository: RunningGoalRepository,
 ) {
-    suspend operator fun invoke(goalId: Long) =
-        runningGoalRepository.getRunningSessions(goalId)
+    suspend operator fun invoke(goalId: Long) = runningGoalRepository.getRunningSessions(goalId)
 }

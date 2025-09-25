@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.session_list.ui.screen
+package com.dpm.sixpack.presentation.routes.sessionlist.ui.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,12 +22,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
-import com.dpm.sixpack.presentation.routes.session_list.contract.SessionListItemState
-import com.dpm.sixpack.presentation.routes.session_list.contract.SessionListScreenState
-import com.dpm.sixpack.presentation.routes.session_list.contract.SessionListTotalGoalComponentState
-import com.dpm.sixpack.presentation.routes.session_list.ui.component.SessionListErrorSnackBar
-import com.dpm.sixpack.presentation.routes.session_list.ui.component.SessionListItem
-import com.dpm.sixpack.presentation.routes.session_list.ui.component.SessionListTotalGoalComponent
+import com.dpm.sixpack.presentation.routes.sessionlist.contract.SessionListItemState
+import com.dpm.sixpack.presentation.routes.sessionlist.contract.SessionListScreenState
+import com.dpm.sixpack.presentation.routes.sessionlist.contract.SessionListTotalGoalComponentState
+import com.dpm.sixpack.presentation.routes.sessionlist.ui.component.SessionListErrorSnackBar
+import com.dpm.sixpack.presentation.routes.sessionlist.ui.component.SessionListItem
+import com.dpm.sixpack.presentation.routes.sessionlist.ui.component.SessionListTotalGoalComponent
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
@@ -38,7 +38,7 @@ fun SessionListScreen(
     onClickBackNavigation: () -> Unit = {},
     onClickEditGoal: () -> Unit = {},
     onClickSessionItem: (sessionId: Long) -> Unit = {},
-    onClickStartPreviousSession: (sessionId: Long) -> Unit = {}
+    onClickStartPreviousSession: (sessionId: Long) -> Unit = {},
 ) {
     Scaffold(
         modifier = modifier,
@@ -74,21 +74,22 @@ fun SessionListScreen(
                     SessionListErrorSnackBar(
                         modifier = Modifier.padding(bottom = 190.dp),
                         iconRes = R.drawable.ill_warning,
-                        title = it.visuals.message
+                        title = it.visuals.message,
                     )
-                }
+                },
             )
-        }
+        },
     ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .padding(paddingValues)
-                .padding(top = 24.dp)
-                .padding(horizontal = 20.dp),
+            modifier =
+                Modifier
+                    .padding(paddingValues)
+                    .padding(top = 24.dp)
+                    .padding(horizontal = 20.dp),
         ) {
             SessionListTotalGoalComponent(
                 state = screenState.totalGoalComponentState,
-                onClickEdit = onClickEditGoal
+                onClickEdit = onClickEditGoal,
             )
 
             LazyColumn(
@@ -97,7 +98,7 @@ fun SessionListScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 items(
-                    screenState.sessionList
+                    screenState.sessionList,
                 ) { item ->
                     SessionListItem(
                         modifier = Modifier,
@@ -107,7 +108,7 @@ fun SessionListScreen(
                         },
                         onClickStartPreviousSession = {
                             onClickStartPreviousSession(item.id)
-                        }
+                        },
                     )
                 }
             }
@@ -119,29 +120,32 @@ fun SessionListScreen(
 @Composable
 private fun SessionListScreenPreview() {
     val completedSessionCount = 3
-    val mockState = SessionListScreenState(
-        totalGoalComponentState = SessionListTotalGoalComponentState(
-            title = "러닝 초보 탈출을 위한 5km 달리기",
-            imageRes = R.drawable.ill_marathon_42km,
-            completedSessionCount = completedSessionCount,
-            totalSessionCount = 15,
-        ),
-        sessionList = List(10) { index ->
-            SessionListItemState(
-                id = index.toLong(),
-                roundCount = index + 1,
-                distance = "5km",
-                duration = "1:12:03",
-                pace = "6'00\"/km",
-                isCompleted = index < completedSessionCount,
-                isSelected = index == completedSessionCount - 1,
-            )
-        }
-    )
+    val mockState =
+        SessionListScreenState(
+            totalGoalComponentState =
+                SessionListTotalGoalComponentState(
+                    title = "러닝 초보 탈출을 위한 5km 달리기",
+                    imageRes = R.drawable.ill_marathon_42km,
+                    completedSessionCount = completedSessionCount,
+                    totalSessionCount = 15,
+                ),
+            sessionList =
+                List(10) { index ->
+                    SessionListItemState(
+                        id = index.toLong(),
+                        roundCount = index + 1,
+                        distance = "5km",
+                        duration = "1:12:03",
+                        pace = "6'00\"/km",
+                        isCompleted = index < completedSessionCount,
+                        isSelected = index == completedSessionCount - 1,
+                    )
+                },
+        )
 
     DoRunPreviewWrapper {
         SessionListScreen(
-            screenState = mockState
+            screenState = mockState,
         )
     }
 }

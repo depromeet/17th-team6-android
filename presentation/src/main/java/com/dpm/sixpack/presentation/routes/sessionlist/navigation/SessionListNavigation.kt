@@ -1,20 +1,15 @@
-package com.dpm.sixpack.presentation.routes.session_list.navigation
+package com.dpm.sixpack.presentation.routes.sessionlist.navigation
 
-import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
-import androidx.navigation.Navigator
 import androidx.navigation.compose.composable
-import com.dpm.sixpack.presentation.destinations.MainRoute
-import com.dpm.sixpack.presentation.destinations.Route
 import com.dpm.sixpack.presentation.destinations.SessionListRoute
-import com.dpm.sixpack.presentation.routes.home.HomeRoute
-import com.dpm.sixpack.presentation.routes.session_list.SessionListRoute
+import com.dpm.sixpack.presentation.routes.sessionlist.SessionListRoute
 
 fun NavController.navigateSessionList(
     navOptions: NavOptions? = null,
-    totalGoalId: Long
+    totalGoalId: Long,
 ) {
     // TODO SR-N Argument 처리
     navigate(
@@ -33,7 +28,7 @@ fun NavGraphBuilder.addSessionListNavGraph(
         SessionListRoute(
             onNavigateToBack = onNavigateToBack,
             onNavigateToGoalEdit = onNavigateToGoalEdit,
-            onNavigateToSession = onNavigateToSession
+            onNavigateToSession = onNavigateToSession,
         )
     }
 }

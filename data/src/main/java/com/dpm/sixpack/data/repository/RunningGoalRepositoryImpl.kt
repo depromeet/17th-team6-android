@@ -86,6 +86,6 @@ class MockRunningGoalRepositoryImpl @Inject constructor() : RunningGoalRepositor
                     previousSessionId = index.toLong() - 1,
                     goalId = goalId,
                 )
-            }
+            },
         )
 }

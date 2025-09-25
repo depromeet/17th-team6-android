@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
-import com.dpm.sixpack.presentation.routes.home.ui.component.session.next.item.HomeNextSessionInformationItem
 import com.dpm.sixpack.presentation.routes.home.contract.HomeSessionComponentState
+import com.dpm.sixpack.presentation.routes.home.ui.component.session.next.item.HomeNextSessionInformationItem
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
