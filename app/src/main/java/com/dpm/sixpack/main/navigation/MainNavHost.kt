@@ -33,9 +33,7 @@ internal fun MainNavHost(
             )
 
             addHomeNavGraph(
-                onNavigateToSessionList = {
-                    navigator.navigateToSessionList(it)
-                },
+                onNavigateToSessionList = navigator::navigateToSessionList,
                 onNavigateToSession = {
                     Timber.d("SR-N onNavigateToSession")
                 },

@@ -50,6 +50,8 @@ data class SessionListItemState(
     val distance: String,
     val duration: String,
     val pace: String,
-    val completed: Boolean,
+    val isCompleted: Boolean,
     val isSelected: Boolean = false
-): Parcelable
+): Parcelable {
+    val showButton by lazy { isCompleted && isSelected }
+}
