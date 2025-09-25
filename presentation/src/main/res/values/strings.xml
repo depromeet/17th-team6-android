@@ -33,6 +33,13 @@
     <string name="onboarding_goal_zone_title">지구력을 키울래요</string>
     <string name="onboarding_goal_zone2_sub_title">Zone2 러닝</string>
     <string name="onboarding_goal_title">도전하고 싶은 목표가 있나요?</string>
+
+    <string name="onboarding_finish_title">나에게 꼭 맞는\n목표가 준비되었어요!</string>
+    <string name="onboarding_finish_recommend_button">추천</string>
+    <string name="onboarding_finish_goal_round_count">달성 회차</string>
+    <string name="onboarding_finish_goal_duration">권장 러닝 시간</string>
+    <string name="onboarding_finish_goal_pace">권장 페이스</string>
+    <string name="onboarding_finish_button">두런두런 시작하기</string>
     <!-- Onboadring End-->
 
 
