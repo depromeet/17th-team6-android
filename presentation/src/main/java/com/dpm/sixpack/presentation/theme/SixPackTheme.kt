@@ -6,6 +6,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
+import com.dpm.sixpack.core.BuildConfig
 
 private val LocalSixpackColors =
     staticCompositionLocalOf {
@@ -25,6 +26,7 @@ private val LocalSixpackShapes =
 @Composable
 fun SixpackTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    isDebug: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     val colors = if (darkTheme) SixPackDarkColors else SixPackLightColors
@@ -35,7 +37,7 @@ fun SixpackTheme(
         LocalSixpackShapes provides SixPackShapesValue,
     ) {
         // BuildConfig.DEBUG
-        content()
+        if (isDebug) DebugColorTheme(content) else content
     }
 }
 

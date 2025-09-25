@@ -10,12 +10,14 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.dpm.sixpack.presentation.destinations.MainRoute
 import com.dpm.sixpack.presentation.destinations.OnboardingRoute
 import com.dpm.sixpack.presentation.destinations.Route
-import com.dpm.sixpack.presentation.destinations.RunningRoute
 import com.dpm.sixpack.presentation.navigation.MainNavTab
+import com.dpm.sixpack.presentation.routes.home.navigation.navigateHome
 import com.dpm.sixpack.presentation.routes.onboarding.navigation.navigateOnboarding
 import com.dpm.sixpack.presentation.routes.session.navigation.navigateRunning
+import com.dpm.sixpack.presentation.routes.sessionlist.navigation.navigateSessionList
 import timber.log.Timber
 
 class MainNavigator(
@@ -45,7 +47,7 @@ class MainNavigator(
             }
 
     // FIXME: Change to other when the start screen is implemented
-    val startDestination = RunningRoute.Session
+    val startDestination = MainRoute.Home
 
     fun popBackStack() {
         navController.popBackStack()
@@ -63,6 +65,10 @@ class MainNavigator(
         )
     }
 
+    fun navigateToSessionList(goalId: Long) {
+        navController.navigateSessionList(totalGoalId = goalId)
+    }
+
     fun navigate(tab: MainNavTab) {
         val navOptions =
             navOptions {
@@ -74,7 +80,7 @@ class MainNavigator(
             }
 
         when (tab) {
-            MainNavTab.RUNNING -> navController.navigateRunning(navOptions)
+            MainNavTab.HOME -> navController.navigateHome(navOptions)
             MainNavTab.RECORD -> {
                 // TODO
                 Timber.d("Navigate to Record Screen")

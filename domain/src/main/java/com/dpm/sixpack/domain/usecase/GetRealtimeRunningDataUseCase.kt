@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.scan
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -53,7 +54,10 @@ class GetRealtimeRunningDataUseCase @Inject constructor(
 
         return combine(
             distanceAccumulatorFlow,
-            sensorRepository.getTotalStep(),
+            sensorRepository
+                .getTotalStep()
+                // 센서감지안되면 시작안하는거 방지용
+                .onStart { emit(DoRunResult.Success(0)) },
             durationFlow,
         ) { distanceData, stepsResult, duration ->
 
@@ -84,7 +88,7 @@ class GetRealtimeRunningDataUseCase @Inject constructor(
                     duration = duration,
                     timestamp = System.currentTimeMillis(),
                 )
-
+            Timber.d("실시간 데이터: $realtimeData")
             DoRunResult.Success(realtimeData)
         }.onStart {
             emit(DoRunResult.Success(RealtimeRunningData()))

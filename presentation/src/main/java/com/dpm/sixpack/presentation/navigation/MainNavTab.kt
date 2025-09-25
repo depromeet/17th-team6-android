@@ -11,10 +11,10 @@ enum class MainNavTab(
     @StringRes val titleResId: Int,
     val route: MainRoute,
 ) {
-    RUNNING(
+    HOME(
         iconResId = R.drawable.ic_running_nav,
         titleResId = R.string.nav_tab_running_title,
-        route = MainRoute.Running,
+        route = MainRoute.Home,
     ),
     RECORD(
         iconResId = R.drawable.ic_record_nav,

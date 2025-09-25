@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.dpm.sixpack.BuildConfig
 import com.dpm.sixpack.LocalTimeZone
 import com.dpm.sixpack.core.util.NetworkMonitor
 import com.dpm.sixpack.core.util.TimeZoneMonitor
@@ -41,7 +42,7 @@ class MainActivity : ComponentActivity() {
             CompositionLocalProvider(
                 LocalTimeZone provides currentTimeZone,
             ) {
-                SixpackTheme {
+                SixpackTheme(isDebug = BuildConfig.DEBUG) {
                     MainScreen(appState = appState)
                 }
             }
