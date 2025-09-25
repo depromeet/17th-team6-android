@@ -31,13 +31,13 @@ import com.dpm.sixpack.presentation.routes.onboarding.component.OnboardingNextBu
 import com.dpm.sixpack.presentation.routes.onboarding.component.OnboardingPage
 import com.dpm.sixpack.presentation.routes.onboarding.component.OnboardingPageIndicator
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.OnboardingUiState
-import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.level.RunningLevel
+import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.level.LevelType
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 fun OnboardingLevelScreen(
     uiState: State<OnboardingUiState>,
-    onSelectLevel: (RunningLevel) -> Unit,
+    onSelectLevel: (LevelType) -> Unit,
     onClickNextButton: () -> Unit,
     onClickBackButton: () -> Unit,
     modifier: Modifier = Modifier
@@ -91,11 +91,11 @@ fun OnboardingLevelScreen(
 
 @Composable
 fun LevelCardList(
-    selectedLevel: RunningLevel?,
-    onSelectLevel: (RunningLevel) -> Unit,
+    selectedLevel: LevelType?,
+    onSelectLevel: (LevelType) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    RunningLevel.entries.forEach { level ->
+    LevelType.entries.forEach { level ->
         LevelCard(
             level = level,
             isSelected = level == selectedLevel,
@@ -109,9 +109,9 @@ fun LevelCardList(
 
 @Composable
 fun LevelCard(
-    level: RunningLevel,
+    level: LevelType,
     isSelected: Boolean,
-    onSelectLevel: (RunningLevel) -> Unit,
+    onSelectLevel: (LevelType) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val borderColor = if (isSelected) {

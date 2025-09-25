@@ -3,9 +3,8 @@ package com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.level
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.dpm.sixpack.presentation.R
-import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.level.RunningLevelConstants
 
-enum class RunningLevel(
+enum class LevelType(
     val runningLevel: String,
     @StringRes val title: Int,
     @StringRes val subTitle: Int,
