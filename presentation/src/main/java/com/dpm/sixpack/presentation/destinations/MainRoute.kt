@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed interface MainRoute : Route {
     @Serializable
-    data object Running : MainRoute
+    data object Home : MainRoute
 
     @Serializable
     data object Record : MainRoute

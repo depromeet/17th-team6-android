@@ -74,7 +74,7 @@ class MainNavigator(
             }
 
         when (tab) {
-            MainNavTab.RUNNING -> navController.navigateRunning(navOptions)
+            MainNavTab.HOME -> navController.navigateRunning(navOptions)
             MainNavTab.RECORD -> {
                 // TODO
                 Timber.d("Navigate to Record Screen")

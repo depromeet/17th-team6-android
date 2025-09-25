@@ -62,7 +62,7 @@ private fun MainBottomBarPreview() {
         MainBottomBar(
             visible = true,
             mainNavTabs = MainNavTab.entries.toPersistentList(),
-            currentTab = MainNavTab.RUNNING,
+            currentTab = MainNavTab.HOME,
             onTabSelected = { },
         )
     }
