@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dpm.sixpack.presentation.routes.home.contract.HomeIntent
 import com.dpm.sixpack.presentation.routes.home.contract.HomeSideEffect
-import com.dpm.sixpack.presentation.routes.home.screen.HomeScreen
+import com.dpm.sixpack.presentation.routes.home.ui.screen.HomeScreen
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 

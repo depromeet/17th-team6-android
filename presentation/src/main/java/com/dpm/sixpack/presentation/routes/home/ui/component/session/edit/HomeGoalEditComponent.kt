@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.home.component.session.edit
+package com.dpm.sixpack.presentation.routes.home.ui.component.session.edit
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

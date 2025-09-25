@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.home.component.session.next.item
+package com.dpm.sixpack.presentation.routes.home.ui.component.session.next.item
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
