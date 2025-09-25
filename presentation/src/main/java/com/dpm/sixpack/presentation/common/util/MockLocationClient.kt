@@ -12,15 +12,14 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
 class MockLocationClient(
+    private val fusedLocationClient: FusedLocationProviderClient,
     private val scope: CoroutineScope,
 ) {
-    @Inject
-    lateinit var fusedLocationClient: FusedLocationProviderClient
-
     private var simulationJob: Job? = null
+    var isPaused = false
+    var isRunning = false
 
     @RequiresPermission(
         allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION],
@@ -50,9 +49,21 @@ class MockLocationClient(
         startSimulation(path, delayMillis) { it.toMockLocation() }
     }
 
+    fun pause() {
+        isPaused = true
+        Timber.Forest.tag("MockLocationClient").d("Simulation paused.")
+    }
+
+    fun resume() {
+        isPaused = false
+        Timber.Forest.tag("MockLocationClient").d("Simulation resumed.")
+    }
+
     @SuppressLint("MissingPermission")
     fun stop() {
         stopMockMode()
+        isRunning = false
+        isPaused = false // 상태 초기화
         simulationJob?.cancel()
         simulationJob = null
     }
@@ -66,6 +77,7 @@ class MockLocationClient(
         converter: (T) -> Location,
     ) {
         stop()
+        isRunning = true
         simulationJob =
             scope.launch {
                 try {
@@ -73,6 +85,10 @@ class MockLocationClient(
                     Timber.Forest.tag("MockLocationClient").d("Mock mode enabled.")
 
                     for (point in path) {
+                        while (isPaused) {
+                            delay(100L) // 100ms 마다 isPaused 상태를 다시 확인
+                        }
+
                         val mockLocation = converter(point)
 
                         fusedLocationClient.setMockLocation(mockLocation)
