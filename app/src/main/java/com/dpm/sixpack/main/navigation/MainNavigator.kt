@@ -58,7 +58,7 @@ class MainNavigator(
     fun navigateToHome() {
         navController.navigateRunning(
             navOptions {
-                popUpTo(OnboardingRoute.Onboarding) { inclusive = true }
+                popUpTo(OnboardingRoute.Finish) { inclusive = true }
             },
         )
     }

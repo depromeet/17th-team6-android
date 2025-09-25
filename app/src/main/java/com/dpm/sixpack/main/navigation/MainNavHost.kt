@@ -28,7 +28,7 @@ internal fun MainNavHost(
 
             addOnboardingNavGraph(
                 navController = navigator.navController,
-                onCompleteOnboarding = navigator::navigateToHome,
+                navigateToHome = navigator::navigateToHome,
             )
         }
     }

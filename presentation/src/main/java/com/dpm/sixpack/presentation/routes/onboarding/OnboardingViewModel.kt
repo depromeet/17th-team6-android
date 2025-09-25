@@ -1,6 +1,7 @@
 package com.dpm.sixpack.presentation.routes.onboarding
 
 import androidx.lifecycle.SavedStateHandle
+import com.dpm.sixpack.domain.usecase.CompleteOnboardingUseCase
 import com.dpm.sixpack.domain.usecase.GetRecommendedGoalsUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.routes.onboarding.contract.OnboardingSideEffect
@@ -21,6 +22,7 @@ import javax.inject.Inject
 class OnboardingViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     val getRecommendedGoalsUseCase: GetRecommendedGoalsUseCase,
+    val completeOnboardingUseCase: CompleteOnboardingUseCase ,
 ) : BaseViewModel<OnboardingUiState, OnboardingUiIntent, OnboardingSideEffect>() {
     override val initialState: OnboardingUiState = OnboardingUiState()
     override val container: Container<OnboardingUiState, OnboardingSideEffect> =
@@ -119,6 +121,7 @@ class OnboardingViewModel @Inject constructor(
     private fun completeOnboarding(){
         intent{
             postSideEffect(OnboardingSideEffect.NavigateToHome)
+            completeOnboardingUseCase()
         }
     }
 
