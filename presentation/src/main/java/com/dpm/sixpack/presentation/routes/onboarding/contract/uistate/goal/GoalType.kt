@@ -3,6 +3,7 @@ package com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.goal
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.dpm.sixpack.presentation.R
+import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.finish.RecommendedGoalUiState
 
 enum class GoalType(
     val runningGoal: String,
@@ -28,4 +29,12 @@ enum class GoalType(
         R.string.onboarding_goal_zone2_sub_title,
         R.drawable.ill_zone
     ),
+}
+
+@DrawableRes
+fun getIconForGoalType(goalType: GoalType, recommendedGoalUiState: RecommendedGoalUiState): Int {
+    return when (goalType) {
+        GoalType.MARATHON -> recommendedGoalUiState.goalTarget.marathonImgRes
+        else -> goalType.img
+    }
 }

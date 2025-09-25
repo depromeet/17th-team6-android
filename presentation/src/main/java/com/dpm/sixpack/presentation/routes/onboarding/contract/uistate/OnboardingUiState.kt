@@ -28,4 +28,7 @@ data class OnboardingUiState(
         get() = selectedLevel != null
     val isGoalNextEnabled: Boolean
         get() = selectedGoal != null
+
+    val isFinishNextEnabled: Boolean
+        get() = recommendedGoals.any { it.isSelected }
 }

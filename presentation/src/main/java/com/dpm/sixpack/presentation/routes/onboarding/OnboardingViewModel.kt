@@ -35,7 +35,7 @@ class OnboardingViewModel @Inject constructor(
             is OnboardingUiIntent.ToggleTerm -> handleToggleTerm(intent.type, intent.isChecked)
             is OnboardingUiIntent.ClickPermissionNextButton -> intent {
                 consentTimestamp = Instant.now().toString()
-                postSideEffect(OnboardingSideEffect.NavigateToLevelScreen)
+                postSideEffect(OnboardingSideEffect.NavigateToLevel)
             }
 
             is OnboardingUiIntent.ShowTermDetails -> TODO()
@@ -43,19 +43,19 @@ class OnboardingViewModel @Inject constructor(
             // --- Level Screen Intents ---
             is OnboardingUiIntent.SelectLevel -> handleSelectLevel(intent.level)
             is OnboardingUiIntent.ClickLevelNextButton -> intent {
-                postSideEffect(OnboardingSideEffect.NavigateToGoalScreen)
+                postSideEffect(OnboardingSideEffect.NavigateToGoal)
             }
 
             // --- Goal Screen Intents ---
             is OnboardingUiIntent.SelectGoal -> handleSelectGoal(intent.goal)
             is OnboardingUiIntent.ClickGoalNextButton -> intent {
                 getRecommendedGoalList()
-                postSideEffect(OnboardingSideEffect.NavigateToFinishScreen)
+                postSideEffect(OnboardingSideEffect.NavigateToFinish)
             }
 
             // --- Finish Screen Intents ---
             is OnboardingUiIntent.SelectRecommendedGoal -> handleSelectRecommendedGoal(intent.id)
-            is OnboardingUiIntent.ClickFinishButton -> completeOnboarding()
+            is OnboardingUiIntent.CompleteOnboarding -> completeOnboarding()
 
 
             // --- Common Intents ---
@@ -118,7 +118,7 @@ class OnboardingViewModel @Inject constructor(
 
     private fun completeOnboarding(){
         intent{
-            postSideEffect(OnboardingSideEffect.CompleteOnboarding)
+            postSideEffect(OnboardingSideEffect.NavigateToHome)
         }
     }
 
