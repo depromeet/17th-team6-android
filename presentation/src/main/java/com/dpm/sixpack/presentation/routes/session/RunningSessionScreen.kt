@@ -3,12 +3,14 @@ package com.dpm.sixpack.presentation.routes.session
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
 import com.dpm.sixpack.presentation.routes.session.component.LocationTrackingButton
 import com.dpm.sixpack.presentation.routes.session.component.MapConstants
 import com.dpm.sixpack.presentation.routes.session.component.dialog.CooldownStopDialog
@@ -87,15 +89,28 @@ fun RunningSessionScreen(
                 onLocationChange(LatLng(location))
             },
         ) {
-            // FIXME: Temporary Draw Path
-            if (uiState.sessionState is RunningSessionState.Main.Running) {
-                val mapUiState = uiState.sessionState.mapUiState
-                mapUiState.path.forEachIndexed { index, line ->
-                    if (line.size > 2) {
-                        PathOverlay(
-                            coords = line,
-                            color = Color.Black,
-                        )
+            (uiState.sessionState as? RunningSessionState.HasMapPath)?.mapUiState?.let { mapUiState ->
+                mapUiState.path.forEachIndexed { pathIndex, currentPath ->
+                    if (currentPath.size > 1) {
+                        val currentPathColors = mapUiState.paceColors[pathIndex]
+
+                        for (pointIndex in 0 until currentPath.lastIndex - 1) {
+                            key(pathIndex, pointIndex) {
+                                val segmentCoords =
+                                    listOf(
+                                        currentPath[pointIndex],
+                                        currentPath[pointIndex + 1],
+                                    )
+                                val segmentColor = Color(currentPathColors[pointIndex])
+
+                                PathOverlay(
+                                    coords = segmentCoords,
+                                    color = segmentColor,
+                                    width = 8.dp,
+                                    outlineWidth = 0.dp,
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -197,7 +212,7 @@ fun RunningSessionScreen(
 
                         is RunningSessionState.Main.Pause -> {
                             RunningStopDialog(
-                                remainDistance = uiState.sessionState.remainingDistance,
+                                remainDistance = formatDistanceToKm(uiState.sessionState.remainingDistanceMeter),
                                 onCancelClick = {
                                     onStopCancelClick(RunningSessionIntent.MainRunningStopCancel)
                                 },
