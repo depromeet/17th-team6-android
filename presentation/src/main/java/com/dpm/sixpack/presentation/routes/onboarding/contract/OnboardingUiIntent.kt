@@ -1,7 +1,8 @@
 package com.dpm.sixpack.presentation.routes.onboarding.contract
 
 import com.dpm.sixpack.presentation.common.base.UiIntent
-import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.level.RunningLevel
+import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.goal.GoalType
+import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.level.LevelType
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.permission.TermType
 
 sealed interface OnboardingUiIntent : UiIntent{
@@ -23,11 +24,16 @@ sealed interface OnboardingUiIntent : UiIntent{
 
     // Level
     data class SelectLevel(
-        val level: RunningLevel,
+        val level: LevelType,
+    ) : OnboardingUiIntent
+
+    // Goal
+    data class SelectGoal(
+        val goal: GoalType,
     ) : OnboardingUiIntent
 
     data object ClickLevelNextButton : OnboardingUiIntent
 
-
+    data object ClickGoalNextButton : OnboardingUiIntent
     data object ClickBackButton : OnboardingUiIntent
 }

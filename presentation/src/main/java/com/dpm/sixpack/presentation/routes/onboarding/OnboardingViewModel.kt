@@ -1,11 +1,13 @@
 package com.dpm.sixpack.presentation.routes.onboarding
 
+import android.R.attr.level
 import androidx.lifecycle.SavedStateHandle
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.routes.onboarding.contract.OnboardingSideEffect
 import com.dpm.sixpack.presentation.routes.onboarding.contract.OnboardingUiIntent
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.OnboardingUiState
-import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.level.RunningLevel
+import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.goal.GoalType
+import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.level.LevelType
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.permission.TermType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
@@ -40,6 +42,12 @@ class OnboardingViewModel @Inject constructor(
                 postSideEffect(OnboardingSideEffect.NavigateToGoalScreen)
             }
 
+            // --- Goal Screen Intents ---
+            is OnboardingUiIntent.SelectGoal -> handleSelectGoal(intent.goal)
+            is OnboardingUiIntent.ClickGoalNextButton -> intent {
+                postSideEffect(OnboardingSideEffect.NavigateToFinishScreen)
+            }
+
             // --- Common Intents ---
             is OnboardingUiIntent.ClickBackButton -> intent {
                 postSideEffect(OnboardingSideEffect.NavigateToBack)
@@ -67,10 +75,18 @@ class OnboardingViewModel @Inject constructor(
         }
     }
 
-    private fun handleSelectLevel(level: RunningLevel) {
+    private fun handleSelectLevel(level: LevelType) {
         intent {
             reduce {
                 state.copy(selectedLevel = level)
+            }
+        }
+    }
+
+    private fun handleSelectGoal(goal: GoalType) {
+        intent {
+            reduce {
+                state.copy(selectedGoal = goal)
             }
         }
     }
