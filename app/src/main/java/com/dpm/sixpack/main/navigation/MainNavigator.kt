@@ -94,7 +94,7 @@ class MainNavigator(
 @Composable
 internal fun rememberMainNavigator(
     startDestination: Route,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
 ): MainNavigator =
     remember(navController, startDestination) {
         MainNavigator(navController, startDestination)

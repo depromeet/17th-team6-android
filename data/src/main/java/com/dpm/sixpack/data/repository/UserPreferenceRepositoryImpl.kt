@@ -2,7 +2,6 @@ package com.dpm.sixpack.data.repository
 
 import com.dpm.sixpack.data.source.local.datastore.api.UserPreferenceDataSource
 import com.dpm.sixpack.domain.repository.UserPreferenceRepository
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject

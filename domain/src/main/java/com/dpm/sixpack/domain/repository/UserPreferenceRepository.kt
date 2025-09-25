@@ -1,13 +1,11 @@
 package com.dpm.sixpack.domain.repository
 
-import kotlinx.coroutines.flow.Flow
-
 interface UserPreferenceRepository {
     suspend fun getUserId(): Long
 
     suspend fun getSessionId(): Long?
 
-     suspend fun getIsOnboardingComplete(): Boolean
+    suspend fun getIsOnboardingComplete(): Boolean
 
     suspend fun updateUserId(userId: Long)
 

@@ -42,16 +42,17 @@ class MainActivity : ComponentActivity() {
             val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
             if (!isLoading) {
-                val appState = rememberSixPackAppState(
-                    navigator = rememberMainNavigator(startDestination = startDestination),
-                    networkMonitor = networkMonitor,
-                    timeZoneMonitor = timeZoneMonitor,
-                )
+                val appState =
+                    rememberSixPackAppState(
+                        navigator = rememberMainNavigator(startDestination = startDestination),
+                        networkMonitor = networkMonitor,
+                        timeZoneMonitor = timeZoneMonitor,
+                    )
 
                 val currentTimeZone by appState.currentTimeZone.collectAsStateWithLifecycle()
 
                 CompositionLocalProvider(
-                    LocalTimeZone provides currentTimeZone
+                    LocalTimeZone provides currentTimeZone,
                 ) {
                     SixpackTheme(isDebug = BuildConfig.DEBUG) {
                         MainScreen(appState = appState)

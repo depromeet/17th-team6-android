@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getOnboardingStatusUseCase: GetOnboardingStatusUseCase
+    private val getOnboardingStatusUseCase: GetOnboardingStatusUseCase,
 ) : ViewModel() {
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
