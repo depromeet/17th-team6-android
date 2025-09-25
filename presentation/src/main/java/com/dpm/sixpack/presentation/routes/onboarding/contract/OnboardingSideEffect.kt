@@ -7,4 +7,6 @@ sealed interface OnboardingSideEffect : SideEffect {
     data object NavigateToGoalScreen : OnboardingSideEffect
     data object NavigateToFinishScreen : OnboardingSideEffect
     data object NavigateToBack : OnboardingSideEffect
+
+    data object CompleteOnboarding : OnboardingSideEffect
 }

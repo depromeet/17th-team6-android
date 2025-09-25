@@ -26,14 +26,21 @@ sealed interface OnboardingUiIntent : UiIntent{
     data class SelectLevel(
         val level: LevelType,
     ) : OnboardingUiIntent
+    data object ClickLevelNextButton : OnboardingUiIntent
 
     // Goal
     data class SelectGoal(
         val goal: GoalType,
     ) : OnboardingUiIntent
-
-    data object ClickLevelNextButton : OnboardingUiIntent
-
     data object ClickGoalNextButton : OnboardingUiIntent
+
+    // Finish
+    data object ClickFinishButton : OnboardingUiIntent
+
+    data class SelectRecommendedGoal(
+        val id: Int,
+    ) : OnboardingUiIntent
+
+    // Common
     data object ClickBackButton : OnboardingUiIntent
 }

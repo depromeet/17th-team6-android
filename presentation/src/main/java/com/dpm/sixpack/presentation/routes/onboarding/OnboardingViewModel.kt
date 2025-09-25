@@ -1,11 +1,13 @@
 package com.dpm.sixpack.presentation.routes.onboarding
 
-import android.R.attr.level
 import androidx.lifecycle.SavedStateHandle
+import com.dpm.sixpack.domain.usecase.GetRecommendedGoalsUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.routes.onboarding.contract.OnboardingSideEffect
 import com.dpm.sixpack.presentation.routes.onboarding.contract.OnboardingUiIntent
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.OnboardingUiState
+import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.finish.GoalUiState
+import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.finish.RecommendedGoalUiState
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.goal.GoalType
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.level.LevelType
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.permission.TermType
@@ -18,12 +20,14 @@ import javax.inject.Inject
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    val getRecommendedGoalsUseCase: GetRecommendedGoalsUseCase,
 ) : BaseViewModel<OnboardingUiState, OnboardingUiIntent, OnboardingSideEffect>() {
     override val initialState: OnboardingUiState = OnboardingUiState()
     override val container: Container<OnboardingUiState, OnboardingSideEffect> =
         container(initialState = initialState, savedStateHandle = savedStateHandle)
 
     private var consentTimestamp: String? = null
+
     override fun onIntent(intent: OnboardingUiIntent) {
         when (intent) {
             // --- Permission Screen Intents ---
@@ -45,8 +49,14 @@ class OnboardingViewModel @Inject constructor(
             // --- Goal Screen Intents ---
             is OnboardingUiIntent.SelectGoal -> handleSelectGoal(intent.goal)
             is OnboardingUiIntent.ClickGoalNextButton -> intent {
+                getRecommendedGoalList()
                 postSideEffect(OnboardingSideEffect.NavigateToFinishScreen)
             }
+
+            // --- Finish Screen Intents ---
+            is OnboardingUiIntent.SelectRecommendedGoal -> handleSelectRecommendedGoal(intent.id)
+            is OnboardingUiIntent.ClickFinishButton -> completeOnboarding()
+
 
             // --- Common Intents ---
             is OnboardingUiIntent.ClickBackButton -> intent {
@@ -87,6 +97,51 @@ class OnboardingViewModel @Inject constructor(
         intent {
             reduce {
                 state.copy(selectedGoal = goal)
+            }
+        }
+    }
+
+    private fun handleSelectRecommendedGoal(index: Int) {
+        intent {
+            val currentState = state.recommendedGoals
+            val updatedGoals = currentState.mapIndexed { i, goal ->
+                goal.copy(isSelected = i == index)
+            }
+
+            reduce {
+                state.copy(
+                    recommendedGoals = updatedGoals,
+                )
+            }
+        }
+    }
+
+    private fun completeOnboarding(){
+        intent{
+            postSideEffect(OnboardingSideEffect.CompleteOnboarding)
+        }
+    }
+
+    private fun getRecommendedGoalList() {
+        intent {
+            val uiGoals = getRecommendedGoalsUseCase(state.selectedGoal!!.runningGoal)
+                .mapIndexed { index, data ->
+                    RecommendedGoalUiState(
+                        title = data.title,
+                        subTitle = data.subTitle,
+                        isRecommended = index == 0,
+                        isSelected = false,
+                        goalTarget = GoalUiState(
+                            pace = data.goal.pace,
+                            distance = data.goal.distance,
+                            duration = data.goal.duration,
+                            roundCount = data.goal.roundCount
+                        )
+                    )
+                }
+
+            reduce {
+                state.copy(recommendedGoals = uiGoals)
             }
         }
     }
