@@ -22,10 +22,10 @@ class GetRealtimeRunningDataUseCase @Inject constructor(
     private val gpsRepository: GpsRepository,
     private val sensorRepository: SensorRepository,
 ) {
-    operator fun invoke(initialDuration: Int = 0): Flow<DoRunResult<RealtimeRunningData>> {
+    operator fun invoke(): Flow<DoRunResult<RealtimeRunningData>> {
         val durationFlow =
             flow {
-                var duration = initialDuration
+                var duration = 0
                 while (true) {
                     emit(duration)
                     delay(1000L)
@@ -105,7 +105,7 @@ class GetRealtimeRunningDataUseCase @Inject constructor(
                     speed = speed,
                     pace = avgPace,
                     cadence = cadence,
-                    totalDistanceMeter = totalDistance,
+                    totalDistanceMeter = totalDistance.toInt(),
                     duration = duration,
                     timestamp = System.currentTimeMillis(),
                 )
