@@ -17,6 +17,7 @@ import com.dpm.sixpack.presentation.navigation.MainNavTab
 import com.dpm.sixpack.presentation.routes.home.navigation.navigateHome
 import com.dpm.sixpack.presentation.routes.onboarding.navigation.navigateOnboarding
 import com.dpm.sixpack.presentation.routes.session.navigation.navigateRunning
+import com.dpm.sixpack.presentation.routes.session_list.navigation.navigateSessionList
 import timber.log.Timber
 
 class MainNavigator(
@@ -62,6 +63,10 @@ class MainNavigator(
                 popUpTo(OnboardingRoute.Onboarding) { inclusive = true }
             },
         )
+    }
+
+    fun navigateToSessionList(goalId: Long) {
+        navController.navigateSessionList(totalGoalId = goalId)
     }
 
     fun navigate(tab: MainNavTab) {

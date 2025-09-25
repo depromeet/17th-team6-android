@@ -72,7 +72,7 @@ class HomeViewModel @Inject constructor(
     private fun handleGoalListIntent() {
         cachedGoalId?.let { id ->
             intent {
-                postSideEffect(HomeSideEffect.NavigateToGoalList(id))
+                postSideEffect(HomeSideEffect.NavigateToSessionList(id))
             }
         }
     }
