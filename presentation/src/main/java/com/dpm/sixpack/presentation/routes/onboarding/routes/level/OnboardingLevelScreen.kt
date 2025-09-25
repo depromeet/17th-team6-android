@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.onboarding.level
+package com.dpm.sixpack.presentation.routes.onboarding.routes.level
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

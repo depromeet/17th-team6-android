@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.onboarding.permission
+package com.dpm.sixpack.presentation.routes.onboarding.routes.permission
 
 import androidx.compose.runtime.Composable
 import com.dpm.sixpack.presentation.routes.onboarding.OnboardingViewModel

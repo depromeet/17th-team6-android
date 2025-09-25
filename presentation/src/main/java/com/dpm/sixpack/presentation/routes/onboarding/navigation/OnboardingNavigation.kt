@@ -9,8 +9,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.dpm.sixpack.presentation.destinations.OnboardingRoute
 import com.dpm.sixpack.presentation.routes.onboarding.OnboardingViewModel
-import com.dpm.sixpack.presentation.routes.onboarding.level.OnboardingLevelRoute
-import com.dpm.sixpack.presentation.routes.onboarding.permission.OnboardingPermissionRoute
+import com.dpm.sixpack.presentation.routes.onboarding.routes.level.OnboardingLevelRoute
+import com.dpm.sixpack.presentation.routes.onboarding.routes.permission.OnboardingPermissionRoute
 
 fun NavController.navigateOnboarding(navOptions: NavOptions? = null) {
     navigate(OnboardingRoute.Onboarding, navOptions)
