@@ -20,7 +20,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
@@ -58,7 +57,7 @@ fun SessionListItem(
             ) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    text = state.title,
+                    text = stringResource(R.string.common_session_count).format(state.roundCount),
                     style = SixpackTheme.typography.t2Bold,
                     color = SixpackTheme.colors.gray900,
                     maxLines = 1,
@@ -131,8 +130,8 @@ fun SessionListItem(
 
 
 private val mockState = SessionListItemState(
-    sessionId = 1,
-    title = "러닝 초보 탈출을 위한 5km 달리기러닝 초보 탈출을 위한 5km 달리기",
+    id = 1,
+    roundCount = 3,
     distance = "5km",
     duration = "1:12:03",
     pace = "6'00\"/km",

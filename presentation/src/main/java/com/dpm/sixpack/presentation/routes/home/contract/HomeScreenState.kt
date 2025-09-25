@@ -55,14 +55,14 @@ data class HomeTotalGoalComponentState(
     }
 }
 
-fun RunningTotalGoal.asHomeTotalGoalComponentState() =
+fun RunningTotalGoal.asUiState() =
     HomeTotalGoalComponentState(
-        imageRes =
-            when {
-                distance < 10000 -> R.drawable.ill_marathon_10km
-                distance < 21000 -> R.drawable.ill_marathon_21km
-                else -> R.drawable.ill_marathon_42km
-            },
+        // TODO SR-N 프리런칭 때는 마라톤만 고려. ype enum 적용하고, 마라톤 외에도 구현.
+        imageRes = when {
+            distance < 10000 -> R.drawable.ill_marathon_10km
+            distance < 21000 -> R.drawable.ill_marathon_21km
+            else -> R.drawable.ill_marathon_42km
+        },
         title = title,
         distance = formatDistanceToKm(distance),
         duration = formatSecondsToTime(duration),
@@ -83,7 +83,7 @@ data class HomeSessionComponentState(
         get() = (sessionCount ?: 0) > 1
 }
 
-fun RunningSessionGoal.asHomeSessionComponentState(totalRoundCount: Int): HomeSessionComponentState {
+fun RunningSessionGoal.asUiState(totalRoundCount: Int): HomeSessionComponentState {
     val roundProgress = roundCount / totalRoundCount.toFloat()
     return HomeSessionComponentState(
         sessionCount = roundCount,

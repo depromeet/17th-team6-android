@@ -9,8 +9,7 @@ import com.dpm.sixpack.presentation.routes.home.contract.HomeScreenState
 import com.dpm.sixpack.presentation.routes.home.contract.HomeSessionComponentState
 import com.dpm.sixpack.presentation.routes.home.contract.HomeSideEffect
 import com.dpm.sixpack.presentation.routes.home.contract.HomeTotalGoalComponentState
-import com.dpm.sixpack.presentation.routes.home.contract.asHomeSessionComponentState
-import com.dpm.sixpack.presentation.routes.home.contract.asHomeTotalGoalComponentState
+import com.dpm.sixpack.presentation.routes.home.contract.asUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
@@ -39,10 +38,10 @@ class HomeViewModel @Inject constructor(
             val home = getHomeUseCase()
             val data = (home as? DoRunResult.Success)?.data
             val totalGoal =
-                data?.runningTotalGoal?.asHomeTotalGoalComponentState()
+                data?.runningTotalGoal?.asUiState()
                     ?: HomeTotalGoalComponentState()
             val sessionGoal =
-                data?.sessionGoal?.asHomeSessionComponentState(totalGoal.safeTotalSessionCount)
+                data?.sessionGoal?.asUiState(totalGoal.safeTotalSessionCount)
                     ?: HomeSessionComponentState()
 
             cachedGoalId = data?.runningTotalGoal?.id

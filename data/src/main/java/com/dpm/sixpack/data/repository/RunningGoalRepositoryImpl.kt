@@ -14,7 +14,7 @@ class RunningGoalRepositoryImpl @Inject constructor(
     private val runningGoalDataSource: RunningGoalDataSource,
 ) : RunningGoalRepository {
     override suspend fun getTodayRunningSessionGoal(): DoRunResult<RunningSessionGoal> =
-        DoRunResult.Failure(DoRunException.DataError("네트워크 요청에 실패했습니다"))
+        DoRunResult.Failure(DoRunException.DataError("미구현 상태입니다."))
 
     override suspend fun getRunningTotalGoal(): DoRunResult<RunningTotalGoal> =
         withContext(Dispatchers.IO) {
@@ -30,6 +30,9 @@ class RunningGoalRepositoryImpl @Inject constructor(
                 DoRunResult.Failure(DoRunException.DataError("네트워크 요청에 실패했습니다: ${e.message}"))
             }
         }
+
+    override suspend fun getRunningSessions(goalId: Long): DoRunResult<List<RunningSessionGoal>> =
+        DoRunResult.Failure(DoRunException.DataError("미구현 상태입니다."))
 }
 
 class MockRunningGoalRepositoryImpl @Inject constructor() : RunningGoalRepository {
@@ -66,5 +69,23 @@ class MockRunningGoalRepositoryImpl @Inject constructor() : RunningGoalRepositor
                 previousSessionId = 2L,
                 goalId = 1,
             ),
+        )
+
+    override suspend fun getRunningSessions(goalId: Long): DoRunResult<List<RunningSessionGoal>> =
+        DoRunResult.Success(
+            (1..30).map { index ->
+                RunningSessionGoal(
+                    id = index.toLong(),
+                    createdAt = "2023-10-10T10:00:00Z",
+                    updatedAt = "2023-10-10T10:00:00Z",
+                    clearedAt = if (index <= 5) "2023-10-10T10:00:00Z" else null,
+                    pace = 320 + index * 10,
+                    distance = 3000 + index * 300,
+                    duration = 1200 + index * 120,
+                    roundCount = index,
+                    previousSessionId = index.toLong() - 1,
+                    goalId = goalId,
+                )
+            }
         )
 }
