@@ -36,7 +36,7 @@ fun OnboardingGoalScreen(
     onSelectGoal: (GoalType) -> Unit,
     onClickNextButton: () -> Unit,
     onClickBackButton: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier =
@@ -68,8 +68,9 @@ fun OnboardingGoalScreen(
             GoalCardList(
                 selectedGoal = uiState.value.selectedGoal,
                 onSelectGoal = onSelectGoal,
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier =
+                    Modifier
+                        .fillMaxWidth(),
             )
 
             Spacer(Modifier.weight(1f))
@@ -89,14 +90,14 @@ fun OnboardingGoalScreen(
 private fun GoalCardList(
     selectedGoal: GoalType?,
     onSelectGoal: (GoalType) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     GoalType.entries.forEach { goal ->
         GoalCard(
             goal = goal,
             isSelected = goal == selectedGoal,
             onSelectGoal = onSelectGoal,
-            modifier = modifier
+            modifier = modifier,
         )
 
         Spacer(Modifier.height(16.dp))
@@ -108,22 +109,24 @@ fun GoalCard(
     goal: GoalType,
     isSelected: Boolean,
     onSelectGoal: (GoalType) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val borderColor = if (isSelected) {
-        SixpackTheme.colors.blue600
-    } else {
-        SixpackTheme.colors.gray100
-    }
+    val borderColor =
+        if (isSelected) {
+            SixpackTheme.colors.blue600
+        } else {
+            SixpackTheme.colors.gray100
+        }
 
     val borderShape = SixpackTheme.shapes.round16
 
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .border(width = 1.dp, color = borderColor, shape = borderShape)
-            .noRippleClickable(onClick = { onSelectGoal(goal) }),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .border(width = 1.dp, color = borderColor, shape = borderShape)
+                .noRippleClickable(onClick = { onSelectGoal(goal) }),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Spacer(Modifier.width(16.dp))
 
@@ -135,14 +138,15 @@ fun GoalCard(
         Spacer(Modifier.width(12.dp))
 
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
         ) {
             Text(
                 text = stringResource(goal.title),
                 style = SixpackTheme.typography.t2Bold,
-                color = SixpackTheme.colors.gray900
+                color = SixpackTheme.colors.gray900,
             )
 
             Spacer(Modifier.width(4.dp))
@@ -150,7 +154,7 @@ fun GoalCard(
             Text(
                 text = stringResource(goal.subTitle),
                 style = SixpackTheme.typography.b2Regular,
-                color = SixpackTheme.colors.gray600
+                color = SixpackTheme.colors.gray600,
             )
         }
     }

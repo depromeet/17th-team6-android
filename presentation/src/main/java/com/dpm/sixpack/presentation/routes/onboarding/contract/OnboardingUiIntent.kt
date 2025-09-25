@@ -5,7 +5,7 @@ import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.goal.Goal
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.level.LevelType
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.permission.TermType
 
-sealed interface OnboardingUiIntent : UiIntent{
+sealed interface OnboardingUiIntent : UiIntent {
     // Permission
     data class ToggleAllTerms(
         val isChecked: Boolean,
@@ -26,12 +26,14 @@ sealed interface OnboardingUiIntent : UiIntent{
     data class SelectLevel(
         val level: LevelType,
     ) : OnboardingUiIntent
+
     data object ClickLevelNextButton : OnboardingUiIntent
 
     // Goal
     data class SelectGoal(
         val goal: GoalType,
     ) : OnboardingUiIntent
+
     data object ClickGoalNextButton : OnboardingUiIntent
 
     // Finish

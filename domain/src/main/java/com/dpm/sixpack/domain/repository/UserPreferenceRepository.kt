@@ -13,7 +13,7 @@ interface UserPreferenceRepository {
 
     suspend fun updateSessionId(sessionId: Long)
 
-    suspend fun updateOnboardingComplete(isComplete : Boolean)
+    suspend fun updateOnboardingComplete(isComplete: Boolean)
 
     suspend fun clearSessionId()
 }

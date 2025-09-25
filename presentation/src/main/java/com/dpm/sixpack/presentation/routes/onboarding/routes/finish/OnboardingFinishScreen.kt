@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -34,7 +33,6 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
-import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
 import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.routes.onboarding.component.OnboardingNextButton
@@ -72,12 +70,13 @@ fun OnboardingFinishScreen(
                 )
                 Spacer(modifier = Modifier.height(24.dp))
             }
-        }
+        },
     ) { innerPadding ->
         Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize(),
+            modifier =
+                Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Spacer(modifier = Modifier.height(24.dp))
@@ -88,7 +87,7 @@ fun OnboardingFinishScreen(
                 recommendedGoals = uiState.value.recommendedGoals,
                 selectedGoalType = uiState.value.selectedGoal ?: GoalType.MARATHON,
                 onSelectRecommendedGoal = onSelectRecommendedGoal,
-                modifier = Modifier.padding(horizontal = 20.dp)
+                modifier = Modifier.padding(horizontal = 20.dp),
             )
         }
     }
@@ -97,14 +96,15 @@ fun OnboardingFinishScreen(
 @Composable
 private fun FinishScreenHeader(modifier: Modifier = Modifier) {
     Column(
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier =
+            modifier
+                .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Image(
             imageVector = ImageVector.vectorResource(id = R.drawable.ill_goal_character),
             contentDescription = null,
-            modifier = Modifier
+            modifier = Modifier,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -112,9 +112,10 @@ private fun FinishScreenHeader(modifier: Modifier = Modifier) {
         Text(
             text = stringResource(R.string.onboarding_finish_title),
             style = SixpackTheme.typography.h2Bold,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
         )
     }
 }
@@ -124,11 +125,11 @@ fun RecommendedGoalList(
     recommendedGoals: List<RecommendedGoalUiState>,
     selectedGoalType: GoalType,
     onSelectRecommendedGoal: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LazyColumn(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         item {
             Spacer(modifier = Modifier.height(16.dp))
@@ -137,7 +138,7 @@ fun RecommendedGoalList(
             RecommendedGoalCard(
                 imgRes = getIconForGoalType(selectedGoalType, goal),
                 recommendedGoalUiState = goal,
-                onSelectRecommendedGoal = { onSelectRecommendedGoal(index) }
+                onSelectRecommendedGoal = { onSelectRecommendedGoal(index) },
             )
         }
     }
@@ -148,20 +149,22 @@ private fun RecommendedGoalCard(
     @DrawableRes imgRes: Int,
     recommendedGoalUiState: RecommendedGoalUiState,
     onSelectRecommendedGoal: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val borderColor = if (recommendedGoalUiState.isSelected) {
-        SixpackTheme.colors.blue600
-    } else {
-        SixpackTheme.colors.gray100
-    }
+    val borderColor =
+        if (recommendedGoalUiState.isSelected) {
+            SixpackTheme.colors.blue600
+        } else {
+            SixpackTheme.colors.gray100
+        }
 
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .noRippleClickable(onClick = { onSelectRecommendedGoal() })
-            .border(width = 1.dp, color = borderColor, shape = SixpackTheme.shapes.round16)
-            .padding(20.dp)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .noRippleClickable(onClick = { onSelectRecommendedGoal() })
+                .border(width = 1.dp, color = borderColor, shape = SixpackTheme.shapes.round16)
+                .padding(20.dp),
     ) {
         Row {
             Image(
@@ -181,7 +184,7 @@ private fun RecommendedGoalCard(
         Text(
             text = recommendedGoalUiState.title,
             style = SixpackTheme.typography.t1Bold,
-            color = SixpackTheme.colors.gray900
+            color = SixpackTheme.colors.gray900,
         )
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -189,7 +192,7 @@ private fun RecommendedGoalCard(
         Text(
             text = recommendedGoalUiState.subTitle,
             style = SixpackTheme.typography.b2Regular,
-            color = SixpackTheme.colors.gray600
+            color = SixpackTheme.colors.gray600,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -198,24 +201,24 @@ private fun RecommendedGoalCard(
             roundCount = recommendedGoalUiState.goalTarget.formattedRoundCount,
             duration = recommendedGoalUiState.goalTarget.formattedDuration,
             pace = recommendedGoalUiState.goalTarget.formattedPace,
-            modifier = Modifier
+            modifier = Modifier,
         )
     }
 }
 
-
 @Composable
 private fun RecommendButton(modifier: Modifier = Modifier) {
     Box(
-        modifier = modifier
-            .background(color = SixpackTheme.colors.blue600, shape = SixpackTheme.shapes.round20)
-            .padding(horizontal = 10.dp,vertical=4.dp),
-        contentAlignment = Alignment.Center
-    ){
+        modifier =
+            modifier
+                .background(color = SixpackTheme.colors.blue600, shape = SixpackTheme.shapes.round20)
+                .padding(horizontal = 10.dp, vertical = 4.dp),
+        contentAlignment = Alignment.Center,
+    ) {
         Text(
             text = stringResource(R.string.onboarding_finish_recommend_button),
             style = SixpackTheme.typography.c1Medium,
-            color =  SixpackTheme.colors.gray0
+            color = SixpackTheme.colors.gray0,
         )
     }
 }
@@ -225,29 +228,29 @@ private fun GoalInfoRow(
     roundCount: String,
     duration: String,
     pace: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly
+        horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
         GoalInfo(
             goal = roundCount,
-            description = stringResource(R.string.onboarding_finish_goal_round_count)
+            description = stringResource(R.string.onboarding_finish_goal_round_count),
         )
 
         GoalInfoDivider()
 
         GoalInfo(
             goal = duration,
-            description = stringResource(R.string.onboarding_finish_goal_duration)
+            description = stringResource(R.string.onboarding_finish_goal_duration),
         )
 
         GoalInfoDivider()
 
         GoalInfo(
             goal = pace,
-            description = stringResource(R.string.onboarding_finish_goal_pace)
+            description = stringResource(R.string.onboarding_finish_goal_pace),
         )
     }
 }
@@ -256,22 +259,22 @@ private fun GoalInfoRow(
 private fun GoalInfo(
     goal: String,
     description: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = goal,
             style = SixpackTheme.typography.t2Bold,
-            color = SixpackTheme.colors.gray900
+            color = SixpackTheme.colors.gray900,
         )
 
         Text(
             text = description,
             style = SixpackTheme.typography.c1Regular,
-            color = SixpackTheme.colors.gray600
+            color = SixpackTheme.colors.gray600,
         )
     }
 }
@@ -282,7 +285,7 @@ fun GoalInfoDivider(modifier: Modifier = Modifier) {
         modifier
             .padding(horizontal = 12.dp)
             .width(1.dp)
-            .background(color = SixpackTheme.colors.gray100)
+            .background(color = SixpackTheme.colors.gray100),
     )
 }
 
@@ -299,5 +302,4 @@ private fun OnboardingFinishScreenPreview() {
             )
         }
     }
-
 }

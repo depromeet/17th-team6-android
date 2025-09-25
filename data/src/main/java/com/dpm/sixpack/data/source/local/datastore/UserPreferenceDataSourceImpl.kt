@@ -31,12 +31,12 @@ class UserPreferenceDataSourceImpl
                 preferences[ONBOARDING_COMPLETE] ?: false
             }
 
-
-        override suspend fun updateOnboardingComplete(isComplete :Boolean) {
+        override suspend fun updateOnboardingComplete(isComplete: Boolean) {
             dataStore.edit { preferences ->
                 preferences[ONBOARDING_COMPLETE] = isComplete
             }
         }
+
         override suspend fun updateUserId(userId: Long) {
             dataStore.edit { preferences ->
                 preferences[USER_ID] = userId

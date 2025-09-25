@@ -6,7 +6,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
-import com.dpm.sixpack.core.BuildConfig
 
 private val LocalSixpackColors =
     staticCompositionLocalOf {

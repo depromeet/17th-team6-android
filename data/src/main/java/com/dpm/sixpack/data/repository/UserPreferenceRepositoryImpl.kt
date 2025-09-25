@@ -33,7 +33,6 @@ class UserPreferenceRepositoryImpl @Inject constructor(
         userPreferenceDataSource.updateOnboardingComplete(isComplete = isComplete)
     }
 
-
     override suspend fun clearSessionId() {
         userPreferenceDataSource.clearSessionId()
     }

@@ -16,10 +16,9 @@ data class OnboardingUiState(
     val selectedLevel: LevelType? = null,
     // Goal Screen State
     val selectedGoal: GoalType? = null,
-
-    val recommendedGoals: List<RecommendedGoalUiState> = emptyList()
-
-) : UiState, Parcelable {
+    val recommendedGoals: List<RecommendedGoalUiState> = emptyList(),
+) : UiState,
+    Parcelable {
     val isAllTermsChecked: Boolean
         get() = termsState.values.all { it }
     val isPermissionNextEnabled: Boolean

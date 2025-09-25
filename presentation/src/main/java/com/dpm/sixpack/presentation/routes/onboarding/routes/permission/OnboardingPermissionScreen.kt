@@ -1,7 +1,6 @@
 package com.dpm.sixpack.presentation.routes.onboarding.routes.permission
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -73,7 +72,6 @@ fun OnboardingPermissionScreen(
 
             Spacer(modifier = Modifier.height(40.dp))
 
-
             TermsAgreementGroup(
                 termsState = uiState.value.termsState,
                 isAllTermsChecked = uiState.value.isAllTermsChecked,
@@ -111,12 +109,12 @@ fun TermsAgreementGroup(
         Spacer(modifier = Modifier.height(20.dp))
 
         Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .background(color = SixpackTheme.colors.gray50)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(color = SixpackTheme.colors.gray50),
         )
-
 
         Spacer(modifier = Modifier.height(20.dp))
 

@@ -14,7 +14,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 fun OnboardingNextButton(
-    @StringRes text : Int = R.string.button_default_next,
+    @StringRes text: Int = R.string.button_default_next,
     onClick: () -> Unit,
     enabled: Boolean,
     modifier: Modifier = Modifier,

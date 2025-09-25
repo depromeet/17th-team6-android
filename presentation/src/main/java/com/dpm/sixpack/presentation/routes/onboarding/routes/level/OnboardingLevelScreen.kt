@@ -40,7 +40,7 @@ fun OnboardingLevelScreen(
     onSelectLevel: (LevelType) -> Unit,
     onClickNextButton: () -> Unit,
     onClickBackButton: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier =
@@ -72,8 +72,9 @@ fun OnboardingLevelScreen(
             LevelCardList(
                 selectedLevel = uiState.value.selectedLevel,
                 onSelectLevel = onSelectLevel,
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier =
+                    Modifier
+                        .fillMaxWidth(),
             )
 
             Spacer(Modifier.weight(1f))
@@ -93,14 +94,14 @@ fun OnboardingLevelScreen(
 private fun LevelCardList(
     selectedLevel: LevelType?,
     onSelectLevel: (LevelType) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LevelType.entries.forEach { level ->
         LevelCard(
             level = level,
             isSelected = level == selectedLevel,
             onSelectLevel = onSelectLevel,
-            modifier = modifier
+            modifier = modifier,
         )
 
         Spacer(Modifier.height(16.dp))
@@ -112,22 +113,24 @@ private fun LevelCard(
     level: LevelType,
     isSelected: Boolean,
     onSelectLevel: (LevelType) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val borderColor = if (isSelected) {
-        SixpackTheme.colors.blue600
-    } else {
-        SixpackTheme.colors.gray100
-    }
+    val borderColor =
+        if (isSelected) {
+            SixpackTheme.colors.blue600
+        } else {
+            SixpackTheme.colors.gray100
+        }
 
     val borderShape = SixpackTheme.shapes.round16
 
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .border(width = 1.dp, color = borderColor, shape = borderShape)
-            .noRippleClickable(onClick = { onSelectLevel(level) }),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .border(width = 1.dp, color = borderColor, shape = borderShape)
+                .noRippleClickable(onClick = { onSelectLevel(level) }),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Spacer(Modifier.width(16.dp))
 
@@ -138,13 +141,16 @@ private fun LevelCard(
 
         Spacer(Modifier.width(12.dp))
 
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp)) {
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+        ) {
             Text(
                 text = stringResource(level.title),
                 style = SixpackTheme.typography.t2Bold,
-                color = SixpackTheme.colors.gray900
+                color = SixpackTheme.colors.gray900,
             )
 
             Spacer(Modifier.width(4.dp))
@@ -152,7 +158,7 @@ private fun LevelCard(
             Text(
                 text = stringResource(level.subTitle),
                 style = SixpackTheme.typography.b2Regular,
-                color = SixpackTheme.colors.gray600
+                color = SixpackTheme.colors.gray600,
             )
         }
     }

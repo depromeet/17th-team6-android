@@ -22,7 +22,7 @@ import javax.inject.Inject
 class OnboardingViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     val getRecommendedGoalsUseCase: GetRecommendedGoalsUseCase,
-    val completeOnboardingUseCase: CompleteOnboardingUseCase ,
+    val completeOnboardingUseCase: CompleteOnboardingUseCase,
 ) : BaseViewModel<OnboardingUiState, OnboardingUiIntent, OnboardingSideEffect>() {
     override val initialState: OnboardingUiState = OnboardingUiState()
     override val container: Container<OnboardingUiState, OnboardingSideEffect> =
@@ -35,35 +35,38 @@ class OnboardingViewModel @Inject constructor(
             // --- Permission Screen Intents ---
             is OnboardingUiIntent.ToggleAllTerms -> handleToggleAllTerms(intent.isChecked)
             is OnboardingUiIntent.ToggleTerm -> handleToggleTerm(intent.type, intent.isChecked)
-            is OnboardingUiIntent.ClickPermissionNextButton -> intent {
-                consentTimestamp = Instant.now().toString()
-                postSideEffect(OnboardingSideEffect.NavigateToLevel)
-            }
+            is OnboardingUiIntent.ClickPermissionNextButton ->
+                intent {
+                    consentTimestamp = Instant.now().toString()
+                    postSideEffect(OnboardingSideEffect.NavigateToLevel)
+                }
 
             is OnboardingUiIntent.ShowTermDetails -> TODO()
 
             // --- Level Screen Intents ---
             is OnboardingUiIntent.SelectLevel -> handleSelectLevel(intent.level)
-            is OnboardingUiIntent.ClickLevelNextButton -> intent {
-                postSideEffect(OnboardingSideEffect.NavigateToGoal)
-            }
+            is OnboardingUiIntent.ClickLevelNextButton ->
+                intent {
+                    postSideEffect(OnboardingSideEffect.NavigateToGoal)
+                }
 
             // --- Goal Screen Intents ---
             is OnboardingUiIntent.SelectGoal -> handleSelectGoal(intent.goal)
-            is OnboardingUiIntent.ClickGoalNextButton -> intent {
-                getRecommendedGoalList()
-                postSideEffect(OnboardingSideEffect.NavigateToFinish)
-            }
+            is OnboardingUiIntent.ClickGoalNextButton ->
+                intent {
+                    getRecommendedGoalList()
+                    postSideEffect(OnboardingSideEffect.NavigateToFinish)
+                }
 
             // --- Finish Screen Intents ---
             is OnboardingUiIntent.SelectRecommendedGoal -> handleSelectRecommendedGoal(intent.id)
             is OnboardingUiIntent.CompleteOnboarding -> completeOnboarding()
 
-
             // --- Common Intents ---
-            is OnboardingUiIntent.ClickBackButton -> intent {
-                postSideEffect(OnboardingSideEffect.NavigateToBack)
-            }
+            is OnboardingUiIntent.ClickBackButton ->
+                intent {
+                    postSideEffect(OnboardingSideEffect.NavigateToBack)
+                }
         }
     }
 
@@ -77,7 +80,10 @@ class OnboardingViewModel @Inject constructor(
         }
     }
 
-    private fun handleToggleTerm(type: TermType, isChecked: Boolean) {
+    private fun handleToggleTerm(
+        type: TermType,
+        isChecked: Boolean,
+    ) {
         intent {
             reduce {
                 state.copy(
@@ -106,9 +112,10 @@ class OnboardingViewModel @Inject constructor(
     private fun handleSelectRecommendedGoal(index: Int) {
         intent {
             val currentState = state.recommendedGoals
-            val updatedGoals = currentState.mapIndexed { i, goal ->
-                goal.copy(isSelected = i == index)
-            }
+            val updatedGoals =
+                currentState.mapIndexed { i, goal ->
+                    goal.copy(isSelected = i == index)
+                }
 
             reduce {
                 state.copy(
@@ -118,8 +125,8 @@ class OnboardingViewModel @Inject constructor(
         }
     }
 
-    private fun completeOnboarding(){
-        intent{
+    private fun completeOnboarding() {
+        intent {
             postSideEffect(OnboardingSideEffect.NavigateToHome)
             completeOnboardingUseCase()
         }
@@ -127,21 +134,23 @@ class OnboardingViewModel @Inject constructor(
 
     private fun getRecommendedGoalList() {
         intent {
-            val uiGoals = getRecommendedGoalsUseCase(state.selectedGoal!!.runningGoal)
-                .mapIndexed { index, data ->
-                    RecommendedGoalUiState(
-                        title = data.title,
-                        subTitle = data.subTitle,
-                        isRecommended = index == 0,
-                        isSelected = false,
-                        goalTarget = GoalUiState(
-                            pace = data.goal.pace,
-                            distance = data.goal.distance,
-                            duration = data.goal.duration,
-                            roundCount = data.goal.roundCount
+            val uiGoals =
+                getRecommendedGoalsUseCase(state.selectedGoal!!.runningGoal)
+                    .mapIndexed { index, data ->
+                        RecommendedGoalUiState(
+                            title = data.title,
+                            subTitle = data.subTitle,
+                            isRecommended = index == 0,
+                            isSelected = false,
+                            goalTarget =
+                                GoalUiState(
+                                    pace = data.goal.pace,
+                                    distance = data.goal.distance,
+                                    duration = data.goal.duration,
+                                    roundCount = data.goal.roundCount,
+                                ),
                         )
-                    )
-                }
+                    }
 
             reduce {
                 state.copy(recommendedGoals = uiGoals)
