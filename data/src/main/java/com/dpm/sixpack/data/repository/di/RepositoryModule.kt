@@ -1,6 +1,6 @@
 package com.dpm.sixpack.data.repository.di
 
-import com.dpm.sixpack.data.repository.RunningGoalRepositoryImpl
+import com.dpm.sixpack.data.repository.MockRunningGoalRepositoryImpl
 import com.dpm.sixpack.data.repository.RunningRepositoryImpl
 import com.dpm.sixpack.data.repository.RunningSessionRepositoryImpl
 import com.dpm.sixpack.data.repository.UserPreferenceRepositoryImpl
@@ -23,7 +23,7 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindsRunningGoalRepository(repositoryImpl: RunningGoalRepositoryImpl): RunningGoalRepository
+    abstract fun bindsRunningGoalRepository(repositoryImpl: MockRunningGoalRepositoryImpl): RunningGoalRepository
 
     @Binds
     @Singleton
