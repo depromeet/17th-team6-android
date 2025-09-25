@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
+import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionIntent
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.RecordUiState
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningSessionState
@@ -75,7 +76,7 @@ internal fun RunningRecordPanel(
                 is RunningSessionState.Main.Running -> {
                     MainSessionInfo(
                         primaryInfo = stringResource(R.string.running_phase_main_title),
-                        secondaryInfo = sessionState.goalDistance,
+                        secondaryInfo = formatDistanceToKm(sessionState.goalDistanceMeter),
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                     MainRunningRecordGrid(recordUiState = sessionState.recordUiState)
@@ -86,7 +87,7 @@ internal fun RunningRecordPanel(
                 is RunningSessionState.Main.Pause -> {
                     MainSessionInfo(
                         primaryInfo = stringResource(R.string.running_phase_main_title),
-                        secondaryInfo = sessionState.goalDistance,
+                        secondaryInfo = formatDistanceToKm(sessionState.goalDistanceMeter),
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                     MainRunningRecordGrid(recordUiState = sessionState.recordUiState)
