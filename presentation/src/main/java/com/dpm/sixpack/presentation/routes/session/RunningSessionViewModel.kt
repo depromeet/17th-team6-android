@@ -1,5 +1,11 @@
 package com.dpm.sixpack.presentation.routes.session
 
+import android.annotation.SuppressLint
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.os.IBinder
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dpm.sixpack.domain.model.RealtimeRunningData
@@ -8,9 +14,8 @@ import com.dpm.sixpack.domain.usecase.FinishRunningSessionUseCase
 import com.dpm.sixpack.domain.usecase.GetRealtimeRunningDataUseCase
 import com.dpm.sixpack.domain.usecase.StartRunningUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
-import com.dpm.sixpack.presentation.common.util.calculatePace
-import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
-import com.dpm.sixpack.presentation.common.util.formatSecondsToTime
+import com.dpm.sixpack.presentation.common.util.MockLocationClient
+import com.dpm.sixpack.presentation.common.util.Sungsoo
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionIntent
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionSideEffect
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.INITIAL_RECORD_STATE
@@ -21,28 +26,38 @@ import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningSessi
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningSessionState.Companion.INITIAL_COUNTDOWN
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningSessionUiState
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.toUiState
+import com.dpm.sixpack.runningservice.RunningActions
+import com.dpm.sixpack.runningservice.RunningService
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.naver.maps.geometry.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.Syntax
 import org.orbitmvi.orbit.viewmodel.container
+import timber.log.Timber
 import javax.inject.Inject
-import kotlin.random.Random
-import kotlin.random.nextULong
 
 private typealias RunningSessionSyntax = Syntax<RunningSessionUiState, RunningSessionSideEffect>
 
 @HiltViewModel
 class RunningSessionViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    @ApplicationContext private val context: Context,
     private val startRunningUseCase: StartRunningUseCase,
     private val getRealtimeRunningDataUseCase: GetRealtimeRunningDataUseCase,
     private val finishRunningSessionUseCase: FinishRunningSessionUseCase,
+    fusedLocationProviderClient: FusedLocationProviderClient,
 ) : BaseViewModel<RunningSessionUiState, RunningSessionIntent, RunningSessionSideEffect>() {
+    // FIXME: 프리런칭 시뮬레이션용
+    val mockLocationClient = MockLocationClient(fusedLocationProviderClient, viewModelScope)
+
     // TODO replace with real data
     val todayRunData =
         savedStateHandle.get<RunningSessionGoal>("key_name") ?: RunningSessionGoal(
@@ -63,15 +78,63 @@ class RunningSessionViewModel @Inject constructor(
     override val container: Container<RunningSessionUiState, RunningSessionSideEffect> =
         container(initialState = initialState, savedStateHandle = savedStateHandle)
 
-    private var observeJob: Job? = null
+    @SuppressLint("StaticFieldLeak")
+    private var runningService: RunningService? = null
 
+    private val serviceConnection =
+        object : ServiceConnection {
+            override fun onServiceConnected(
+                name: ComponentName?,
+                service: IBinder?,
+            ) {
+                val binder = service as? RunningService.RunningBinder ?: return
+                runningService = binder.getService()
+                observeServiceState()
+            }
+
+            override fun onServiceDisconnected(name: ComponentName?) {
+                runningService = null
+            }
+        }
+
+    init {
+        bindToService()
+    }
+
+    private fun observeServiceState() {
+        runningService
+            ?.runningDataState
+            ?.onEach { realtimeData ->
+                Timber.d("observeServiceState: $realtimeData")
+                intent {
+                    val currentSessionState = state.sessionState
+                    if (currentSessionState is RunningSessionState.RunningState && realtimeData != null) {
+                        val newSessionState = getNewRunningState(currentSessionState, realtimeData)
+                        intent {
+                            reduce {
+                                state.copy(sessionState = newSessionState)
+                            }
+                        }
+                    }
+                }
+            }?.launchIn(viewModelScope)
+    }
+
+    @SuppressLint("MissingPermission")
     private fun startObservingRealtimeData() {
-        observeJob?.cancel()
-        observeJob = intent { observeRealTimeRunningData() }
+        // 테스트
+        if (mockLocationClient.isRunning) {
+            mockLocationClient.resume()
+        } else {
+            mockLocationClient.startWithLatLng(Sungsoo)
+        }
+
+        sendCommandToService(context, RunningActions.START_OR_RESUME)
     }
 
     private fun pauseObservingRealtimeData() {
-        observeJob?.cancel()
+        mockLocationClient.pause()
+        sendCommandToService(context, RunningActions.PAUSE)
     }
 
     override fun onIntent(intent: RunningSessionIntent) {
@@ -79,13 +142,14 @@ class RunningSessionViewModel @Inject constructor(
             is RunningSessionIntent.TabChange -> handleTabChange(intent.tab)
             is RunningSessionIntent.SessionStart -> handleSessionStart()
             is RunningSessionIntent.ToggleFollowingMode -> handleToggleFollowingMode()
-            is RunningSessionIntent.WarmUpSkip -> {
-                handleWarmUpPause(true)
-                pauseObservingRealtimeData()
+            is RunningSessionIntent.WarmUpSkip -> handleWarmUpPause(true)
+            is RunningSessionIntent.WarmUpSkipCancel -> handleWarmUpPause()
+            is RunningSessionIntent.WarmUpSkipConfirm -> {
+                mockLocationClient.stop()
+                sendCommandToService(context, RunningActions.STOP)
+                handleWarmUpSkipConfirm()
             }
 
-            is RunningSessionIntent.WarmUpSkipCancel -> handleWarmUpPause()
-            is RunningSessionIntent.WarmUpSkipConfirm -> handleWarmUpSkipConfirm()
             is RunningSessionIntent.ResumeIntent -> {
                 when (intent) {
                     RunningSessionIntent.WarmUpResume -> handleWarmUpResume()
@@ -108,14 +172,13 @@ class RunningSessionViewModel @Inject constructor(
             is RunningSessionIntent.StopIntent -> handleStopDialog(true)
 
             is RunningSessionIntent.StopConfirmIntent -> {
-                pauseObservingRealtimeData()
+                mockLocationClient.stop()
+                sendCommandToService(context, RunningActions.STOP)
                 when (intent) {
                     RunningSessionIntent.WarmUpStopConfirm -> handleWarmUpStopConfirm()
                     RunningSessionIntent.MainRunningStopConfirm -> handleMainRunningStopConfirm()
                     RunningSessionIntent.CoolDownStopConfirm -> handleCoolDownStopConfirm()
                 }
-
-                // TODO: 공동 로직있으면 처리
             }
         }
     }
@@ -129,26 +192,25 @@ class RunningSessionViewModel @Inject constructor(
 
     // Initial 상태에서 러닝 시작
     private fun handleSessionStart() {
-        viewModelScope.launch {
-            startRunningUseCase(goalPlanId = todayRunData.id)
-                // TODO: handle error
-                .onSuccess { }
-                .onError { }
-
-            intent {
-                handleReadyState(RunningSessionState.WarmUp.Ready())
-
-                reduce {
-                    state.copy(
-                        sessionState =
-                            RunningSessionState.WarmUp.Running(
-                                recordUiState = INITIAL_RECORD_STATE,
-                            ),
-                    )
-                }
-
-                startObservingRealtimeData()
+        intent {
+            viewModelScope.launch {
+                startRunningUseCase(goalPlanId = todayRunData.id)
+                    .onSuccess { }
+                    .onError { }
             }
+
+            handleReadyState(RunningSessionState.WarmUp.Ready())
+
+            reduce {
+                state.copy(
+                    sessionState =
+                        RunningSessionState.WarmUp.Running(
+                            recordUiState = INITIAL_RECORD_STATE,
+                        ),
+                )
+            }
+
+            startObservingRealtimeData()
         }
     }
 
@@ -195,6 +257,7 @@ class RunningSessionViewModel @Inject constructor(
                     getNewMapUiState(
                         sessionState,
                         LatLng(realtimeRunningData.latitude, realtimeRunningData.longitude),
+                        realtimeRunningData,
                     )
                 // Main.Running일 때는 mapUiState와 recordUiState를 모두 업데이트
                 sessionState.copy(
@@ -214,45 +277,41 @@ class RunningSessionViewModel @Inject constructor(
     private fun getNewMapUiState(
         sessionState: RunningSessionState.Main.Running,
         newPoint: LatLng,
+        realtimeRunningData: RealtimeRunningData,
     ): MapUiState {
-        // 페이스 색상 업데이트
-        val currentTotalPaceColors = sessionState.mapUiState.paceColors
-        val currentPaceColors = currentTotalPaceColors.lastOrNull() ?: listOf()
-        // TODO FIXME 페이스 컬러 실제 데이터로 변경
-        val newPaceColors = currentPaceColors + listOf(Random.nextULong(0uL..0xFFFFFFFFuL))
-        val newTotalPaceColors = currentTotalPaceColors.toMutableList()
+        val currentPaths = sessionState.mapUiState.path
+        val currentColors = sessionState.mapUiState.paceColors
 
-        if (newTotalPaceColors.isNotEmpty()) {
-            newTotalPaceColors[newTotalPaceColors.lastIndex] = newPaceColors
+        val newColorInt = PaceColorCalculator(realtimeRunningData.pace)
+
+        // 세션을 처음 시작하는 경우
+        if (currentPaths.isEmpty()) {
+            return MapUiState(
+                path = listOf(listOf(newPoint)),
+                paceColors = listOf(listOf(newColorInt)),
+            )
         }
 
-        // 경로 업데이트
-        val currentTotalPaths = sessionState.mapUiState.path
-        val currentPath = currentTotalPaths.lastOrNull() ?: listOf()
-        val newPath = currentPath + newPoint
-        val newTotalPathList = currentTotalPaths.toMutableList()
+        // 기존 경로에 이어서 추가하는 경우
+        val previousPaths = currentPaths.dropLast(1)
+        val previousColors = currentColors.dropLast(1)
 
-        if (newTotalPathList.isNotEmpty()) {
-            newTotalPathList[newTotalPathList.lastIndex] = newPath
-        }
+        val newLastPath = currentPaths.last() + newPoint
+        val newLastColors = currentColors.last() + newColorInt
 
         return MapUiState(
-            paceColors = newTotalPaceColors,
-            path = newTotalPathList,
+            path = previousPaths + listOf(newLastPath),
+            paceColors = previousColors + listOf(newLastColors),
         )
     }
 
     private fun getNewRecordUiState(realtimeRunningData: RealtimeRunningData): RecordUiState {
         val newRecord =
             RecordUiState(
-                currentDistance = formatDistanceToKm(realtimeRunningData.totalDistanceMeter.toInt()),
-                currentDuration = formatSecondsToTime(realtimeRunningData.duration),
-                avgPace =
-                    calculatePace(
-                        totalTimeInSeconds = realtimeRunningData.duration,
-                        distanceInKm = realtimeRunningData.totalDistanceMeter / 1000.0,
-                    ),
-                cadence = "${realtimeRunningData.cadence}",
+                currentDistance = realtimeRunningData.totalDistanceMeter,
+                currentDuration = realtimeRunningData.duration,
+                avgPace = realtimeRunningData.pace,
+                cadence = realtimeRunningData.cadence,
             )
         return newRecord
     }
@@ -280,7 +339,8 @@ class RunningSessionViewModel @Inject constructor(
                                 sessionState =
                                     currentState.copy(
                                         // TODO 진짜 남은 거리 계산
-                                        remainingDistance = currentState.goalDistance,
+                                        remainingDistanceMeter =
+                                            currentState.goalDistanceMeter - currentState.recordUiState.currentDistance,
                                         showStopSessionConfirmDialog = showStopConfirmDialog,
                                     ),
                             )
@@ -321,7 +381,7 @@ class RunningSessionViewModel @Inject constructor(
                 state.copy(
                     sessionState =
                         RunningSessionState.Main.Running(
-                            goalDistance = formatDistanceToKm(todayRunData.mainRunningDistance),
+                            goalDistanceMeter = todayRunData.mainRunningDistance,
                             recordUiState = INITIAL_RECORD_STATE,
                         ),
                 )
@@ -367,7 +427,7 @@ class RunningSessionViewModel @Inject constructor(
                     state.copy(
                         sessionState =
                             RunningSessionState.Main.Pause(
-                                goalDistance = currentState.goalDistance,
+                                goalDistanceMeter = currentState.goalDistanceMeter,
                                 mapUiState =
                                     currentState.mapUiState.copy(
                                         paceColors = currentState.mapUiState.paceColors + listOf(),
@@ -388,7 +448,7 @@ class RunningSessionViewModel @Inject constructor(
                     state.copy(
                         sessionState =
                             RunningSessionState.Main.Running(
-                                goalDistance = currentState.goalDistance,
+                                goalDistanceMeter = currentState.goalDistanceMeter,
                                 mapUiState = currentState.mapUiState,
                                 recordUiState = currentState.recordUiState,
                             ),
@@ -403,24 +463,6 @@ class RunningSessionViewModel @Inject constructor(
     private fun handleMainRunningStopConfirm() =
         intent {
             finishRunningSessionUseCase()
-//                val currentState = state.sessionState
-//                if (currentState is RunningSessionState.Main.Pause) {
-//                    var timer = 0
-//                    repeat(INITIAL_COUNTDOWN) {
-//                        reduce {
-//                            state.copy(
-//                                sessionState =
-//                                    RunningSessionState.WarmUp.Ready(
-//                                        countdown = INITIAL_COUNTDOWN - timer,
-//                                    ),
-//                            )
-//                        }
-//                        timer++
-//                    }
-//                }
-//            reduce {
-//                state.copy(RunningSessionState.Initial())
-//            }
 
             handleReadyState(RunningSessionState.CoolDown.Ready())
             reduce {
@@ -483,4 +525,30 @@ class RunningSessionViewModel @Inject constructor(
                 state.copy(RunningSessionState.Initial())
             }
         }
+
+    // region Service
+    private fun sendCommandToService(
+        context: Context,
+        action: String,
+    ) {
+        val intent =
+            Intent(context, RunningService::class.java).apply {
+                this.action = action
+            }
+        context.startService(intent)
+    }
+
+    private fun bindToService() {
+        Intent(context, RunningService::class.java).also { intent ->
+            context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+        }
+    }
+
+    // endregion
+
+    override fun onCleared() {
+        mockLocationClient.stop()
+        context.unbindService(serviceConnection)
+        super.onCleared()
+    }
 }
