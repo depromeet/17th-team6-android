@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.home.component.total.sub
+package com.dpm.sixpack.presentation.routes.home.ui.component.total.sub
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row

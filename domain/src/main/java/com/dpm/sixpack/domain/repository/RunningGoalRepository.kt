@@ -8,4 +8,7 @@ interface RunningGoalRepository {
     suspend fun getRunningTotalGoal(): DoRunResult<RunningTotalGoal>
 
     suspend fun getTodayRunningSessionGoal(): DoRunResult<RunningSessionGoal>
+
+    // TODO 프리런칭 이후 pagination 적용
+    suspend fun getRunningSessions(goalId: Long): DoRunResult<List<RunningSessionGoal>>
 }

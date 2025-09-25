@@ -9,6 +9,7 @@ import com.dpm.sixpack.SixPackAppState
 import com.dpm.sixpack.presentation.routes.home.navigation.addHomeNavGraph
 import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
 import com.dpm.sixpack.presentation.routes.session.navigation.addRunningNavGraph
+import com.dpm.sixpack.presentation.routes.sessionlist.navigation.addSessionListNavGraph
 import timber.log.Timber
 
 @Composable
@@ -32,17 +33,26 @@ internal fun MainNavHost(
             )
 
             addHomeNavGraph(
+                onNavigateToSessionList = navigator::navigateToSessionList,
                 onNavigateToSession = {
                     Timber.d("SR-N onNavigateToSession")
-                },
-                onNavigateToGoalList = {
-                    Timber.d("SR-N onNavigateToGoalList")
                 },
                 onNavigateToGoalEdit = {
                     Timber.d("SR-N onNavigateToGoalEdit")
                 },
             )
 
+            addSessionListNavGraph(
+                onNavigateToBack = navigator::popBackStack,
+                onNavigateToGoalEdit = {
+                    // TODO SR-N
+                    Timber.d("SR-N onNavigateToSession")
+                },
+                onNavigateToSession = {
+                    // TODO SR-N
+                    Timber.d("SR-N onNavigateToGoalEdit")
+                },
+            )
             addRunningNavGraph()
         }
     }

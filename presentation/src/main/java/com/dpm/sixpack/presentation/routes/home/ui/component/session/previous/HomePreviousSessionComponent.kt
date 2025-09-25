@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.home.component.session.previous
+package com.dpm.sixpack.presentation.routes.home.ui.component.session.previous
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

@@ -1,8 +1,7 @@
-package com.dpm.sixpack.presentation.routes.home.contract
+package com.dpm.sixpack.presentation.routes.sessionlist.contract
 
 import android.os.Parcelable
 import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import com.dpm.sixpack.domain.model.session.RunningSessionGoal
 import com.dpm.sixpack.domain.model.total.RunningTotalGoal
 import com.dpm.sixpack.presentation.R
@@ -14,21 +13,17 @@ import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class HomeScreenState(
+data class SessionListScreenState(
     val loading: Boolean = true,
-    val totalGoalComponentState: HomeTotalGoalComponentState = HomeTotalGoalComponentState(),
-    val sessionComponentState: HomeSessionComponentState = HomeSessionComponentState(),
-    val totalGoalCompleted: Boolean = false,
+    val totalGoalComponentState: SessionListTotalGoalComponentState = SessionListTotalGoalComponentState(),
+    val sessionList: List<SessionListItemState> = emptyList(),
 ) : UiState,
     Parcelable
 
 @Parcelize
-data class HomeTotalGoalComponentState(
-    @DrawableRes val imageRes: Int? = null, // TODO enum 으로 변경?
+data class SessionListTotalGoalComponentState(
+    @DrawableRes val imageRes: Int? = null,
     val title: String = "",
-    val distance: String = "",
-    val duration: String = "",
-    val pace: String = "",
     private val totalSessionCount: Int = 0,
     private val completedSessionCount: Int = 0,
 ) : Parcelable {
@@ -56,7 +51,8 @@ data class HomeTotalGoalComponentState(
 }
 
 fun RunningTotalGoal.asUiState() =
-    HomeTotalGoalComponentState(
+    SessionListTotalGoalComponentState(
+        title = title,
         // TODO SR-N 프리런칭 때는 마라톤만 고려. ype enum 적용하고, 마라톤 외에도 구현.
         imageRes =
             when {
@@ -64,40 +60,30 @@ fun RunningTotalGoal.asUiState() =
                 distance < 21000 -> R.drawable.ill_marathon_21km
                 else -> R.drawable.ill_marathon_42km
             },
-        title = title,
-        distance = formatDistanceToKm(distance),
-        duration = formatSecondsToTime(duration),
-        pace = formatSecondsToPace(pace),
         totalSessionCount = totalRoundCount,
         completedSessionCount = clearedRoundCount,
     )
 
 @Parcelize
-data class HomeSessionComponentState(
-    val sessionCount: Int? = null,
-    @StringRes val cheerUpStringRes: Int? = null, // TODO enum 으로 변경?
-    val distance: String = "",
-    val duration: String = "",
-    val pace: String = "",
+data class SessionListItemState(
+    val id: Long,
+    val roundCount: Int,
+    val distance: String,
+    val duration: String,
+    val pace: String,
+    val isCompleted: Boolean,
+    val isSelected: Boolean = false,
 ) : Parcelable {
-    val showPreviousSession: Boolean
-        get() = (sessionCount ?: 0) > 1
+    val showButton by lazy { isCompleted && isSelected }
 }
 
-fun RunningSessionGoal.asUiState(totalRoundCount: Int): HomeSessionComponentState {
-    val roundProgress = roundCount / totalRoundCount.toFloat()
-    return HomeSessionComponentState(
-        sessionCount = roundCount,
-        cheerUpStringRes =
-            when {
-                roundProgress <= 0.01f -> R.string.home_goal_cheer_up_0_1
-                roundProgress <= 0.25f -> R.string.home_goal_cheer_up_1_25
-                roundProgress <= 0.5f -> R.string.home_goal_cheer_up_26_50
-                roundProgress <= 0.75 -> R.string.home_goal_cheer_up_51_75
-                else -> R.string.home_goal_cheer_up_76_100
-            },
+fun RunningSessionGoal.asUiState() =
+    SessionListItemState(
+        id = id,
+        roundCount = roundCount,
         distance = formatDistanceToKm(distance),
         duration = formatSecondsToTime(duration),
         pace = formatSecondsToPace(pace),
+        isCompleted = clearedAt != null,
+        isSelected = false,
     )
-}

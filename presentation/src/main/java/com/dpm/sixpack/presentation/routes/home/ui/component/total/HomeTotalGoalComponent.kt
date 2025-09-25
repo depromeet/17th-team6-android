@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.home.component.total
+package com.dpm.sixpack.presentation.routes.home.ui.component.total
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -19,10 +19,10 @@ import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunTotalGoalProgress
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
-import com.dpm.sixpack.presentation.routes.home.component.total.item.HomeTotalGoalInformationItem
-import com.dpm.sixpack.presentation.routes.home.component.total.sub.HomeTotalGoalCompletedSubComponent
-import com.dpm.sixpack.presentation.routes.home.component.total.sub.TextButtonWithIcon
 import com.dpm.sixpack.presentation.routes.home.contract.HomeTotalGoalComponentState
+import com.dpm.sixpack.presentation.routes.home.ui.component.total.item.HomeTotalGoalInformationItem
+import com.dpm.sixpack.presentation.routes.home.ui.component.total.sub.HomeTotalGoalCompletedSubComponent
+import com.dpm.sixpack.presentation.routes.home.ui.component.total.sub.TextButtonWithIcon
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable

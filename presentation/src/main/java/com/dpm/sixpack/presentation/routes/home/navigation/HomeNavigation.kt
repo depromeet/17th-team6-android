@@ -12,14 +12,14 @@ fun NavController.navigateHome(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.addHomeNavGraph(
+    onNavigateToSessionList: (goalId: Long) -> Unit,
     onNavigateToSession: (sessionId: Long) -> Unit,
-    onNavigateToGoalList: (goalId: Long) -> Unit,
     onNavigateToGoalEdit: () -> Unit,
 ) {
     composable<MainRoute.Home> {
         HomeRoute(
+            onNavigateToSessionList = onNavigateToSessionList,
             onNavigateToSession = onNavigateToSession,
-            onNavigateToGoalList = onNavigateToGoalList,
             onNavigateToGoalEdit = onNavigateToGoalEdit,
         )
     }

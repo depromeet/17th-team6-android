@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dpm.sixpack.presentation.routes.home.contract.HomeIntent
 import com.dpm.sixpack.presentation.routes.home.contract.HomeSideEffect
-import com.dpm.sixpack.presentation.routes.home.screen.HomeScreen
+import com.dpm.sixpack.presentation.routes.home.ui.screen.HomeScreen
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -14,8 +14,8 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 fun HomeRoute(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
+    onNavigateToSessionList: (goalId: Long) -> Unit,
     onNavigateToSession: (sessionId: Long) -> Unit,
-    onNavigateToGoalList: (goalId: Long) -> Unit,
     onNavigateToGoalEdit: () -> Unit,
 ) {
     val screenState by viewModel.collectAsState()
@@ -26,8 +26,8 @@ fun HomeRoute(
                 onNavigateToSession(sideEffect.sessionId)
             }
 
-            is HomeSideEffect.NavigateToGoalList -> {
-                onNavigateToGoalList(sideEffect.goalId)
+            is HomeSideEffect.NavigateToSessionList -> {
+                onNavigateToSessionList(sideEffect.goalId)
             }
 
             is HomeSideEffect.NavigateToGoalEdit -> {

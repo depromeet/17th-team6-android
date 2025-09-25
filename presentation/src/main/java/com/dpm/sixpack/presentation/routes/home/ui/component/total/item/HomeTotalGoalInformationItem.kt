@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.home.component.total.item
+package com.dpm.sixpack.presentation.routes.home.ui.component.total.item
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding

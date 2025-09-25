@@ -3,7 +3,7 @@ package com.dpm.sixpack.presentation.routes.home.contract
 import com.dpm.sixpack.presentation.common.base.SideEffect
 
 sealed interface HomeSideEffect : SideEffect {
-    data class NavigateToGoalList(
+    data class NavigateToSessionList(
         val goalId: Long,
     ) : HomeSideEffect
 
