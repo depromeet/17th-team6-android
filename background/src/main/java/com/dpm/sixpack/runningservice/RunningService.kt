@@ -1,86 +1,63 @@
 package com.dpm.sixpack.runningservice
 
-import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Intent
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
 import android.location.Location
 import android.os.Binder
 import android.os.IBinder
-import android.os.Looper
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
-import com.dpm.sixpack.core.permission.PermissionUtil
-import com.dpm.sixpack.core.permission.SixPackPermissions
 import com.dpm.sixpack.core.util.TimeUtil
-import com.dpm.sixpack.domain.model.RunningState
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.Granularity
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.Priority
+import com.dpm.sixpack.domain.model.RealtimeRunningData
+import com.dpm.sixpack.domain.usecase.GetGpsDataUseCase
+import com.dpm.sixpack.domain.usecase.GetStepCountUseCase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.round
 
 @AndroidEntryPoint
-class RunningService :
-    LifecycleService(),
-    SensorEventListener {
-    private val binder = RunningBinder()
-
-    inner class RunningBinder : Binder() {
-        fun getService(): RunningService = this@RunningService
-    }
-
-    override fun onBind(intent: Intent): IBinder {
-        super.onBind(intent)
-        return binder
-    }
+class RunningService : LifecycleService() {
+    @Inject
+    lateinit var getGpsDataUseCase: GetGpsDataUseCase
 
     @Inject
-    lateinit var fusedLocationClient: FusedLocationProviderClient
-
-    @Inject
-    lateinit var sensorManager: SensorManager
+    lateinit var getStepCountUseCase: GetStepCountUseCase
 
     @Inject
     lateinit var baseNotificationBuilder: NotificationCompat.Builder
 
-    // 거리 계산을 위한 변수
-    private var lastLocation: Location? = null
-    private var totalDistance = 0.0
-
-    // 페이스 계산을 위한 변수
-    private var paceInMoment: Double = 0.0
-    private var paceAverage: Double = 0.0
-    private var timeOfLastPaceCalculate = 0L
-    private var distanceAtLastPaceCalculation = 0.0
-
-    // 케이던스 계산 위한 변수
-    private var cadence = 0
-    private var timeOfLastCadenceCalc = 0L
-    private var stepsAtLastCadenceCalc = 0L
-    private var currentSteps = 0L
+    private val binder = RunningBinder()
 
     private lateinit var notificationManager: NotificationManager
 
-    private val _runningDataState = MutableStateFlow(RunningState())
+    // 외부 공개 상태
+    private val _runningDataState = MutableStateFlow<RealtimeRunningData?>(null)
     val runningDataState = _runningDataState.asStateFlow()
 
-    private var initialSteps = -1L
+    // --- 내부 상태 관리 변수 ---
+    private var isServiceRunning = false
+    private var isPaused = true
+
+    private var durationInSeconds: Int = 0
+    private var lastLocation: Location? = null
+    private var totalDistance: Double = 0.0
+    private var stepsBeforePause: Long = 0L
+    private var currentSteps: Long = 0L
+    private var paceAverage: Int = 0
+    private var cadence: Int = 0
+
+    // Coroutine Jobs
     private var timerJob: Job? = null
-    private var startTimeInMillis: Long = 0L
+    private var locationJob: Job? = null
+    private var stepJob: Job? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -92,21 +69,21 @@ class RunningService :
         flags: Int,
         startId: Int,
     ): Int {
-//        intent?.action?.let { action ->
-//            when (action) {
-//                RunningActions.START_OR_RESUME -> {
-//                    startForegroundService()
-//                }
-//
-//                RunningActions.PAUSE -> {
-//                    // TODO SK: 일시정지 로직
-//                }
-//
-//                RunningActions.STOP -> {
-//                    stopService()
-//                }
-//            }
-//        }
+        intent?.action?.let { action ->
+            when (action) {
+                RunningActions.START_OR_RESUME -> {
+                    startOrResumeService()
+                }
+
+                RunningActions.PAUSE -> {
+                    pauseService()
+                }
+
+                RunningActions.STOP -> {
+                    stopService()
+                }
+            }
+        }
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -115,193 +92,177 @@ class RunningService :
         stopService()
     }
 
-    private fun initStates() {
-        // State
-        _runningDataState.value = RunningState()
-
-        // 거리
-        lastLocation = null
-        totalDistance = 0.0
-
-        // 페이스
-        paceInMoment = 0.0
-        paceAverage = 0.0
-        timeOfLastPaceCalculate = 0L
-        distanceAtLastPaceCalculation = 0.0
-
-        // 케이던스
-        cadence = 0
-        initialSteps = -1L
-        currentSteps = 0L
-        timeOfLastCadenceCalc = 0L
-        stepsAtLastCadenceCalc = 0L
+    private fun startOrResumeService() {
+        if (!isServiceRunning) {
+            isServiceRunning = true
+            startService()
+        } else {
+            resumeService()
+        }
     }
 
-    private fun startForegroundService() {
+    private fun startService() {
+        isPaused = false
+        initStates()
         createNotificationChannel()
         startForeground(NOTIFICATION_ID, baseNotificationBuilder.build())
-        startListeners()
+        startJobs()
     }
 
-    private fun startListeners() {
-        startTimer()
-        startLocationUpdates()
-        startStepCounter()
+    private fun resumeService() {
+        if (isPaused) {
+            isPaused = false
+            startJobs()
+        }
+    }
+
+    private fun pauseService() {
+        isPaused = true
+        stepsBeforePause = currentSteps
+        cancelJobs()
     }
 
     private fun stopService() {
-        timerJob?.cancel()
-        fusedLocationClient.removeLocationUpdates(locationCallback)
-        sensorManager.unregisterListener(this)
-
+        isServiceRunning = false
+        isPaused = true
+        cancelJobs()
         initStates()
-        postCurrentRunningDataState(0L)
-
-        stopForeground(STOP_FOREGROUND_DETACH)
+        stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
+    }
+
+    private fun initStates() {
+        durationInSeconds = 0
+        lastLocation = null
+        totalDistance = 0.0
+        paceAverage = 0
+        cadence = 0
+        stepsBeforePause = 0L
+        currentSteps = 0L
+        _runningDataState.value = null
+    }
+
+    private fun startJobs() {
+        startTimer()
+        startLocationCollection()
+        startStepCollection()
+    }
+
+    private fun cancelJobs() {
+        timerJob?.cancel()
+        locationJob?.cancel()
+        stepJob?.cancel()
     }
 
     // 시간 측정
     private fun startTimer() {
         timerJob =
             lifecycleScope.launch {
-                startTimeInMillis = System.currentTimeMillis()
-                while (true) {
-                    val duration = System.currentTimeMillis() - startTimeInMillis
-                    postCurrentRunningDataState(duration)
+                while (isActive) {
+                    durationInSeconds += 1
                     delay(1000L)
+
+                    paceAverage = calculateAvgPace(totalDistance, durationInSeconds)
+                    cadence = calculateAvgCadence(currentSteps, durationInSeconds)
+                    postCurrentRunningDataState()
+
+                    updateNotification(durationInSeconds)
                 }
             }
     }
 
-    private fun postCurrentRunningDataState(duration: Long) {
-        _runningDataState.value =
-            RunningState(
-                duration = duration,
-                distance = this.totalDistance,
-                paceInMoment = this.paceInMoment,
-                paceAverage = this.paceAverage,
-                cadence = this.cadence,
-            )
+    // 1초마다 RealTime 데이터 업데이트
+    private fun postCurrentRunningDataState() {
+        lastLocation?.let {
+            val roundedDistance = (round(totalDistance / 10.0) * 10).toInt()
+
+            _runningDataState.value =
+                RealtimeRunningData(
+                    latitude = it.latitude,
+                    longitude = it.longitude,
+                    altitude = it.altitude,
+                    speed = it.speed,
+                    pace = paceAverage,
+                    cadence = cadence,
+                    totalDistanceMeter = roundedDistance,
+                    duration = durationInSeconds,
+                    timestamp = System.currentTimeMillis(),
+                )
+        }
     }
 
-    // 위치 업데이트 (거리, 페이스 계산)
-    private val locationCallback =
-        object : LocationCallback() {
-            override fun onLocationResult(result: LocationResult) {
-                super.onLocationResult(result)
-
-                updateTotalDistance(result.locations)
-
-                val now = System.currentTimeMillis()
-
-                calculatePaceInMoment(now)
-                calculateAvgPace(now)
+    /**
+     * GPS 데이터 구독하여 거리만 업데이트
+     */
+    private fun startLocationCollection() {
+        locationJob =
+            lifecycleScope.launch {
+                getGpsDataUseCase().collect { result ->
+                    result.onSuccess { newLocation ->
+                        if (!isPaused) {
+                            lastLocation?.let {
+                                totalDistance += it.distanceTo(newLocation)
+                            }
+                            lastLocation = newLocation
+                        }
+                    }
+                }
             }
-        }
+    }
 
-    private fun updateTotalDistance(locations: List<Location>) {
-        locations.forEach { newLocation ->
-            lastLocation?.let { lastLocation ->
-                val distance = lastLocation.distanceTo(newLocation)
-                totalDistance += distance
+    /**
+     * 걸음 수 데이터 구독하여 걸음 수를 누적 업데이트
+     */
+    private fun startStepCollection() {
+        stepJob =
+            lifecycleScope.launch {
+                getStepCountUseCase().collect { result ->
+                    result.onSuccess { stepsSinceResume ->
+                        if (!isPaused) {
+                            currentSteps = stepsBeforePause + stepsSinceResume.toLong()
+                        }
+                    }
+                }
             }
-            lastLocation = newLocation
-        }
     }
 
-    private fun calculatePaceInMoment(now: Long) {
-        // 5초 이상 차이날때만 계산
-        if (now - timeOfLastPaceCalculate >= 5000L) {
-            // 이전 계산 이후 이동한 거리와 시간
-            val distanceGap = totalDistance - distanceAtLastPaceCalculation
-            val timeGap = (now - timeOfLastPaceCalculate) / 1000.0 // 초단위
+    // --- 계산 헬퍼 함수 ---
 
-            // 멈추거나 비정상적인 값 방지
-            if (distanceGap < 2f || timeGap < 1.0) {
-                this.paceInMoment = 0.0
-            } else {
-                val speedInMetersPerSecond = distanceGap / timeGap // 속도
-                this.paceInMoment = (1000 / speedInMetersPerSecond) / 60 // km 당 분 페이스
-            }
-
-            this.timeOfLastPaceCalculate = now
-            this.distanceAtLastPaceCalculation = totalDistance
+    private fun calculateAvgPace(
+        totalDistanceInMeters: Double,
+        durationInSeconds: Int,
+    ): Int {
+        // 거리가 10m 미만이거나 시간이 0이면 페이스 계산 의미 없음
+        if (durationInSeconds <= 0) {
+            return 0
         }
+
+        // (거리 m) / (시간 s) = 초당 미터
+        val speedInMps = totalDistanceInMeters / durationInSeconds
+        if (speedInMps <= 0) return 0
+
+        // 1000m / (초당 가는 미터) = 초/km
+        val secondsPerKilometer = 1000.0 / speedInMps
+        return secondsPerKilometer.toInt()
     }
 
-    private fun calculateAvgPace(now: Long) {
-        val durationInMillis = now - startTimeInMillis
-
-        // 거리 10 미터 이상, 시간 0 이상
-        if (this.totalDistance > 10f && durationInMillis > 0L) {
-            val totalDurationInSeconds = durationInMillis / 1000.0
-            val avgSpeedInMetersPerSecond = this.totalDistance / totalDurationInSeconds // 속도
-            this.paceAverage = (1000 / avgSpeedInMetersPerSecond) / 60 // 평균 페이스
+    private fun calculateAvgCadence(
+        totalSteps: Long,
+        durationInSeconds: Int,
+    ): Int {
+        if (durationInSeconds <= 0L) {
+            return 0
         }
+        val durationInMinutes = durationInSeconds / 60.0
+        return (totalSteps / durationInMinutes).toInt()
     }
 
-    @SuppressLint("MissingPermission")
-    private fun startLocationUpdates() {
-        val locationRequest =
-            LocationRequest
-                .Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000L)
-                .apply {
-                    setMinUpdateIntervalMillis(2000L)
-                    setMaxUpdateDelayMillis(5000L)
-                    setGranularity(Granularity.GRANULARITY_PERMISSION_LEVEL)
-                    setWaitForAccurateLocation(true)
-                }.build()
+    // --- Notification ---
 
-        if (PermissionUtil.hasPermissions(this, SixPackPermissions.LocationPermissions)) {
-            fusedLocationClient.requestLocationUpdates(
-                locationRequest,
-                locationCallback,
-                Looper.getMainLooper(),
-            )
-        }
-    }
-
-    // 3. 걸음 수 측정
-    private fun startStepCounter() {
-        val stepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
-        stepCounter?.let {
-            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
-        }
-    }
-
-    // 센서 측정값의 정확도가 변경됐을때 - 사용 X
-    override fun onAccuracyChanged(
-        sensor: Sensor?,
-        accuracy: Int,
-    ) {}
-
-    // sensorManager.registerListener()에 등록한 센서가 새로운 측정값을 생성했을때
-    override fun onSensorChanged(event: SensorEvent?) {
-        if (event?.sensor?.type == Sensor.TYPE_STEP_COUNTER) {
-            val totalSteps = event.values[0].toLong()
-            if (this.initialSteps == -1L) {
-                this.initialSteps = totalSteps
-            }
-            this.currentSteps = totalSteps - this.initialSteps
-
-            calculateAvgCadence()
-        }
-    }
-
-    private fun calculateAvgCadence() {
-        val durationInMillis = System.currentTimeMillis() - startTimeInMillis
-        if (durationInMillis == 0L || this.currentSteps == 0L) {
-            return
-        }
-        val durationInMinutes = durationInMillis / 1000.0 / 60.0
-        this.cadence = (this.currentSteps / durationInMinutes).toInt()
-    }
-
-    private fun updateNotification(durationInMillis: Long) {
+    private fun updateNotification(durationInSeconds: Int) {
         val notification =
             baseNotificationBuilder
-                .setContentText(TimeUtil.formatMillisWithDuration(durationInMillis))
+                .setContentText(TimeUtil.formatMillisWithDuration(durationInSeconds * 1000L))
                 .build()
         notificationManager.notify(NOTIFICATION_ID, notification)
     }
@@ -314,5 +275,14 @@ class RunningService :
                 NotificationManager.IMPORTANCE_LOW,
             )
         notificationManager.createNotificationChannel(channel)
+    }
+
+    inner class RunningBinder : Binder() {
+        fun getService(): RunningService = this@RunningService
+    }
+
+    override fun onBind(intent: Intent): IBinder {
+        super.onBind(intent)
+        return binder
     }
 }
