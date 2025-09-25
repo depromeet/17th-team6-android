@@ -1,7 +1,7 @@
 package com.dpm.sixpack.data.source.remote.dto.response
 
 import android.annotation.SuppressLint
-import com.dpm.sixpack.domain.model.RunningSessionGoal
+import com.dpm.sixpack.domain.model.total.RunningTotalGoal
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -14,34 +14,42 @@ data class TodayGoalResponseDto(
     val createdAt: String,
     @SerialName("updatedAt")
     val updatedAt: String,
-    @SerialName("title")
-    val title: String,
-    @SerialName("startedAt")
-    val startedAt: String,
-    @SerialName("endedAt")
-    val endedAt: String,
+    @SerialName("pausedAt")
+    val pausedAt: String? = null,
     @SerialName("clearedAt")
     val clearedAt: String? = null,
+    @SerialName("title")
+    val title: String,
+    @SerialName("subTitle")
+    val subTitle: String? = null,
+    @SerialName("type")
+    val type: String,
     @SerialName("pace")
     val pace: Int,
     @SerialName("distance")
     val distance: Int,
     @SerialName("duration")
     val duration: Int,
-    @SerialName("repeatType")
-    val repeatType: String,
-    @SerialName("repeatFrequency")
-    val repeatFrequency: Int,
+    @SerialName("totalRoundCount")
+    val totalRoundCount: Int,
+    @SerialName("clearedRoundCount")
+    val clearedRoundCount: Int,
 ) {
-    // TODO FIXME - 실제 데이터로 변경
-    fun toRunningGoal(): RunningSessionGoal =
-        RunningSessionGoal(
+
+    fun toRunningTotalGoal(): RunningTotalGoal =
+        RunningTotalGoal(
             id = id,
-            sessionNumber = 0,
-            warmUpDuration = 0,
-            mainRunningDuration = duration,
-            mainRunningDistance = distance,
-            mainRunningPace = pace,
-            coolDownDuration = 0,
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+            pausedAt = pausedAt,
+            clearedAt = clearedAt,
+            title = title,
+            subTitle = subTitle.orEmpty(),
+            type = type,
+            pace = pace,
+            distance = distance,
+            duration = duration,
+            totalRoundCount = totalRoundCount,
+            clearedRoundCount = clearedRoundCount
         )
 }

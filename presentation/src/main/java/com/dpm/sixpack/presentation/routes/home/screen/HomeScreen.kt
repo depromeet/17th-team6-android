@@ -114,7 +114,6 @@ private fun HomeScreenPreview() {
         HomeScreen(
             uiState = HomeScreenState(
                 totalGoalComponentState = HomeTotalGoalComponentState(
-                    loading = false,
                     imageRes = R.drawable.ill_marathon_10km,
                     title = "이번 달 목표",
                     distance = "10km",
@@ -124,7 +123,6 @@ private fun HomeScreenPreview() {
                     completedSessionCount = 4
                 ),
                 sessionComponentState = HomeSessionComponentState(
-                    loading = false,
                     sessionCount = 3,
                     cheerUpStringRes = R.string.home_goal_cheer_up_1_25,
                     distance = "5km",
