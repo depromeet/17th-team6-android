@@ -1,5 +1,6 @@
 package com.dpm.sixpack.presentation.routes.onboarding.component
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -13,6 +14,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 fun OnboardingNextButton(
+    @StringRes text: Int = R.string.button_default_next,
     onClick: () -> Unit,
     enabled: Boolean,
     modifier: Modifier = Modifier,
@@ -32,7 +34,7 @@ fun OnboardingNextButton(
         }
 
     DoRunDefaultButton(
-        text = stringResource(R.string.button_default_next),
+        text = stringResource(text),
         onClick = onClick,
         modifier = modifier,
         enabled = enabled,

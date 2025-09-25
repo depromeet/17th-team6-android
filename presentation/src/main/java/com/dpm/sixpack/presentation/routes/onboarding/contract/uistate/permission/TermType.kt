@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.onboarding.permission.contract.uistate
+package com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.permission
 
 import androidx.annotation.StringRes
 import com.dpm.sixpack.presentation.R
