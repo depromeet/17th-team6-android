@@ -19,9 +19,9 @@ import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunTotalGoalProgress
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
-import com.dpm.sixpack.presentation.routes.home.component.total.sub.TextButtonWithIcon
 import com.dpm.sixpack.presentation.routes.home.component.total.item.HomeTotalGoalInformationItem
 import com.dpm.sixpack.presentation.routes.home.component.total.sub.HomeTotalGoalCompletedSubComponent
+import com.dpm.sixpack.presentation.routes.home.component.total.sub.TextButtonWithIcon
 import com.dpm.sixpack.presentation.routes.home.contract.HomeTotalGoalComponentState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
@@ -30,22 +30,24 @@ fun HomeTotalGoalComponent(
     modifier: Modifier = Modifier,
     totalGoalCompleted: Boolean = false,
     state: HomeTotalGoalComponentState,
-    onNavigateToGoalList: () -> Unit = {}
+    onNavigateToGoalList: () -> Unit = {},
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 24.dp, horizontal = 20.dp)
-            .padding()
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(vertical = 24.dp, horizontal = 20.dp)
+                .padding(),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 state.imageRes?.let {
                     Image(
@@ -57,64 +59,67 @@ fun HomeTotalGoalComponent(
                 Text(
                     text = state.title,
                     style = SixpackTheme.typography.t1Bold,
-                    color = SixpackTheme.colors.gray900
+                    color = SixpackTheme.colors.gray900,
                 )
             }
 
             TextButtonWithIcon(
                 title = stringResource(R.string.home_goal_list),
-                onClick = onNavigateToGoalList
+                onClick = onNavigateToGoalList,
             )
         }
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             HomeTotalGoalInformationItem(
                 modifier = Modifier,
                 value = state.distance,
-                title = stringResource(R.string.home_goal_distance)
+                title = stringResource(R.string.home_goal_distance),
             )
             VerticalDivider(
                 modifier = Modifier.height(20.dp),
                 color = SixpackTheme.colors.gray100,
-                thickness = 1.dp
+                thickness = 1.dp,
             )
             HomeTotalGoalInformationItem(
                 modifier = Modifier,
                 value = state.duration,
-                title = stringResource(R.string.home_goal_distance)
+                title = stringResource(R.string.home_goal_distance),
             )
             VerticalDivider(
                 modifier = Modifier.height(20.dp),
                 color = SixpackTheme.colors.gray100,
-                thickness = 1.dp
+                thickness = 1.dp,
             )
             HomeTotalGoalInformationItem(
                 modifier = Modifier,
                 value = state.pace,
-                title = stringResource(R.string.home_goal_distance)
+                title = stringResource(R.string.home_goal_distance),
             )
         }
 
         DoRunTotalGoalProgress(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
             current = state.safeCurrentSessionCount,
             total = state.safeTotalSessionCount,
-            progress = state.sessionProgress
+            progress = state.sessionProgress,
         )
 
         if (totalGoalCompleted) {
             HomeTotalGoalCompletedSubComponent(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
             )
         }
     }
@@ -125,15 +130,16 @@ fun HomeTotalGoalComponent(
 private fun HomeTotalGoalComponentPreview() {
     DoRunPreviewWrapper {
         HomeTotalGoalComponent(
-            state = HomeTotalGoalComponentState(
-                title = "이번 달 목표",
-                imageRes = R.drawable.ill_marathon_10km,
-                distance = "5.0km",
-                duration = "01:00:00",
-                pace = "6'00\"",
-                totalSessionCount = 20,
-                completedSessionCount = 4
-            )
+            state =
+                HomeTotalGoalComponentState(
+                    title = "이번 달 목표",
+                    imageRes = R.drawable.ill_marathon_10km,
+                    distance = "5.0km",
+                    duration = "01:00:00",
+                    pace = "6'00\"",
+                    totalSessionCount = 20,
+                    completedSessionCount = 4,
+                ),
         )
     }
 }
@@ -144,16 +150,16 @@ private fun HomeTotalGoalComponentCompletedPreview() {
     DoRunPreviewWrapper {
         HomeTotalGoalComponent(
             totalGoalCompleted = true,
-            state = HomeTotalGoalComponentState(
-                title = "이번 달 목표",
-                imageRes = R.drawable.ill_marathon_10km,
-                distance = "5.0km",
-                duration = "01:00:00",
-                pace = "6'00\"",
-                totalSessionCount = 20,
-                completedSessionCount = 4
-            )
+            state =
+                HomeTotalGoalComponentState(
+                    title = "이번 달 목표",
+                    imageRes = R.drawable.ill_marathon_10km,
+                    distance = "5.0km",
+                    duration = "01:00:00",
+                    pace = "6'00\"",
+                    totalSessionCount = 20,
+                    completedSessionCount = 4,
+                ),
         )
     }
 }
-

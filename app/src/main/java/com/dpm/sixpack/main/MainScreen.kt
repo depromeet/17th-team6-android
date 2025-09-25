@@ -66,7 +66,7 @@ internal fun MainScreenContent(
                 },
             )
         },
-        containerColor = SixpackTheme.colors.gray0
+        containerColor = SixpackTheme.colors.gray0,
     ) { paddingValue ->
         MainNavHost(
             appState = appState,

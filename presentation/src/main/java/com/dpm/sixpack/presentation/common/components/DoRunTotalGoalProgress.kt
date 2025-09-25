@@ -30,10 +30,8 @@ fun DoRunTotalGoalProgress(
     modifier: Modifier = Modifier,
     current: Int,
     total: Int,
-    progress: Float
+    progress: Float,
 ) {
-
-
     val progressColor = SixpackTheme.colors.blue600
     val trackColor = SixpackTheme.colors.gray100
     val textDimColor = SixpackTheme.colors.gray400
@@ -41,33 +39,34 @@ fun DoRunTotalGoalProgress(
     val animatedProgress by animateFloatAsState(
         targetValue = progress,
         animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing),
-        label = "goalProgressAnim"
+        label = "goalProgressAnim",
     )
 
     Column(modifier = modifier) {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = stringResource(R.string.common_session_count).format(current),
                 style = SixpackTheme.typography.b1Bold,
-                color = progressColor
+                color = progressColor,
             )
             Text(
                 modifier = Modifier.padding(start = 4.dp),
                 text = stringResource(R.string.common_session_total_count).format(total),
                 style = SixpackTheme.typography.c1Regular,
-                color = textDimColor
+                color = textDimColor,
             )
         }
         Canvas(
-            modifier = Modifier
-                .padding(top = 6.dp)
-                .fillMaxWidth()
-                .height(10.dp)
-                .semantics {
-                    contentDescription = "진행도 ${current}회차, 총 ${total}회"
-                }
+            modifier =
+                Modifier
+                    .padding(top = 6.dp)
+                    .fillMaxWidth()
+                    .height(10.dp)
+                    .semantics {
+                        contentDescription = "진행도 ${current}회차, 총 ${total}회"
+                    },
         ) {
             val radius = size.height / 2f
 
@@ -75,14 +74,14 @@ fun DoRunTotalGoalProgress(
             drawRoundRect(
                 color = trackColor,
                 size = Size(size.width, size.height),
-                cornerRadius = CornerRadius(radius, radius)
+                cornerRadius = CornerRadius(radius, radius),
             )
 
             // Progress
             drawRoundRect(
                 color = progressColor,
                 size = Size(size.width * animatedProgress, size.height),
-                cornerRadius = CornerRadius(radius, radius)
+                cornerRadius = CornerRadius(radius, radius),
             )
         }
     }
@@ -95,11 +94,12 @@ private fun DoRunTotalGoalProgressPreview() {
     val total = 20
     DoRunPreviewWrapper {
         DoRunTotalGoalProgress(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .fillMaxWidth(),
             current = current,
             total = total,
-            progress = current / total.toFloat()
+            progress = current / total.toFloat(),
         )
     }
 }

@@ -16,7 +16,7 @@ fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel(),
     onNavigateToSession: (sessionId: Long) -> Unit,
     onNavigateToGoalList: (goalId: Long) -> Unit,
-    onNavigateToGoalEdit: () -> Unit
+    onNavigateToGoalEdit: () -> Unit,
 ) {
     val screenState by viewModel.collectAsState()
 
@@ -50,6 +50,6 @@ fun HomeRoute(
         },
         onNavigateToGoalEdit = {
             viewModel.onIntent(HomeIntent.GoalEdit)
-        }
+        },
     )
 }

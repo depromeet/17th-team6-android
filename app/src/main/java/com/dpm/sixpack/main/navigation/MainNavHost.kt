@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.dpm.sixpack.SixPackAppState
-import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
 import com.dpm.sixpack.presentation.routes.home.navigation.addHomeNavGraph
+import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
 import com.dpm.sixpack.presentation.routes.session.navigation.addRunningNavGraph
 import timber.log.Timber
 
@@ -40,7 +40,7 @@ internal fun MainNavHost(
                 },
                 onNavigateToGoalEdit = {
                     Timber.d("SR-N onNavigateToGoalEdit")
-                }
+                },
             )
 
             addRunningNavGraph()

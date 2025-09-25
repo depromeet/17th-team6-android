@@ -16,5 +16,5 @@ data class RunningTotalGoal(
     val distance: Int,
     val duration: Int,
     val totalRoundCount: Int,
-    val clearedRoundCount: Int
+    val clearedRoundCount: Int,
 )

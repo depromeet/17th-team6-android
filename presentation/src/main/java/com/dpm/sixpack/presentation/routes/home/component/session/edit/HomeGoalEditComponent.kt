@@ -21,39 +21,39 @@ import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
-
 @Composable
 fun HomeGoalEditComponent(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     Column(
-        modifier = modifier
-            .widthIn(min = 335.dp)
-            .background(
-                color = SixpackTheme.colors.gray0,
-                shape = SixpackTheme.shapes.round16
-            )
-            .padding(20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier =
+            modifier
+                .widthIn(min = 335.dp)
+                .background(
+                    color = SixpackTheme.colors.gray0,
+                    shape = SixpackTheme.shapes.round16,
+                ).padding(20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Image(
             painter = painterResource(R.drawable.ill_goal_edit_character),
-            contentDescription = "목표 편집 일러스트" // TODO: 접근성 resource 추가
+            contentDescription = "목표 편집 일러스트", // TODO: 접근성 resource 추가
         )
         Text(
             modifier = Modifier.padding(top = 12.dp),
             text = stringResource(R.string.home_goal_edit_description),
             style = SixpackTheme.typography.b1Medium,
             color = SixpackTheme.colors.gray900,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
 
         DoRunDefaultButton(
-            modifier = Modifier
-                .heightIn(min = 56.dp)
-                .fillMaxWidth()
-                .padding(top = 20.dp),
+            modifier =
+                Modifier
+                    .heightIn(min = 56.dp)
+                    .fillMaxWidth()
+                    .padding(top = 20.dp),
             text = stringResource(R.string.home_goal_edit),
             onClick = onClick,
         )

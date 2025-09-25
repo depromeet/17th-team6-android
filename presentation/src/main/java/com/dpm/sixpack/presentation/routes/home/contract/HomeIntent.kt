@@ -2,7 +2,6 @@ package com.dpm.sixpack.presentation.routes.home.contract
 
 import com.dpm.sixpack.presentation.common.base.UiIntent
 
-
 sealed interface HomeIntent : UiIntent {
     data object GoalList : HomeIntent
 

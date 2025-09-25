@@ -10,5 +10,5 @@ data class RunningSessionGoal(
     val distance: Int,
     val duration: Int,
     val roundCount: Int,
-    val previousSessionId: Long
+    val previousSessionId: Long,
 )

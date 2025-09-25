@@ -12,8 +12,8 @@ import javax.inject.Inject
 class GetHomeUseCase @Inject constructor(
     private val runningGoalRepository: RunningGoalRepository,
 ) {
-    suspend operator fun invoke(): DoRunResult<Home> {
-        return withContext(Dispatchers.IO) {
+    suspend operator fun invoke(): DoRunResult<Home> =
+        withContext(Dispatchers.IO) {
             val total = async { runningGoalRepository.getRunningTotalGoal() }
             val todaySession = async { runningGoalRepository.getTodayRunningSessionGoal() }
 
@@ -25,8 +25,8 @@ class GetHomeUseCase @Inject constructor(
                     DoRunResult.Success(
                         Home(
                             runningTotalGoal = totalResult.data,
-                            sessionGoal = todaySessionResult.data
-                        )
+                            sessionGoal = todaySessionResult.data,
+                        ),
                     )
                 }
 
@@ -35,5 +35,4 @@ class GetHomeUseCase @Inject constructor(
                 }
             }
         }
-    }
 }

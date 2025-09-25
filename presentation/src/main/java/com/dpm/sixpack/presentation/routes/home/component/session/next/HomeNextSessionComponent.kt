@@ -27,75 +27,78 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 fun HomeNextSessionComponent(
     modifier: Modifier = Modifier,
     state: HomeSessionComponentState,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     Column(
-        modifier = modifier
-            .widthIn(min = 335.dp)
-            .background(
-                color = SixpackTheme.colors.gray0,
-                shape = SixpackTheme.shapes.round16
-            )
-            .padding(20.dp)
+        modifier =
+            modifier
+                .widthIn(min = 335.dp)
+                .background(
+                    color = SixpackTheme.colors.gray0,
+                    shape = SixpackTheme.shapes.round16,
+                ).padding(20.dp),
     ) {
         Text(
-            text = stringResource(R.string.home_goal_session_count)
-                .format(state.sessionCount),
+            text =
+                stringResource(R.string.home_goal_session_count)
+                    .format(state.sessionCount),
             style = SixpackTheme.typography.t2Bold,
-            color = SixpackTheme.colors.gray900
+            color = SixpackTheme.colors.gray900,
         )
         state.cheerUpStringRes?.let {
             Text(
                 modifier = Modifier.padding(top = 4.dp),
                 text = stringResource(it),
                 style = SixpackTheme.typography.b2Regular,
-                color = SixpackTheme.colors.gray900
+                color = SixpackTheme.colors.gray900,
             )
         }
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 24.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 24.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceAround
+            horizontalArrangement = Arrangement.SpaceAround,
         ) {
             HomeNextSessionInformationItem(
                 iconRes = R.drawable.ic_distance,
                 value = state.distance,
                 title = stringResource(R.string.home_goal_distance),
-                contentDescription = "목표 거리 아이콘" // TODO: 접근성 resource
+                contentDescription = "목표 거리 아이콘", // TODO: 접근성 resource
             )
             VerticalDivider(
                 modifier = Modifier.height(40.dp),
                 color = SixpackTheme.colors.gray100,
-                thickness = 1.dp
+                thickness = 1.dp,
             )
             HomeNextSessionInformationItem(
                 iconRes = R.drawable.ic_duration,
                 value = state.duration,
                 title = stringResource(R.string.common_recommended_duration),
-                contentDescription = "목표 시간 아이콘" // TODO: 접근성 resource
+                contentDescription = "목표 시간 아이콘", // TODO: 접근성 resource
             )
             VerticalDivider(
                 modifier = Modifier.height(40.dp),
                 color = SixpackTheme.colors.gray100,
-                thickness = 1.dp
+                thickness = 1.dp,
             )
             HomeNextSessionInformationItem(
                 iconRes = R.drawable.ic_pace,
                 value = state.pace,
                 title = stringResource(R.string.common_recommended_pace),
-                contentDescription = "목표 페이스 아이콘" // TODO: 접근성 resource
+                contentDescription = "목표 페이스 아이콘", // TODO: 접근성 resource
             )
         }
 
         DoRunDefaultButton(
             text = stringResource(R.string.home_goal_run),
             onClick = { onClick() },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 24.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 24.dp),
         )
     }
 }
@@ -105,13 +108,14 @@ fun HomeNextSessionComponent(
 private fun HomeNextSessionComponentPreview() {
     DoRunPreviewWrapper {
         HomeNextSessionComponent(
-            state = HomeSessionComponentState(
-                sessionCount = 3,
-                cheerUpStringRes = R.string.home_goal_cheer_up_1_25,
-                distance = "5.0km",
-                duration = "01:00:00",
-                pace = "6'00\"",
-            )
+            state =
+                HomeSessionComponentState(
+                    sessionCount = 3,
+                    cheerUpStringRes = R.string.home_goal_cheer_up_1_25,
+                    distance = "5.0km",
+                    duration = "01:00:00",
+                    pace = "6'00\"",
+                ),
         )
     }
 }

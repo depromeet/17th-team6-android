@@ -20,20 +20,21 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 fun TextButtonWithIcon(
     title: String,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     Row(
-        modifier = modifier
-            .clip(shape = SixpackTheme.shapes.full)
-            .clickable(onClick = onClick)
-            .padding(vertical = 6.dp)
-            .padding(start = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            modifier
+                .clip(shape = SixpackTheme.shapes.full)
+                .clickable(onClick = onClick)
+                .padding(vertical = 6.dp)
+                .padding(start = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = title,
             style = SixpackTheme.typography.b2Regular,
-            color = SixpackTheme.colors.gray600
+            color = SixpackTheme.colors.gray600,
         )
         Icon(
             painter = painterResource(R.drawable.ic_arrow_right),

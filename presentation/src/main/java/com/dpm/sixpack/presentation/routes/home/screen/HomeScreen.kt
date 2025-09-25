@@ -35,7 +35,7 @@ fun HomeScreen(
     onClickPreviousSession: () -> Unit = {},
     onClickNextSession: () -> Unit = {},
     onNavigateToGoalList: () -> Unit = {},
-    onNavigateToGoalEdit: () -> Unit = {}
+    onNavigateToGoalEdit: () -> Unit = {},
 ) {
     val scrollState = rememberScrollState()
     Scaffold(
@@ -47,59 +47,67 @@ fun HomeScreen(
                     Text(
                         text = stringResource(R.string.home_title),
                         style = SixpackTheme.typography.t1Bold,
-                        color = SixpackTheme.colors.gray900
+                        color = SixpackTheme.colors.gray900,
                     )
                 },
-                colors = TopAppBarDefaults.topAppBarColors()
-                    .copy(containerColor = SixpackTheme.colors.gray0)
+                colors =
+                    TopAppBarDefaults
+                        .topAppBarColors()
+                        .copy(containerColor = SixpackTheme.colors.gray0),
             )
-        }
+        },
     ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .background(color = SixpackTheme.colors.gray50)
-                .fillMaxSize()
-                .padding(paddingValues)
-                .scrollable(
-                    state = scrollState,
-                    orientation = Orientation.Vertical
-                )
+            modifier =
+                Modifier
+                    .background(color = SixpackTheme.colors.gray50)
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .scrollable(
+                        state = scrollState,
+                        orientation = Orientation.Vertical,
+                    ),
         ) {
             HomeTotalGoalComponent(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color = SixpackTheme.colors.gray0),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .background(color = SixpackTheme.colors.gray0),
                 state = uiState.totalGoalComponentState,
-                onNavigateToGoalList = onNavigateToGoalList
+                onNavigateToGoalList = onNavigateToGoalList,
             )
 
             Column(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(top = 18.dp, bottom = 56.dp)
-                    .padding(horizontal = 20.dp)
+                modifier =
+                    modifier
+                        .fillMaxWidth()
+                        .padding(top = 18.dp, bottom = 56.dp)
+                        .padding(horizontal = 20.dp),
             ) {
                 if (uiState.totalGoalCompleted.not()) {
                     HomeNextSessionComponent(
-                        modifier = Modifier
-                            .fillMaxWidth(),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth(),
                         state = uiState.sessionComponentState,
-                        onClick = onClickNextSession
+                        onClick = onClickNextSession,
                     )
 
                     if (uiState.sessionComponentState.showPreviousSession) {
                         HomePreviousSessionComponent(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 16.dp),
-                            onClick = onClickPreviousSession
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 16.dp),
+                            onClick = onClickPreviousSession,
                         )
                     }
                 } else {
                     HomeGoalEditComponent(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        onClick = onNavigateToGoalEdit
+                        modifier =
+                            Modifier
+                                .fillMaxWidth(),
+                        onClick = onNavigateToGoalEdit,
                     )
                 }
             }
@@ -112,25 +120,28 @@ fun HomeScreen(
 private fun HomeScreenPreview() {
     DoRunPreviewWrapper {
         HomeScreen(
-            uiState = HomeScreenState(
-                totalGoalComponentState = HomeTotalGoalComponentState(
-                    imageRes = R.drawable.ill_marathon_10km,
-                    title = "이번 달 목표",
-                    distance = "10km",
-                    duration = "1시간 30분",
-                    pace = "8'30\"",
-                    totalSessionCount = 20,
-                    completedSessionCount = 4
+            uiState =
+                HomeScreenState(
+                    totalGoalComponentState =
+                        HomeTotalGoalComponentState(
+                            imageRes = R.drawable.ill_marathon_10km,
+                            title = "이번 달 목표",
+                            distance = "10km",
+                            duration = "1시간 30분",
+                            pace = "8'30\"",
+                            totalSessionCount = 20,
+                            completedSessionCount = 4,
+                        ),
+                    sessionComponentState =
+                        HomeSessionComponentState(
+                            sessionCount = 3,
+                            cheerUpStringRes = R.string.home_goal_cheer_up_1_25,
+                            distance = "5km",
+                            duration = "45분",
+                            pace = "9'00\"",
+                        ),
+                    totalGoalCompleted = false,
                 ),
-                sessionComponentState = HomeSessionComponentState(
-                    sessionCount = 3,
-                    cheerUpStringRes = R.string.home_goal_cheer_up_1_25,
-                    distance = "5km",
-                    duration = "45분",
-                    pace = "9'00\""
-                ),
-                totalGoalCompleted = false
-            ),
         )
     }
 }

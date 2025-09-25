@@ -35,7 +35,6 @@ data class TodayGoalResponseDto(
     @SerialName("clearedRoundCount")
     val clearedRoundCount: Int,
 ) {
-
     fun toRunningTotalGoal(): RunningTotalGoal =
         RunningTotalGoal(
             id = id,
@@ -50,6 +49,6 @@ data class TodayGoalResponseDto(
             distance = distance,
             duration = duration,
             totalRoundCount = totalRoundCount,
-            clearedRoundCount = clearedRoundCount
+            clearedRoundCount = clearedRoundCount,
         )
 }

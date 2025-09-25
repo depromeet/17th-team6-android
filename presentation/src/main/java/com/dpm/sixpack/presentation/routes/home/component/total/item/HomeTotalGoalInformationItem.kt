@@ -15,23 +15,22 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 fun HomeTotalGoalInformationItem(
     modifier: Modifier = Modifier,
     value: String,
-    title: String
+    title: String,
 ) {
     Column(
-        modifier = modifier.wrapContentSize()
+        modifier = modifier.wrapContentSize(),
     ) {
         Text(
             text = value,
             style = SixpackTheme.typography.h2Bold,
-            color = SixpackTheme.colors.gray900
+            color = SixpackTheme.colors.gray900,
         )
         Text(
             modifier = Modifier.padding(top = 2.dp),
             text = title,
             style = SixpackTheme.typography.c1Regular,
-            color = SixpackTheme.colors.gray600
+            color = SixpackTheme.colors.gray600,
         )
-
     }
 }
 
@@ -41,7 +40,7 @@ private fun HomeTotalGoalInformationItemPreview() {
     DoRunPreviewWrapper {
         HomeTotalGoalInformationItem(
             value = "5.0km",
-            title = "목표 거리"
+            title = "목표 거리",
         )
     }
 }

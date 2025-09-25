@@ -13,7 +13,6 @@ import androidx.navigation.navOptions
 import com.dpm.sixpack.presentation.destinations.MainRoute
 import com.dpm.sixpack.presentation.destinations.OnboardingRoute
 import com.dpm.sixpack.presentation.destinations.Route
-import com.dpm.sixpack.presentation.destinations.RunningRoute
 import com.dpm.sixpack.presentation.navigation.MainNavTab
 import com.dpm.sixpack.presentation.routes.home.navigation.navigateHome
 import com.dpm.sixpack.presentation.routes.onboarding.navigation.navigateOnboarding

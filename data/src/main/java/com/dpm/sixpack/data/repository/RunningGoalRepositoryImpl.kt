@@ -13,9 +13,8 @@ import javax.inject.Inject
 class RunningGoalRepositoryImpl @Inject constructor(
     private val runningGoalDataSource: RunningGoalDataSource,
 ) : RunningGoalRepository {
-    override suspend fun getTodayRunningSessionGoal(): DoRunResult<RunningSessionGoal> {
-        return DoRunResult.Failure(DoRunException.DataError("네트워크 요청에 실패했습니다"))
-    }
+    override suspend fun getTodayRunningSessionGoal(): DoRunResult<RunningSessionGoal> =
+        DoRunResult.Failure(DoRunException.DataError("네트워크 요청에 실패했습니다"))
 
     override suspend fun getRunningTotalGoal(): DoRunResult<RunningTotalGoal> =
         withContext(Dispatchers.IO) {
@@ -34,8 +33,8 @@ class RunningGoalRepositoryImpl @Inject constructor(
 }
 
 class MockRunningGoalRepositoryImpl @Inject constructor() : RunningGoalRepository {
-    override suspend fun getRunningTotalGoal(): DoRunResult<RunningTotalGoal> {
-        return DoRunResult.Success(
+    override suspend fun getRunningTotalGoal(): DoRunResult<RunningTotalGoal> =
+        DoRunResult.Success(
             RunningTotalGoal(
                 id = 1L,
                 createdAt = "2023-10-10T10:00:00Z",
@@ -49,13 +48,12 @@ class MockRunningGoalRepositoryImpl @Inject constructor() : RunningGoalRepositor
                 distance = 5000,
                 duration = 1800,
                 totalRoundCount = 5,
-                clearedRoundCount = 2
-            )
+                clearedRoundCount = 2,
+            ),
         )
-    }
 
-    override suspend fun getTodayRunningSessionGoal(): DoRunResult<RunningSessionGoal> {
-        return DoRunResult.Success(
+    override suspend fun getTodayRunningSessionGoal(): DoRunResult<RunningSessionGoal> =
+        DoRunResult.Success(
             RunningSessionGoal(
                 id = 3L,
                 createdAt = "2023-10-10T10:00:00Z",
@@ -66,8 +64,7 @@ class MockRunningGoalRepositoryImpl @Inject constructor() : RunningGoalRepositor
                 duration = 1200,
                 roundCount = 3,
                 previousSessionId = 2L,
-                goalId = 1
-            )
+                goalId = 1,
+            ),
         )
-    }
 }

@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val getHomeUseCase: GetHomeUseCase
+    private val getHomeUseCase: GetHomeUseCase,
 ) : BaseViewModel<HomeScreenState, HomeIntent, HomeSideEffect>() {
     override val initialState: HomeScreenState = HomeScreenState()
 
@@ -30,7 +30,6 @@ class HomeViewModel @Inject constructor(
     private var cachedNextSessionId: Long? = null
     private var cachedPreviousSessionId: Long? = null
 
-
     init {
         initializeState()
     }
@@ -39,10 +38,12 @@ class HomeViewModel @Inject constructor(
         intent {
             val home = getHomeUseCase()
             val data = (home as? DoRunResult.Success)?.data
-            val totalGoal = data?.runningTotalGoal?.asHomeTotalGoalComponentState()
-                ?: HomeTotalGoalComponentState()
-            val sessionGoal = data?.sessionGoal?.asHomeSessionComponentState(totalGoal.safeTotalSessionCount)
-                ?: HomeSessionComponentState()
+            val totalGoal =
+                data?.runningTotalGoal?.asHomeTotalGoalComponentState()
+                    ?: HomeTotalGoalComponentState()
+            val sessionGoal =
+                data?.sessionGoal?.asHomeSessionComponentState(totalGoal.safeTotalSessionCount)
+                    ?: HomeSessionComponentState()
 
             cachedGoalId = data?.runningTotalGoal?.id
             cachedNextSessionId = data?.sessionGoal?.id
@@ -53,7 +54,7 @@ class HomeViewModel @Inject constructor(
                     loading = false,
                     totalGoalComponentState = totalGoal,
                     sessionComponentState = sessionGoal,
-                    totalGoalCompleted = totalGoal.safeTotalSessionCount == totalGoal.safeCurrentSessionCount
+                    totalGoalCompleted = totalGoal.safeTotalSessionCount == totalGoal.safeCurrentSessionCount,
                 )
             }
         }

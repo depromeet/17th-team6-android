@@ -16,27 +16,26 @@ import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
-
 @Composable
 fun HomeTotalGoalCompletedSubComponent(modifier: Modifier = Modifier) {
     Row(
-        modifier = modifier
-            .background(
-                color = SixpackTheme.colors.blue100,
-                shape = SixpackTheme.shapes.round16
-            )
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            modifier
+                .background(
+                    color = SixpackTheme.colors.blue100,
+                    shape = SixpackTheme.shapes.round16,
+                ).padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Image(
             painter = painterResource(R.drawable.ill_congratulation),
-            contentDescription = "축하 일러스트" // TODO: 접근성 resource 추가
+            contentDescription = "축하 일러스트", // TODO: 접근성 resource 추가
         )
         Text(
             modifier = Modifier.padding(start = 8.dp),
             text = stringResource(R.string.home_goal_achieve),
             style = SixpackTheme.typography.b1Medium,
-            color = SixpackTheme.colors.gray900
+            color = SixpackTheme.colors.gray900,
         )
     }
 }

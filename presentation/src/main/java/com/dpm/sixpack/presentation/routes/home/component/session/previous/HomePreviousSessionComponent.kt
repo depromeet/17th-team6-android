@@ -24,33 +24,33 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 @Composable
 fun HomePreviousSessionComponent(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     Row(
-        modifier = modifier
-            .widthIn(min = 335.dp)
-            .background(
-                color = SixpackTheme.colors.gray0,
-                shape = SixpackTheme.shapes.round16
-            )
-            .clip(shape = SixpackTheme.shapes.round16)
-            .clickable(onClick = onClick)
-            .padding(16.dp),
+        modifier =
+            modifier
+                .widthIn(min = 335.dp)
+                .background(
+                    color = SixpackTheme.colors.gray0,
+                    shape = SixpackTheme.shapes.round16,
+                ).clip(shape = SixpackTheme.shapes.round16)
+                .clickable(onClick = onClick)
+                .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         ) {
             Text(
                 text = stringResource(R.string.home_goal_run_again_title_condition),
                 style = SixpackTheme.typography.b2Regular,
-                color = SixpackTheme.colors.gray600
+                color = SixpackTheme.colors.gray600,
             )
             Text(
                 text = stringResource(R.string.home_goal_run_again_title),
                 style = SixpackTheme.typography.t2Bold,
-                color = SixpackTheme.colors.gray900
+                color = SixpackTheme.colors.gray900,
             )
         }
         Image(
@@ -59,7 +59,6 @@ fun HomePreviousSessionComponent(
         )
     }
 }
-
 
 @Preview
 @Composable

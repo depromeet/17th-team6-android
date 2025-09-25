@@ -25,24 +25,24 @@ fun HomeNextSessionInformationItem(
 ) {
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Icon(
             painter = painterResource(iconRes),
             contentDescription = contentDescription, // TODO: 접근성 resource
-            tint = SixpackTheme.colors.gray300
+            tint = SixpackTheme.colors.gray300,
         )
         Text(
             modifier = Modifier.padding(top = 8.dp),
             text = value,
             style = SixpackTheme.typography.t1Bold,
-            color = SixpackTheme.colors.gray900
+            color = SixpackTheme.colors.gray900,
         )
         Text(
             modifier = Modifier.padding(top = 2.dp),
             text = title,
             style = SixpackTheme.typography.c1Regular,
-            color = SixpackTheme.colors.gray600
+            color = SixpackTheme.colors.gray600,
         )
     }
 }
@@ -54,7 +54,7 @@ private fun HomeNextSessionInformationItemPreview() {
         HomeNextSessionInformationItem(
             iconRes = R.drawable.ic_distance,
             value = "5.0km",
-            title = "목표 거리"
+            title = "목표 거리",
         )
     }
 }

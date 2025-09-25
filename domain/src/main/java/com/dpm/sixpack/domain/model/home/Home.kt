@@ -5,5 +5,5 @@ import com.dpm.sixpack.domain.model.total.RunningTotalGoal
 
 data class Home(
     val runningTotalGoal: RunningTotalGoal,
-    val sessionGoal: RunningSessionGoal
+    val sessionGoal: RunningSessionGoal,
 )
