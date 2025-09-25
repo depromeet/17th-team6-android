@@ -13,87 +13,115 @@ import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 
-class MockGpsRepository
-    @Inject
-    constructor() : GpsRepository {
-        // --- 시뮬레이션 설정값 ---
-        companion object {
-            private const val START_LATITUDE = 37.566689
-            private const val START_LONGITUDE = 126.978181
-            private const val SPEED_METERS_PER_SECOND = 2.8f
-            private const val BEARING_DEGREES = 0f
-            private const val UPDATE_INTERVAL_MS = 1000L
-            private const val EARTH_RADIUS_METERS = 6371000.0
-        }
+class MockGpsRepository @Inject constructor() : GpsRepository {
+    // --- 시뮬레이션 설정값 ---
+    companion object {
+        private const val START_LATITUDE = 37.566689
+        private const val START_LONGITUDE = 126.978181
+        private const val BEARING_DEGREES = 0f
+        private const val UPDATE_INTERVAL_MS = 1000L
+        private const val EARTH_RADIUS_METERS = 6371000.0
 
-        override fun getLocationFlow(): Flow<DoRunResult<Location>> =
-            flow {
-                var currentLocation = createMockLocation(START_LATITUDE, START_LONGITUDE, SPEED_METERS_PER_SECOND)
+        private const val START_PACE_MIN_PER_KM = 8.0 // 시작 페이스 (8:00)
+        private const val END_PACE_MIN_PER_KM = 4.0 // 목표 페이스 (4:00)
+        private const val ACCELERATION_DURATION_SECONDS = 60.0 // 가속에 걸리는 시간 (1분)
 
-                val distancePerTick = SPEED_METERS_PER_SECOND * (UPDATE_INTERVAL_MS / 1000.0)
-
-                while (true) {
-                    emit(DoRunResult.Success(currentLocation))
-
-                    delay(UPDATE_INTERVAL_MS)
-
-                    // 다음 위치를 Location 객체로 직접 계산
-                    currentLocation =
-                        calculateNewLocation(
-                            startPoint = currentLocation,
-                            distanceMeters = distancePerTick,
-                            bearingDegrees = BEARING_DEGREES,
-                        )
-                }
-            }
-
-        /**
-         * 시작 Location, 거리, 방향을 기반으로 새로운 Location 객체를 계산합니다.
-         */
-        private fun calculateNewLocation(
-            startPoint: Location,
-            distanceMeters: Double,
-            bearingDegrees: Float,
-        ): Location {
-            val latRad = Math.toRadians(startPoint.latitude)
-            val lonRad = Math.toRadians(startPoint.longitude)
-            val bearingRad = Math.toRadians(bearingDegrees.toDouble())
-            val angularDistance = distanceMeters / EARTH_RADIUS_METERS
-
-            val newLatRad =
-                asin(
-                    sin(latRad) * cos(angularDistance) +
-                        cos(latRad) * sin(angularDistance) * cos(bearingRad),
-                )
-            val newLat = Math.toDegrees(newLatRad)
-
-            val newLonRad =
-                lonRad +
-                    atan2(
-                        sin(bearingRad) * sin(angularDistance) * cos(latRad),
-                        cos(angularDistance) - sin(latRad) * sin(newLatRad),
-                    )
-            val newLon = Math.toDegrees(newLonRad)
-
-            // 계산된 위도/경도로 새로운 Location 객체를 생성하여 반환
-            return createMockLocation(newLat, newLon, startPoint.speed)
-        }
-
-        /**
-         * Location 객체를 생성하는 헬퍼 함수
-         */
-        private fun createMockLocation(
-            lat: Double,
-            lon: Double,
-            speed: Float,
-        ): Location =
-            Location("FakeGpsProvider").apply {
-                latitude = lat
-                longitude = lon
-                altitude = 30.0
-                this.speed = speed
-                accuracy = 1.0f
-                time = System.currentTimeMillis()
-                elapsedRealtimeNanos = SystemClock.elapsedRealtimeNanos()
-            }
+        // 페이스를 m/s 속도로 변환
+        private val START_SPEED_MPS = 1000.0 / (START_PACE_MIN_PER_KM * 60.0) // 약 2.08 m/s
+        private val END_SPEED_MPS = 1000.0 / (END_PACE_MIN_PER_KM * 60.0) // 약 4.17 m/s
     }
+
+    override fun getLocationFlow(): Flow<DoRunResult<Location>> =
+        flow {
+            var currentLatitude = START_LATITUDE
+            var currentLongitude = START_LONGITUDE
+            var elapsedSeconds = 0.0
+
+            while (true) {
+                // 순간 속도 계산
+                val currentSpeed = calculateCurrentSpeed(elapsedSeconds)
+
+                // 2. 현재 위치와 계산된 속도로 Location 객체 생성
+                val currentLocation = createMockLocation(currentLatitude, currentLongitude, currentSpeed.toFloat())
+                emit(DoRunResult.Success(currentLocation))
+
+                // 3. 현재 속도를 기반으로 다음 1초 동안 이동할 거리 계산
+                val distancePerTick = currentSpeed * (UPDATE_INTERVAL_MS / 1000.0)
+
+                // 4. 다음 위치 계산
+                val newCoords =
+                    calculateNewCoordinates(
+                        currentLatitude,
+                        currentLongitude,
+                        distancePerTick,
+                        BEARING_DEGREES,
+                    )
+                currentLatitude = newCoords.first
+                currentLongitude = newCoords.second
+
+                // 5. 시간 업데이트 및 딜레이
+                delay(UPDATE_INTERVAL_MS)
+                elapsedSeconds += (UPDATE_INTERVAL_MS / 1000.0)
+            }
+        }
+
+    /**
+     * 경과 시간에 따라 현재 속도를 선형 보간하여 계산합니다.
+     */
+    private fun calculateCurrentSpeed(elapsedSeconds: Double): Double {
+        if (elapsedSeconds >= ACCELERATION_DURATION_SECONDS) {
+            return END_SPEED_MPS // 목표 시간 도달 후 최고 속도 유지
+        }
+        // 진행률 (0.0 ~ 1.0)
+        val fraction = elapsedSeconds / ACCELERATION_DURATION_SECONDS
+        // 시작 속도와 끝 속도 사이를 보간
+        return START_SPEED_MPS * (1.0 - fraction) + END_SPEED_MPS * fraction
+    }
+
+    /**
+     * 시작 좌표, 거리, 방향을 기반으로 새로운 위도/경도를 계산합니다.
+     */
+    private fun calculateNewCoordinates(
+        startLat: Double,
+        startLon: Double,
+        distanceMeters: Double,
+        bearingDegrees: Float,
+    ): Pair<Double, Double> {
+        val latRad = Math.toRadians(startLat)
+        val lonRad = Math.toRadians(startLon)
+        val bearingRad = Math.toRadians(bearingDegrees.toDouble())
+        val angularDistance = distanceMeters / EARTH_RADIUS_METERS
+
+        val newLatRad =
+            asin(sin(latRad) * cos(angularDistance) + cos(latRad) * sin(angularDistance) * cos(bearingRad))
+        val newLat = Math.toDegrees(newLatRad)
+
+        val newLonRad =
+            lonRad +
+                atan2(
+                    sin(bearingRad) * sin(angularDistance) * cos(latRad),
+                    cos(angularDistance) - sin(latRad) * sin(newLatRad),
+                )
+        val newLon = Math.toDegrees(newLonRad)
+
+        return newLat to newLon
+    }
+
+    /**
+     * Location 객체를 생성하는 헬퍼 함수
+     */
+    private fun createMockLocation(
+        lat: Double,
+        lon: Double,
+        speed: Float,
+    ): Location =
+        Location("FakeGpsProvider").apply {
+            latitude = lat
+            longitude = lon
+            altitude = 30.0
+            this.speed = speed
+            accuracy = 1.0f
+            time = System.currentTimeMillis()
+            elapsedRealtimeNanos = SystemClock.elapsedRealtimeNanos()
+        }
+}
