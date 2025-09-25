@@ -24,10 +24,16 @@ fun NavController.navigateSessionList(
 }
 
 fun NavGraphBuilder.addSessionListNavGraph(
-    onNavigateToSession: (sessionId: Long) -> Unit
+    onNavigateToBack: () -> Unit = {},
+    onNavigateToGoalEdit: (goalId: Long) -> Unit = {},
+    onNavigateToSession: (sessionId: Long) -> Unit = {},
 ) {
     // TODO SR-N Argument 처리
     composable<SessionListRoute> {
-        SessionListRoute(onNavigateToSession = onNavigateToSession)
+        SessionListRoute(
+            onNavigateToBack = onNavigateToBack,
+            onNavigateToGoalEdit = onNavigateToGoalEdit,
+            onNavigateToSession = onNavigateToSession
+        )
     }
 }

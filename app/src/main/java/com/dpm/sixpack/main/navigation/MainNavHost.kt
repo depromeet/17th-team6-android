@@ -42,10 +42,17 @@ internal fun MainNavHost(
                 },
             )
 
-            addSessionListNavGraph {
-                Timber.d("SL-N onNavigateToSession: $it")
-            }
-
+            addSessionListNavGraph(
+                onNavigateToBack = navigator::popBackStack,
+                onNavigateToGoalEdit = {
+                    // TODO SR-N
+                    Timber.d("SR-N onNavigateToSession")
+                },
+                onNavigateToSession = {
+                    // TODO SR-N
+                    Timber.d("SR-N onNavigateToGoalEdit")
+                }
+            )
             addRunningNavGraph()
         }
     }
