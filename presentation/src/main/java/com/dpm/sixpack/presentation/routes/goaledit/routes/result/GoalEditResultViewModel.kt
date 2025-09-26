@@ -1,6 +1,7 @@
 package com.dpm.sixpack.presentation.routes.goaledit.routes.result
 
 import androidx.lifecycle.SavedStateHandle
+import com.dpm.sixpack.domain.model.params.SaveTotalGoalParams
 import com.dpm.sixpack.domain.usecase.GetRecommendedGoalsUseCase
 import com.dpm.sixpack.domain.usecase.SaveTotalGoalUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
@@ -80,7 +81,7 @@ class GoalEditResultViewModel @Inject constructor(
         intent {
             val selectedRecommendedGoal = state.recommendedGoals.firstOrNull { it.isSelected } ?: return@intent
             saveTotalGoalUseCase(
-                SaveTotalGoalUseCase.Params(
+                SaveTotalGoalParams(
                     title = selectedRecommendedGoal.title,
                     subTitle = selectedRecommendedGoal.subTitle,
                     type = (state.selectedGoal ?: GoalType.getDefault()).runningGoal,

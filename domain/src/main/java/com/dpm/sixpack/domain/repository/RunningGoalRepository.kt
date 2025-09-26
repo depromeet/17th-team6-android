@@ -1,5 +1,6 @@
 package com.dpm.sixpack.domain.repository
 
+import com.dpm.sixpack.domain.model.params.SaveTotalGoalParams
 import com.dpm.sixpack.domain.model.session.RunningSessionGoal
 import com.dpm.sixpack.domain.model.total.RunningTotalGoal
 import com.dpm.sixpack.domain.usecase.SaveTotalGoalUseCase
@@ -13,5 +14,5 @@ interface RunningGoalRepository {
     // TODO 프리런칭 이후 pagination 적용
     suspend fun getRunningSessions(goalId: Long): DoRunResult<List<RunningSessionGoal>>
 
-    suspend fun saveRunningTotalGoal(goal: SaveTotalGoalUseCase.Params): DoRunResult<Unit>
+    suspend fun saveRunningTotalGoal(goal: SaveTotalGoalParams)
 }

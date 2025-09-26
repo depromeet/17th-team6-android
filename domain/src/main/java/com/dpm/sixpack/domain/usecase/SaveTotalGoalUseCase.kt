@@ -1,6 +1,9 @@
 package com.dpm.sixpack.domain.usecase
 
+import com.dpm.sixpack.domain.exception.DoRunException
+import com.dpm.sixpack.domain.model.params.SaveTotalGoalParams
 import com.dpm.sixpack.domain.repository.RunningGoalRepository
+import com.dpm.sixpack.domain.util.DoRunResult
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -8,21 +11,11 @@ import javax.inject.Singleton
 class SaveTotalGoalUseCase @Inject constructor(
     private val runningGoalRepository: RunningGoalRepository,
 ) {
-    suspend operator fun invoke(params: Params): Result<Unit> =
+    suspend operator fun invoke(saveTotalGoalParams: SaveTotalGoalParams): DoRunResult<Unit> =
         try {
-            val currentGoal = runningGoalRepository.saveRunningTotalGoal(params)
-            Result.success(Unit)
+            runningGoalRepository.saveRunningTotalGoal(saveTotalGoalParams)
+            DoRunResult.Success(Unit)
         } catch (e: Exception) {
-            Result.failure(e)
+            DoRunResult.Failure(DoRunException.UnknownError(e.message.toString(),e))
         }
-
-    data class Params(
-        val title: String,
-        val subTitle: String,
-        val type: String,
-        val pace: Int,
-        val distance: Int,
-        val duration: Int,
-        val totalRoundCount: Int,
-    )
 }
