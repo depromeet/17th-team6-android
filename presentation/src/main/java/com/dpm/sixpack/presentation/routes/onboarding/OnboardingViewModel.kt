@@ -1,6 +1,7 @@
 package com.dpm.sixpack.presentation.routes.onboarding
 
 import androidx.lifecycle.SavedStateHandle
+import com.dpm.sixpack.domain.model.params.SaveTotalGoalParams
 import com.dpm.sixpack.domain.usecase.CompleteOnboardingUseCase
 import com.dpm.sixpack.domain.usecase.GetRecommendedGoalsUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
@@ -126,8 +127,20 @@ class OnboardingViewModel @Inject constructor(
 
     private fun completeOnboarding() {
         intent {
+            val selectedRecommendedGoal = state.recommendedGoals.firstOrNull { it.isSelected } ?: return@intent
+            completeOnboardingUseCase(
+                SaveTotalGoalParams(
+                    title = selectedRecommendedGoal.title,
+                    subTitle = selectedRecommendedGoal.subTitle,
+                    type = (state.selectedGoal ?: GoalType.getDefault()).runningGoal,
+                    pace = selectedRecommendedGoal.goalTarget.pace,
+                    distance = selectedRecommendedGoal.goalTarget.distance,
+                    duration = selectedRecommendedGoal.goalTarget.duration,
+                    totalRoundCount = selectedRecommendedGoal.goalTarget.roundCount,
+                )
+            )
             postSideEffect(OnboardingSideEffect.NavigateToHome)
-            completeOnboardingUseCase()
+
         }
     }
 

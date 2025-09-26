@@ -2,10 +2,10 @@ package com.dpm.sixpack.data.repository
 
 import com.dpm.sixpack.data.source.remote.datasoruce.RunningGoalDataSource
 import com.dpm.sixpack.domain.exception.DoRunException
+import com.dpm.sixpack.domain.model.params.SaveTotalGoalParams
 import com.dpm.sixpack.domain.model.session.RunningSessionGoal
 import com.dpm.sixpack.domain.model.total.RunningTotalGoal
 import com.dpm.sixpack.domain.repository.RunningGoalRepository
-import com.dpm.sixpack.domain.usecase.SaveTotalGoalUseCase
 import com.dpm.sixpack.domain.util.DoRunResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -35,44 +35,47 @@ class RunningGoalRepositoryImpl @Inject constructor(
     override suspend fun getRunningSessions(goalId: Long): DoRunResult<List<RunningSessionGoal>> =
         DoRunResult.Failure(DoRunException.DataError("미구현 상태입니다."))
 
-    override suspend fun saveRunningTotalGoal(goal: SaveTotalGoalUseCase.Params): DoRunResult<Unit> {
+    override suspend fun saveRunningTotalGoal(goal: SaveTotalGoalParams) {
         TODO("Not yet implemented")
     }
 }
 
 class MockRunningGoalRepositoryImpl @Inject constructor() : RunningGoalRepository {
+
+    var cachedTotalGoal = RunningTotalGoal(
+        id = 1L,
+        createdAt = "2023-10-10T10:00:00Z",
+        updatedAt = "2023-10-10T10:00:00Z",
+        pausedAt = null,
+        clearedAt = null,
+        title = "",
+        subTitle = "",
+        type = "",
+        pace = 0,
+        distance = 0,
+        duration = 0,
+        totalRoundCount = 0,
+        clearedRoundCount = 0,
+    )
+
     override suspend fun getRunningTotalGoal(): DoRunResult<RunningTotalGoal> =
         DoRunResult.Success(
-            RunningTotalGoal(
-                id = 1L,
-                createdAt = "2023-10-10T10:00:00Z",
-                updatedAt = "2023-10-10T10:00:00Z",
-                pausedAt = null,
-                clearedAt = null,
-                title = "Mock Total Goal",
-                subTitle = "This is a mock total goal",
-                type = "distance",
-                pace = 300,
-                distance = 5000,
-                duration = 1800,
-                totalRoundCount = 5,
-                clearedRoundCount = 2,
-            ),
+            cachedTotalGoal
         )
 
     override suspend fun getTodayRunningSessionGoal(): DoRunResult<RunningSessionGoal> =
         DoRunResult.Success(
             RunningSessionGoal(
-                id = 3L,
+                id = 1L,
                 createdAt = "2023-10-10T10:00:00Z",
                 updatedAt = "2023-10-10T10:00:00Z",
                 clearedAt = null,
-                pace = 320,
-                distance = 3000,
-                duration = 1200,
-                roundCount = 3,
-                previousSessionId = 2L,
-                goalId = 1,
+                pace = 360,
+                distance = 5000,
+                duration = 3600,
+                roundCount = 1,
+                previousSessionId = -1L,
+                goalId = 1L,
             ),
         )
 
@@ -94,6 +97,15 @@ class MockRunningGoalRepositoryImpl @Inject constructor() : RunningGoalRepositor
             },
         )
 
-    override suspend fun saveRunningTotalGoal(goal: SaveTotalGoalUseCase.Params): DoRunResult<Unit> =
-        DoRunResult.Success(Unit)
+    override suspend fun saveRunningTotalGoal(goal: SaveTotalGoalParams) {
+        cachedTotalGoal = cachedTotalGoal.copy(
+            title = goal.title,
+            subTitle = goal.subTitle,
+            type = goal.type,
+            pace = goal.pace,
+            distance = goal.distance,
+            duration = goal.duration,
+            totalRoundCount = goal.totalRoundCount,
+        )
+    }
 }

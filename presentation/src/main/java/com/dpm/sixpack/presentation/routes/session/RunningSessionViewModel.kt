@@ -62,17 +62,16 @@ class RunningSessionViewModel @Inject constructor(
     // TODO replace with real data
     val todayRunData =
         savedStateHandle.get<RunningSessionGoal>("key_name") ?: RunningSessionGoal(
-            id = 0L,
-            pace = 360,
-            distance = 10000,
-            duration = 60,
-            roundCount = 5,
-            previousSessionId = 3L,
-            goalId = 2L,
-            createdAt = "TODO()",
-            updatedAt = "TODO()",
+            id = 1L,
+            createdAt = "2023-10-10T10:00:00Z",
+            updatedAt = "2023-10-10T10:00:00Z",
             clearedAt = null,
-            totalRoundCount = 20,
+            pace = 360,
+            distance = 5000,
+            duration = 3600,
+            roundCount = 1,
+            previousSessionId = -1L,
+            goalId = 1L,
         )
 
     override val initialState: RunningSessionUiState =
