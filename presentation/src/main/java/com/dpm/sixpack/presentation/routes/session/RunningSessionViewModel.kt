@@ -442,7 +442,7 @@ class RunningSessionViewModel @Inject constructor(
     private fun handleWarmUpStopConfirm() =
         intent {
             reduce {
-                state.copy(RunningSessionState.Initial())
+                state.copy(RunningSessionState.Initial(goal = todayRunData.toUiState()))
             }
         }
 
