@@ -564,12 +564,9 @@ class RunningSessionViewModel @Inject constructor(
             }
         }
 
-    // FIXME SK: 임시 조치로 Initial 상태로 돌아가게 함
     private fun handleCoolDownStopConfirm() =
         intent {
-            reduce {
-                state.copy(RunningSessionState.Initial())
-            }
+            postSideEffect(RunningSessionSideEffect.NavigateToReport(1))
         }
 
     // region Service
