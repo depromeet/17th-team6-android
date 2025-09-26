@@ -13,7 +13,8 @@ object MapConstants {
 
     val DEFAULT_CAMERA_POSITION =
         CameraPosition(
-            LatLng(37.5665, 126.9780),
+            // 성수
+            LatLng(37.546914, 127.066506),
             DEFAULT_ZOOM,
         )
 

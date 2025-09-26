@@ -26,16 +26,24 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
+import com.dpm.sixpack.presentation.routes.session.component.MapConstants
+import com.dpm.sixpack.presentation.routes.session.component.MapConstants.DEFAULT_ZOOM
 import com.dpm.sixpack.presentation.routes.session.component.ScreenSelectTab
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionIntent
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionSideEffect
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningScreenTabItem
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningSessionState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
+import com.naver.maps.map.CameraPosition
+import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.compose.ExperimentalNaverMapApi
+import com.naver.maps.map.compose.rememberCameraPositionState
+import com.naver.maps.map.compose.rememberFusedLocationSource
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 import timber.log.Timber
 
+@OptIn(ExperimentalNaverMapApi::class)
 @Composable
 fun RunningSessionRoute(
     modifier: Modifier = Modifier,
@@ -46,6 +54,15 @@ fun RunningSessionRoute(
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { tabItems.size })
 
     val uiState by viewModel.collectAsState()
+
+    // Location
+    val locationSource = rememberFusedLocationSource()
+
+    // State
+    val cameraPositionState =
+        rememberCameraPositionState {
+            position = MapConstants.DEFAULT_CAMERA_POSITION
+        }
 
     viewModel.collectSideEffect { sideEffect ->
         // Collect
@@ -67,6 +84,10 @@ fun RunningSessionRoute(
                         pagerState.animateScrollToPage(1)
                     }
                 }
+            }
+
+            is RunningSessionSideEffect.SetInitialLocation -> {
+                cameraPositionState.move(CameraUpdate.scrollTo(sideEffect.latLng))
             }
         }
     }
@@ -175,6 +196,8 @@ fun RunningSessionRoute(
                                 alpha = if (pagerState.currentPage == 1) 1f else 0f
                             },
                     viewModel = viewModel,
+                    cameraPositionState = cameraPositionState,
+                    locationSource = locationSource,
                 )
             }
 

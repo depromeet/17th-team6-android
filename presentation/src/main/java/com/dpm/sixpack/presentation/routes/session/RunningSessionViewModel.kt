@@ -1,11 +1,13 @@
 package com.dpm.sixpack.presentation.routes.session
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import androidx.annotation.RequiresPermission
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dpm.sixpack.domain.model.RealtimeRunningData
@@ -52,7 +54,7 @@ class RunningSessionViewModel @Inject constructor(
     private val startRunningUseCase: StartRunningUseCase,
     private val getRealtimeRunningDataUseCase: GetRealtimeRunningDataUseCase,
     private val finishRunningSessionUseCase: FinishRunningSessionUseCase,
-    fusedLocationProviderClient: FusedLocationProviderClient,
+    private val fusedLocationProviderClient: FusedLocationProviderClient,
 ) : BaseViewModel<RunningSessionUiState, RunningSessionIntent, RunningSessionSideEffect>() {
     // FIXME: 프리런칭 시뮬레이션용
     val mockLocationClient = MockLocationClient(fusedLocationProviderClient, viewModelScope)
@@ -104,8 +106,31 @@ class RunningSessionViewModel @Inject constructor(
         bindToService()
     }
 
+    @SuppressLint("MissingPermission")
     override fun onIntent(intent: RunningSessionIntent) {
         when (intent) {
+            is RunningSessionIntent.UpdatePermission -> {
+                // TODO SK: 권한설정 바뀌면 처리
+                if (intent.isGranted) {
+                    loadLocationFromClient(
+                        onSuccess = {
+                            intent {
+                                postSideEffect(RunningSessionSideEffect.SetInitialLocation(it))
+                            }
+                        },
+                    )
+                }
+            }
+
+            is RunningSessionIntent.ChangeLocationTrackingButton ->
+                intent {
+                    reduce {
+                        state.copy(
+                            isFollowingModeEnabled = intent.isTracking,
+                        )
+                    }
+                }
+
             is RunningSessionIntent.ClickBackIcon ->
                 intent {
                     postSideEffect(RunningSessionSideEffect.NavigateBackToHome)
@@ -562,5 +587,20 @@ class RunningSessionViewModel @Inject constructor(
         mockLocationClient.stop()
         context.unbindService(serviceConnection)
         super.onCleared()
+    }
+
+    @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
+    private fun loadLocationFromClient(onSuccess: (LatLng) -> Unit) {
+        fusedLocationProviderClient.lastLocation
+            .addOnSuccessListener { location ->
+                if (location != null) {
+                    val userLatLng = LatLng(location.latitude, location.longitude)
+                    onSuccess(userLatLng)
+                } else {
+                    Timber.e("Last Location is Null")
+                }
+            }.addOnFailureListener {
+                Timber.e("Load Location From Client failed: $it")
+            }
     }
 }

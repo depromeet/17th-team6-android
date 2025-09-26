@@ -81,4 +81,12 @@ sealed interface RunningSessionIntent : UiIntent {
     //endregion
 
     data object ClickBackIcon : RunningSessionIntent
+
+    data class ChangeLocationTrackingButton(
+        val isTracking: Boolean,
+    ) : RunningSessionIntent
+
+    data class UpdatePermission(
+        val isGranted: Boolean,
+    ) : RunningSessionIntent
 }

@@ -19,10 +19,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
+import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 fun LocationTrackingButton(
-    onClick: () -> Unit,
+    isFollowing: Boolean,
+    onClick: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
 ) {
@@ -34,7 +36,9 @@ fun LocationTrackingButton(
                 .clip(CircleShape)
                 .background(Color.White)
                 .clickable(
-                    onClick = onClick,
+                    onClick = {
+                        if (isFollowing) onClick(false) else onClick(true)
+                    },
                     interactionSource = remember { MutableInteractionSource() },
                     indication = ripple(bounded = true, color = Color.Gray),
                 ),
@@ -44,7 +48,12 @@ fun LocationTrackingButton(
             painter = painterResource(R.drawable.ic_tracking),
             contentDescription = contentDescription,
             modifier = Modifier.size(24.dp),
-            tint = Color.Unspecified,
+            tint =
+                if (isFollowing) {
+                    SixpackTheme.colors.blue600
+                } else {
+                    SixpackTheme.colors.gray800
+                },
         )
     }
 }
@@ -55,6 +64,7 @@ fun LocationTrackingButton(
 @Composable
 fun LocationTrackingButtonPreview() {
     LocationTrackingButton(
+        isFollowing = true,
         onClick = {},
     )
 }
