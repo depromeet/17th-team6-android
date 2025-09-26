@@ -50,7 +50,10 @@ import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.rememberCameraPositionState
 
 @Composable
-fun SessionReport(navigateBack: () -> Unit, modifier: Modifier = Modifier) {
+fun SessionReportRoute(
+    navigateBack: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     // 스크롤 추가
     Column(
         modifier = Modifier
@@ -219,6 +222,6 @@ fun RunningCourseMap(
 @Composable
 private fun adsfadsf() {
     DoRunPreviewWrapper {
-        SessionReport(navigateBack = { }, modifier = Modifier.fillMaxSize())
+        SessionReportRoute(navigateBack = { }, modifier = Modifier.fillMaxSize())
     }
 }

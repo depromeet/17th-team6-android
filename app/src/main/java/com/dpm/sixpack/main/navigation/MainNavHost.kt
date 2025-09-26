@@ -75,7 +75,9 @@ internal fun MainNavHost(
                 navigateToSessionReport = navigator::navigateToSessionReport,
             )
 
-            addSessionReportNavGraph { navigator.popBackStack() }
+            addSessionReportNavGraph(
+                onNavigateToBack = navigator::popBackStack,
+            )
         }
     }
 }
