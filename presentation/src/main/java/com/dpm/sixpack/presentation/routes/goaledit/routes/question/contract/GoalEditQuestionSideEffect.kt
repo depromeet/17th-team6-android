@@ -6,5 +6,7 @@ import com.dpm.sixpack.presentation.routes.goaledit.common.model.GoalEditGoalTyp
 sealed interface GoalEditQuestionSideEffect : SideEffect {
     data object NavigateToBack : GoalEditQuestionSideEffect
 
-    data class NavigateToGoalEditResult(val goalType: GoalEditGoalType) : GoalEditQuestionSideEffect
+    data class NavigateToGoalEditResult(
+        val goalType: GoalEditGoalType,
+    ) : GoalEditQuestionSideEffect
 }

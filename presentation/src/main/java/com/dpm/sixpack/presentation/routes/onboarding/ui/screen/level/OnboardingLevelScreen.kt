@@ -16,11 +16,11 @@ import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
+import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.OnboardingUiState
+import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.level.LevelType
 import com.dpm.sixpack.presentation.routes.onboarding.ui.component.common.OnboardingNextButton
 import com.dpm.sixpack.presentation.routes.onboarding.ui.component.common.OnboardingPage
 import com.dpm.sixpack.presentation.routes.onboarding.ui.component.common.OnboardingPageIndicator
-import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.OnboardingUiState
-import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.level.LevelType
 import com.dpm.sixpack.presentation.routes.onboarding.ui.component.level.LevelCardList
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
@@ -86,7 +86,6 @@ private fun OnboardingLevelScreenPreview() {
     DoRunPreviewWrapper {
         OnboardingLevelScreen(
             uiState = OnboardingUiState(),
-            )
+        )
     }
 }
-

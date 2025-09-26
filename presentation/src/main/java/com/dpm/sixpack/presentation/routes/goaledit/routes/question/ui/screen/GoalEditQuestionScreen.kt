@@ -11,6 +11,4 @@ fun GoalEditQuestionScreen(
     onClickBack: () -> Unit,
     onClickNext: (goalTypeId: String) -> Unit,
 ) {
-
-
 }

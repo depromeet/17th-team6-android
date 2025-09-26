@@ -12,9 +12,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GoalEditQuestionViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<GoalEditQuestionScreenState, GoalEditQuestionIntent, GoalEditQuestionSideEffect>() {
-
     override val initialState: GoalEditQuestionScreenState = GoalEditQuestionScreenState()
 
     override val container: Container<GoalEditQuestionScreenState, GoalEditQuestionSideEffect> =
@@ -38,13 +37,14 @@ class GoalEditQuestionViewModel @Inject constructor(
         intent {
             reduce {
                 state.copy(
-                    goalTypes = state.goalTypes.map {
-                        if (it.goalType == intent.goalType) {
-                            it.copy(isSelected = true)
-                        } else {
-                            it.copy(isSelected = false)
-                        }
-                    }
+                    goalTypes =
+                        state.goalTypes.map {
+                            if (it.goalType == intent.goalType) {
+                                it.copy(isSelected = true)
+                            } else {
+                                it.copy(isSelected = false)
+                            }
+                        },
                 )
             }
         }
@@ -57,5 +57,4 @@ class GoalEditQuestionViewModel @Inject constructor(
             }
         }
     }
-
 }

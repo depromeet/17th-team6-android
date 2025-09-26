@@ -38,7 +38,7 @@ internal fun MainNavHost(
                 onNavigateToSession = {
                     Timber.d("SR-N onNavigateToSession")
                 },
-                onNavigateToGoalEdit = navigator::navigateToGoalEdit
+                onNavigateToGoalEdit = navigator::navigateToGoalEdit,
             )
 
             addSessionListNavGraph(
@@ -57,7 +57,6 @@ internal fun MainNavHost(
                     Timber.d("SR-N onNavigateToGoalEditResult")
                 },
             )
-
 
             addRunningNavGraph()
         }

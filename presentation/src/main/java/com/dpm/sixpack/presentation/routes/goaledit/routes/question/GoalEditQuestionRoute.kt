@@ -30,12 +30,12 @@ fun GoalEditQuestionRoute(
     onNavigateToBack: () -> Unit = {},
     onNavigateToGoalEditResult: () -> Unit = {},
 ) {
-
     val scrollState = rememberScrollState()
 
     Scaffold(
-        modifier = modifier
-            .fillMaxSize(),
+        modifier =
+            modifier
+                .fillMaxSize(),
         containerColor = SixpackTheme.colors.gray0,
         topBar = {
             CenterAlignedTopAppBar(
@@ -54,39 +54,37 @@ fun GoalEditQuestionRoute(
                             tint = SixpackTheme.colors.gray800,
                         )
                     }
-                }
+                },
             )
-        }
+        },
     ) { paddingValues ->
 
         Box(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(paddingValues)
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
         ) {
             Column(
-                modifier = modifier
-                    .fillMaxSize()
-                    .scrollable(
-                        state = scrollState,
-                        orientation = Orientation.Vertical,
-                    )
-                    .padding(bottom = 92.dp),
+                modifier =
+                    modifier
+                        .fillMaxSize()
+                        .scrollable(
+                            state = scrollState,
+                            orientation = Orientation.Vertical,
+                        ).padding(bottom = 92.dp),
             ) {
-
-
             }
 
             DoRunDefaultButton(
-                modifier = Modifier
-                    .padding(top = 16.dp, bottom = 24.dp)
-                    .padding(horizontal = 16.dp)
-                    .align(Alignment.BottomCenter),
+                modifier =
+                    Modifier
+                        .padding(top = 16.dp, bottom = 24.dp)
+                        .padding(horizontal = 16.dp)
+                        .align(Alignment.BottomCenter),
                 text = stringResource(R.string.common_next),
                 onClick = onNavigateToGoalEditResult,
             )
         }
-
     }
-
 }

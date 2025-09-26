@@ -24,10 +24,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
-import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.common.components.goal.model.state.RecommendedGoalUiState
 import com.dpm.sixpack.presentation.common.components.goal.model.type.GoalType
 import com.dpm.sixpack.presentation.common.components.goal.model.type.getIconForGoalType
+import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable

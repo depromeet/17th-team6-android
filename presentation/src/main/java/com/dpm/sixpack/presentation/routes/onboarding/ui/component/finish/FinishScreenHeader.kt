@@ -20,9 +20,7 @@ import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrappe
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
-fun FinishScreenHeader(
-    modifier: Modifier = Modifier
-) {
+fun FinishScreenHeader(modifier: Modifier = Modifier) {
     Column(
         modifier =
             modifier

@@ -6,7 +6,9 @@ import com.dpm.sixpack.presentation.routes.goaledit.common.model.GoalEditGoalTyp
 sealed interface GoalEditQuestionIntent : UiIntent {
     data object BackClick : GoalEditQuestionIntent
 
-    data class GoalTypeClick(val goalType: GoalEditGoalType) : GoalEditQuestionIntent
+    data class GoalTypeClick(
+        val goalType: GoalEditGoalType,
+    ) : GoalEditQuestionIntent
 
     data object NextClick : GoalEditQuestionIntent
 }

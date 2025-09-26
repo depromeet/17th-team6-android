@@ -12,8 +12,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.permission.TermType
-import com.dpm.sixpack.presentation.routes.onboarding.ui.component.permission.sub.AgreeAllTermsRow
 import com.dpm.sixpack.presentation.routes.onboarding.ui.component.permission.item.TermRow
+import com.dpm.sixpack.presentation.routes.onboarding.ui.component.permission.sub.AgreeAllTermsRow
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
@@ -69,5 +69,4 @@ private fun TermsAgreementGroupPreview() {
             modifier = Modifier.Companion.padding(horizontal = 20.dp),
         )
     }
-
 }

@@ -14,13 +14,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.goal.RecommendedGoalList
-import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
-import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
-import com.dpm.sixpack.presentation.routes.onboarding.ui.component.common.OnboardingNextButton
-import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.OnboardingUiState
 import com.dpm.sixpack.presentation.common.components.goal.model.state.GoalUiState
 import com.dpm.sixpack.presentation.common.components.goal.model.state.RecommendedGoalUiState
 import com.dpm.sixpack.presentation.common.components.goal.model.type.GoalType
+import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
+import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
+import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.OnboardingUiState
+import com.dpm.sixpack.presentation.routes.onboarding.ui.component.common.OnboardingNextButton
 import com.dpm.sixpack.presentation.routes.onboarding.ui.component.finish.FinishScreenHeader
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
@@ -75,30 +75,30 @@ fun OnboardingFinishScreen(
     }
 }
 
-
 @Preview
 @Composable
 private fun OnboardingFinishScreenPreview() {
     DoRunPreviewWrapper {
         OnboardingFinishScreen(
-            uiState = OnboardingUiState(
-                recommendedGoals = listOf(
-                    RecommendedGoalUiState(
-                        title = "마라톤 완주",
-                        subTitle = "42.195km를 완주할 수 있어요",
-                        isRecommended = true,
-                        isSelected = true,
-                        goalTarget =
-                            GoalUiState(
-                                distance = 500,
-                                duration = 300,
-                                pace = 3000,
-                                roundCount = 50
+            uiState =
+                OnboardingUiState(
+                    recommendedGoals =
+                        listOf(
+                            RecommendedGoalUiState(
+                                title = "마라톤 완주",
+                                subTitle = "42.195km를 완주할 수 있어요",
+                                isRecommended = true,
+                                isSelected = true,
+                                goalTarget =
+                                    GoalUiState(
+                                        distance = 500,
+                                        duration = 300,
+                                        pace = 3000,
+                                        roundCount = 50,
+                                    ),
                             ),
-                    )
-                )
-            ),
+                        ),
+                ),
         )
     }
 }
-

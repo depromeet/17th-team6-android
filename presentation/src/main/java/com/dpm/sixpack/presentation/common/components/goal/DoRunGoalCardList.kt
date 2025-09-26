@@ -18,16 +18,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dpm.sixpack.presentation.common.components.goal.model.type.GoalType
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
-import com.dpm.sixpack.presentation.common.components.goal.model.type.GoalType
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 fun DoRunGoalCardList(
     modifier: Modifier = Modifier,
     onSelectGoal: (GoalType) -> Unit = {},
-    selectedGoal: GoalType? = null
+    selectedGoal: GoalType? = null,
 ) {
     Column(
         modifier = modifier,
@@ -110,5 +110,4 @@ private fun DoRunGoalCardListPreview() {
             modifier = Modifier.fillMaxWidth(),
         )
     }
-
 }

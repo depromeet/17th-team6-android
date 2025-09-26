@@ -10,7 +10,7 @@ data class GoalEditQuestionScreenState(
     val goalTypes: List<GoalEditGoalTypeComponentState> =
         GoalEditGoalType.entries.map {
             GoalEditGoalTypeComponentState(goalType = it)
-        }
+        },
 ) : UiState,
     Parcelable {
     val enableNextButton: Boolean = goalTypes.any { it.isSelected }

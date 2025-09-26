@@ -4,12 +4,12 @@ import androidx.lifecycle.SavedStateHandle
 import com.dpm.sixpack.domain.usecase.CompleteOnboardingUseCase
 import com.dpm.sixpack.domain.usecase.GetRecommendedGoalsUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
-import com.dpm.sixpack.presentation.routes.onboarding.contract.OnboardingSideEffect
-import com.dpm.sixpack.presentation.routes.onboarding.contract.OnboardingUiIntent
-import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.OnboardingUiState
 import com.dpm.sixpack.presentation.common.components.goal.model.state.GoalUiState
 import com.dpm.sixpack.presentation.common.components.goal.model.state.RecommendedGoalUiState
 import com.dpm.sixpack.presentation.common.components.goal.model.type.GoalType
+import com.dpm.sixpack.presentation.routes.onboarding.contract.OnboardingSideEffect
+import com.dpm.sixpack.presentation.routes.onboarding.contract.OnboardingUiIntent
+import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.OnboardingUiState
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.level.LevelType
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.permission.TermType
 import dagger.hilt.android.lifecycle.HiltViewModel

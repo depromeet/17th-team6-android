@@ -20,8 +20,8 @@ fun NavGraphBuilder.addGoalEditQuestionNavGraph(
 ) {
     composable<SessionListRoute> {
         GoalEditQuestionRoute(
-            onNavigateToBack =onNavigateToBack,
-            onNavigateToGoalEditResult = onNavigateToGoalEditResult
+            onNavigateToBack = onNavigateToBack,
+            onNavigateToGoalEditResult = onNavigateToGoalEditResult,
         )
     }
 }
