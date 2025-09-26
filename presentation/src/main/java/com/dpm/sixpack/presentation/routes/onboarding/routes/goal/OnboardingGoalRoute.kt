@@ -1,6 +1,7 @@
 package com.dpm.sixpack.presentation.routes.onboarding.routes.goal
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import com.dpm.sixpack.presentation.routes.onboarding.OnboardingViewModel
 import com.dpm.sixpack.presentation.routes.onboarding.contract.OnboardingSideEffect
 import com.dpm.sixpack.presentation.routes.onboarding.contract.OnboardingUiIntent
@@ -13,7 +14,7 @@ fun OnboardingGoalRoute(
     navigateToFinish: () -> Unit,
     navigateToBack: () -> Unit,
 ) {
-    val uiState = viewModel.collectAsState()
+    val uiState by viewModel.collectAsState()
 
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
