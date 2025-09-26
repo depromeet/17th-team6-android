@@ -7,14 +7,14 @@ import androidx.navigation.compose.composable
 import com.dpm.sixpack.presentation.destinations.RunningRoute
 import com.dpm.sixpack.presentation.routes.session.RunningSessionRoute
 
-fun NavController.navigateRunning(navOptions: NavOptions? = null) {
+fun NavController.navigateRunningSession(navOptions: NavOptions? = null) {
     navigate(RunningRoute.Session, navOptions)
 }
 
-fun NavGraphBuilder.addRunningNavGraph() {
+fun NavGraphBuilder.addRunningSessionNavGraph(onNavigateToBack: () -> Unit) {
     composable<RunningRoute.Session> {
         RunningSessionRoute(
-            // fill
+            onNavigateToBack = onNavigateToBack,
         )
     }
 }

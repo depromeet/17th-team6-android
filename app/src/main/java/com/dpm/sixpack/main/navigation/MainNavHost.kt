@@ -8,7 +8,7 @@ import androidx.navigation.compose.NavHost
 import com.dpm.sixpack.SixPackAppState
 import com.dpm.sixpack.presentation.routes.home.navigation.addHomeNavGraph
 import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
-import com.dpm.sixpack.presentation.routes.session.navigation.addRunningNavGraph
+import com.dpm.sixpack.presentation.routes.session.navigation.addRunningSessionNavGraph
 import com.dpm.sixpack.presentation.routes.sessionlist.navigation.addSessionListNavGraph
 import timber.log.Timber
 
@@ -53,7 +53,9 @@ internal fun MainNavHost(
                     Timber.d("SR-N onNavigateToGoalEdit")
                 },
             )
-            addRunningNavGraph()
+            addRunningSessionNavGraph(
+                onNavigateToBack = navigator::popBackStack,
+            )
         }
     }
 }

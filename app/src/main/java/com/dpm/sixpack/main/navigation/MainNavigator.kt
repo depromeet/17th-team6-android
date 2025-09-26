@@ -14,6 +14,7 @@ import com.dpm.sixpack.presentation.destinations.MainRoute
 import com.dpm.sixpack.presentation.destinations.Route
 import com.dpm.sixpack.presentation.navigation.MainNavTab
 import com.dpm.sixpack.presentation.routes.home.navigation.navigateHome
+import com.dpm.sixpack.presentation.routes.session.navigation.navigateRunningSession
 import com.dpm.sixpack.presentation.routes.sessionlist.navigation.navigateSessionList
 import timber.log.Timber
 
@@ -51,6 +52,10 @@ class MainNavigator(
 
     fun navigateToHome() {
         navController.navigate(MainRoute.Home)
+    }
+
+    fun navigateToRunningSession() {
+        navController.navigateRunningSession()
     }
 
     fun navigateToSessionList(goalId: Long) {

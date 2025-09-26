@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,7 +41,7 @@ internal fun RunningRecordPanel(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(SixpackTheme.colors.gray0, shape = SixpackTheme.shapes.round20)
+                    .background(SixpackTheme.colors.gray0, shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
                     .padding(horizontal = 24.dp, vertical = 20.dp),
         ) {
             when (sessionState) {

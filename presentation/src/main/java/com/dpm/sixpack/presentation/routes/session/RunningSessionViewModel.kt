@@ -9,7 +9,7 @@ import android.os.IBinder
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dpm.sixpack.domain.model.RealtimeRunningData
-import com.dpm.sixpack.domain.model.RunningSessionGoal
+import com.dpm.sixpack.domain.model.session.RunningSessionGoal
 import com.dpm.sixpack.domain.usecase.FinishRunningSessionUseCase
 import com.dpm.sixpack.domain.usecase.GetRealtimeRunningDataUseCase
 import com.dpm.sixpack.domain.usecase.StartRunningUseCase
@@ -34,7 +34,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -62,12 +61,16 @@ class RunningSessionViewModel @Inject constructor(
     val todayRunData =
         savedStateHandle.get<RunningSessionGoal>("key_name") ?: RunningSessionGoal(
             id = 0L,
-            sessionNumber = 12,
-            warmUpDuration = 300,
-            mainRunningDistance = 15_000,
-            mainRunningDuration = 3_600,
-            mainRunningPace = 321,
-            coolDownDuration = 300,
+            pace = 360,
+            distance = 10000,
+            duration = 60,
+            roundCount = 5,
+            previousSessionId = 3L,
+            goalId = 2L,
+            createdAt = "TODO()",
+            updatedAt = "TODO()",
+            clearedAt = null,
+            totalRoundCount = 20,
         )
 
     override val initialState: RunningSessionUiState =
@@ -139,6 +142,11 @@ class RunningSessionViewModel @Inject constructor(
 
     override fun onIntent(intent: RunningSessionIntent) {
         when (intent) {
+            is RunningSessionIntent.ClickBackIcon ->
+                intent {
+                    postSideEffect(RunningSessionSideEffect.NavigateBackToHome)
+                }
+
             is RunningSessionIntent.TabChange -> handleTabChange(intent.tab)
             is RunningSessionIntent.SessionStart -> handleSessionStart()
             is RunningSessionIntent.ToggleFollowingMode -> handleToggleFollowingMode()
@@ -381,7 +389,7 @@ class RunningSessionViewModel @Inject constructor(
                 state.copy(
                     sessionState =
                         RunningSessionState.Main.Running(
-                            goalDistanceMeter = todayRunData.mainRunningDistance,
+                            goalDistanceMeter = todayRunData.distance,
                             recordUiState = INITIAL_RECORD_STATE,
                         ),
                 )

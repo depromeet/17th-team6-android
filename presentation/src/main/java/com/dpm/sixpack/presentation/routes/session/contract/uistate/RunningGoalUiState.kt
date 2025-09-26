@@ -1,7 +1,7 @@
 package com.dpm.sixpack.presentation.routes.session.contract.uistate
 
 import android.os.Parcelable
-import com.dpm.sixpack.domain.model.RunningSessionGoal
+import com.dpm.sixpack.domain.model.session.RunningSessionGoal
 import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
 import com.dpm.sixpack.presentation.common.util.formatSecondsToPace
 import com.dpm.sixpack.presentation.common.util.formatSecondsToTime
@@ -9,20 +9,22 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class RunningGoalUiState(
-    val sessionNumber: Int? = null,
-    val mainRunningDistance: String = "", // 목표 거리
-    val mainRunningDuration: String = "", // 목표 시간
-    val mainRunningPace: String = "", // 목표 페이스
-    val warmUpDuration: String = "", // 준비운동 시간
-    val coolDownDuration: String = "", // 정리운동 시간
+    val id: Long? = null,
+    val distanceMeter: Int = 0, // 목표 거리 m
+    val recommendedTimeMinutes: Int = 0, // 목표 시간
+    val recommendedPaceSeconds: Int = 0, // 목표 페이스
+    val roundCount: Int = 1,
+    val totalRoundCount: Int = 20,
+    val warmUpMinutes: Int = 5,
+    val coolDownMinutes: Int = 5,
 ) : Parcelable
 
 fun RunningSessionGoal.toUiState() =
     RunningGoalUiState(
-        sessionNumber = sessionNumber,
-        mainRunningDistance = formatDistanceToKm(mainRunningDistance),
-        mainRunningDuration = formatSecondsToTime(mainRunningDuration),
-        mainRunningPace = formatSecondsToPace(mainRunningPace),
-        warmUpDuration = formatSecondsToTime(mainRunningDuration),
-        coolDownDuration = formatSecondsToTime(coolDownDuration),
+        id = id,
+        distanceMeter = distance,
+        recommendedTimeMinutes = duration,
+        recommendedPaceSeconds = pace,
+        roundCount = roundCount,
+        totalRoundCount = totalRoundCount ?: 20,
     )

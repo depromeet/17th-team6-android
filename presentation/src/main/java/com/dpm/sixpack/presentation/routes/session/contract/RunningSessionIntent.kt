@@ -79,4 +79,6 @@ sealed interface RunningSessionIntent : UiIntent {
     data object CoolDownStopConfirm : StopConfirmIntent
 
     //endregion
+
+    data object ClickBackIcon : RunningSessionIntent
 }
