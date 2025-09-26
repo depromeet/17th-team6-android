@@ -23,4 +23,5 @@ dependencies {
 
     implementation(libs.bundles.navigation)
     implementation(libs.kotlinx.datetime)
+    implementation(libs.androidx.core.splashscreen)
 }

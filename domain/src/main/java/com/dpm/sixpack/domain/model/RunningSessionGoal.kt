@@ -1,8 +1,6 @@
 package com.dpm.sixpack.domain.model
 
-/**
- * 오늘의 러닝 목표 데이터 Entity
- */
+@Deprecated("Use RunningTotalGoal instead", ReplaceWith("RunningTotalGoal"))
 data class RunningSessionGoal(
     val id: Long, // 플랜 ID
     val sessionNumber: Int, // 세션 번호 N회차

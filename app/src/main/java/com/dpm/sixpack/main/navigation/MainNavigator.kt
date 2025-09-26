@@ -10,20 +10,21 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.dpm.sixpack.presentation.destinations.MainRoute
 import com.dpm.sixpack.presentation.destinations.Route
-import com.dpm.sixpack.presentation.destinations.RunningRoute
 import com.dpm.sixpack.presentation.navigation.MainNavTab
-import com.dpm.sixpack.presentation.routes.session.navigation.navigateRunning
+import com.dpm.sixpack.presentation.routes.home.navigation.navigateHome
+import com.dpm.sixpack.presentation.routes.sessionlist.navigation.navigateSessionList
 import timber.log.Timber
 
 class MainNavigator(
     val navController: NavHostController,
+    val startDestination: Route,
 ) {
     private val previousDestination = mutableStateOf<NavDestination?>(null)
 
     val currentDestination: NavDestination?
         @Composable get() {
-            // Collect the currentBackStackEntryFlow as a state
             val currentEntry =
                 navController.currentBackStackEntryFlow
                     .collectAsState(initial = null)
@@ -43,10 +44,17 @@ class MainNavigator(
             }
 
     // FIXME: Change to other when the start screen is implemented
-    val startDestination = RunningRoute.Session
 
     fun popBackStack() {
         navController.popBackStack()
+    }
+
+    fun navigateToHome() {
+        navController.navigate(MainRoute.Home)
+    }
+
+    fun navigateToSessionList(goalId: Long) {
+        navController.navigateSessionList(totalGoalId = goalId)
     }
 
     fun navigate(tab: MainNavTab) {
@@ -60,7 +68,7 @@ class MainNavigator(
             }
 
         when (tab) {
-            MainNavTab.RUNNING -> navController.navigateRunning(navOptions)
+            MainNavTab.HOME -> navController.navigateHome(navOptions)
             MainNavTab.RECORD -> {
                 // TODO
                 Timber.d("Navigate to Record Screen")
@@ -84,7 +92,10 @@ class MainNavigator(
 }
 
 @Composable
-internal fun rememberMainNavigator(navController: NavHostController = rememberNavController()): MainNavigator =
-    remember(navController) {
-        MainNavigator(navController)
+internal fun rememberMainNavigator(
+    startDestination: Route,
+    navController: NavHostController = rememberNavController(),
+): MainNavigator =
+    remember(navController, startDestination) {
+        MainNavigator(navController, startDestination)
     }

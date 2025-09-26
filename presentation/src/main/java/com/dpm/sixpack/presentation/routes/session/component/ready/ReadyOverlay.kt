@@ -55,8 +55,9 @@ internal fun ReadyOverlay(
 @Composable
 private fun PreviewReadyOverlay() {
     ReadyOverlay(
-        readyState = RunningSessionState.CoolDown.Ready(
-            countdown = 2
-        )
+        readyState =
+            RunningSessionState.CoolDown.Ready(
+                countdown = 2,
+            ),
     )
 }
