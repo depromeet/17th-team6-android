@@ -31,7 +31,7 @@ import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
-fun RecommendedGoalList(
+fun DoRunRecommendedGoalList(
     recommendedGoals: List<RecommendedGoalUiState>,
     selectedGoalType: GoalType,
     onSelectRecommendedGoal: (Int) -> Unit,

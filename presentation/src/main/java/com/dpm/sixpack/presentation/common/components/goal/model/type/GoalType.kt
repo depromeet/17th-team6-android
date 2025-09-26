@@ -30,6 +30,11 @@ enum class GoalType(
         R.string.onboarding_goal_zone2_sub_title,
         R.drawable.ill_zone,
     ),
+    ;
+
+    companion object {
+        fun getDefault(): GoalType = MARATHON
+    }
 }
 
 @DrawableRes

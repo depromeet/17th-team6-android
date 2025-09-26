@@ -37,14 +37,7 @@ class GoalEditQuestionViewModel @Inject constructor(
         intent {
             reduce {
                 state.copy(
-                    goalTypes =
-                        state.goalTypes.map {
-                            if (it.goalType == intent.goalType) {
-                                it.copy(isSelected = true)
-                            } else {
-                                it.copy(isSelected = false)
-                            }
-                        },
+                    selectedGoalType = intent.goalType,
                 )
             }
         }
@@ -52,7 +45,7 @@ class GoalEditQuestionViewModel @Inject constructor(
 
     private fun handleNextClick() {
         intent {
-            state.goalTypes.firstOrNull { it.isSelected }?.goalType?.let {
+            state.selectedGoalType?.let {
                 postSideEffect(GoalEditQuestionSideEffect.NavigateToGoalEditResult(it))
             }
         }

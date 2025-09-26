@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
-import com.dpm.sixpack.presentation.common.components.goal.RecommendedGoalList
+import com.dpm.sixpack.presentation.common.components.goal.DoRunRecommendedGoalList
 import com.dpm.sixpack.presentation.common.components.goal.model.state.GoalUiState
 import com.dpm.sixpack.presentation.common.components.goal.model.state.RecommendedGoalUiState
 import com.dpm.sixpack.presentation.common.components.goal.model.type.GoalType
@@ -65,9 +65,9 @@ fun OnboardingFinishScreen(
 
             FinishScreenHeader()
 
-            RecommendedGoalList(
+            DoRunRecommendedGoalList(
                 recommendedGoals = uiState.recommendedGoals,
-                selectedGoalType = uiState.selectedGoal ?: GoalType.MARATHON,
+                selectedGoalType = uiState.selectedGoal ?: GoalType.getDefault(),
                 onSelectRecommendedGoal = onSelectRecommendedGoal,
                 modifier = Modifier.padding(horizontal = 20.dp),
             )
