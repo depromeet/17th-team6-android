@@ -104,42 +104,6 @@ class RunningSessionViewModel @Inject constructor(
         bindToService()
     }
 
-    private fun observeServiceState() {
-        runningService
-            ?.runningDataState
-            ?.onEach { realtimeData ->
-                Timber.d("observeServiceState: $realtimeData")
-                intent {
-                    val currentSessionState = state.sessionState
-                    if (currentSessionState is RunningSessionState.RunningState && realtimeData != null) {
-                        val newSessionState = getNewRunningState(currentSessionState, realtimeData)
-                        intent {
-                            reduce {
-                                state.copy(sessionState = newSessionState)
-                            }
-                        }
-                    }
-                }
-            }?.launchIn(viewModelScope)
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun startObservingRealtimeData() {
-        // 테스트
-        if (mockLocationClient.isRunning) {
-            mockLocationClient.resume()
-        } else {
-            mockLocationClient.startWithLatLng(Sungsoo)
-        }
-
-        sendCommandToService(context, RunningActions.START_OR_RESUME)
-    }
-
-    private fun pauseObservingRealtimeData() {
-        mockLocationClient.pause()
-        sendCommandToService(context, RunningActions.PAUSE)
-    }
-
     override fun onIntent(intent: RunningSessionIntent) {
         when (intent) {
             is RunningSessionIntent.ClickBackIcon ->
@@ -150,7 +114,11 @@ class RunningSessionViewModel @Inject constructor(
             is RunningSessionIntent.TabChange -> handleTabChange(intent.tab)
             is RunningSessionIntent.SessionStart -> handleSessionStart()
             is RunningSessionIntent.ToggleFollowingMode -> handleToggleFollowingMode()
-            is RunningSessionIntent.WarmUpSkip -> handleWarmUpPause(true)
+            is RunningSessionIntent.WarmUpSkip -> {
+                handleWarmUpPause(true)
+                pauseObservingRealtimeData()
+            }
+
             is RunningSessionIntent.WarmUpSkipCancel -> handleWarmUpPause()
             is RunningSessionIntent.WarmUpSkipConfirm -> {
                 mockLocationClient.stop()
@@ -189,6 +157,42 @@ class RunningSessionViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun observeServiceState() {
+        runningService
+            ?.runningDataState
+            ?.onEach { realtimeData ->
+                Timber.d("observeServiceState: $realtimeData")
+                intent {
+                    val currentSessionState = state.sessionState
+                    if (currentSessionState is RunningSessionState.RunningState && realtimeData != null) {
+                        val newSessionState = getNewRunningState(currentSessionState, realtimeData)
+                        intent {
+                            reduce {
+                                state.copy(sessionState = newSessionState)
+                            }
+                        }
+                    }
+                }
+            }?.launchIn(viewModelScope)
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun startObservingRealtimeData() {
+        // 테스트
+        if (mockLocationClient.isRunning) {
+            mockLocationClient.resume()
+        } else {
+            mockLocationClient.startWithLatLng(Sungsoo)
+        }
+
+        sendCommandToService(context, RunningActions.START_OR_RESUME)
+    }
+
+    private fun pauseObservingRealtimeData() {
+        mockLocationClient.pause()
+        sendCommandToService(context, RunningActions.PAUSE)
     }
 
     private fun handleTabChange(tab: RunningScreenTabItem) =
