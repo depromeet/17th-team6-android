@@ -2,7 +2,6 @@ package com.dpm.sixpack.presentation.routes.goaledit.routes.question.ui.screen
 
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,11 +12,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -64,23 +60,24 @@ fun GoalEditQuestionScreen(
                         )
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors()
-                    .copy(containerColor = SixpackTheme.colors.gray0)
+                colors =
+                    TopAppBarDefaults
+                        .centerAlignedTopAppBarColors()
+                        .copy(containerColor = SixpackTheme.colors.gray0),
             )
         },
         bottomBar = {
-            if (state.enableNextButton) {
-                DoRunDefaultButton(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(top = 12.dp, bottom = 24.dp)
-                            .padding(horizontal = 16.dp),
-                    text = stringResource(R.string.common_next),
-                    onClick = onClickNext,
-                )
-            }
-        }
+            DoRunDefaultButton(
+                text = stringResource(R.string.common_next),
+                onClick = onClickNext,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 12.dp, bottom = 24.dp)
+                        .padding(horizontal = 16.dp),
+                enabled = state.enableNextButton,
+            )
+        },
     ) { paddingValues ->
 
         Column(
@@ -110,7 +107,7 @@ fun GoalEditQuestionScreen(
             DoRunGoalCardList(
                 modifier = Modifier.padding(top = 32.dp),
                 onSelectGoal = onClickGoalType,
-                selectedGoal = state.selectedGoalType
+                selectedGoal = state.selectedGoalType,
             )
         }
     }

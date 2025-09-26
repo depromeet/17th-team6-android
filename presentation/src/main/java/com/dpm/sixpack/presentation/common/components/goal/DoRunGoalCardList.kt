@@ -37,7 +37,7 @@ fun DoRunGoalCardList(
             DoRunGoalCard(
                 goal = goal,
                 isSelected = goal == selectedGoal,
-                onSelectGoal = onSelectGoal
+                onSelectGoal = onSelectGoal,
             )
         }
     }

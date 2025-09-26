@@ -14,9 +14,3 @@ data class GoalEditQuestionScreenState(
     @IgnoredOnParcel
     val enableNextButton: Boolean = selectedGoalType != null
 }
-
-@Parcelize
-data class GoalEditGoalTypeComponentState(
-    val isSelected: Boolean = false,
-    val goalType: GoalType,
-) : Parcelable
