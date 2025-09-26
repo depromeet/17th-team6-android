@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.onboarding.component
+package com.dpm.sixpack.presentation.routes.onboarding.ui.component.common
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,7 +9,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import com.dpm.sixpack.presentation.R
+import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
@@ -42,4 +44,15 @@ enum class OnboardingPage(
     PERMISSION(1),
     LEVEL(2),
     GOAL(3),
+}
+
+@Preview
+@Composable
+private fun OnboardingPageIndicatorPreview() {
+    DoRunPreviewWrapper {
+        OnboardingPageIndicator(
+            page = OnboardingPage.GOAL,
+            modifier = Modifier,
+        )
+    }
 }

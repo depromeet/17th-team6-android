@@ -1,9 +1,10 @@
-package com.dpm.sixpack.presentation.routes.onboarding.routes.level
+package com.dpm.sixpack.presentation.routes.onboarding
 
 import androidx.compose.runtime.Composable
-import com.dpm.sixpack.presentation.routes.onboarding.OnboardingViewModel
+import androidx.compose.runtime.getValue
 import com.dpm.sixpack.presentation.routes.onboarding.contract.OnboardingSideEffect
 import com.dpm.sixpack.presentation.routes.onboarding.contract.OnboardingUiIntent
+import com.dpm.sixpack.presentation.routes.onboarding.ui.screen.level.OnboardingLevelScreen
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -13,7 +14,7 @@ fun OnboardingLevelRoute(
     navigateToGoal: () -> Unit,
     navigateToBack: () -> Unit,
 ) {
-    val uiState = viewModel.collectAsState()
+    val uiState by viewModel.collectAsState()
 
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {

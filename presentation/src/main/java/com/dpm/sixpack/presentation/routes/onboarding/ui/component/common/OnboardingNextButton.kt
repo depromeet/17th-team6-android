@@ -1,8 +1,8 @@
-package com.dpm.sixpack.presentation.routes.onboarding.component
+package com.dpm.sixpack.presentation.routes.onboarding.ui.component.common
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -10,6 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
+import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
@@ -47,9 +48,11 @@ fun OnboardingNextButton(
 @Preview
 @Composable
 private fun OnboardingNextButtonPreview() {
-    OnboardingNextButton(
-        onClick = { },
-        enabled = true,
-        modifier = Modifier.padding(16.dp),
-    )
+    DoRunPreviewWrapper {
+        OnboardingNextButton(
+            onClick = { },
+            enabled = true,
+            modifier = Modifier.fillMaxWidth(),
+        )
+    }
 }

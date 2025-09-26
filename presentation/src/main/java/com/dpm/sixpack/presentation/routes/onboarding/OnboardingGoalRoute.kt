@@ -1,10 +1,10 @@
-package com.dpm.sixpack.presentation.routes.onboarding.routes.goal
+package com.dpm.sixpack.presentation.routes.onboarding
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import com.dpm.sixpack.presentation.routes.onboarding.OnboardingViewModel
 import com.dpm.sixpack.presentation.routes.onboarding.contract.OnboardingSideEffect
 import com.dpm.sixpack.presentation.routes.onboarding.contract.OnboardingUiIntent
+import com.dpm.sixpack.presentation.routes.onboarding.ui.screen.goal.OnboardingGoalScreen
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 

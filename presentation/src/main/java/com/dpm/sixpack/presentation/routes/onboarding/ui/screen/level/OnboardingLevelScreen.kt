@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.onboarding.routes.goal
+package com.dpm.sixpack.presentation.routes.onboarding.ui.screen.level
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -14,22 +14,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
-import com.dpm.sixpack.presentation.common.components.goal.DoRunGoalCardList
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
-import com.dpm.sixpack.presentation.routes.onboarding.component.OnboardingNextButton
-import com.dpm.sixpack.presentation.routes.onboarding.component.OnboardingPage
-import com.dpm.sixpack.presentation.routes.onboarding.component.OnboardingPageIndicator
+import com.dpm.sixpack.presentation.routes.onboarding.ui.component.common.OnboardingNextButton
+import com.dpm.sixpack.presentation.routes.onboarding.ui.component.common.OnboardingPage
+import com.dpm.sixpack.presentation.routes.onboarding.ui.component.common.OnboardingPageIndicator
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.OnboardingUiState
-import com.dpm.sixpack.presentation.common.components.goal.model.type.GoalType
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.level.LevelType
+import com.dpm.sixpack.presentation.routes.onboarding.ui.component.level.LevelCardList
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
-fun OnboardingGoalScreen(
+fun OnboardingLevelScreen(
     uiState: OnboardingUiState,
     modifier: Modifier = Modifier,
-    onSelectGoal: (GoalType) -> Unit = {},
+    onSelectLevel: (LevelType) -> Unit = {},
     onClickNextButton: () -> Unit = {},
     onClickBackButton: () -> Unit = {},
 ) {
@@ -48,21 +47,21 @@ fun OnboardingGoalScreen(
         Column(
             modifier = Modifier.padding(horizontal = 20.dp),
         ) {
-            OnboardingPageIndicator(page = OnboardingPage.GOAL)
+            OnboardingPageIndicator(page = OnboardingPage.LEVEL)
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = stringResource(R.string.onboarding_goal_title),
+                text = stringResource(R.string.onboarding_level_title),
                 style = SixpackTheme.typography.h2Bold,
                 modifier = Modifier.fillMaxWidth(),
             )
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            DoRunGoalCardList(
-                selectedGoal = uiState.selectedGoal,
-                onSelectGoal = onSelectGoal,
+            LevelCardList(
+                selectedLevel = uiState.selectedLevel,
+                onSelectLevel = onSelectLevel,
                 modifier =
                     Modifier
                         .fillMaxWidth(),
@@ -72,7 +71,7 @@ fun OnboardingGoalScreen(
 
             OnboardingNextButton(
                 onClick = onClickNextButton,
-                enabled = uiState.isGoalNextEnabled,
+                enabled = uiState.isLevelNextEnabled,
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -81,16 +80,13 @@ fun OnboardingGoalScreen(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
-private fun OnboardingGoalScreenPreview() {
+private fun OnboardingLevelScreenPreview() {
     DoRunPreviewWrapper {
-        OnboardingGoalScreen(
-            uiState = OnboardingUiState(
-                selectedLevel = LevelType.CONSISTENT,
-                selectedGoal = GoalType.MARATHON,
-                recommendedGoals = listOf()
-            ),
-        )
+        OnboardingLevelScreen(
+            uiState = OnboardingUiState(),
+            )
     }
 }
+
