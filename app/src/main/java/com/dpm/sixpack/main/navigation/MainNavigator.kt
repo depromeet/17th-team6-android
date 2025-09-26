@@ -18,6 +18,7 @@ import com.dpm.sixpack.presentation.routes.goaledit.routes.result.navigation.nav
 import com.dpm.sixpack.presentation.routes.home.navigation.navigateHome
 import com.dpm.sixpack.presentation.routes.session.navigation.navigateRunningSession
 import com.dpm.sixpack.presentation.routes.sessionlist.navigation.navigateSessionList
+import com.dpm.sixpack.presentation.routes.sessionreport.navigation.navigateSessionReport
 import timber.log.Timber
 
 class MainNavigator(
@@ -70,6 +71,10 @@ class MainNavigator(
 
     fun navigateToGoalEditResult() {
         navController.navigateGoalEditResult()
+    }
+
+    fun navigateToSessionReport(){
+        navController.navigateSessionReport()
     }
 
     fun navigate(tab: MainNavTab) {

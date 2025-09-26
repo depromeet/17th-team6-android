@@ -535,6 +535,8 @@ class RunningSessionViewModel @Inject constructor(
             reduce {
                 state.copy(RunningSessionState.Initial())
             }
+
+            postSideEffect( RunningSessionSideEffect.NavigateToReport(1)  )
         }
 
     // region Service

@@ -14,6 +14,7 @@ import com.dpm.sixpack.presentation.routes.home.navigation.addHomeNavGraph
 import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
 import com.dpm.sixpack.presentation.routes.session.navigation.addRunningSessionNavGraph
 import com.dpm.sixpack.presentation.routes.sessionlist.navigation.addSessionListNavGraph
+import com.dpm.sixpack.presentation.routes.sessionreport.navigation.addSessionReportNavGraph
 
 @Composable
 internal fun MainNavHost(
@@ -71,7 +72,10 @@ internal fun MainNavHost(
 
             addRunningSessionNavGraph(
                 onNavigateToBack = navigator::popBackStack,
+                navigateToSessionReport = navigator::navigateToSessionReport,
             )
+
+            addSessionReportNavGraph { navigator.popBackStack() }
         }
     }
 }

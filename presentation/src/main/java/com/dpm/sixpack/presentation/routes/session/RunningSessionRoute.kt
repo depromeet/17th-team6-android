@@ -41,6 +41,7 @@ fun RunningSessionRoute(
     modifier: Modifier = Modifier,
     viewModel: RunningSessionViewModel = hiltViewModel(),
     onNavigateToBack: () -> Unit = { },
+    navigateToSessionReport: () -> Unit = { },
 ) {
     val tabItems = RunningScreenTabItem.entries
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { tabItems.size })
@@ -55,6 +56,7 @@ fun RunningSessionRoute(
             }
 
             is RunningSessionSideEffect.NavigateToReport -> {
+                navigateToSessionReport()
             }
 
             is RunningSessionSideEffect.ChangeTab -> {
