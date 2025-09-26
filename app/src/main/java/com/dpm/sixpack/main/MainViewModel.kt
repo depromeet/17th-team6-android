@@ -3,7 +3,6 @@ package com.dpm.sixpack.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dpm.sixpack.domain.usecase.GetOnboardingStatusUseCase
-import com.dpm.sixpack.presentation.destinations.MainRoute
 import com.dpm.sixpack.presentation.destinations.OnboardingRoute
 import com.dpm.sixpack.presentation.destinations.Route
 import dagger.hilt.android.lifecycle.HiltViewModel

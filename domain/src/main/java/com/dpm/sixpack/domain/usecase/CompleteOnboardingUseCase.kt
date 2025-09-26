@@ -11,13 +11,12 @@ class CompleteOnboardingUseCase @Inject constructor(
     private val userPreferenceRepository: UserPreferenceRepository,
     private val runningGoalRepository: RunningGoalRepository,
 ) {
-    suspend operator fun invoke(params: SaveTotalGoalParams): DoRunResult<Unit> {
-        return try {
+    suspend operator fun invoke(params: SaveTotalGoalParams): DoRunResult<Unit> =
+        try {
             runningGoalRepository.saveRunningTotalGoal(params)
             userPreferenceRepository.updateOnboardingComplete(isComplete = true)
             DoRunResult.Success(Unit)
         } catch (e: Exception) {
             DoRunResult.Failure(DoRunException.UnknownError(e.message.toString(), e))
         }
-    }
 }
