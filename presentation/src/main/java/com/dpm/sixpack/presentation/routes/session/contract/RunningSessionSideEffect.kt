@@ -17,7 +17,7 @@ sealed interface RunningSessionSideEffect : SideEffect {
         val sessionId: Long,
     ) : RunningSessionSideEffect
 
-    data class SetInitialLocation(
+    data class SetLocation(
         val latLng: LatLng,
     ) : RunningSessionSideEffect
 }

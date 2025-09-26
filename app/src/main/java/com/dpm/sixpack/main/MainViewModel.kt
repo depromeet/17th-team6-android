@@ -28,8 +28,8 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             val isOnboardingComplete = getOnboardingStatusUseCase()
 
-            _startDestination.value =
-                if (isOnboardingComplete) MainRoute.Home else OnboardingRoute.Onboarding
+            _startDestination.value = OnboardingRoute.Onboarding
+//                if (isOnboardingComplete) MainRoute.Home else OnboardingRoute.Onboarding
 
             delay(1000L)
             _isLoading.value = false

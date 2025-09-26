@@ -18,6 +18,7 @@ import com.dpm.sixpack.domain.usecase.StartRunningUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.common.util.MockLocationClient
 import com.dpm.sixpack.presentation.common.util.Sungsoo
+import com.dpm.sixpack.presentation.routes.session.component.MapConstants
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionIntent
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionSideEffect
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.INITIAL_RECORD_STATE
@@ -108,33 +109,9 @@ class RunningSessionViewModel @Inject constructor(
     @SuppressLint("MissingPermission")
     override fun onIntent(intent: RunningSessionIntent) {
         when (intent) {
-            is RunningSessionIntent.UpdatePermission -> {
-                // TODO SK: 권한설정 바뀌면 처리
-                if (intent.isGranted) {
-                    loadLocationFromClient(
-                        onSuccess = {
-                            intent {
-                                postSideEffect(RunningSessionSideEffect.SetInitialLocation(it))
-                            }
-                        },
-                    )
-                }
-            }
-
-            is RunningSessionIntent.ChangeLocationTrackingButton ->
-                intent {
-                    reduce {
-                        state.copy(
-                            isFollowingModeEnabled = intent.isTracking,
-                        )
-                    }
-                }
-
-            is RunningSessionIntent.ClickBackIcon ->
-                intent {
-                    postSideEffect(RunningSessionSideEffect.NavigateBackToHome)
-                }
-
+            // TODO SK: 권한설정 바뀌면 처리
+            is RunningSessionIntent.UpdatePermission -> handlePermissionUpdate(intent.isGranted)
+            is RunningSessionIntent.ClickBackIcon -> handleBackIconClick()
             is RunningSessionIntent.TabChange -> handleTabChange(intent.tab)
             is RunningSessionIntent.SessionStart -> handleSessionStart()
             is RunningSessionIntent.ToggleFollowingMode -> handleToggleFollowingMode()
@@ -223,6 +200,28 @@ class RunningSessionViewModel @Inject constructor(
         intent {
             postSideEffect(RunningSessionSideEffect.ChangeTab(tab))
         }
+
+    private fun handleBackIconClick() =
+        intent {
+            postSideEffect(RunningSessionSideEffect.NavigateBackToHome)
+        }
+
+    @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
+    private fun handlePermissionUpdate(isGranted: Boolean) {
+        if (isGranted) {
+            loadLocationFromClient(
+                onSuccess = {
+                    intent {
+                        postSideEffect(RunningSessionSideEffect.SetLocation(it))
+                    }
+                },
+            )
+        } else {
+            intent {
+                postSideEffect(RunningSessionSideEffect.SetLocation(MapConstants.DEFAULT_CAMERA_POSITION.target))
+            }
+        }
+    }
 
     // region session start
 
@@ -354,11 +353,22 @@ class RunningSessionViewModel @Inject constructor(
 
     // endregion
 
+    @SuppressLint("MissingPermission")
     fun handleToggleFollowingMode() =
         intent {
+            val currentFollowMode = state.isFollowingModeEnabled
+            if (!currentFollowMode) {
+                loadLocationFromClient(
+                    onSuccess = { latLng ->
+                        viewModelScope.launch {
+                            postSideEffect(RunningSessionSideEffect.SetLocation(latLng))
+                        }
+                    },
+                )
+            }
             reduce {
                 state.copy(
-                    isFollowingModeEnabled = !state.isFollowingModeEnabled,
+                    isFollowingModeEnabled = !currentFollowMode,
                 )
             }
         }
@@ -588,6 +598,7 @@ class RunningSessionViewModel @Inject constructor(
         super.onCleared()
     }
 
+    // TODO SK: 이 함수 호출부 모두 Client 직접 사용하는 방식 말고 유스케이스 거치는 방식으로 변경하기
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     private fun loadLocationFromClient(onSuccess: (LatLng) -> Unit) {
         fusedLocationProviderClient.lastLocation

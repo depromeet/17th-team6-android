@@ -39,7 +39,7 @@ fun RunningSessionScreen(
     cameraPositionState: CameraPositionState,
     locationSource: LocationSource,
     onLocationChange: (LatLng) -> Unit,
-    onTrackingButtonClick: (RunningSessionIntent.ChangeLocationTrackingButton) -> Unit,
+    onTrackingButtonClick: (RunningSessionIntent.ToggleFollowingMode) -> Unit,
     onPauseClick: (RunningSessionIntent.PauseIntent) -> Unit,
     onResumeClick: (RunningSessionIntent.ResumeIntent) -> Unit,
     onStopClick: (RunningSessionIntent.StopIntent) -> Unit,
@@ -118,8 +118,8 @@ fun RunningSessionScreen(
 
         LocationTrackingButton(
             isFollowing = uiState.isFollowingModeEnabled,
-            onClick = { followMode ->
-                onTrackingButtonClick(RunningSessionIntent.ChangeLocationTrackingButton(followMode))
+            onClick = {
+                onTrackingButtonClick(RunningSessionIntent.ToggleFollowingMode)
             },
             modifier =
                 Modifier

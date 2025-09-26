@@ -24,7 +24,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 @Composable
 fun LocationTrackingButton(
     isFollowing: Boolean,
-    onClick: (Boolean) -> Unit,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
 ) {
@@ -36,9 +36,7 @@ fun LocationTrackingButton(
                 .clip(CircleShape)
                 .background(Color.White)
                 .clickable(
-                    onClick = {
-                        if (isFollowing) onClick(false) else onClick(true)
-                    },
+                    onClick = onClick,
                     interactionSource = remember { MutableInteractionSource() },
                     indication = ripple(bounded = true, color = Color.Gray),
                 ),
