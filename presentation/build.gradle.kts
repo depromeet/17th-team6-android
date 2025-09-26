@@ -13,4 +13,5 @@ dependencies {
 
     implementation(libs.bundles.navermap)
     implementation(libs.constraintlayout.compose)
+    implementation(libs.androidx.lifecycle.service)
 }

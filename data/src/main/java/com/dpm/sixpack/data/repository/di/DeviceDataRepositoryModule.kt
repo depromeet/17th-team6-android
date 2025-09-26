@@ -2,7 +2,6 @@ package com.dpm.sixpack.data.repository.di
 
 import com.dpm.sixpack.core.BuildConfig
 import com.dpm.sixpack.data.repository.GpsRepositoryImpl
-import com.dpm.sixpack.data.repository.MockGpsRepository
 import com.dpm.sixpack.data.repository.MockSensorRepository
 import com.dpm.sixpack.data.repository.SensorRepositoryImpl
 import com.dpm.sixpack.data.source.local.gps.LocationDataSource
@@ -21,15 +20,17 @@ object DeviceDataRepositoryModule {
     @Provides
     @Singleton
     fun provideGpsRepository(locationDataSource: LocationDataSource): GpsRepository =
-        if (BuildConfig.DEBUG) {
-            MockGpsRepository()
-        } else {
-            GpsRepositoryImpl(locationDataSource)
-        }
+        GpsRepositoryImpl(locationDataSource)
+//        if (BuildConfig.DEBUG) {
+//            MockGpsRepository()
+//        } else {
+//            GpsRepositoryImpl(locationDataSource)
+//        }
 
     @Provides
     @Singleton
     fun provideSensorRepository(sensorDataSource: SensorDataSource): SensorRepository =
+//        SensorRepositoryImpl(sensorDataSource)
         if (BuildConfig.DEBUG) {
             MockSensorRepository()
         } else {

@@ -25,6 +25,7 @@ class SensorDataSource
                     object : SensorEventListener {
                         override fun onSensorChanged(event: SensorEvent) {
                             if (event.sensor.type == Sensor.TYPE_STEP_COUNTER) {
+                                // 센서가 제공하는 기기 재부팅 후의 절대적인 총 걸음 수
                                 val totalSteps = event.values[0].toInt()
                                 if (initialSteps == -1) {
                                     initialSteps = totalSteps

@@ -5,19 +5,19 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class RecordUiState(
-    val currentDistance: String = "",
+    val currentDistance: Int = 0,
     // 00:32:10
-    val currentDuration: String = "",
+    val currentDuration: Int = 0,
     // 5'30"
-    val avgPace: String = "",
+    val avgPace: Int = 0,
     // 180
-    val cadence: String = "",
+    val cadence: Int = 0,
 ) : Parcelable
 
 internal val INITIAL_RECORD_STATE =
     RecordUiState(
-        currentDistance = "0.0km",
-        currentDuration = "00:00:00",
-        avgPace = "0'00\"",
-        cadence = "0",
+        currentDistance = 0,
+        currentDuration = 0,
+        avgPace = 0,
+        cadence = 0,
     )

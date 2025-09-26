@@ -108,7 +108,7 @@ class RunningSessionRepositoryImpl @Inject constructor(
                         speed = speed, // m/s (API 보낼 땐 km/h로 변환!)
                         pace = pace, // sec/km
                         cadence = cadence, // spm
-                        totalDistanceMeter = totalDistance,
+                        totalDistanceMeter = totalDistance.toInt(),
                         timestamp = System.currentTimeMillis(),
                         duration = durationSec++, // 누적 러닝 시간(초)
                     )

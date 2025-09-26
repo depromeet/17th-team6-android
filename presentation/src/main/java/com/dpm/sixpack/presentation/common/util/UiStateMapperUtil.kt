@@ -34,6 +34,13 @@ fun calculatePace(
     return String.format("%02d'%02d", minutes, seconds)
 }
 
+fun formatPaceToString(paceInSeconds: Int): String {
+    val minutes = paceInSeconds / 60
+    val seconds = paceInSeconds % 60
+
+    return String.format("%02d'%02d", minutes, seconds)
+}
+
 fun formatDistanceToKm(distanceInMeters: Int): String {
     if (distanceInMeters < 1000) return "${distanceInMeters}m"
     val km = distanceInMeters / 1000.0

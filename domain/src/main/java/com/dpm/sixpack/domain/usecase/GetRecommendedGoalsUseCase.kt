@@ -39,7 +39,7 @@ class GetRecommendedGoalsUseCase @Inject constructor() {
                 title = "10km 마라톤 완주",
                 subTitle = "초보 러너도 안정적으로 완주할 수 있어요!",
                 type = "MARATHON",
-                goal = Goal(pace = 420, distance = 10000, duration = 3600, roundCount = 32),
+                goal = Goal(pace = 390, distance = 10000, duration = 3600, roundCount = 32),
             ),
             RecommendedGoal(
                 title = "21km 마라톤 완주",

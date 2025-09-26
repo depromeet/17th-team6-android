@@ -1,16 +1,18 @@
 package com.dpm.sixpack.domain.usecase
 
 import android.location.Location
+import com.dpm.sixpack.domain.exception.DoRunException
 import com.dpm.sixpack.domain.model.RealtimeRunningData
 import com.dpm.sixpack.domain.repository.GpsRepository
 import com.dpm.sixpack.domain.repository.SensorRepository
 import com.dpm.sixpack.domain.util.DoRunResult
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.scan
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,39 +33,51 @@ class GetRealtimeRunningDataUseCase @Inject constructor(
                 }
             }
 
+        // (위치, 거리)
         val distanceAccumulatorFlow: Flow<Pair<Location?, Float>> =
-            gpsRepository
-                .getLocationFlow()
-                .scan(Pair<Location?, Float>(null, 0f)) { accumulator, locationResult ->
-                    if (locationResult is DoRunResult.Failure) {
-                        return@scan accumulator
+            flow {
+                var totalDistance = 0f
+                var lastLocation: Location? = null
+                gpsRepository
+                    .getLocationFlow()
+                    .collect { locationResult ->
+                        locationResult
+                            .onSuccess { newLocation ->
+                                lastLocation?.let {
+                                    totalDistance += it.distanceTo(newLocation)
+                                    emit(Pair(newLocation, totalDistance))
+                                }
+                                lastLocation = newLocation
+                            }.onError { exception ->
+                                Timber.w(exception, "기기 위치 데이터 수신 실패")
+                            }
                     }
-                    val newLocation = (locationResult as DoRunResult.Success).data
-                    val lastLocation = accumulator.first
-                    val totalDistance = accumulator.second
+            }
 
-                    val newTotalDistance =
-                        if (lastLocation != null) {
-                            totalDistance + lastLocation.distanceTo(newLocation)
-                        } else {
-                            totalDistance
+        val stepFlow: Flow<DoRunResult<Int>> =
+            sensorRepository
+                .getTotalStep()
+                .onEach { result ->
+                    // onEach는 Flow의 각 아이템에 대해 "액션"만 수행하고 아이템은 그대로 통과
+                    result
+                        .onSuccess { steps ->
+                            Timber.d("걸음 수 데이터 수신 성공: $steps")
+                        }.onError { exception ->
+                            Timber.w(exception, "걸음 수 데이터 수신 실패")
                         }
-
-                    return@scan Pair(newLocation, newTotalDistance)
+                }.catch { e ->
+                    val exception = DoRunException.DataError(e.message.toString())
+                    emit(DoRunResult.Failure(exception))
+                }.onStart {
+                    // 센서감지안되면 시작안하는거 방지용
+                    emit(DoRunResult.Success(0))
                 }
 
         return combine(
             distanceAccumulatorFlow,
-            sensorRepository
-                .getTotalStep()
-                // 센서감지안되면 시작안하는거 방지용
-                .onStart { emit(DoRunResult.Success(0)) },
+            stepFlow,
             durationFlow,
         ) { distanceData, stepsResult, duration ->
-
-            if (stepsResult is DoRunResult.Failure) {
-                return@combine stepsResult
-            }
 
             val currentLocation = distanceData.first
             val totalDistance = distanceData.second
@@ -71,7 +85,14 @@ class GetRealtimeRunningDataUseCase @Inject constructor(
 
             val speed = currentLocation?.speed ?: 0f
 
-            val pace = if (speed > 0.3f) (1000f / speed).toInt() else 0
+            val totalDistanceInKm = totalDistance / 1000.0
+
+            val avgPace =
+                if (totalDistanceInKm > 0) {
+                    (duration / totalDistanceInKm).toInt()
+                } else {
+                    0
+                }
 
             val durationInMinutes = if (duration > 0) duration / 60.0 else 0.0
             val cadence = if (durationInMinutes > 0) (totalSteps / durationInMinutes).toInt() else 0
@@ -82,16 +103,14 @@ class GetRealtimeRunningDataUseCase @Inject constructor(
                     longitude = currentLocation?.longitude ?: 0.0,
                     altitude = currentLocation?.altitude ?: 0.0,
                     speed = speed,
-                    pace = pace,
+                    pace = avgPace,
                     cadence = cadence,
-                    totalDistanceMeter = totalDistance,
+                    totalDistanceMeter = totalDistance.toInt(),
                     duration = duration,
                     timestamp = System.currentTimeMillis(),
                 )
             Timber.d("실시간 데이터: $realtimeData")
             DoRunResult.Success(realtimeData)
-        }.onStart {
-            emit(DoRunResult.Success(RealtimeRunningData()))
         }
     }
 }

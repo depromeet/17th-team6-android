@@ -12,9 +12,8 @@ import com.dpm.sixpack.presentation.routes.goaledit.routes.question.navigation.a
 import com.dpm.sixpack.presentation.routes.goaledit.routes.result.navigation.addGoalEditResultNavGraph
 import com.dpm.sixpack.presentation.routes.home.navigation.addHomeNavGraph
 import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
-import com.dpm.sixpack.presentation.routes.session.navigation.addRunningNavGraph
+import com.dpm.sixpack.presentation.routes.session.navigation.addRunningSessionNavGraph
 import com.dpm.sixpack.presentation.routes.sessionlist.navigation.addSessionListNavGraph
-import timber.log.Timber
 
 @Composable
 internal fun MainNavHost(
@@ -39,7 +38,7 @@ internal fun MainNavHost(
             addHomeNavGraph(
                 onNavigateToSessionList = navigator::navigateToSessionList,
                 onNavigateToSession = {
-                    Timber.d("SR-N onNavigateToSession")
+                    navigator.navigateToRunningSession()
                 },
                 onNavigateToGoalEdit = navigator::navigateToGoalEditQuestion,
             )
@@ -48,8 +47,7 @@ internal fun MainNavHost(
                 onNavigateToBack = navigator::popBackStack,
                 onNavigateToGoalEdit = navigator::navigateToGoalEditQuestion,
                 onNavigateToSession = {
-                    // TODO SR-N
-                    Timber.d("SR-N onNavigateToGoalEdit")
+                    navigator.navigateToRunningSession()
                 },
             )
 
@@ -71,7 +69,9 @@ internal fun MainNavHost(
                 },
             )
 
-            addRunningNavGraph()
+            addRunningSessionNavGraph(
+                onNavigateToBack = navigator::popBackStack,
+            )
         }
     }
 }

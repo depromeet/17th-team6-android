@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
+import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionIntent
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.RecordUiState
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningSessionState
@@ -39,7 +41,7 @@ internal fun RunningRecordPanel(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(SixpackTheme.colors.gray0, shape = SixpackTheme.shapes.round20)
+                    .background(SixpackTheme.colors.gray0, shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
                     .padding(horizontal = 24.dp, vertical = 20.dp),
         ) {
             when (sessionState) {
@@ -75,7 +77,7 @@ internal fun RunningRecordPanel(
                 is RunningSessionState.Main.Running -> {
                     MainSessionInfo(
                         primaryInfo = stringResource(R.string.running_phase_main_title),
-                        secondaryInfo = sessionState.goalDistance,
+                        secondaryInfo = formatDistanceToKm(sessionState.goalDistanceMeter),
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                     MainRunningRecordGrid(recordUiState = sessionState.recordUiState)
@@ -86,7 +88,7 @@ internal fun RunningRecordPanel(
                 is RunningSessionState.Main.Pause -> {
                     MainSessionInfo(
                         primaryInfo = stringResource(R.string.running_phase_main_title),
-                        secondaryInfo = sessionState.goalDistance,
+                        secondaryInfo = formatDistanceToKm(sessionState.goalDistanceMeter),
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                     MainRunningRecordGrid(recordUiState = sessionState.recordUiState)
@@ -176,10 +178,10 @@ private fun PreviewMainRunningStatsPanel() {
             RunningSessionState.Main.Running(
                 recordUiState =
                     RecordUiState(
-                        currentDistance = "1.54km",
-                        currentDuration = "00:23:17",
-                        avgPace = "7'20\"",
-                        cadence = "154",
+                        currentDistance = 15400,
+                        currentDuration = 1530,
+                        avgPace = 440,
+                        cadence = 154,
                     ),
             ),
 //        primaryInfo = "러닝",
@@ -199,10 +201,10 @@ private fun PreviewMainRunningStatsPanelPause() {
             RunningSessionState.Main.Pause(
                 recordUiState =
                     RecordUiState(
-                        currentDistance = "1.54km",
-                        currentDuration = "00:23:17",
-                        avgPace = "7'20\"",
-                        cadence = "154",
+                        currentDistance = 15400,
+                        currentDuration = 1530,
+                        avgPace = 440,
+                        cadence = 154,
                     ),
             ),
 //        primaryInfo = "러닝",
@@ -222,10 +224,10 @@ private fun PreviewPrePostRunningStatsPanel() {
             RunningSessionState.WarmUp.Running(
                 recordUiState =
                     RecordUiState(
-                        currentDistance = "1.54km",
-                        currentDuration = "00:23:17",
-                        avgPace = "7'20\"",
-                        cadence = "154",
+                        currentDistance = 15400,
+                        currentDuration = 1530,
+                        avgPace = 440,
+                        cadence = 154,
                     ),
             ),
 //        primaryInfo = "쿨다운",

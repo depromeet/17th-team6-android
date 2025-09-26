@@ -5,7 +5,7 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 
 object MapConstants {
-    const val DEFAULT_ZOOM = 16.0
+    const val DEFAULT_ZOOM = 16.5
     const val MIN_ZOOM_LEVEL = 6.0
     const val MAX_ZOOM_LEVEL = 19.0
     const val MIN_LENGTH_PATH_ARRAY = 2

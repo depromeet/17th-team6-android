@@ -1,3 +1,4 @@
+import android.R.attr.fontFamily
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -10,6 +11,8 @@ data class SixpackTypography(
     val h2Bold: TextStyle,
     val h2Medium: TextStyle,
     val h2Regular: TextStyle,
+    val h3Bold: TextStyle,
+    val h4Bold: TextStyle,
     val t1Bold: TextStyle,
     val t1Medium: TextStyle,
     val t1Regular: TextStyle,
@@ -75,6 +78,22 @@ val SixPackTypographyValue =
                 fontWeight = FontWeight.Normal,
                 fontSize = 24.sp,
                 lineHeight = 34.sp,
+                letterSpacing = (-0.2).sp,
+            ),
+        h3Bold =
+            TextStyle(
+                fontFamily = pretendard,
+                fontWeight = FontWeight.Bold,
+                fontSize = 32.sp,
+                lineHeight = 42.sp,
+                letterSpacing = (-0.2).sp,
+            ),
+        h4Bold =
+            TextStyle(
+                fontFamily = pretendard,
+                fontWeight = FontWeight.Bold,
+                fontSize = 40.sp,
+                lineHeight = 50.sp,
                 letterSpacing = (-0.2).sp,
             ),
         // Title
