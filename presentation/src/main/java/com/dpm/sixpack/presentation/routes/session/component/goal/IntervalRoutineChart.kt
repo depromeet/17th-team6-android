@@ -1,6 +1,5 @@
 package com.dpm.sixpack.presentation.routes.session.component.goal
 
-import android.R.attr.lineHeight
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,11 +15,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningGoalUiState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 import kotlin.math.max
@@ -31,6 +28,10 @@ internal fun IntervalRoutineChart(uiState: RunningGoalUiState) {
 
     val totalDuration =
         (uiState.warmUpMinutes + uiState.recommendedTimeMinutes + uiState.coolDownMinutes).toFloat()
+
+    val warmUpWeight = if (totalDuration == 0f) minWeight else max(uiState.warmUpMinutes / totalDuration, minWeight)
+    val mainWeight = if (totalDuration == 0f) 0.7f else (uiState.warmUpMinutes / totalDuration)
+    val coolDownWeight = if (totalDuration == 0f) minWeight else max(uiState.warmUpMinutes / totalDuration, minWeight)
 
     Column(
         modifier =
@@ -50,7 +51,7 @@ internal fun IntervalRoutineChart(uiState: RunningGoalUiState) {
             Box(
                 modifier =
                     Modifier
-                        .weight(max(uiState.warmUpMinutes / totalDuration, minWeight))
+                        .weight(warmUpWeight)
                         .fillMaxHeight(0.5f)
                         .background(Color(0xFFB5B9FF)),
             )
@@ -58,7 +59,7 @@ internal fun IntervalRoutineChart(uiState: RunningGoalUiState) {
             Box(
                 modifier =
                     Modifier
-                        .weight(uiState.recommendedTimeMinutes / totalDuration)
+                        .weight(mainWeight)
                         .fillMaxHeight(1f)
                         .background(Color(0xFF8B91FF)),
             )
@@ -66,7 +67,7 @@ internal fun IntervalRoutineChart(uiState: RunningGoalUiState) {
             Box(
                 modifier =
                     Modifier
-                        .weight(max(uiState.coolDownMinutes / totalDuration, minWeight))
+                        .weight(coolDownWeight)
                         .fillMaxHeight(0.5f)
                         .background(Color(0xFFB5B9FF)),
             )
@@ -79,7 +80,7 @@ internal fun IntervalRoutineChart(uiState: RunningGoalUiState) {
             modifier = Modifier.fillMaxWidth(),
         ) {
             Column(
-                modifier = Modifier.weight(max(uiState.warmUpMinutes / totalDuration, minWeight)),
+                modifier = Modifier.weight(warmUpWeight),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
@@ -96,7 +97,7 @@ internal fun IntervalRoutineChart(uiState: RunningGoalUiState) {
                 )
             }
             Column(
-                modifier = Modifier.weight(uiState.recommendedTimeMinutes / totalDuration),
+                modifier = Modifier.weight(mainWeight),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
@@ -114,7 +115,7 @@ internal fun IntervalRoutineChart(uiState: RunningGoalUiState) {
             }
 
             Column(
-                modifier = Modifier.weight(max(uiState.coolDownMinutes / totalDuration, minWeight)),
+                modifier = Modifier.weight(coolDownWeight),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(

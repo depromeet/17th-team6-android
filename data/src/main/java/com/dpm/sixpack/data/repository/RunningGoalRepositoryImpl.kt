@@ -94,7 +94,6 @@ class MockRunningGoalRepositoryImpl @Inject constructor() : RunningGoalRepositor
             },
         )
 
-    override suspend fun saveRunningTotalGoal(goal: SaveTotalGoalUseCase.Params): DoRunResult<Unit> {
-        return DoRunResult.Success(Unit)
-    }
+    override suspend fun saveRunningTotalGoal(goal: SaveTotalGoalUseCase.Params): DoRunResult<Unit> =
+        DoRunResult.Success(Unit)
 }

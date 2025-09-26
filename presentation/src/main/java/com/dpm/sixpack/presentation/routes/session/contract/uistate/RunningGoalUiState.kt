@@ -2,9 +2,6 @@ package com.dpm.sixpack.presentation.routes.session.contract.uistate
 
 import android.os.Parcelable
 import com.dpm.sixpack.domain.model.session.RunningSessionGoal
-import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
-import com.dpm.sixpack.presentation.common.util.formatSecondsToPace
-import com.dpm.sixpack.presentation.common.util.formatSecondsToTime
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
