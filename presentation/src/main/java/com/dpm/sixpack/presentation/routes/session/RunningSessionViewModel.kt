@@ -1,11 +1,13 @@
 package com.dpm.sixpack.presentation.routes.session
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import androidx.annotation.RequiresPermission
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dpm.sixpack.domain.model.RealtimeRunningData
@@ -16,6 +18,7 @@ import com.dpm.sixpack.domain.usecase.StartRunningUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.common.util.MockLocationClient
 import com.dpm.sixpack.presentation.common.util.Sungsoo
+import com.dpm.sixpack.presentation.routes.session.component.MapConstants
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionIntent
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionSideEffect
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.INITIAL_RECORD_STATE
@@ -52,7 +55,7 @@ class RunningSessionViewModel @Inject constructor(
     private val startRunningUseCase: StartRunningUseCase,
     private val getRealtimeRunningDataUseCase: GetRealtimeRunningDataUseCase,
     private val finishRunningSessionUseCase: FinishRunningSessionUseCase,
-    fusedLocationProviderClient: FusedLocationProviderClient,
+    private val fusedLocationProviderClient: FusedLocationProviderClient,
 ) : BaseViewModel<RunningSessionUiState, RunningSessionIntent, RunningSessionSideEffect>() {
     // FIXME: 프리런칭 시뮬레이션용
     val mockLocationClient = MockLocationClient(fusedLocationProviderClient, viewModelScope)
@@ -103,13 +106,12 @@ class RunningSessionViewModel @Inject constructor(
         bindToService()
     }
 
+    @SuppressLint("MissingPermission")
     override fun onIntent(intent: RunningSessionIntent) {
         when (intent) {
-            is RunningSessionIntent.ClickBackIcon ->
-                intent {
-                    postSideEffect(RunningSessionSideEffect.NavigateBackToHome)
-                }
-
+            // TODO SK: 권한설정 바뀌면 처리
+            is RunningSessionIntent.UpdatePermission -> handlePermissionUpdate(intent.isGranted)
+            is RunningSessionIntent.ClickBackIcon -> handleBackIconClick()
             is RunningSessionIntent.TabChange -> handleTabChange(intent.tab)
             is RunningSessionIntent.SessionStart -> handleSessionStart()
             is RunningSessionIntent.ToggleFollowingMode -> handleToggleFollowingMode()
@@ -198,6 +200,28 @@ class RunningSessionViewModel @Inject constructor(
         intent {
             postSideEffect(RunningSessionSideEffect.ChangeTab(tab))
         }
+
+    private fun handleBackIconClick() =
+        intent {
+            postSideEffect(RunningSessionSideEffect.NavigateBackToHome)
+        }
+
+    @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
+    private fun handlePermissionUpdate(isGranted: Boolean) {
+        if (isGranted) {
+            loadLocationFromClient(
+                onSuccess = {
+                    intent {
+                        postSideEffect(RunningSessionSideEffect.SetLocation(it))
+                    }
+                },
+            )
+        } else {
+            intent {
+                postSideEffect(RunningSessionSideEffect.SetLocation(MapConstants.DEFAULT_CAMERA_POSITION.target))
+            }
+        }
+    }
 
     // region session start
 
@@ -329,11 +353,22 @@ class RunningSessionViewModel @Inject constructor(
 
     // endregion
 
+    @SuppressLint("MissingPermission")
     fun handleToggleFollowingMode() =
         intent {
+            val currentFollowMode = state.isFollowingModeEnabled
+            if (!currentFollowMode) {
+                loadLocationFromClient(
+                    onSuccess = { latLng ->
+                        viewModelScope.launch {
+                            postSideEffect(RunningSessionSideEffect.SetLocation(latLng))
+                        }
+                    },
+                )
+            }
             reduce {
                 state.copy(
-                    isFollowingModeEnabled = !state.isFollowingModeEnabled,
+                    isFollowingModeEnabled = !currentFollowMode,
                 )
             }
         }
@@ -407,7 +442,7 @@ class RunningSessionViewModel @Inject constructor(
     private fun handleWarmUpStopConfirm() =
         intent {
             reduce {
-                state.copy(RunningSessionState.Initial())
+                state.copy(RunningSessionState.Initial(goal = todayRunData.toUiState()))
             }
         }
 
@@ -529,12 +564,9 @@ class RunningSessionViewModel @Inject constructor(
             }
         }
 
-    // FIXME SK: 임시 조치로 Initial 상태로 돌아가게 함
     private fun handleCoolDownStopConfirm() =
         intent {
-            reduce {
-                state.copy(RunningSessionState.Initial())
-            }
+            postSideEffect(RunningSessionSideEffect.NavigateToReport(1))
         }
 
     // region Service
@@ -561,5 +593,21 @@ class RunningSessionViewModel @Inject constructor(
         mockLocationClient.stop()
         context.unbindService(serviceConnection)
         super.onCleared()
+    }
+
+    // TODO SK: 이 함수 호출부 모두 Client 직접 사용하는 방식 말고 유스케이스 거치는 방식으로 변경하기
+    @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
+    private fun loadLocationFromClient(onSuccess: (LatLng) -> Unit) {
+        fusedLocationProviderClient.lastLocation
+            .addOnSuccessListener { location ->
+                if (location != null) {
+                    val userLatLng = LatLng(location.latitude, location.longitude)
+                    onSuccess(userLatLng)
+                } else {
+                    Timber.e("Last Location is Null")
+                }
+            }.addOnFailureListener {
+                Timber.e("Load Location From Client failed: $it")
+            }
     }
 }

@@ -11,10 +11,14 @@ fun NavController.navigateRunningSession(navOptions: NavOptions? = null) {
     navigate(RunningRoute.Session, navOptions)
 }
 
-fun NavGraphBuilder.addRunningSessionNavGraph(onNavigateToBack: () -> Unit) {
+fun NavGraphBuilder.addRunningSessionNavGraph(
+    onNavigateToBack: () -> Unit,
+    navigateToSessionReport: () -> Unit = {}
+) {
     composable<RunningRoute.Session> {
         RunningSessionRoute(
             onNavigateToBack = onNavigateToBack,
+            navigateToSessionReport = navigateToSessionReport
         )
     }
 }

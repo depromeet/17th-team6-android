@@ -10,5 +10,5 @@ sealed interface RunningRoute : Route {
 
     // 러닝 종료 후 요약 화면
     @Serializable
-    data object Summarization : RunningRoute
+    data object Report : RunningRoute
 }

@@ -3,38 +3,47 @@ package com.dpm.sixpack.presentation.routes.session
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.dpm.sixpack.presentation.common.util.PermissionHandler
 import com.dpm.sixpack.presentation.routes.session.component.MapConstants
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionIntent
+import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.LocationSource
+import com.naver.maps.map.compose.CameraPositionState
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
-import com.naver.maps.map.compose.rememberCameraPositionState
-import com.naver.maps.map.compose.rememberFusedLocationSource
 import org.orbitmvi.orbit.compose.collectAsState
 
 @OptIn(ExperimentalNaverMapApi::class)
 @Composable
 fun RunningSessionSubRoute(
     viewModel: RunningSessionViewModel,
+    cameraPositionState: CameraPositionState,
+    locationSource: LocationSource,
     modifier: Modifier = Modifier,
 ) {
     // state
     val uiState by viewModel.collectAsState()
 
-    // Location
-    val locationSource = rememberFusedLocationSource()
-
-    // State
-    val cameraPositionState =
-        rememberCameraPositionState {
-            position = MapConstants.DEFAULT_CAMERA_POSITION
-        }
+    PermissionHandler(
+        context = LocalContext.current,
+        lifecycleOwner = LocalLifecycleOwner.current,
+        permissionsToRequest = MapConstants.MAP_PERMISSIONS,
+        onPermissionResult = { isGranted ->
+            viewModel.onIntent(RunningSessionIntent.UpdatePermission(isGranted))
+        },
+    )
 
     RunningSessionScreen(
         modifier = modifier,
         uiState = uiState,
         cameraPositionState = cameraPositionState,
         locationSource = locationSource,
-        onLocationChange = {
-            // todo
+        onLocationChange = { latLng ->
+            cameraPositionState.move(CameraUpdate.scrollTo(latLng))
+        },
+        onTrackingButtonClick = { trackingIntent ->
+            viewModel.onIntent(trackingIntent)
         },
         onPauseClick = { pauseIntent ->
             viewModel.onIntent(pauseIntent)

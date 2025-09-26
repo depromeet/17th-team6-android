@@ -39,10 +39,17 @@ fun NavGraphBuilder.addOnboardingNavGraph(
                 },
             )
         }
-
         composable<OnboardingRoute.LevelSelection> {
-            val backStackEntry = navController.getBackStackEntry(OnboardingRoute.Onboarding)
-            val viewModel: OnboardingViewModel = hiltViewModel(backStackEntry)
+            val viewModel: OnboardingViewModel =
+                if (navController.currentDestination?.parent?.route ==
+                    OnboardingRoute.Onboarding
+                        .serializer()
+                        .descriptor.serialName
+                ) {
+                    hiltViewModel(navController.getBackStackEntry(OnboardingRoute.Onboarding))
+                } else {
+                    hiltViewModel()
+                }
 
             OnboardingLevelRoute(
                 viewModel = viewModel,
@@ -56,8 +63,16 @@ fun NavGraphBuilder.addOnboardingNavGraph(
         }
 
         composable<OnboardingRoute.GoalSelection> {
-            val backStackEntry = navController.getBackStackEntry(OnboardingRoute.Onboarding)
-            val viewModel: OnboardingViewModel = hiltViewModel(backStackEntry)
+            val viewModel: OnboardingViewModel =
+                if (navController.currentDestination?.parent?.route ==
+                    OnboardingRoute.Onboarding
+                        .serializer()
+                        .descriptor.serialName
+                ) {
+                    hiltViewModel(navController.getBackStackEntry(OnboardingRoute.Onboarding))
+                } else {
+                    hiltViewModel()
+                }
 
             OnboardingGoalRoute(
                 viewModel = viewModel,
@@ -71,8 +86,16 @@ fun NavGraphBuilder.addOnboardingNavGraph(
         }
 
         composable<OnboardingRoute.Finish> {
-            val backStackEntry = navController.getBackStackEntry(OnboardingRoute.Onboarding)
-            val viewModel: OnboardingViewModel = hiltViewModel(backStackEntry)
+            val viewModel: OnboardingViewModel =
+                if (navController.currentDestination?.parent?.route ==
+                    OnboardingRoute.Onboarding
+                        .serializer()
+                        .descriptor.serialName
+                ) {
+                    hiltViewModel(navController.getBackStackEntry(OnboardingRoute.Onboarding))
+                } else {
+                    hiltViewModel()
+                }
 
             OnboardingFinishRoute(
                 viewModel = viewModel,

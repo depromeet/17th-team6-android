@@ -16,6 +16,6 @@ class SaveTotalGoalUseCase @Inject constructor(
             runningGoalRepository.saveRunningTotalGoal(saveTotalGoalParams)
             DoRunResult.Success(Unit)
         } catch (e: Exception) {
-            DoRunResult.Failure(DoRunException.UnknownError(e.message.toString(),e))
+            DoRunResult.Failure(DoRunException.UnknownError(e.message.toString(), e))
         }
 }

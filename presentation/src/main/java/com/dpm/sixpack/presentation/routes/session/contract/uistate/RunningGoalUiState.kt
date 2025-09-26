@@ -20,7 +20,7 @@ fun RunningSessionGoal.toUiState() =
     RunningGoalUiState(
         id = id,
         distanceMeter = distance,
-        recommendedTimeMinutes = duration,
+        recommendedTimeMinutes = duration / 60,
         recommendedPaceSeconds = pace,
         roundCount = roundCount,
         totalRoundCount = totalRoundCount ?: 20,

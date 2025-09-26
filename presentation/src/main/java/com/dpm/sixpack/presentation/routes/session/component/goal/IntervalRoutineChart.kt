@@ -20,18 +20,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningGoalUiState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
-import kotlin.math.max
 
 @Composable
 internal fun IntervalRoutineChart(uiState: RunningGoalUiState) {
+    // TODO SK: 실제 계산 로직으로 고치기
     val minWeight = 0.15f
+    val mainWeight = 0.7f
 
     val totalDuration =
         (uiState.warmUpMinutes + uiState.recommendedTimeMinutes + uiState.coolDownMinutes).toFloat()
-
-    val warmUpWeight = if (totalDuration == 0f) minWeight else max(uiState.warmUpMinutes / totalDuration, minWeight)
-    val mainWeight = if (totalDuration == 0f) 0.7f else (uiState.warmUpMinutes / totalDuration)
-    val coolDownWeight = if (totalDuration == 0f) minWeight else max(uiState.warmUpMinutes / totalDuration, minWeight)
 
     Column(
         modifier =
@@ -51,7 +48,7 @@ internal fun IntervalRoutineChart(uiState: RunningGoalUiState) {
             Box(
                 modifier =
                     Modifier
-                        .weight(warmUpWeight)
+                        .weight(minWeight)
                         .fillMaxHeight(0.5f)
                         .background(Color(0xFFB5B9FF)),
             )
@@ -67,7 +64,7 @@ internal fun IntervalRoutineChart(uiState: RunningGoalUiState) {
             Box(
                 modifier =
                     Modifier
-                        .weight(coolDownWeight)
+                        .weight(minWeight)
                         .fillMaxHeight(0.5f)
                         .background(Color(0xFFB5B9FF)),
             )
@@ -80,7 +77,7 @@ internal fun IntervalRoutineChart(uiState: RunningGoalUiState) {
             modifier = Modifier.fillMaxWidth(),
         ) {
             Column(
-                modifier = Modifier.weight(warmUpWeight),
+                modifier = Modifier.weight(minWeight),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
@@ -115,7 +112,7 @@ internal fun IntervalRoutineChart(uiState: RunningGoalUiState) {
             }
 
             Column(
-                modifier = Modifier.weight(coolDownWeight),
+                modifier = Modifier.weight(minWeight),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(

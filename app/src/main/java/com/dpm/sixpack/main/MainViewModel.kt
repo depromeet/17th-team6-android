@@ -3,7 +3,6 @@ package com.dpm.sixpack.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dpm.sixpack.domain.usecase.GetOnboardingStatusUseCase
-import com.dpm.sixpack.presentation.destinations.MainRoute
 import com.dpm.sixpack.presentation.destinations.OnboardingRoute
 import com.dpm.sixpack.presentation.destinations.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,8 +27,8 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             val isOnboardingComplete = getOnboardingStatusUseCase()
 
-            _startDestination.value =
-                if (isOnboardingComplete) MainRoute.Home else OnboardingRoute.Onboarding
+            _startDestination.value = OnboardingRoute.Onboarding
+//                if (isOnboardingComplete) MainRoute.Home else OnboardingRoute.Onboarding
 
             delay(1000L)
             _isLoading.value = false

@@ -8,12 +8,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.dpm.sixpack.SixPackAppState
 import com.dpm.sixpack.presentation.destinations.GoalEditRoute
+import com.dpm.sixpack.presentation.destinations.OnboardingRoute
+import com.dpm.sixpack.presentation.destinations.Route
 import com.dpm.sixpack.presentation.routes.goaledit.routes.question.navigation.addGoalEditQuestionNavGraph
 import com.dpm.sixpack.presentation.routes.goaledit.routes.result.navigation.addGoalEditResultNavGraph
 import com.dpm.sixpack.presentation.routes.home.navigation.addHomeNavGraph
 import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
 import com.dpm.sixpack.presentation.routes.session.navigation.addRunningSessionNavGraph
 import com.dpm.sixpack.presentation.routes.sessionlist.navigation.addSessionListNavGraph
+import com.dpm.sixpack.presentation.routes.sessionreport.navigation.addSessionReportNavGraph
 
 @Composable
 internal fun MainNavHost(
@@ -32,7 +35,15 @@ internal fun MainNavHost(
         ) {
             addOnboardingNavGraph(
                 navController = navigator.navController,
-                navigateToHome = navigator::navigateToHome,
+                navigateToHome = {
+                    navigator.navigateToHome(
+                        navOptions {
+                            popUpTo(OnboardingRoute.Onboarding) {
+                                inclusive = true
+                            }
+                        },
+                    )
+                },
             )
 
             addHomeNavGraph(
@@ -70,6 +81,11 @@ internal fun MainNavHost(
             )
 
             addRunningSessionNavGraph(
+                onNavigateToBack = navigator::popBackStack,
+                navigateToSessionReport = navigator::navigateToSessionReport,
+            )
+
+            addSessionReportNavGraph(
                 onNavigateToBack = navigator::popBackStack,
             )
         }

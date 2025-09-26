@@ -1,5 +1,6 @@
 package com.dpm.sixpack.presentation.routes.session
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,26 +27,42 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
+import com.dpm.sixpack.presentation.routes.session.component.MapConstants
 import com.dpm.sixpack.presentation.routes.session.component.ScreenSelectTab
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionIntent
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionSideEffect
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningScreenTabItem
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningSessionState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
+import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.compose.ExperimentalNaverMapApi
+import com.naver.maps.map.compose.rememberCameraPositionState
+import com.naver.maps.map.compose.rememberFusedLocationSource
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 import timber.log.Timber
 
+@OptIn(ExperimentalNaverMapApi::class)
 @Composable
 fun RunningSessionRoute(
     modifier: Modifier = Modifier,
     viewModel: RunningSessionViewModel = hiltViewModel(),
     onNavigateToBack: () -> Unit = { },
+    navigateToSessionReport: () -> Unit = { },
 ) {
     val tabItems = RunningScreenTabItem.entries
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { tabItems.size })
 
     val uiState by viewModel.collectAsState()
+
+    // Location
+    val locationSource = rememberFusedLocationSource()
+
+    // State
+    val cameraPositionState =
+        rememberCameraPositionState {
+            position = MapConstants.DEFAULT_CAMERA_POSITION
+        }
 
     viewModel.collectSideEffect { sideEffect ->
         // Collect
@@ -55,6 +72,7 @@ fun RunningSessionRoute(
             }
 
             is RunningSessionSideEffect.NavigateToReport -> {
+                navigateToSessionReport()
             }
 
             is RunningSessionSideEffect.ChangeTab -> {
@@ -68,6 +86,16 @@ fun RunningSessionRoute(
                     }
                 }
             }
+
+            is RunningSessionSideEffect.SetLocation -> {
+                cameraPositionState.move(CameraUpdate.scrollTo(sideEffect.latLng))
+            }
+        }
+    }
+
+    if (uiState.sessionState !is RunningSessionState.Initial) {
+        BackHandler {
+            // 뒤로가기 못하게
         }
     }
 
@@ -175,6 +203,8 @@ fun RunningSessionRoute(
                                 alpha = if (pagerState.currentPage == 1) 1f else 0f
                             },
                     viewModel = viewModel,
+                    cameraPositionState = cameraPositionState,
+                    locationSource = locationSource,
                 )
             }
 

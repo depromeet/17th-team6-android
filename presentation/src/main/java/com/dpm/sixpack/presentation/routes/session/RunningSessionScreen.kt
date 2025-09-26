@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -32,7 +31,6 @@ import com.naver.maps.map.compose.MapType
 import com.naver.maps.map.compose.MapUiSettings
 import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.PathOverlay
-import com.naver.maps.map.compose.rememberFusedLocationSource
 
 @OptIn(ExperimentalNaverMapApi::class)
 @Composable
@@ -41,6 +39,7 @@ fun RunningSessionScreen(
     cameraPositionState: CameraPositionState,
     locationSource: LocationSource,
     onLocationChange: (LatLng) -> Unit,
+    onTrackingButtonClick: (RunningSessionIntent.ToggleFollowingMode) -> Unit,
     onPauseClick: (RunningSessionIntent.PauseIntent) -> Unit,
     onResumeClick: (RunningSessionIntent.ResumeIntent) -> Unit,
     onStopClick: (RunningSessionIntent.StopIntent) -> Unit,
@@ -76,7 +75,6 @@ fun RunningSessionScreen(
                 ),
             uiSettings =
                 MapUiSettings(
-                    isScrollGesturesEnabled = false,
                     isZoomGesturesEnabled = true,
                     isZoomControlEnabled = false,
                     isLocationButtonEnabled = false,
@@ -86,7 +84,9 @@ fun RunningSessionScreen(
                 ),
             locationSource = locationSource,
             onLocationChange = { location ->
-                onLocationChange(LatLng(location))
+                if (uiState.isFollowingModeEnabled) {
+                    onLocationChange(LatLng(location))
+                }
             },
         ) {
             (uiState.sessionState as? RunningSessionState.HasMapPath)?.mapUiState?.let { mapUiState ->
@@ -117,8 +117,9 @@ fun RunningSessionScreen(
         }
 
         LocationTrackingButton(
+            isFollowing = uiState.isFollowingModeEnabled,
             onClick = {
-                // TODO
+                onTrackingButtonClick(RunningSessionIntent.ToggleFollowingMode)
             },
             modifier =
                 Modifier
@@ -237,27 +238,4 @@ fun RunningSessionScreen(
             }
         }
     }
-}
-
-@OptIn(ExperimentalNaverMapApi::class)
-@Preview
-@Composable
-private fun PreviewRunningSessionScreenContent() {
-    RunningSessionScreen(
-        uiState =
-            RunningSessionUiState(
-                sessionState = RunningSessionState.WarmUp.Ready(),
-            ),
-        cameraPositionState = CameraPositionState(),
-        locationSource = rememberFusedLocationSource(),
-        onLocationChange = { },
-        onPauseClick = { },
-        onResumeClick = { },
-        onStopClick = { },
-        onStopCancelClick = {},
-        onStopConfirmClick = { },
-        onSkipClick = { },
-        onSkipCancelClick = {},
-        onSkipConfirmClick = { },
-    )
 }

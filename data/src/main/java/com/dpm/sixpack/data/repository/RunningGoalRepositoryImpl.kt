@@ -41,26 +41,26 @@ class RunningGoalRepositoryImpl @Inject constructor(
 }
 
 class MockRunningGoalRepositoryImpl @Inject constructor() : RunningGoalRepository {
-
-    var cachedTotalGoal = RunningTotalGoal(
-        id = 1L,
-        createdAt = "2023-10-10T10:00:00Z",
-        updatedAt = "2023-10-10T10:00:00Z",
-        pausedAt = null,
-        clearedAt = null,
-        title = "",
-        subTitle = "",
-        type = "",
-        pace = 0,
-        distance = 0,
-        duration = 0,
-        totalRoundCount = 0,
-        clearedRoundCount = 0,
-    )
+    var cachedTotalGoal =
+        RunningTotalGoal(
+            id = 1L,
+            createdAt = "2023-10-10T10:00:00Z",
+            updatedAt = "2023-10-10T10:00:00Z",
+            pausedAt = null,
+            clearedAt = null,
+            title = "",
+            subTitle = "",
+            type = "",
+            pace = 0,
+            distance = 0,
+            duration = 0,
+            totalRoundCount = 0,
+            clearedRoundCount = 0,
+        )
 
     override suspend fun getRunningTotalGoal(): DoRunResult<RunningTotalGoal> =
         DoRunResult.Success(
-            cachedTotalGoal
+            cachedTotalGoal,
         )
 
     override suspend fun getTodayRunningSessionGoal(): DoRunResult<RunningSessionGoal> =
@@ -98,14 +98,15 @@ class MockRunningGoalRepositoryImpl @Inject constructor() : RunningGoalRepositor
         )
 
     override suspend fun saveRunningTotalGoal(goal: SaveTotalGoalParams) {
-        cachedTotalGoal = cachedTotalGoal.copy(
-            title = goal.title,
-            subTitle = goal.subTitle,
-            type = goal.type,
-            pace = goal.pace,
-            distance = goal.distance,
-            duration = goal.duration,
-            totalRoundCount = goal.totalRoundCount,
-        )
+        cachedTotalGoal =
+            cachedTotalGoal.copy(
+                title = goal.title,
+                subTitle = goal.subTitle,
+                type = goal.type,
+                pace = goal.pace,
+                distance = goal.distance,
+                duration = goal.duration,
+                totalRoundCount = goal.totalRoundCount,
+            )
     }
 }

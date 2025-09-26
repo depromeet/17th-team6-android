@@ -137,10 +137,9 @@ class OnboardingViewModel @Inject constructor(
                     distance = selectedRecommendedGoal.goalTarget.distance,
                     duration = selectedRecommendedGoal.goalTarget.duration,
                     totalRoundCount = selectedRecommendedGoal.goalTarget.roundCount,
-                )
+                ),
             )
             postSideEffect(OnboardingSideEffect.NavigateToHome)
-
         }
     }
 

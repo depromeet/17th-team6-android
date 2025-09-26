@@ -81,4 +81,8 @@ sealed interface RunningSessionIntent : UiIntent {
     //endregion
 
     data object ClickBackIcon : RunningSessionIntent
+
+    data class UpdatePermission(
+        val isGranted: Boolean,
+    ) : RunningSessionIntent
 }
