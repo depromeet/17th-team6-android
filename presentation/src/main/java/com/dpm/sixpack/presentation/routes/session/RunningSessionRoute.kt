@@ -1,5 +1,6 @@
 package com.dpm.sixpack.presentation.routes.session
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -89,6 +90,12 @@ fun RunningSessionRoute(
             is RunningSessionSideEffect.SetInitialLocation -> {
                 cameraPositionState.move(CameraUpdate.scrollTo(sideEffect.latLng))
             }
+        }
+    }
+
+    if (uiState.sessionState !is RunningSessionState.Initial) {
+        BackHandler {
+            // 뒤로가기 못하게
         }
     }
 
