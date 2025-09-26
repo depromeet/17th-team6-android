@@ -1,9 +1,10 @@
-package com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.goal
+package com.dpm.sixpack.presentation.common.components.goal.model.type
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import com.dpm.sixpack.domain.util.RunningGoalConstants
 import com.dpm.sixpack.presentation.R
-import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.finish.RecommendedGoalUiState
+import com.dpm.sixpack.presentation.common.components.goal.model.state.RecommendedGoalUiState
 
 enum class GoalType(
     val runningGoal: String,

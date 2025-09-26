@@ -14,24 +14,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
-import com.dpm.sixpack.presentation.common.components.goaltype.DoRunGoalCardList
+import com.dpm.sixpack.presentation.common.components.goal.DoRunGoalCardList
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
 import com.dpm.sixpack.presentation.routes.onboarding.component.OnboardingNextButton
 import com.dpm.sixpack.presentation.routes.onboarding.component.OnboardingPage
 import com.dpm.sixpack.presentation.routes.onboarding.component.OnboardingPageIndicator
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.OnboardingUiState
-import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.goal.GoalType
+import com.dpm.sixpack.presentation.common.components.goal.model.type.GoalType
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.level.LevelType
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 fun OnboardingGoalScreen(
     uiState: OnboardingUiState,
+    modifier: Modifier = Modifier,
     onSelectGoal: (GoalType) -> Unit = {},
     onClickNextButton: () -> Unit = {},
     onClickBackButton: () -> Unit = {},
-    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier =
@@ -80,7 +80,6 @@ fun OnboardingGoalScreen(
         }
     }
 }
-
 
 @Preview
 @Composable

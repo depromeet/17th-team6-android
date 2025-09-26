@@ -38,17 +38,12 @@ internal fun MainNavHost(
                 onNavigateToSession = {
                     Timber.d("SR-N onNavigateToSession")
                 },
-                onNavigateToGoalEdit = {
-                    Timber.d("SR-N onNavigateToGoalEdit")
-                },
+                onNavigateToGoalEdit = navigator::navigateToGoalEdit
             )
 
             addSessionListNavGraph(
                 onNavigateToBack = navigator::popBackStack,
-                onNavigateToGoalEdit = {
-                    // TODO SR-N
-                    Timber.d("SR-N onNavigateToSession")
-                },
+                onNavigateToGoalEdit = navigator::navigateToGoalEdit,
                 onNavigateToSession = {
                     // TODO SR-N
                     Timber.d("SR-N onNavigateToGoalEdit")

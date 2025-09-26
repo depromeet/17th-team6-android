@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.common.components.goaltype
+package com.dpm.sixpack.presentation.common.components.goal
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
-import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.goal.GoalType
+import com.dpm.sixpack.presentation.common.components.goal.model.type.GoalType
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable

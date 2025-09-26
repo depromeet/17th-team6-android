@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.goal
+package com.dpm.sixpack.domain.util
 
 object RunningGoalConstants {
     const val MARATHON = "MARATHON"

@@ -1,6 +1,7 @@
-package com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.finish
+package com.dpm.sixpack.presentation.common.components.goal.model.state
 
 import android.os.Parcelable
+import com.dpm.sixpack.presentation.common.components.goal.model.type.MarathonGoalType
 import com.dpm.sixpack.presentation.common.util.format.formatPace
 import com.dpm.sixpack.presentation.common.util.format.formatSecondsToTime
 import kotlinx.parcelize.Parcelize

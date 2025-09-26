@@ -13,6 +13,7 @@ import androidx.navigation.navOptions
 import com.dpm.sixpack.presentation.destinations.MainRoute
 import com.dpm.sixpack.presentation.destinations.Route
 import com.dpm.sixpack.presentation.navigation.MainNavTab
+import com.dpm.sixpack.presentation.routes.goaledit.routes.question.navigation.navigateGoalEditQuestion
 import com.dpm.sixpack.presentation.routes.home.navigation.navigateHome
 import com.dpm.sixpack.presentation.routes.sessionlist.navigation.navigateSessionList
 import timber.log.Timber
@@ -55,6 +56,10 @@ class MainNavigator(
 
     fun navigateToSessionList(goalId: Long) {
         navController.navigateSessionList(totalGoalId = goalId)
+    }
+
+    fun navigateToGoalEdit() {
+        navController.navigateGoalEditQuestion()
     }
 
     fun navigate(tab: MainNavTab) {

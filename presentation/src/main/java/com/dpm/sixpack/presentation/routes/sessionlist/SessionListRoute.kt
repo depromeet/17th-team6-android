@@ -19,7 +19,7 @@ fun SessionListRoute(
     modifier: Modifier = Modifier,
     viewModel: SessionListViewModel = hiltViewModel(),
     onNavigateToBack: () -> Unit = {},
-    onNavigateToGoalEdit: (goalId: Long) -> Unit = {},
+    onNavigateToGoalEdit: () -> Unit = {},
     onNavigateToSession: (sessionId: Long) -> Unit = {},
 ) {
     val screenState by viewModel.collectAsState()
@@ -33,7 +33,7 @@ fun SessionListRoute(
             }
 
             is SessionListSideEffect.NavigateToGoalEdit -> {
-                onNavigateToGoalEdit(sideEffect.goalId)
+                onNavigateToGoalEdit()
             }
 
             is SessionListSideEffect.NavigateToSession -> {

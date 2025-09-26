@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.finish
+package com.dpm.sixpack.presentation.common.components.goal.model.state
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
