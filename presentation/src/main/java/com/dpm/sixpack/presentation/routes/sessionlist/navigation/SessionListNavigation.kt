@@ -20,7 +20,7 @@ fun NavController.navigateSessionList(
 
 fun NavGraphBuilder.addSessionListNavGraph(
     onNavigateToBack: () -> Unit = {},
-    onNavigateToGoalEdit: (goalId: Long) -> Unit = {},
+    onNavigateToGoalEdit: () -> Unit = {},
     onNavigateToSession: (sessionId: Long) -> Unit = {},
 ) {
     // TODO SR-N Argument 처리

@@ -4,12 +4,11 @@ import androidx.lifecycle.SavedStateHandle
 import com.dpm.sixpack.domain.usecase.CompleteOnboardingUseCase
 import com.dpm.sixpack.domain.usecase.GetRecommendedGoalsUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
+import com.dpm.sixpack.presentation.common.components.goal.model.state.asUiState
+import com.dpm.sixpack.presentation.common.components.goal.model.type.GoalType
 import com.dpm.sixpack.presentation.routes.onboarding.contract.OnboardingSideEffect
 import com.dpm.sixpack.presentation.routes.onboarding.contract.OnboardingUiIntent
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.OnboardingUiState
-import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.finish.GoalUiState
-import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.finish.RecommendedGoalUiState
-import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.goal.GoalType
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.level.LevelType
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.permission.TermType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -136,22 +135,7 @@ class OnboardingViewModel @Inject constructor(
         intent {
             val uiGoals =
                 getRecommendedGoalsUseCase(state.selectedGoal!!.runningGoal)
-                    .mapIndexed { index, data ->
-                        RecommendedGoalUiState(
-                            title = data.title,
-                            subTitle = data.subTitle,
-                            isRecommended = index == 0,
-                            isSelected = false,
-                            goalTarget =
-                                GoalUiState(
-                                    pace = data.goal.pace,
-                                    distance = data.goal.distance,
-                                    duration = data.goal.duration,
-                                    roundCount = data.goal.roundCount,
-                                ),
-                        )
-                    }
-
+                    .mapIndexed { index, data -> data.asUiState(index) }
             reduce {
                 state.copy(recommendedGoals = uiGoals)
             }

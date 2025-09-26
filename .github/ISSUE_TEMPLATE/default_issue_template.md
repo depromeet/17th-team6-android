@@ -3,6 +3,8 @@ name: "기본 이슈 템플릿"
 about: "이슈 넘버 명시, 작업 목적과 해야 할 일 작성"
 title: "#{이슈 넘버}: {제목}"
 ---
+## Closed Issue
+- closed issue: #{이슈 넘버}
 
 ## 📝 Description
 {작업의 목적이나 기능}

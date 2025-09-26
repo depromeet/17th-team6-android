@@ -5,7 +5,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import androidx.navigation.navOptions
 import com.dpm.sixpack.SixPackAppState
+import com.dpm.sixpack.presentation.destinations.GoalEditRoute
+import com.dpm.sixpack.presentation.routes.goaledit.routes.question.navigation.addGoalEditQuestionNavGraph
+import com.dpm.sixpack.presentation.routes.goaledit.routes.result.navigation.addGoalEditResultNavGraph
 import com.dpm.sixpack.presentation.routes.home.navigation.addHomeNavGraph
 import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
 import com.dpm.sixpack.presentation.routes.session.navigation.addRunningSessionNavGraph
@@ -37,22 +41,36 @@ internal fun MainNavHost(
                 onNavigateToSession = {
                     Timber.d("SR-N onNavigateToSession")
                 },
-                onNavigateToGoalEdit = {
-                    Timber.d("SR-N onNavigateToGoalEdit")
-                },
+                onNavigateToGoalEdit = navigator::navigateToGoalEditQuestion,
             )
 
             addSessionListNavGraph(
                 onNavigateToBack = navigator::popBackStack,
-                onNavigateToGoalEdit = {
-                    // TODO SR-N
-                    Timber.d("SR-N onNavigateToSession")
-                },
+                onNavigateToGoalEdit = navigator::navigateToGoalEditQuestion,
                 onNavigateToSession = {
                     // TODO SR-N
                     Timber.d("SR-N onNavigateToGoalEdit")
                 },
             )
+
+            addGoalEditQuestionNavGraph(
+                onNavigateToBack = navigator::popBackStack,
+                onNavigateToGoalEditResult = navigator::navigateToGoalEditResult,
+            )
+
+            addGoalEditResultNavGraph(
+                onNavigateToBack = navigator::popBackStack,
+                onNavigateToHome = {
+                    navigator.navigateToHome(
+                        navOptions {
+                            popUpTo(GoalEditRoute) {
+                                inclusive = true
+                            }
+                        },
+                    )
+                },
+            )
+
             addRunningSessionNavGraph(
                 onNavigateToBack = navigator::popBackStack,
             )
