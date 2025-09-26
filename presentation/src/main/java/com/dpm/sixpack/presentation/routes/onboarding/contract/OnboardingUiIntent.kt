@@ -1,7 +1,7 @@
 package com.dpm.sixpack.presentation.routes.onboarding.contract
 
 import com.dpm.sixpack.presentation.common.base.UiIntent
-import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.goal.GoalType
+import com.dpm.sixpack.presentation.common.components.goal.model.type.GoalType
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.level.LevelType
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.permission.TermType
 
