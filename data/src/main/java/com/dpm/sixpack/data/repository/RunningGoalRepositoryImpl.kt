@@ -5,6 +5,7 @@ import com.dpm.sixpack.domain.exception.DoRunException
 import com.dpm.sixpack.domain.model.session.RunningSessionGoal
 import com.dpm.sixpack.domain.model.total.RunningTotalGoal
 import com.dpm.sixpack.domain.repository.RunningGoalRepository
+import com.dpm.sixpack.domain.usecase.SaveTotalGoalUseCase
 import com.dpm.sixpack.domain.util.DoRunResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -33,6 +34,10 @@ class RunningGoalRepositoryImpl @Inject constructor(
 
     override suspend fun getRunningSessions(goalId: Long): DoRunResult<List<RunningSessionGoal>> =
         DoRunResult.Failure(DoRunException.DataError("미구현 상태입니다."))
+
+    override suspend fun saveRunningTotalGoal(goal: SaveTotalGoalUseCase.Params): DoRunResult<Unit> {
+        TODO("Not yet implemented")
+    }
 }
 
 class MockRunningGoalRepositoryImpl @Inject constructor() : RunningGoalRepository {
@@ -88,4 +93,8 @@ class MockRunningGoalRepositoryImpl @Inject constructor() : RunningGoalRepositor
                 )
             },
         )
+
+    override suspend fun saveRunningTotalGoal(goal: SaveTotalGoalUseCase.Params): DoRunResult<Unit> {
+        return DoRunResult.Success(Unit)
+    }
 }
