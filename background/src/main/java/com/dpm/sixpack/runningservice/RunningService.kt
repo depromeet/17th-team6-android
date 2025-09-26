@@ -162,8 +162,10 @@ class RunningService : LifecycleService() {
                     durationInSeconds += 1
                     delay(1000L)
 
-                    paceAverage = calculateAvgPace(totalDistance, durationInSeconds)
-                    cadence = calculateAvgCadence(currentSteps, durationInSeconds)
+                    if (durationInSeconds % CALCULATE_PERIOD == 0 || durationInSeconds == 1) {
+                        paceAverage = calculateAvgPace(totalDistance, durationInSeconds)
+                        cadence = calculateAvgCadence(currentSteps, durationInSeconds)
+                    }
                     postCurrentRunningDataState()
 
                     updateNotification(durationInSeconds)
@@ -284,5 +286,9 @@ class RunningService : LifecycleService() {
     override fun onBind(intent: Intent): IBinder {
         super.onBind(intent)
         return binder
+    }
+
+    companion object {
+        private const val CALCULATE_PERIOD = 3
     }
 }
