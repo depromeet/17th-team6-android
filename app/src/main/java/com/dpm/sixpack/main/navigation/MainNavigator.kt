@@ -14,11 +14,7 @@ import androidx.navigation.navOptions
 import com.dpm.sixpack.presentation.destinations.MainRoute
 import com.dpm.sixpack.presentation.destinations.Route
 import com.dpm.sixpack.presentation.navigation.MainNavTab
-import com.dpm.sixpack.presentation.routes.goaledit.routes.question.navigation.navigateGoalEditQuestion
-import com.dpm.sixpack.presentation.routes.goaledit.routes.result.navigation.navigateGoalEditResult
-import com.dpm.sixpack.presentation.routes.home.navigation.navigateHome
 import com.dpm.sixpack.presentation.routes.session.navigation.navigateRunningSession
-import com.dpm.sixpack.presentation.routes.sessionlist.navigation.navigateSessionList
 import com.dpm.sixpack.presentation.routes.sessionreport.navigation.navigateSessionReport
 import timber.log.Timber
 
@@ -55,23 +51,10 @@ class MainNavigator(
     }
 
     fun navigateToHome(navOptions: NavOptions? = null) {
-        navController.navigateHome(navOptions)
     }
 
     fun navigateToRunningSession() {
         navController.navigateRunningSession()
-    }
-
-    fun navigateToSessionList(goalId: Long) {
-        navController.navigateSessionList(totalGoalId = goalId)
-    }
-
-    fun navigateToGoalEditQuestion() {
-        navController.navigateGoalEditQuestion()
-    }
-
-    fun navigateToGoalEditResult() {
-        navController.navigateGoalEditResult()
     }
 
     fun navigateToSessionReport() {
@@ -95,8 +78,11 @@ class MainNavigator(
             }
 
         when (tab) {
-            MainNavTab.HOME -> navController.navigateHome(navOptions)
-            MainNavTab.RECORD -> {
+            MainNavTab.HOME -> {
+                // TODO
+            }
+
+            MainNavTab.FEED -> {
                 // TODO
                 Timber.d("Navigate to Record Screen")
             }

@@ -13,9 +13,7 @@ sealed interface RunningSessionState : Parcelable {
      * [러닝 지도 뷰](https://www.figma.com/design/2gOt25L1n1LkFz15uvRapV/%EB%94%94%ED%94%84%EB%A7%8C-17%EA%B8%B0-6%ED%8C%80?node-id=1548-5420&m=dev)
      * 러닝 시작 버튼만 떠있는 상태.
      */
-    data class Initial(
-        val goal: RunningGoalUiState = RunningGoalUiState(),
-    ) : RunningSessionState
+    data object Initial : RunningSessionState
 
     // 러닝 패널에 표시될 기록이 있는 상태
     sealed interface HasRecord : RunningSessionState {

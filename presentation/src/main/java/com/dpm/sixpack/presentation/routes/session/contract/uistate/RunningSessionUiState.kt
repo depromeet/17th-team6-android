@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class RunningSessionUiState(
-    val sessionState: RunningSessionState = RunningSessionState.Initial(),
+    val sessionState: RunningSessionState = RunningSessionState.Initial,
     val isFollowingModeEnabled: Boolean = true,
 ) : UiState,
     Parcelable

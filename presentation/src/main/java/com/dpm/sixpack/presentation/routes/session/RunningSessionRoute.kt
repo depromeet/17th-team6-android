@@ -33,6 +33,7 @@ import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionIntent
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionSideEffect
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningScreenTabItem
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningSessionState
+import com.dpm.sixpack.presentation.routes.session.ui.RunningSessionSubRoute
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
@@ -163,13 +164,6 @@ fun RunningSessionRoute(
                 when (page) {
                     0 -> {
                         (uiState.sessionState as? RunningSessionState.Initial)?.let { sessionState ->
-                            RunningGoalScreen(
-                                modifier =
-                                    Modifier
-                                        .padding(top = paddingValues.calculateTopPadding())
-                                        .fillMaxSize(),
-                                goalUiState = sessionState.goal,
-                            )
                         }
                     }
 

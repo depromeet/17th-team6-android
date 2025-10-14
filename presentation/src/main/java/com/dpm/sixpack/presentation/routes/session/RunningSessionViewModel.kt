@@ -11,9 +11,7 @@ import androidx.annotation.RequiresPermission
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dpm.sixpack.domain.model.RealtimeRunningData
-import com.dpm.sixpack.domain.model.session.RunningSessionGoal
 import com.dpm.sixpack.domain.usecase.FinishRunningSessionUseCase
-import com.dpm.sixpack.domain.usecase.GetRealtimeRunningDataUseCase
 import com.dpm.sixpack.domain.usecase.StartRunningUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.common.util.MockLocationClient
@@ -28,7 +26,6 @@ import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningScree
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningSessionState
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningSessionState.Companion.INITIAL_COUNTDOWN
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningSessionUiState
-import com.dpm.sixpack.presentation.routes.session.contract.uistate.toUiState
 import com.dpm.sixpack.runningservice.RunningActions
 import com.dpm.sixpack.runningservice.RunningService
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -36,7 +33,6 @@ import com.naver.maps.geometry.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -53,31 +49,15 @@ class RunningSessionViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     @ApplicationContext private val context: Context,
     private val startRunningUseCase: StartRunningUseCase,
-    private val getRealtimeRunningDataUseCase: GetRealtimeRunningDataUseCase,
     private val finishRunningSessionUseCase: FinishRunningSessionUseCase,
     private val fusedLocationProviderClient: FusedLocationProviderClient,
 ) : BaseViewModel<RunningSessionUiState, RunningSessionIntent, RunningSessionSideEffect>() {
     // FIXME: 프리런칭 시뮬레이션용
     val mockLocationClient = MockLocationClient(fusedLocationProviderClient, viewModelScope)
 
-    // TODO replace with real data
-    val todayRunData =
-        savedStateHandle.get<RunningSessionGoal>("key_name") ?: RunningSessionGoal(
-            id = 1L,
-            createdAt = "2023-10-10T10:00:00Z",
-            updatedAt = "2023-10-10T10:00:00Z",
-            clearedAt = null,
-            pace = 360,
-            distance = 5000,
-            duration = 3600,
-            roundCount = 1,
-            previousSessionId = -1L,
-            goalId = 1L,
-        )
-
     override val initialState: RunningSessionUiState =
         RunningSessionUiState(
-            sessionState = RunningSessionState.Initial(todayRunData.toUiState()),
+            sessionState = RunningSessionState.Initial,
         )
 
     override val container: Container<RunningSessionUiState, RunningSessionSideEffect> =
@@ -229,7 +209,7 @@ class RunningSessionViewModel @Inject constructor(
     private fun handleSessionStart() {
         intent {
             viewModelScope.launch {
-                startRunningUseCase(goalPlanId = todayRunData.id)
+                startRunningUseCase(goalPlanId = 123214214L) // TODO: 세션아이디
                     .onSuccess { }
                     .onError { }
             }
@@ -259,24 +239,6 @@ class RunningSessionViewModel @Inject constructor(
             }
             delay(1000L)
         }
-    }
-
-    // 실시간 러닝 데이터 받아오는 함수
-    private suspend fun RunningSessionSyntax.observeRealTimeRunningData() {
-        getRealtimeRunningDataUseCase()
-            .catch { }
-            .collect { result ->
-                val currentSessionState = state.sessionState
-                val realtimeData = result.getOrNull()
-
-                if (currentSessionState is RunningSessionState.RunningState && realtimeData != null) {
-                    val newSessionState = getNewRunningState(currentSessionState, realtimeData)
-
-                    reduce {
-                        state.copy(sessionState = newSessionState)
-                    }
-                }
-            }
     }
 
     // 러닝 진행 중 RunningState 업데이트
@@ -427,7 +389,6 @@ class RunningSessionViewModel @Inject constructor(
                 state.copy(
                     sessionState =
                         RunningSessionState.Main.Running(
-                            goalDistanceMeter = todayRunData.distance,
                             recordUiState = INITIAL_RECORD_STATE,
                         ),
                 )
@@ -442,7 +403,7 @@ class RunningSessionViewModel @Inject constructor(
     private fun handleWarmUpStopConfirm() =
         intent {
             reduce {
-                state.copy(RunningSessionState.Initial(goal = todayRunData.toUiState()))
+                state.copy(RunningSessionState.Initial)
             }
         }
 

@@ -2,8 +2,8 @@ package com.dpm.sixpack.data.repository.di
 
 import com.dpm.sixpack.core.BuildConfig
 import com.dpm.sixpack.data.repository.GpsRepositoryImpl
-import com.dpm.sixpack.data.repository.MockSensorRepository
 import com.dpm.sixpack.data.repository.SensorRepositoryImpl
+import com.dpm.sixpack.data.repository.mock.MockSensorRepository
 import com.dpm.sixpack.data.source.local.gps.LocationDataSource
 import com.dpm.sixpack.data.source.local.sensor.SensorDataSource
 import com.dpm.sixpack.domain.repository.GpsRepository
