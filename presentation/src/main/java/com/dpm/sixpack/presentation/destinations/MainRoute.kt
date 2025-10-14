@@ -8,7 +8,7 @@ sealed interface MainRoute : Route {
     data object Home : MainRoute
 
     @Serializable
-    data object Record : MainRoute
+    data object Feed : MainRoute
 
     @Serializable
     data object MyPage : MainRoute

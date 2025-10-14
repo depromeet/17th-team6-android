@@ -16,10 +16,10 @@ enum class MainNavTab(
         titleResId = R.string.nav_tab_running_title,
         route = MainRoute.Home,
     ),
-    RECORD(
-        iconResId = R.drawable.ic_record_nav,
+    FEED(
+        iconResId = R.drawable.ic_feed,
         titleResId = R.string.nav_tab_record_title,
-        route = MainRoute.Record,
+        route = MainRoute.Feed,
     ),
     MY_PAGE(
         iconResId = R.drawable.ic_mypage_nav,
