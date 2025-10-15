@@ -2,7 +2,6 @@ package com.dpm.sixpack.presentation.destinations
 
 import kotlinx.serialization.Serializable
 
-@Deprecated("온보딩 변경")
 @Serializable
 sealed interface OnboardingRoute : Route {
     @Serializable
