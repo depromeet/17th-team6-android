@@ -40,7 +40,8 @@ internal fun RunningRecordPanel(
                 Modifier
                     .fillMaxWidth()
                     .background(SixpackTheme.colors.gray0, shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-                    .padding(horizontal = 24.dp, vertical = 20.dp),
+                    .padding(horizontal = 24.dp, vertical = 20.dp)
+                    .padding(top = 12.dp),
         ) {
             when (sessionState) {
                 is RunningSessionState.Running -> {
