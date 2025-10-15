@@ -14,7 +14,7 @@ enum class MainNavTab(
     RUNNING(
         iconResId = R.drawable.ic_running_nav,
         titleResId = R.string.nav_tab_running_title,
-        route = MainRoute.Home,
+        route = MainRoute.Running,
     ),
     FEED(
         iconResId = R.drawable.ic_feed,
