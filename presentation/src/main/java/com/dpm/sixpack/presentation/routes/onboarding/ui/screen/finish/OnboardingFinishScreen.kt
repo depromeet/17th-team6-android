@@ -13,10 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
-import com.dpm.sixpack.presentation.common.components.goal.DoRunRecommendedGoalList
-import com.dpm.sixpack.presentation.common.components.goal.model.state.GoalUiState
-import com.dpm.sixpack.presentation.common.components.goal.model.state.RecommendedGoalUiState
-import com.dpm.sixpack.presentation.common.components.goal.model.type.GoalType
+import com.dpm.sixpack.presentation.common.components.deprecated.goal.DoRunRecommendedGoalList
+import com.dpm.sixpack.presentation.common.components.deprecated.goal.model.state.GoalUiState
+import com.dpm.sixpack.presentation.common.components.deprecated.goal.model.state.RecommendedGoalUiState
+import com.dpm.sixpack.presentation.common.components.deprecated.goal.model.type.GoalType
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.OnboardingUiState

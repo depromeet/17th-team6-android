@@ -1,7 +1,6 @@
 package com.dpm.sixpack.data.source.remote.dto.response
 
 import android.annotation.SuppressLint
-import com.dpm.sixpack.domain.model.total.RunningTotalGoal
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -34,21 +33,4 @@ data class TodayGoalResponseDto(
     val totalRoundCount: Int,
     @SerialName("clearedRoundCount")
     val clearedRoundCount: Int,
-) {
-    fun toRunningTotalGoal(): RunningTotalGoal =
-        RunningTotalGoal(
-            id = id,
-            createdAt = createdAt,
-            updatedAt = updatedAt,
-            pausedAt = pausedAt,
-            clearedAt = clearedAt,
-            title = title,
-            subTitle = subTitle.orEmpty(),
-            type = type,
-            pace = pace,
-            distance = distance,
-            duration = duration,
-            totalRoundCount = totalRoundCount,
-            clearedRoundCount = clearedRoundCount,
-        )
-}
+)

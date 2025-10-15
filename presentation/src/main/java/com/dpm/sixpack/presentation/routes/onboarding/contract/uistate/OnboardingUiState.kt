@@ -2,8 +2,8 @@ package com.dpm.sixpack.presentation.routes.onboarding.contract.uistate
 
 import android.os.Parcelable
 import com.dpm.sixpack.presentation.common.base.UiState
-import com.dpm.sixpack.presentation.common.components.goal.model.state.RecommendedGoalUiState
-import com.dpm.sixpack.presentation.common.components.goal.model.type.GoalType
+import com.dpm.sixpack.presentation.common.components.deprecated.goal.model.state.RecommendedGoalUiState
+import com.dpm.sixpack.presentation.common.components.deprecated.goal.model.type.GoalType
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.level.LevelType
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.permission.TermType
 import kotlinx.parcelize.Parcelize

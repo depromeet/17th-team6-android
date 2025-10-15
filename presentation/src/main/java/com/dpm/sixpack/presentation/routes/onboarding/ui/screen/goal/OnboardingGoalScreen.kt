@@ -14,8 +14,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
-import com.dpm.sixpack.presentation.common.components.goal.DoRunGoalCardList
-import com.dpm.sixpack.presentation.common.components.goal.model.type.GoalType
+import com.dpm.sixpack.presentation.common.components.deprecated.goal.DoRunGoalCardList
+import com.dpm.sixpack.presentation.common.components.deprecated.goal.model.type.GoalType
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.OnboardingUiState

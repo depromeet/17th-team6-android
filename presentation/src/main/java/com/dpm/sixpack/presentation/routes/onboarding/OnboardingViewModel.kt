@@ -3,10 +3,8 @@ package com.dpm.sixpack.presentation.routes.onboarding
 import androidx.lifecycle.SavedStateHandle
 import com.dpm.sixpack.domain.model.params.SaveTotalGoalParams
 import com.dpm.sixpack.domain.usecase.CompleteOnboardingUseCase
-import com.dpm.sixpack.domain.usecase.GetRecommendedGoalsUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
-import com.dpm.sixpack.presentation.common.components.goal.model.state.asUiState
-import com.dpm.sixpack.presentation.common.components.goal.model.type.GoalType
+import com.dpm.sixpack.presentation.common.components.deprecated.goal.model.type.GoalType
 import com.dpm.sixpack.presentation.routes.onboarding.contract.OnboardingSideEffect
 import com.dpm.sixpack.presentation.routes.onboarding.contract.OnboardingUiIntent
 import com.dpm.sixpack.presentation.routes.onboarding.contract.uistate.OnboardingUiState
@@ -17,11 +15,12 @@ import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
 import java.time.Instant
 import javax.inject.Inject
+import kotlin.collections.mapValues
+import kotlin.collections.toMutableMap
 
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    val getRecommendedGoalsUseCase: GetRecommendedGoalsUseCase,
     val completeOnboardingUseCase: CompleteOnboardingUseCase,
 ) : BaseViewModel<OnboardingUiState, OnboardingUiIntent, OnboardingSideEffect>() {
     override val initialState: OnboardingUiState = OnboardingUiState()
@@ -54,7 +53,6 @@ class OnboardingViewModel @Inject constructor(
             is OnboardingUiIntent.SelectGoal -> handleSelectGoal(intent.goal)
             is OnboardingUiIntent.ClickGoalNextButton ->
                 intent {
-                    getRecommendedGoalList()
                     postSideEffect(OnboardingSideEffect.NavigateToFinish)
                 }
 
@@ -140,17 +138,6 @@ class OnboardingViewModel @Inject constructor(
                 ),
             )
             postSideEffect(OnboardingSideEffect.NavigateToHome)
-        }
-    }
-
-    private fun getRecommendedGoalList() {
-        intent {
-            val uiGoals =
-                getRecommendedGoalsUseCase(state.selectedGoal!!.runningGoal)
-                    .mapIndexed { index, data -> data.asUiState(index) }
-            reduce {
-                state.copy(recommendedGoals = uiGoals)
-            }
         }
     }
 }

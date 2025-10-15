@@ -9,8 +9,6 @@ import kotlinx.coroutines.flow.Flow
 interface RunningSessionRepository {
     suspend fun start(goalPlanId: Long): DoRunResult<Long>
 
-    fun getRealtimeData(): Flow<DoRunResult<RealtimeRunningData>>
-
     suspend fun saveRealtimeData(data: RealtimeRunningData): DoRunResult<SaveRealtimeRunningDataResult.LocalResult>
 
     suspend fun saveSegmentData(sessionId: Long): DoRunResult<SaveRealtimeRunningDataResult.SyncResult>
