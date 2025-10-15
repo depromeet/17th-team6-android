@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.session.component
+package com.dpm.sixpack.presentation.routes.session.deprecated
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
@@ -28,7 +28,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningScreenTabItem
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 // 오직 컴포저블로만 구현한 스크린 전환 탭

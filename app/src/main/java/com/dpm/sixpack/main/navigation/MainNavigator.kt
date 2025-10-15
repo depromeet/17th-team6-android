@@ -78,7 +78,7 @@ class MainNavigator(
             }
 
         when (tab) {
-            MainNavTab.HOME -> {
+            MainNavTab.RUNNING -> {
                 // TODO
             }
 

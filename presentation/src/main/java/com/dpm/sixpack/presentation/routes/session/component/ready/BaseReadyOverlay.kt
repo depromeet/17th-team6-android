@@ -52,11 +52,11 @@ internal fun BaseReadyOverlay(
                 color = SixpackTheme.colors.lime600,
             )
 
-            Text(
-                text = secondaryText,
-                style = SixpackTheme.typography.t1Medium,
-                color = SixpackTheme.colors.gray0,
-            )
+//            Text(
+//                text = secondaryText,
+//                style = SixpackTheme.typography.t1Medium,
+//                color = SixpackTheme.colors.gray0,
+//            )
 
             if (!onlyText) {
                 CircularLoadingIndicator(

@@ -11,11 +11,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
 import com.dpm.sixpack.presentation.routes.session.component.LocationTrackingButton
-import com.dpm.sixpack.presentation.routes.session.component.MapConstants
-import com.dpm.sixpack.presentation.routes.session.component.dialog.CooldownStopDialog
+import com.dpm.sixpack.presentation.routes.session.MapConstants
 import com.dpm.sixpack.presentation.routes.session.component.dialog.RunningStopDialog
-import com.dpm.sixpack.presentation.routes.session.component.dialog.WarmUpSkipDialog
-import com.dpm.sixpack.presentation.routes.session.component.dialog.WarmUpStopDialog
 import com.dpm.sixpack.presentation.routes.session.component.panel.RunningRecordPanel
 import com.dpm.sixpack.presentation.routes.session.component.ready.ReadyOverlay
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionIntent
@@ -40,14 +37,11 @@ fun RunningSessionScreen(
     locationSource: LocationSource,
     onLocationChange: (LatLng) -> Unit,
     onTrackingButtonClick: (RunningSessionIntent.ToggleFollowingMode) -> Unit,
-    onPauseClick: (RunningSessionIntent.PauseIntent) -> Unit,
-    onResumeClick: (RunningSessionIntent.ResumeIntent) -> Unit,
-    onStopClick: (RunningSessionIntent.StopIntent) -> Unit,
-    onStopCancelClick: (RunningSessionIntent.StopCancelIntent) -> Unit,
-    onStopConfirmClick: (RunningSessionIntent.StopConfirmIntent) -> Unit,
-    onSkipClick: () -> Unit,
-    onSkipCancelClick: () -> Unit,
-    onSkipConfirmClick: () -> Unit,
+    onPauseClick: (RunningSessionIntent.RunningPause) -> Unit,
+    onResumeClick: (RunningSessionIntent.RunningResume) -> Unit,
+    onStopClick: (RunningSessionIntent.RunningStop) -> Unit,
+    onStopCancelClick: (RunningSessionIntent.RunningStopCancel) -> Unit,
+    onStopConfirmClick: (RunningSessionIntent.RunningStopConfirm) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ConstraintLayout(modifier = modifier.fillMaxSize()) {
@@ -89,7 +83,7 @@ fun RunningSessionScreen(
                 }
             },
         ) {
-            (uiState.sessionState as? RunningSessionState.HasMapPath)?.mapUiState?.let { mapUiState ->
+            (uiState.sessionState as? RunningSessionState.Running)?.mapUiState?.let { mapUiState ->
                 mapUiState.path.forEachIndexed { pathIndex, currentPath ->
                     if (currentPath.size > 1) {
                         val currentPathColors = mapUiState.paceColors[pathIndex]
@@ -131,7 +125,7 @@ fun RunningSessionScreen(
                                 bottom.linkTo(parent.bottom, margin = 100.dp)
                             }
 
-                            !is RunningSessionState.ReadyState -> {
+                            !is RunningSessionState.Ready -> {
                                 bottom.linkTo(panelRef.top, margin = 24.dp)
                             }
 
@@ -147,14 +141,14 @@ fun RunningSessionScreen(
                 // do nothing
             }
 
-            is RunningSessionState.ReadyState -> {
+            is RunningSessionState.Ready -> {
                 ReadyOverlay(
                     modifier = Modifier.fillMaxSize(),
                     readyState = uiState.sessionState,
                 )
             }
 
-            is RunningSessionState.RunningState -> {
+            is RunningSessionState.Running -> {
                 RunningRecordPanel(
                     modifier =
                         Modifier.constrainAs(panelRef) {
@@ -169,11 +163,10 @@ fun RunningSessionScreen(
                     onStopClick = { stopIntent ->
                         onStopClick(stopIntent)
                     },
-                    onSkipClick = onSkipClick,
                 )
             }
 
-            is RunningSessionState.PausedState -> {
+            is RunningSessionState.Pause -> {
                 RunningRecordPanel(
                     modifier =
                         Modifier.constrainAs(panelRef) {
@@ -186,54 +179,17 @@ fun RunningSessionScreen(
                     onPauseClick = onPauseClick,
                     onResumeClick = onResumeClick,
                     onStopClick = onStopClick,
-                    onSkipClick = onSkipClick,
                 )
 
-                if (uiState.sessionState is RunningSessionState.WarmUp.Pause &&
-                    uiState.sessionState.showSkipConfirmDialog
-                ) {
-                    WarmUpSkipDialog(
-                        onCancelClick = onSkipCancelClick,
-                        onStopConfirmClick = onSkipConfirmClick,
-                    )
-                }
-
                 if (uiState.sessionState.showStopSessionConfirmDialog) {
-                    when (uiState.sessionState) {
-                        is RunningSessionState.WarmUp.Pause -> {
-                            WarmUpStopDialog(
-                                onCancelClick = {
-                                    onStopCancelClick(RunningSessionIntent.WarmUpStopCancel)
-                                },
-                                onStopConfirmClick = {
-                                    onStopConfirmClick(RunningSessionIntent.WarmUpStopConfirm)
-                                },
-                            )
-                        }
-
-                        is RunningSessionState.Main.Pause -> {
-                            RunningStopDialog(
-                                remainDistance = formatDistanceToKm(uiState.sessionState.remainingDistanceMeter),
-                                onCancelClick = {
-                                    onStopCancelClick(RunningSessionIntent.MainRunningStopCancel)
-                                },
-                                onStopConfirmClick = {
-                                    onStopConfirmClick(RunningSessionIntent.MainRunningStopConfirm)
-                                },
-                            )
-                        }
-
-                        is RunningSessionState.CoolDown.Pause -> {
-                            CooldownStopDialog(
-                                onCancelClick = {
-                                    onStopCancelClick(RunningSessionIntent.CoolDownStopCancel)
-                                },
-                                onStopClick = {
-                                    onStopConfirmClick(RunningSessionIntent.CoolDownStopConfirm)
-                                },
-                            )
-                        }
-                    }
+                    RunningStopDialog(
+                        onCancelClick = {
+                            onStopCancelClick(RunningSessionIntent.RunningStopCancel)
+                        },
+                        onStopConfirmClick = {
+                            onStopConfirmClick(RunningSessionIntent.RunningStopConfirm)
+                        },
+                    )
                 }
             }
         }

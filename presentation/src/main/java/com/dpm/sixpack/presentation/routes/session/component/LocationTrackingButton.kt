@@ -50,7 +50,7 @@ fun LocationTrackingButton(
                 if (isFollowing) {
                     SixpackTheme.colors.blue600
                 } else {
-                    SixpackTheme.colors.gray800
+                    SixpackTheme.colors.gray400
                 },
         )
     }

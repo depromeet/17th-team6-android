@@ -16,13 +16,11 @@ import com.dpm.sixpack.domain.usecase.StartRunningUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.common.util.MockLocationClient
 import com.dpm.sixpack.presentation.common.util.Sungsoo
-import com.dpm.sixpack.presentation.routes.session.component.MapConstants
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionIntent
 import com.dpm.sixpack.presentation.routes.session.contract.RunningSessionSideEffect
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.INITIAL_RECORD_STATE
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.MapUiState
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.RecordUiState
-import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningScreenTabItem
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningSessionState
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningSessionState.Companion.INITIAL_COUNTDOWN
 import com.dpm.sixpack.presentation.routes.session.contract.uistate.RunningSessionUiState
@@ -92,51 +90,27 @@ class RunningSessionViewModel @Inject constructor(
             // TODO SK: 권한설정 바뀌면 처리
             is RunningSessionIntent.UpdatePermission -> handlePermissionUpdate(intent.isGranted)
             is RunningSessionIntent.ClickBackIcon -> handleBackIconClick()
-            is RunningSessionIntent.TabChange -> handleTabChange(intent.tab)
             is RunningSessionIntent.SessionStart -> handleSessionStart()
             is RunningSessionIntent.ToggleFollowingMode -> handleToggleFollowingMode()
-            is RunningSessionIntent.WarmUpSkip -> {
-                handleWarmUpPause(true)
-                pauseObservingRealtimeData()
-            }
 
-            is RunningSessionIntent.WarmUpSkipCancel -> handleWarmUpPause()
-            is RunningSessionIntent.WarmUpSkipConfirm -> {
-                mockLocationClient.stop()
-                sendCommandToService(context, RunningActions.STOP)
-                handleWarmUpSkipConfirm()
-            }
-
-            is RunningSessionIntent.ResumeIntent -> {
-                when (intent) {
-                    RunningSessionIntent.WarmUpResume -> handleWarmUpResume()
-                    RunningSessionIntent.MainRunningResume -> handleMainRunningResume()
-                    RunningSessionIntent.CoolDownResume -> handleCoolDownResume()
-                }
+            is RunningSessionIntent.RunningResume -> {
+                handleMainRunningResume()
                 startObservingRealtimeData()
             }
 
-            is RunningSessionIntent.PauseIntent -> {
-                when (intent) {
-                    RunningSessionIntent.WarmUpPause -> handleWarmUpPause()
-                    RunningSessionIntent.MainRunningPause -> handleMainRunningPause()
-                    RunningSessionIntent.CoolDownPause -> handleCoolDownPause()
-                }
+            is RunningSessionIntent.RunningPause -> {
+                handleMainRunningPause()
                 pauseObservingRealtimeData()
             }
 
-            is RunningSessionIntent.StopCancelIntent -> handleStopDialog(false)
-            is RunningSessionIntent.StopIntent -> handleStopDialog(true)
-
-            is RunningSessionIntent.StopConfirmIntent -> {
+            is RunningSessionIntent.RunningStopConfirm -> {
                 mockLocationClient.stop()
                 sendCommandToService(context, RunningActions.STOP)
-                when (intent) {
-                    RunningSessionIntent.WarmUpStopConfirm -> handleWarmUpStopConfirm()
-                    RunningSessionIntent.MainRunningStopConfirm -> handleMainRunningStopConfirm()
-                    RunningSessionIntent.CoolDownStopConfirm -> handleCoolDownStopConfirm()
-                }
+                handleMainRunningStopConfirm()
             }
+
+            RunningSessionIntent.RunningStop -> handleStopDialog(true)
+            RunningSessionIntent.RunningStopCancel -> handleStopDialog(false)
         }
     }
 
@@ -147,7 +121,7 @@ class RunningSessionViewModel @Inject constructor(
                 Timber.d("observeServiceState: $realtimeData")
                 intent {
                     val currentSessionState = state.sessionState
-                    if (currentSessionState is RunningSessionState.RunningState && realtimeData != null) {
+                    if (currentSessionState is RunningSessionState.Running && realtimeData != null) {
                         val newSessionState = getNewRunningState(currentSessionState, realtimeData)
                         intent {
                             reduce {
@@ -175,11 +149,6 @@ class RunningSessionViewModel @Inject constructor(
         mockLocationClient.pause()
         sendCommandToService(context, RunningActions.PAUSE)
     }
-
-    private fun handleTabChange(tab: RunningScreenTabItem) =
-        intent {
-            postSideEffect(RunningSessionSideEffect.ChangeTab(tab))
-        }
 
     private fun handleBackIconClick() =
         intent {
@@ -214,12 +183,12 @@ class RunningSessionViewModel @Inject constructor(
                     .onError { }
             }
 
-            handleReadyState(RunningSessionState.WarmUp.Ready())
+            handleReadyState(RunningSessionState.Ready())
 
             reduce {
                 state.copy(
                     sessionState =
-                        RunningSessionState.WarmUp.Running(
+                        RunningSessionState.Running(
                             recordUiState = INITIAL_RECORD_STATE,
                         ),
                 )
@@ -230,7 +199,7 @@ class RunningSessionViewModel @Inject constructor(
     }
 
     // Ready 상태에서 보여지는 카운트 업데이트
-    private suspend fun RunningSessionSyntax.handleReadyState(readyState: RunningSessionState.ReadyState) {
+    private suspend fun RunningSessionSyntax.handleReadyState(readyState: RunningSessionState.Ready) {
         repeat(INITIAL_COUNTDOWN - 1) { index ->
             val countdown = INITIAL_COUNTDOWN - (index + 1)
             reduce {
@@ -243,36 +212,27 @@ class RunningSessionViewModel @Inject constructor(
 
     // 러닝 진행 중 RunningState 업데이트
     private fun getNewRunningState(
-        sessionState: RunningSessionState.RunningState,
+        sessionState: RunningSessionState.Running,
         realtimeRunningData: RealtimeRunningData,
-    ): RunningSessionState.RunningState {
+    ): RunningSessionState.Running {
         val newRecordState = getNewRecordUiState(realtimeRunningData)
 
-        return when (sessionState) {
-            is RunningSessionState.Main.Running -> {
-                val newMapUiState =
-                    getNewMapUiState(
-                        sessionState,
-                        LatLng(realtimeRunningData.latitude, realtimeRunningData.longitude),
-                        realtimeRunningData,
-                    )
-                // Main.Running일 때는 mapUiState와 recordUiState를 모두 업데이트
-                sessionState.copy(
-                    mapUiState = newMapUiState,
-                    recordUiState = newRecordState,
-                )
-            }
-
-            else -> {
-                // 그 외에는 recordUiState만 업데이트
-                sessionState.withNewRecordUiState(newRecordState)
-            }
-        }
+        val newMapUiState =
+            getNewMapUiState(
+                sessionState,
+                LatLng(realtimeRunningData.latitude, realtimeRunningData.longitude),
+                realtimeRunningData,
+            )
+        // Main.Running일 때는 mapUiState와 recordUiState를 모두 업데이트
+        return sessionState.copy(
+            mapUiState = newMapUiState,
+            recordUiState = newRecordState,
+        )
     }
 
     // 새로운 좌표가 추가된 갱신된 MapUiState 생성 -> 오직 본러닝 중에만
     private fun getNewMapUiState(
-        sessionState: RunningSessionState.Main.Running,
+        sessionState: RunningSessionState.Running,
         newPoint: LatLng,
         realtimeRunningData: RealtimeRunningData,
     ): MapUiState {
@@ -313,7 +273,7 @@ class RunningSessionViewModel @Inject constructor(
         return newRecord
     }
 
-    // endregion
+// endregion
 
     @SuppressLint("MissingPermission")
     fun handleToggleFollowingMode() =
@@ -339,102 +299,26 @@ class RunningSessionViewModel @Inject constructor(
     private fun handleStopDialog(showStopConfirmDialog: Boolean) =
         intent {
             val currentState = state.sessionState
-            if (currentState is RunningSessionState.PausedState) {
-                reduce {
-                    when (currentState) {
-                        is RunningSessionState.Main.Pause -> {
-                            state.copy(
-                                sessionState =
-                                    currentState.copy(
-                                        // TODO 진짜 남은 거리 계산
-                                        remainingDistanceMeter =
-                                            currentState.goalDistanceMeter - currentState.recordUiState.currentDistance,
-                                        showStopSessionConfirmDialog = showStopConfirmDialog,
-                                    ),
-                            )
-                        }
-
-                        else -> {
-                            state.copy(
-                                sessionState = currentState.withNewShowStopConfirmDialog(showStopConfirmDialog),
-                            )
-                        }
-                    }
-                }
-            }
-        }
-
-    // region warm up
-
-    private fun handleWarmUpPause(showSkipConfirmDialog: Boolean = false) =
-        intent {
-            val currentState = state.sessionState
-            if (currentState is RunningSessionState.HasRecord) {
+            if (currentState is RunningSessionState.Pause) {
                 reduce {
                     state.copy(
                         sessionState =
-                            RunningSessionState.WarmUp.Pause(
-                                recordUiState = currentState.recordUiState,
-                                showSkipConfirmDialog = showSkipConfirmDialog,
+                            currentState.copy(
+                                showStopSessionConfirmDialog = showStopConfirmDialog,
                             ),
                     )
                 }
             }
         }
-
-    private fun handleWarmUpSkipConfirm() =
-        intent {
-            handleReadyState(RunningSessionState.Main.Ready())
-            reduce {
-                state.copy(
-                    sessionState =
-                        RunningSessionState.Main.Running(
-                            recordUiState = INITIAL_RECORD_STATE,
-                        ),
-                )
-            }
-            startObservingRealtimeData()
-        }
-
-    /*
-     * 웜업 중단 -> 홈화면
-     * FIXME SK: 임시 조치로 Initial 상태로 돌아가게 함
-     */
-    private fun handleWarmUpStopConfirm() =
-        intent {
-            reduce {
-                state.copy(RunningSessionState.Initial)
-            }
-        }
-
-    private fun handleWarmUpResume() =
-        intent {
-            val currentState = state.sessionState
-            if (currentState is RunningSessionState.WarmUp.Pause) {
-                reduce {
-                    state.copy(
-                        sessionState =
-                            RunningSessionState.WarmUp.Running(
-                                recordUiState = currentState.recordUiState,
-                            ),
-                    )
-                }
-            }
-        }
-
-    // endregion
-
-    // region Main
 
     private fun handleMainRunningPause() =
         intent {
             val currentState = state.sessionState
-            if (currentState is RunningSessionState.Main.Running) {
+            if (currentState is RunningSessionState.Running) {
                 reduce {
                     state.copy(
                         sessionState =
-                            RunningSessionState.Main.Pause(
-                                goalDistanceMeter = currentState.goalDistanceMeter,
+                            RunningSessionState.Pause(
                                 mapUiState =
                                     currentState.mapUiState.copy(
                                         paceColors = currentState.mapUiState.paceColors + listOf(),
@@ -450,12 +334,11 @@ class RunningSessionViewModel @Inject constructor(
     private fun handleMainRunningResume() =
         intent {
             val currentState = state.sessionState
-            if (currentState is RunningSessionState.Main.Pause) {
+            if (currentState is RunningSessionState.Pause) {
                 reduce {
                     state.copy(
                         sessionState =
-                            RunningSessionState.Main.Running(
-                                goalDistanceMeter = currentState.goalDistanceMeter,
+                            RunningSessionState.Running(
                                 mapUiState = currentState.mapUiState,
                                 recordUiState = currentState.recordUiState,
                             ),
@@ -464,70 +347,17 @@ class RunningSessionViewModel @Inject constructor(
             }
         }
 
-    // 메인러닝 중단 -> 홈화면
-
-    // FIXME SK: 임시 조치로 Cooldown 으로 넘어가게함
+    // 메인러닝 중단 -> 결과화면
     private fun handleMainRunningStopConfirm() =
         intent {
             finishRunningSessionUseCase()
 
-            handleReadyState(RunningSessionState.CoolDown.Ready())
+            // FIXME: 임시로 Initial
             reduce {
-                val sessionState = state.sessionState
-
                 state.copy(
-                    sessionState =
-                        RunningSessionState.CoolDown.Running(
-                            mapUiState =
-                                if (sessionState is RunningSessionState.Main.Pause) {
-                                    sessionState.mapUiState
-                                } else {
-                                    MapUiState()
-                                },
-                            recordUiState = INITIAL_RECORD_STATE,
-                        ),
+                    sessionState = RunningSessionState.Initial,
                 )
             }
-            startObservingRealtimeData()
-        }
-
-    // endregion
-
-    private fun handleCoolDownPause() =
-        intent {
-            val currentState = state.sessionState
-            if (currentState is RunningSessionState.CoolDown.Running) {
-                reduce {
-                    state.copy(
-                        sessionState =
-                            RunningSessionState.CoolDown.Pause(
-                                mapUiState = currentState.mapUiState,
-                                recordUiState = currentState.recordUiState,
-                            ),
-                    )
-                }
-            }
-        }
-
-    private fun handleCoolDownResume() =
-        intent {
-            val currentState = state.sessionState
-            if (currentState is RunningSessionState.CoolDown.Pause) {
-                reduce {
-                    state.copy(
-                        sessionState =
-                            RunningSessionState.CoolDown.Running(
-                                mapUiState = currentState.mapUiState,
-                                recordUiState = currentState.recordUiState,
-                            ),
-                    )
-                }
-            }
-        }
-
-    private fun handleCoolDownStopConfirm() =
-        intent {
-            postSideEffect(RunningSessionSideEffect.NavigateToReport(1))
         }
 
     // region Service
