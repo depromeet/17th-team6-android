@@ -25,7 +25,7 @@ androidx-navigation-common-ktx = "2.7.7"
 lifecycleService = "2.9.3"
 
 # Coil
-coil = "2.6.0"
+coil = "3.1.0"
 
 # Compose
 activityCompose = "1.9.0"
