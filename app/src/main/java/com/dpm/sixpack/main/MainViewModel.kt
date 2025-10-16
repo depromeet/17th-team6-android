@@ -21,7 +21,7 @@ class MainViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
-    private val _startDestination = MutableStateFlow<Route>(OnboardingRoute.Onboarding)
+    private val _startDestination = MutableStateFlow<Route>(OnboardingRoute)
     val startDestination: StateFlow<Route> = _startDestination.asStateFlow()
 
     init {
