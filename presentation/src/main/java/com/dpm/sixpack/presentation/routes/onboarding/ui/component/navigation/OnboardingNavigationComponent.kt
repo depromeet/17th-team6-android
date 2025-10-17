@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
@@ -30,22 +31,24 @@ fun OnboardingNavigationComponent(
             .fillMaxWidth()
             .padding(horizontal = SixPackDimen.defaultSideMargin)
             .padding(bottom = 12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         DoRunDefaultButton(
             text = stringResource(R.string.onboarding_sign_up),
-            onClick = onClickSignUp
+            onClick = onClickSignUp,
+            modifier = Modifier.fillMaxWidth()
         )
 
         Text(
             text = buildAnnotatedString {
-                val already = stringResource(R.string.onboarding_already_have_account)
-                val singin = stringResource(R.string.onboarding_signin)
+                val already = stringResource(R.string.onboarding_already_have_account) + " "
+                val signin = stringResource(R.string.onboarding_signin)
 
                 append(already)
 
                 pushLink(LinkAnnotation.Clickable(tag = "login") { onClickSignIn() })
                 withStyle(SpanStyle(textDecoration = TextDecoration.Underline)) {
-                    append(singin)
+                    append(signin)
                 }
                 pop()
             },
@@ -54,9 +57,7 @@ fun OnboardingNavigationComponent(
                 .fillMaxWidth()
                 .padding(horizontal = SixPackDimen.defaultSideMargin)
                 .padding(vertical = 4.dp)
-
         )
-
     }
 }
 
