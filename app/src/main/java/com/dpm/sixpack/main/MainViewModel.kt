@@ -26,9 +26,9 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            // TODO: 로그인여부 따라 분기 처리
+            // TODO SR-N 로그인여부 따라 분기 처리
             val isOnboardingComplete = getOnboardingStatusUseCase()
-            _startDestination.value = MainRoute.Running
+//            _startDestination.value = OnboardingRoute
 
             delay(1000L)
             _isLoading.value = false
