@@ -55,7 +55,9 @@ class MainActivity : ComponentActivity() {
                     LocalTimeZone provides currentTimeZone,
                 ) {
                     SixpackTheme(isDebug = BuildConfig.DEBUG) {
-                        MainScreen(appState = appState)
+                        MainScreen(
+                            appState = appState,
+                        )
                     }
                 }
             }

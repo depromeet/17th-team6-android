@@ -22,8 +22,8 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 internal fun MainScreen(
-    modifier: Modifier = Modifier,
     appState: SixPackAppState,
+    modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
@@ -42,8 +42,8 @@ internal fun MainScreen(
 
     MainScreenContent(
         modifier = modifier,
-        snackbarHostState = snackbarHostState,
         appState = appState,
+        snackbarHostState = snackbarHostState,
     )
 }
 
@@ -69,6 +69,10 @@ internal fun MainScreenContent(
         containerColor = SixpackTheme.colors.gray0,
     ) { paddingValue ->
         MainNavHost(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(bottom = paddingValue.calculateBottomPadding()),
             appState = appState,
             onShowSnackbar = { message, action ->
                 snackbarHostState.showSnackbar(
@@ -77,10 +81,7 @@ internal fun MainScreenContent(
                     duration = SnackbarDuration.Short,
                 ) == ActionPerformed
             },
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(bottom = paddingValue.calculateBottomPadding()),
+            onBottomBarVisibilityChange = appState.navigator::setBottomBarVisibility,
         )
     }
 }
