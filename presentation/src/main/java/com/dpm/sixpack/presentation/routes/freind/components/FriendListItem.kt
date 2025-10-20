@@ -32,6 +32,7 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
+import com.dpm.sixpack.presentation.routes.freind.calculateLatestRunTime
 import com.dpm.sixpack.presentation.routes.freind.contract.FriendItem
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
@@ -51,6 +52,7 @@ fun FriendListItem(
                 .padding(vertical = 12.dp, horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        // Profile Image
         Box(
             modifier = Modifier.size(48.dp),
         ) {
@@ -84,13 +86,15 @@ fun FriendListItem(
 
         Spacer(modifier = Modifier.width(12.dp))
 
+        // User Info
         Column(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
+                // nickname
                 Text(
-                    text = friendItem.nickName.toString(),
+                    text = friendItem.nickName,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                 )
@@ -114,7 +118,7 @@ fun FriendListItem(
 
                 // 마지막 러닝 시간
                 Text(
-                    text = friendItem.latestRunAt,
+                    text = calculateLatestRunTime(friendItem.latestRunAt) ?: "",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -137,11 +141,11 @@ fun FriendListItem(
     }
 }
 
-@Preview(showBackground = true, name = "전체 상태 미리보기")
+@Preview(showBackground = true)
 @Composable
 private fun FriendListItemPreview() {
     Column {
-        // 1. 러닝 중인 상태 (나)
+        // 나
         FriendListItem(
             true,
             friendItem =
@@ -150,28 +154,14 @@ private fun FriendListItemPreview() {
                     nickName = "승규",
                     isMe = true,
                     profileImgUrl = "",
-                    latestRunAt = "2일 전",
+                    latestRunAt = "2025-10-19T19:57:13Z",
                     distanceInMeter = 5000,
                     latitude = 37.5301,
                     longitude = 127.12345,
                 ),
         )
 
-//        // 2. 최근 러닝 완료 상태
-//        FriendListItem(
-//            friendItem =
-//                FriendItem(
-//                    userId = 1231242,
-//                    isMe = false,
-//                    profileImgUrl = "",
-//                    latestRunAt = "25분 전",
-//                    distanceInMeter = 5000,
-//                    latitude = 37.5301,
-//                    longitude = 127.12345,
-//                ),
-//        )
-//
-        // 3. 비활성 상태 (응원하기 버튼 표시)
+        // 비활성 상태 (응원하기 버튼 표시)
         FriendListItem(
             active = false,
             friendItem =
@@ -180,7 +170,7 @@ private fun FriendListItemPreview() {
                     nickName = "승범",
                     isMe = false,
                     profileImgUrl = "",
-                    latestRunAt = "5시간 전",
+                    latestRunAt = "2025-10-16T19:57:13Z",
                     distanceInMeter = 5000,
                     latitude = 37.5301,
                     longitude = 127.12345,

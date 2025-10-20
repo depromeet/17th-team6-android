@@ -1,6 +1,10 @@
 package com.dpm.sixpack.core.util
 
+import android.util.Log
+import timber.log.Timber
 import java.time.Duration
+import java.time.Instant
+import java.time.format.DateTimeParseException
 
 object TimeUtil {
     /**
@@ -23,6 +27,17 @@ object TimeUtil {
             val totalMinutes = duration.toMinutes()
             val paddedSeconds = seconds.toString().padStart(2, '0')
             "$totalMinutes:$paddedSeconds"
+        }
+    }
+
+    fun isoStringToEpochSeconds(timestamp: String): Long? {
+        return try {
+            val instant = Instant.parse(timestamp)
+            instant.epochSecond
+        } catch (e: DateTimeParseException) {
+            Timber.e("Error parsing timestamp: $timestamp")
+            e.printStackTrace()
+            null
         }
     }
 }
