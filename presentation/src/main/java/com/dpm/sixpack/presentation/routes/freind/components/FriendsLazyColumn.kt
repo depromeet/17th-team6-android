@@ -15,7 +15,7 @@ import com.dpm.sixpack.presentation.routes.freind.contract.FriendItem
 fun FriendsLazyColumn(
     modifier: Modifier = Modifier,
     friendList: List<FriendItem> = emptyList(),
-    onCheerClick: () -> Unit = {},
+    onCheerClick: (Long) -> Unit = {},
 ) {
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
@@ -33,7 +33,9 @@ fun FriendsLazyColumn(
                 profileImgUrl = friend.profileImgUrl,
                 lastestRunAt = friend.lastestRunAt,
                 distanceInMeter = friend.distanceInMeter,
-                onCheerClick = onCheerClick
+                onCheerClick = {
+                    onCheerClick(friend.userId)
+                }
             )
         }
     }
