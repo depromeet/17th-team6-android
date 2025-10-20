@@ -10,7 +10,7 @@ data class FriendItem(
     val nickName: String,
     val isMe: Boolean, // true
     val profileImgUrl: String, // "https://example.com/profile.jpg",
-    val latestRunAt: String, // "2025-09-13T19:57:13Z",
+    val lastestRunAt: String, // "2025-09-13T19:57:13Z",
     val distanceInMeter: Int, // 5000
     val latitude: Double, // 37.5301
     val longitude: Double, // 127.12345
@@ -22,7 +22,7 @@ fun Friend.toUiItem() =
         nickName = userInfo.nickName,
         isMe = userInfo.isMe,
         profileImgUrl = userInfo.profileImgUrl,
-        latestRunAt = latestRunAt,
+        lastestRunAt = lastestRunAt,
         distanceInMeter = distanceInMeter,
         latitude = latitude,
         longitude = longitude,

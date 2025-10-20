@@ -131,4 +131,10 @@
 
     <!-- Button Default Text -->
     <string name="button_default_next">다음</string>
+
+    <!-- region Friend List -->
+    <string name="minutes_before">%1$d분 전</string>
+    <string name="hours_before">%1$d시간 전</string>
+    <string name="days_before">%1$d일 전</string>
+    <!--endregion-->
 </resources>

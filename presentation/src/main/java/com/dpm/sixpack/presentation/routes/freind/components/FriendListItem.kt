@@ -17,8 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,18 +30,25 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
-import com.dpm.sixpack.presentation.routes.freind.calculateLatestRunTime
-import com.dpm.sixpack.presentation.routes.freind.contract.FriendItem
+import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
+import com.dpm.sixpack.presentation.routes.freind.convertTimeDiffToString
+import com.dpm.sixpack.presentation.routes.freind.calculateSecDiff
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
+// TODO SK: Typo 적용
 @Composable
 fun FriendListItem(
-    active: Boolean,
-    friendItem: FriendItem,
+    nickName: String,
+    isMe: Boolean,
+    profileImgUrl: String,
+    lastestRunAt: String,
+    distanceInMeter: Int,
     modifier: Modifier = Modifier,
     onCheerClick: () -> Unit = {},
 ) {
-    val showInactive = remember { mutableStateOf(!(active || friendItem.isMe)) }
+    val secDiff = calculateSecDiff(lastestRunAt)
+    val isOutdated = secDiff == null || secDiff > 48 * 60 * 60
+    val showInactive = isOutdated && !isMe
 
     Row(
         modifier =
@@ -60,7 +65,7 @@ fun FriendListItem(
                 model =
                     ImageRequest
                         .Builder(LocalContext.current)
-                        .data(friendItem.profileImgUrl)
+                        .data(profileImgUrl)
                         .crossfade(true)
                         .build(),
                 contentDescription = null,
@@ -74,7 +79,7 @@ fun FriendListItem(
                 contentScale = ContentScale.Crop,
             )
 
-            if (showInactive.value) {
+            if (showInactive) {
                 InactiveLabel(
                     modifier =
                         Modifier
@@ -94,20 +99,21 @@ fun FriendListItem(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 // nickname
                 Text(
-                    text = friendItem.nickName,
+                    text = nickName,
+                    color = SixpackTheme.colors.gray900,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                 )
                 // '나' 태그
-                if (friendItem.isMe) {
+                if (isMe) {
                     Surface(
                         modifier = Modifier.padding(start = 6.dp),
                         shape = CircleShape,
                         color = SixpackTheme.colors.blue600,
                     ) {
                         Text(
-                            text = "나",
                             modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp),
+                            text = "나",
                             color = SixpackTheme.colors.gray0,
                             style = MaterialTheme.typography.labelSmall,
                         )
@@ -118,20 +124,21 @@ fun FriendListItem(
 
                 // 마지막 러닝 시간
                 Text(
-                    text = calculateLatestRunTime(friendItem.latestRunAt) ?: "",
+                    text = if (secDiff != null) convertTimeDiffToString(LocalContext.current, secDiff) else "",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = SixpackTheme.colors.gray500,
                 )
             }
+            // 최근 러닝 거리
             Text(
-                text = friendItem.distanceInMeter.toString(),
+                text = if (!isOutdated) formatDistanceToKm(distanceInMeter) else "최근 러닝 기록이 없어요",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = SixpackTheme.colors.gray700,
             )
         }
 
         // 응원하기
-        if (showInactive.value) {
+        if (showInactive) {
             DoRunDefaultButton(
                 text = "응원하기",
                 onClick = onCheerClick,
@@ -147,34 +154,29 @@ private fun FriendListItemPreview() {
     Column {
         // 나
         FriendListItem(
-            true,
-            friendItem =
-                FriendItem(
-                    userId = 1231242,
-                    nickName = "승규",
-                    isMe = true,
-                    profileImgUrl = "",
-                    latestRunAt = "2025-10-19T19:57:13Z",
-                    distanceInMeter = 5000,
-                    latitude = 37.5301,
-                    longitude = 127.12345,
-                ),
+            nickName = "승규",
+            isMe = true,
+            profileImgUrl = "",
+            lastestRunAt = "2025-10-19T19:57:13Z",
+            distanceInMeter = 5000,
+        )
+
+        // 친구, 활성
+        FriendListItem(
+            nickName = "소래",
+            isMe = false,
+            profileImgUrl = "",
+            lastestRunAt = "2025-10-20T09:57:13Z",
+            distanceInMeter = 900,
         )
 
         // 비활성 상태 (응원하기 버튼 표시)
         FriendListItem(
-            active = false,
-            friendItem =
-                FriendItem(
-                    userId = 1231242,
-                    nickName = "승범",
-                    isMe = false,
-                    profileImgUrl = "",
-                    latestRunAt = "2025-10-16T19:57:13Z",
-                    distanceInMeter = 5000,
-                    latitude = 37.5301,
-                    longitude = 127.12345,
-                ),
+            nickName = "승범",
+            isMe = false,
+            profileImgUrl = "",
+            lastestRunAt = "2025-10-16T19:57:13Z",
+            distanceInMeter = 3000,
         )
     }
 }
