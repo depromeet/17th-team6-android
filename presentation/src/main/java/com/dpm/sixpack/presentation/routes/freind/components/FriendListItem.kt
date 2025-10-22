@@ -31,8 +31,8 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
-import com.dpm.sixpack.presentation.routes.freind.convertTimeDiffToString
 import com.dpm.sixpack.presentation.routes.freind.calculateSecDiff
+import com.dpm.sixpack.presentation.routes.freind.convertTimeDiffToString
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 // TODO SK: Typo 적용
@@ -54,7 +54,7 @@ fun FriendListItem(
         modifier =
             modifier
                 .fillMaxWidth()
-                .padding(vertical = 12.dp, horizontal = 16.dp),
+                .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         // Profile Image

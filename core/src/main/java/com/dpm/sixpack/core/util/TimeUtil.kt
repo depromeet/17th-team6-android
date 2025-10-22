@@ -1,6 +1,5 @@
 package com.dpm.sixpack.core.util
 
-import android.util.Log
 import timber.log.Timber
 import java.time.Duration
 import java.time.Instant
@@ -30,8 +29,8 @@ object TimeUtil {
         }
     }
 
-    fun isoStringToEpochSeconds(timestamp: String): Long? {
-        return try {
+    fun isoStringToEpochSeconds(timestamp: String): Long? =
+        try {
             val instant = Instant.parse(timestamp)
             instant.epochSecond
         } catch (e: DateTimeParseException) {
@@ -39,5 +38,4 @@ object TimeUtil {
             e.printStackTrace()
             null
         }
-    }
 }

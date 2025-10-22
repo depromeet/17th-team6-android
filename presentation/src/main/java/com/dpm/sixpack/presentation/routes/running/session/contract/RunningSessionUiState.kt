@@ -3,7 +3,6 @@ package com.dpm.sixpack.presentation.routes.running.session.contract
 import com.dpm.sixpack.presentation.common.base.UiState
 import com.dpm.sixpack.presentation.routes.running.session.contract.state.PathState
 import com.dpm.sixpack.presentation.routes.running.session.contract.state.RecordState
-import com.naver.maps.geometry.LatLng
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

@@ -2,11 +2,7 @@ package com.dpm.sixpack.presentation.routes.deprecated.sessionlist.contract
 
 import android.os.Parcelable
 import androidx.annotation.DrawableRes
-import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.base.UiState
-import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
-import com.dpm.sixpack.presentation.common.util.formatSecondsToPace
-import com.dpm.sixpack.presentation.common.util.formatSecondsToTime
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 

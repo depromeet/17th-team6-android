@@ -1,5 +1,8 @@
 package com.dpm.sixpack.main
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dpm.sixpack.domain.usecase.GetOnboardingStatusUseCase
@@ -23,6 +26,8 @@ class MainViewModel @Inject constructor(
 
     private val _startDestination = MutableStateFlow<Route>(OnboardingRoute.Onboarding)
     val startDestination: StateFlow<Route> = _startDestination.asStateFlow()
+
+    var onFabClick: (() -> Unit)? by mutableStateOf(null)
 
     init {
         viewModelScope.launch {

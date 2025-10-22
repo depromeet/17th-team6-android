@@ -1,13 +1,12 @@
 package com.dpm.sixpack.main
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarDuration.Indefinite
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult.ActionPerformed
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -55,9 +54,9 @@ internal fun MainScreenContent(
 ) {
     Scaffold(
         modifier = modifier,
+        containerColor = SixpackTheme.colors.gray0,
         bottomBar = {
             MainBottomBar(
-                modifier = Modifier.navigationBarsPadding(),
                 visible = appState.navigator.shouldShowBottomBar(),
                 mainNavTabs = MainNavTab.entries,
                 currentTab = appState.navigator.currentTab,
@@ -66,7 +65,6 @@ internal fun MainScreenContent(
                 },
             )
         },
-        containerColor = SixpackTheme.colors.gray0,
     ) { paddingValue ->
         MainNavHost(
             modifier =
@@ -79,7 +77,7 @@ internal fun MainScreenContent(
                     message = message,
                     actionLabel = action,
                     duration = SnackbarDuration.Short,
-                ) == ActionPerformed
+                ) == SnackbarResult.ActionPerformed
             },
             onBottomBarVisibilityChange = appState.navigator::setBottomBarVisibility,
         )

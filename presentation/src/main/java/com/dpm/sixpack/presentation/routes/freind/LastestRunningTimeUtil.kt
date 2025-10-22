@@ -19,8 +19,10 @@ internal fun calculateSecDiff(lastestRunAt: String): Double? {
 /**
  * "n분 전", "n시간 전" 등으로 변환
  */
-internal fun convertTimeDiffToString(context: Context, secDiff: Double): String {
-
+internal fun convertTimeDiffToString(
+    context: Context,
+    secDiff: Double,
+): String {
     val minuteInSec = 60
     val hourInSec = 60 * minuteInSec // 3600
     val dayInSec = 24 * hourInSec // 86400

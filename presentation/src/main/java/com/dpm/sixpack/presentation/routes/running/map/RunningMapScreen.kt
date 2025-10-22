@@ -1,20 +1,33 @@
 package com.dpm.sixpack.presentation.routes.running.map
 
+import android.view.Gravity
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.AnchoredDraggableState
+import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -23,7 +36,10 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.common.util.PermissionHandler
+import com.dpm.sixpack.presentation.routes.freind.contract.FriendItem
+import com.dpm.sixpack.presentation.routes.running.component.DraggableFriendBottomSheet
 import com.dpm.sixpack.presentation.routes.running.map.component.LocationTrackingButton
+import com.dpm.sixpack.presentation.routes.running.map.component.SheetDragState
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapIntent
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapSideEffect
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapUiState
@@ -44,6 +60,7 @@ import com.naver.maps.map.compose.PathOverlay
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 import timber.log.Timber
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalNaverMapApi::class)
 @Composable
@@ -101,115 +118,130 @@ private fun RunningMapScreenContent(
     onMapIntent: (MapIntent) -> Unit,
     modifier: Modifier,
 ) {
+    val density = LocalDensity.current
+    val sheetPeekHeight = 64.dp
+    val sheetPeekHeightPx = with(density) { sheetPeekHeight.toPx() }
+
+    val draggableState =
+        remember {
+            AnchoredDraggableState(
+                initialValue = SheetDragState.Collapsed,
+            )
+        }
+
     LaunchedEffect(cameraPositionState.cameraUpdateReason) {
         val reason = cameraPositionState.cameraUpdateReason
-        val reasonText =
-            when (reason) {
-                CameraUpdateReason.GESTURE -> {
-                    onMapIntent(MapIntent.FollowingModeOff)
-                }
-
-                else -> {
-                    // do noting
-                }
+        when (reason) {
+            CameraUpdateReason.GESTURE -> {
+                onMapIntent(MapIntent.FollowingModeOff)
             }
+
+            else -> {
+                // do noting
+            }
+        }
     }
 
-    ConstraintLayout(modifier = modifier) {
-        val (naverMapRef, panelRef, trackingButtonRef) = createRefs()
+    BoxWithConstraints(modifier = modifier.fillMaxSize()) {
+        val boxHeight = with(density) { constraints.maxHeight.toFloat() }
 
-        NaverMap(
-            modifier =
-                Modifier
-                    .constrainAs(naverMapRef) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        width = Dimension.fillToConstraints
-                        height = Dimension.fillToConstraints
-                    },
-            cameraPositionState = cameraPositionState,
-            properties =
-                MapProperties(
-                    minZoom = MapConstants.MIN_ZOOM_LEVEL,
-                    maxZoom = MapConstants.MAX_ZOOM_LEVEL,
-                    locationTrackingMode = LocationTrackingMode.Follow,
-                    isNightModeEnabled = isSystemInDarkTheme(),
-                    mapType = MapType.Basic,
-                ),
-            uiSettings =
-                MapUiSettings(
-                    isZoomGesturesEnabled = true,
-                    isZoomControlEnabled = false,
-                    isLocationButtonEnabled = false,
-                    isLogoClickEnabled = false,
-                    isScaleBarEnabled = false,
-                    isCompassEnabled = false,
-                ),
-            locationSource = locationSource,
-            onLocationChange = { location ->
-                onMapIntent(MapIntent.UpdateUserLocation(LatLng(location)))
-            },
-        ) {
-            (mapState.mapViewState as? MapViewState.Running)?.pathColorState?.let { mapUiState ->
-                mapUiState.paths.forEachIndexed { pathIndex, currentPath ->
-                    if (currentPath.size > 1) {
-                        val currentPathColors = mapUiState.paceColors[pathIndex]
+        var guidelineFraction by remember { mutableFloatStateOf(0.1f) }
+        var mapBottomPadding by remember { mutableStateOf(0.dp) }
 
-                        for (pointIndex in 0 until currentPath.lastIndex - 1) {
-                            key(pathIndex, pointIndex) {
-                                val segmentCoords =
-                                    listOf(
-                                        currentPath[pointIndex],
-                                        currentPath[pointIndex + 1],
+        LaunchedEffect(draggableState.offset) {
+            val yOffset = draggableState.offset
+            if (!yOffset.isNaN()) {
+                guidelineFraction = yOffset / boxHeight
+            }
+        }
+
+        LaunchedEffect(guidelineFraction) {
+            val obscuredHeightPx = boxHeight * (1.0f - guidelineFraction)
+            mapBottomPadding = with(density) { obscuredHeightPx.toDp() }
+        }
+
+        LaunchedEffect(boxHeight) {
+            val collapsedOffset = boxHeight - sheetPeekHeightPx
+            val halfExpandedOffset = boxHeight / 1.8f
+            draggableState.updateAnchors(
+                DraggableAnchors {
+                    SheetDragState.Collapsed at collapsedOffset
+                    SheetDragState.HalfExpanded at halfExpandedOffset
+                },
+            )
+        }
+
+        ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+            val (naverMapRef, panelRef, sheetRef, startButtonRef, trackingButtonRef) = createRefs()
+
+            // LocationTrackingButton 위치 설정위한 가이드라인
+            val sheetTopGuideline = createGuidelineFromTop(guidelineFraction)
+
+            NaverMap(
+                modifier =
+                    Modifier
+                        .constrainAs(naverMapRef) {
+                            top.linkTo(parent.top)
+                            bottom.linkTo(parent.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            width = Dimension.fillToConstraints
+                            height = Dimension.fillToConstraints
+                        },
+                cameraPositionState = cameraPositionState,
+                properties =
+                    MapProperties(
+                        minZoom = MapConstants.MIN_ZOOM_LEVEL,
+                        maxZoom = MapConstants.MAX_ZOOM_LEVEL,
+                        locationTrackingMode = LocationTrackingMode.Follow,
+                        isNightModeEnabled = isSystemInDarkTheme(),
+                        mapType = MapType.Basic,
+                    ),
+                uiSettings =
+                    MapUiSettings(
+                        isZoomGesturesEnabled = true,
+                        isZoomControlEnabled = false,
+                        isLocationButtonEnabled = false,
+                        isLogoClickEnabled = false,
+                        isScaleBarEnabled = false,
+                        isCompassEnabled = false,
+                        logoGravity = Gravity.START,
+                    ),
+                locationSource = locationSource,
+                onLocationChange = { location ->
+                    onMapIntent(MapIntent.UpdateUserLocation(LatLng(location)))
+                },
+//                contentPadding = PaddingValues(bottom = mapBottomPadding),
+                contentPadding = PaddingValues(bottom = (boxHeight * 0.10).dp),
+            ) {
+                (mapState.mapViewState as? MapViewState.Running)?.pathColorState?.let { mapUiState ->
+                    mapUiState.paths.forEachIndexed { pathIndex, currentPath ->
+                        if (currentPath.size > 1) {
+                            val currentPathColors = mapUiState.paceColors[pathIndex]
+
+                            for (pointIndex in 0 until currentPath.lastIndex - 1) {
+                                key(pathIndex, pointIndex) {
+                                    val segmentCoords =
+                                        listOf(
+                                            currentPath[pointIndex],
+                                            currentPath[pointIndex + 1],
+                                        )
+                                    val segmentColor = Color(currentPathColors[pointIndex])
+
+                                    PathOverlay(
+                                        coords = segmentCoords,
+                                        color = segmentColor,
+                                        width = 8.dp,
+                                        outlineWidth = 0.dp,
                                     )
-                                val segmentColor = Color(currentPathColors[pointIndex])
-
-                                PathOverlay(
-                                    coords = segmentCoords,
-                                    color = segmentColor,
-                                    width = 8.dp,
-                                    outlineWidth = 0.dp,
-                                )
+                                }
                             }
                         }
                     }
                 }
             }
-        }
 
-        LocationTrackingButton(
-            isFollowing = mapState.isFollowingModeEnabled,
-            onClick = {
-                onMapIntent(MapIntent.ToggleFollowingMode)
-            },
-            modifier =
-                Modifier
-                    .constrainAs(trackingButtonRef) {
-                        end.linkTo(parent.end, margin = 24.dp)
-
-                        when (mapState.mapViewState) {
-                            is MapViewState.Loading -> {
-                                bottom.linkTo(parent.bottom, margin = 100.dp)
-                            }
-
-                            is MapViewState.Friend -> {
-                                bottom.linkTo(parent.bottom, margin = 100.dp)
-                            }
-
-                            is MapViewState.Running -> {
-                                bottom.linkTo(panelRef.top, margin = 24.dp)
-                            }
-                        }
-                    },
-        )
-
-        when (mapState.mapViewState) {
-            MapViewState.Loading -> {
-            }
-
-            is MapViewState.Running -> {
+            if (mapState.mapViewState is MapViewState.Running) {
                 RunningSessionScreen(
                     panelRef = panelRef,
                     updateNewRunningPath = { pathState ->
@@ -221,26 +253,81 @@ private fun RunningMapScreenContent(
                 )
             }
 
-            is MapViewState.Friend -> {}
-        }
-    }
+            if (mapState.mapViewState !is MapViewState.Loading) {
+                LocationTrackingButton(
+                    isFollowing = mapState.isFollowingModeEnabled,
+                    onClick = {
+                        onMapIntent(MapIntent.ToggleFollowingMode)
+                    },
+                    modifier =
+                        Modifier
+                            .constrainAs(trackingButtonRef) {
+                                end.linkTo(parent.end, margin = 12.dp)
 
-    if (mapState.mapViewState !is MapViewState.Running) {
-        InitialContent(
-            onStartClick = {
-                onMapIntent(MapIntent.SessionStartClick)
-            },
-        )
+                                when (mapState.mapViewState) {
+                                    is MapViewState.Friend -> {
+                                        bottom.linkTo(sheetTopGuideline, margin = sheetPeekHeight + 20.dp)
+                                    }
+
+                                    is MapViewState.Running -> {
+                                        bottom.linkTo(panelRef.top, margin = 24.dp)
+                                    }
+
+                                    MapViewState.Loading -> { // do nothing
+                                    }
+                                }
+                            },
+                )
+            }
+
+            if (mapState.mapViewState !is MapViewState.Running) {
+                DraggableFriendBottomSheet(
+                    modifier =
+                        Modifier
+                            .constrainAs(sheetRef) {
+                                bottom.linkTo(startButtonRef.top)
+                            }.fillMaxWidth()
+                            .offset {
+                                val yOffset = draggableState.offset
+                                if (yOffset.isNaN()) {
+                                    IntOffset(x = 0, y = boxHeight.roundToInt())
+                                } else {
+                                    IntOffset(x = 0, y = yOffset.roundToInt())
+                                }
+                            },
+                    draggableState = draggableState,
+                    showSheet = mapState.mapViewState is MapViewState.Friend,
+                    friendList = sampleFriendList,
+                )
+            }
+
+            if (mapState.mapViewState !is MapViewState.Running) {
+                InitialContent(
+                    modifier =
+                        Modifier.constrainAs(startButtonRef) {
+                            bottom.linkTo(parent.bottom)
+                        },
+                    //                    modifier = Modifier.align(Alignment.BottomCenter),
+                    onStartClick = {
+                        onMapIntent(MapIntent.SessionStartClick)
+                    },
+                )
+            }
+        }
     }
 }
 
 @Composable
-private fun InitialContent(onStartClick: () -> Unit) {
+private fun InitialContent(
+    onStartClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Box(
         modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(24.dp),
+            modifier
+                .fillMaxWidth()
+                .background(color = Color.White)
+                .padding(horizontal = 24.dp, vertical = 8.dp),
         contentAlignment = Alignment.BottomCenter,
     ) {
         DoRunDefaultButton(
@@ -256,3 +343,37 @@ private fun InitialContent(onStartClick: () -> Unit) {
         )
     }
 }
+
+private val sampleFriendList =
+    listOf(
+        FriendItem(
+            userId = 12345,
+            nickName = "승규",
+            isMe = true,
+            profileImgUrl = "",
+            lastestRunAt = "2025-10-19T19:57:13Z",
+            distanceInMeter = 5000,
+            latitude = 37.5301,
+            longitude = 127.12345,
+        ),
+        FriendItem(
+            userId = 12315,
+            nickName = "소래",
+            isMe = false,
+            profileImgUrl = "",
+            lastestRunAt = "2025-10-20T09:57:13Z",
+            distanceInMeter = 900,
+            latitude = 37.5301,
+            longitude = 127.12345,
+        ),
+        FriendItem(
+            userId = 112415,
+            nickName = "소래",
+            isMe = false,
+            profileImgUrl = "",
+            lastestRunAt = "2025-10-16T19:57:13Z",
+            distanceInMeter = 3000,
+            latitude = 37.5301,
+            longitude = 127.12345,
+        ),
+    )
