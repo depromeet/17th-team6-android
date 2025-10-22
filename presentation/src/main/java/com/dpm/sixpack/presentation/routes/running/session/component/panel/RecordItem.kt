@@ -7,6 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.theme.SixpackTheme
@@ -15,7 +16,11 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 internal fun RecordItem(
     label: String,
     recordValue: String,
+    emphasize: Boolean = false,
+    textColor: Color = SixpackTheme.colors.gray900,
 ) {
+    val textStyle = if (emphasize) SixpackTheme.typography.h3Bold else SixpackTheme.typography.t1Bold
+
     Column(horizontalAlignment = Alignment.Companion.Start) {
         Text(
             text = label,
@@ -26,8 +31,8 @@ internal fun RecordItem(
 
         Text(
             text = recordValue,
-            style = SixpackTheme.typography.h2Bold,
-            color = SixpackTheme.colors.gray900,
+            style = textStyle,
+            color = textColor,
         )
     }
 }

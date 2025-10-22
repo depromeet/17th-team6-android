@@ -21,6 +21,7 @@ import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
 import com.dpm.sixpack.presentation.common.util.formatPaceToString
 import com.dpm.sixpack.presentation.common.util.formatSecondsToTime
 import com.dpm.sixpack.presentation.routes.running.session.contract.state.RecordState
+import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 internal fun MainRunningRecordGrid(
@@ -39,6 +40,8 @@ internal fun MainRunningRecordGrid(
             RecordItem(
                 label = stringResource(R.string.record_current_distance),
                 recordValue = formatDistanceToKm(recordState.currentDistance),
+                emphasize = true,
+                textColor = SixpackTheme.colors.blue600,
             )
             Spacer(modifier = Modifier.height(20.dp))
             RecordItem(
@@ -54,11 +57,12 @@ internal fun MainRunningRecordGrid(
             RecordItem(
                 label = stringResource(R.string.record_running_duration),
                 recordValue = formatSecondsToTime(recordState.currentDuration),
+                emphasize = true,
             )
             Spacer(modifier = Modifier.height(20.dp))
             RecordItem(
                 label = stringResource(R.string.record_cadence),
-                recordValue = "${recordState.cadence}",
+                recordValue = "${recordState.cadence} spm",
             )
         }
     }
