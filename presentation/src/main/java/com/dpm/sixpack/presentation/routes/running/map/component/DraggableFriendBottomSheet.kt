@@ -1,6 +1,5 @@
-package com.dpm.sixpack.presentation.routes.running.component
+package com.dpm.sixpack.presentation.routes.running.map.component
 
-import android.R.attr.top
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.Orientation
@@ -27,13 +26,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.routes.freind.components.FriendsLazyColumn
 import com.dpm.sixpack.presentation.routes.freind.contract.FriendItem
-import com.dpm.sixpack.presentation.routes.running.map.component.SheetDragState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 internal fun DraggableFriendBottomSheet(
     draggableState: AnchoredDraggableState<SheetDragState>,
-    showSheet: Boolean,
     friendList: List<FriendItem>,
     modifier: Modifier = Modifier,
 ) {
@@ -75,15 +72,13 @@ internal fun DraggableFriendBottomSheet(
             ) {
                 FriendListTitle()
                 // 친구 목록
-                if (showSheet) {
-                    FriendsLazyColumn(
-                        modifier =
-                            Modifier
-                                .fillMaxSize()
-                                .padding(top = 12.dp),
-                        friendList = friendList,
-                    )
-                }
+                FriendsLazyColumn(
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(top = 12.dp),
+                    friendList = friendList,
+                )
             }
         }
     }

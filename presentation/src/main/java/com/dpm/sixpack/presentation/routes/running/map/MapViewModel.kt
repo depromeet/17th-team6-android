@@ -16,7 +16,6 @@ import com.naver.maps.geometry.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
-import org.orbitmvi.orbit.syntax.Syntax
 import org.orbitmvi.orbit.viewmodel.container
 import timber.log.Timber
 import javax.inject.Inject
@@ -27,8 +26,6 @@ import javax.inject.Inject
  * 2. 카메라 업데이트
  * 3. 위치 업데이트
  */
-
-private typealias MapSyntax = Syntax<MapUiState, MapSideEffect>
 
 @HiltViewModel
 class MapViewModel @Inject constructor(

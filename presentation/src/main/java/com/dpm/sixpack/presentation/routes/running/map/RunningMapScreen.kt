@@ -37,7 +37,7 @@ import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.common.util.PermissionHandler
 import com.dpm.sixpack.presentation.routes.freind.contract.FriendItem
-import com.dpm.sixpack.presentation.routes.running.component.DraggableFriendBottomSheet
+import com.dpm.sixpack.presentation.routes.running.map.component.DraggableFriendBottomSheet
 import com.dpm.sixpack.presentation.routes.running.map.component.LocationTrackingButton
 import com.dpm.sixpack.presentation.routes.running.map.component.SheetDragState
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapIntent
@@ -131,14 +131,8 @@ private fun RunningMapScreenContent(
 
     LaunchedEffect(cameraPositionState.cameraUpdateReason) {
         val reason = cameraPositionState.cameraUpdateReason
-        when (reason) {
-            CameraUpdateReason.GESTURE -> {
-                onMapIntent(MapIntent.FollowingModeOff)
-            }
-
-            else -> {
-                // do noting
-            }
+        if (reason == CameraUpdateReason.GESTURE) {
+            onMapIntent(MapIntent.FollowingModeOff)
         }
     }
 
@@ -211,7 +205,6 @@ private fun RunningMapScreenContent(
                 onLocationChange = { location ->
                     onMapIntent(MapIntent.UpdateUserLocation(LatLng(location)))
                 },
-//                contentPadding = PaddingValues(bottom = mapBottomPadding),
                 contentPadding = PaddingValues(bottom = (boxHeight * 0.10).dp),
             ) {
                 (mapState.mapViewState as? MapViewState.Running)?.pathColorState?.let { mapUiState ->
@@ -280,7 +273,7 @@ private fun RunningMapScreenContent(
                 )
             }
 
-            if (mapState.mapViewState !is MapViewState.Running) {
+            if (mapState.mapViewState is MapViewState.Friend) {
                 DraggableFriendBottomSheet(
                     modifier =
                         Modifier
@@ -296,18 +289,16 @@ private fun RunningMapScreenContent(
                                 }
                             },
                     draggableState = draggableState,
-                    showSheet = mapState.mapViewState is MapViewState.Friend,
                     friendList = sampleFriendList,
                 )
             }
 
             if (mapState.mapViewState !is MapViewState.Running) {
-                InitialContent(
+                RunningStartButton(
                     modifier =
                         Modifier.constrainAs(startButtonRef) {
                             bottom.linkTo(parent.bottom)
                         },
-                    //                    modifier = Modifier.align(Alignment.BottomCenter),
                     onStartClick = {
                         onMapIntent(MapIntent.SessionStartClick)
                     },
@@ -318,7 +309,7 @@ private fun RunningMapScreenContent(
 }
 
 @Composable
-private fun InitialContent(
+private fun RunningStartButton(
     onStartClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
