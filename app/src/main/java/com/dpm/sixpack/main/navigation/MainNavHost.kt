@@ -11,6 +11,8 @@ import com.dpm.sixpack.presentation.destinations.OnboardingRoute
 import com.dpm.sixpack.presentation.routes.onboarding.OnboardingRoute
 import com.dpm.sixpack.presentation.routes.session.navigation.addRunningSessionNavGraph
 import com.dpm.sixpack.presentation.routes.sessionreport.navigation.addSessionReportNavGraph
+import com.dpm.sixpack.presentation.routes.signup.navigation.addSignUpNavGraph
+import com.dpm.sixpack.presentation.routes.signup.navigation.navigateSignUp
 
 @Composable
 internal fun MainNavHost(
@@ -30,13 +32,20 @@ internal fun MainNavHost(
             composable<OnboardingRoute> {
                 OnboardingRoute(
                     onNavigateToSignUp = {
-                        // TODO SR-N SignUp Navigation 구현
+                        navigator.navController.navigateSignUp()
                     },
                     onNavigateToSignIn = {
                         // TODO SR-N SignIn Navigation 구현
                     },
                 )
             }
+
+            addSignUpNavGraph(
+                onNavigateToTermsAgreement = {
+                    // TODO: 약관 동의 화면으로 이동
+                },
+                onNavigateToBack = navigator::popBackStack,
+            )
 
             addRunningSessionNavGraph(
                 onNavigateToBack = navigator::popBackStack,

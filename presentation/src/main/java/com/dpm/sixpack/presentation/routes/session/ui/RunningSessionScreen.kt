@@ -9,9 +9,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
-import com.dpm.sixpack.presentation.routes.session.component.LocationTrackingButton
 import com.dpm.sixpack.presentation.routes.session.MapConstants
+import com.dpm.sixpack.presentation.routes.session.component.LocationTrackingButton
 import com.dpm.sixpack.presentation.routes.session.component.dialog.RunningStopDialog
 import com.dpm.sixpack.presentation.routes.session.component.panel.RunningRecordPanel
 import com.dpm.sixpack.presentation.routes.session.component.ready.ReadyOverlay

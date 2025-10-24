@@ -52,13 +52,14 @@ import com.naver.maps.map.compose.rememberCameraPositionState
 @Composable
 fun SessionReportRoute(
     navigateBack: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     // 스크롤 추가
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
     ) {
         DoRunTopBarSlot(
             trailingContent = {
@@ -76,7 +77,7 @@ fun SessionReportRoute(
                         tint = SixpackTheme.colors.gray800,
                     )
                 }
-            }
+            },
         )
 
         Spacer(Modifier.height(24.dp))
@@ -85,7 +86,7 @@ fun SessionReportRoute(
             Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
                 imageVector = ImageVector.vectorResource(R.drawable.ill_character_success),
@@ -108,10 +109,11 @@ fun SessionReportRoute(
             Spacer(Modifier.height(24.dp))
 
             Row(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .background(color = SixpackTheme.colors.blue100, shape = SixpackTheme.shapes.round16)
-                    .padding(20.dp),
+                modifier =
+                    modifier
+                        .fillMaxWidth()
+                        .background(color = SixpackTheme.colors.blue100, shape = SixpackTheme.shapes.round16)
+                        .padding(20.dp),
                 horizontalArrangement = Arrangement.SpaceAround,
             ) {
                 // 왼쪽 열
@@ -149,16 +151,18 @@ fun SessionReportRoute(
             Spacer(Modifier.height(24.dp))
 
             RunningCourseMap(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(4f / 5f)
-                    .clip(SixpackTheme.shapes.round16),
-                path = Sungsoo
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(4f / 5f)
+                        .clip(SixpackTheme.shapes.round16),
+                path = Sungsoo,
             )
             Spacer(Modifier.height(24.dp))
         }
     }
 }
+
 @OptIn(ExperimentalNaverMapApi::class)
 @Composable
 fun RunningCourseMap(
@@ -177,39 +181,41 @@ fun RunningCourseMap(
     NaverMap(
         modifier = modifier,
         cameraPositionState = cameraPositionState,
-        uiSettings = MapUiSettings(
-            isScrollGesturesEnabled = false,
-            isZoomGesturesEnabled = false,
-            isRotateGesturesEnabled = false,
-            isTiltGesturesEnabled = false,
-            isStopGesturesEnabled = false,
-            isLogoClickEnabled = false,
-            isCompassEnabled = false,
-            isScaleBarEnabled = false,
-            isZoomControlEnabled = false,
-            isLocationButtonEnabled = false,
-        )
+        uiSettings =
+            MapUiSettings(
+                isScrollGesturesEnabled = false,
+                isZoomGesturesEnabled = false,
+                isRotateGesturesEnabled = false,
+                isTiltGesturesEnabled = false,
+                isStopGesturesEnabled = false,
+                isLogoClickEnabled = false,
+                isCompassEnabled = false,
+                isScaleBarEnabled = false,
+                isZoomControlEnabled = false,
+                isLocationButtonEnabled = false,
+            ),
     ) {
         if (path.size > 1) {
             // 각 경로 조각의 색상을 정의합니다.
             val ppath: List<List<LatLng>> = path.chunked(10)
 
-            val colorParts = path.windowed(2).mapIndexed { index, _ ->
-                val fraction = index.toFloat() / (path.size - 2).toFloat()
-                // 지나갈 경로: 파란색 -> 빨간색 그라데이션
-                val interpolatedColor = lerp(Color.Blue, Color.Red, fraction)
+            val colorParts =
+                path.windowed(2).mapIndexed { index, _ ->
+                    val fraction = index.toFloat() / (path.size - 2).toFloat()
+                    // 지나갈 경로: 파란색 -> 빨간색 그라데이션
+                    val interpolatedColor = lerp(Color.Blue, Color.Red, fraction)
 
-                // ColorPart 생성 시 passedColor를 회색으로 지정합니다.
-                ColorPart(
-                    color = interpolatedColor,
-                    outlineColor = Color.Transparent,
-                    passedColor = Color.Gray, // 지나온 경로의 색상은 회색
-                    passedOutlineColor = Color.Transparent
-                )
-            }
+                    // ColorPart 생성 시 passedColor를 회색으로 지정합니다.
+                    ColorPart(
+                        color = interpolatedColor,
+                        outlineColor = Color.Transparent,
+                        passedColor = Color.Gray, // 지나온 경로의 색상은 회색
+                        passedOutlineColor = Color.Transparent,
+                    )
+                }
 
             MultipartPathOverlay(
-                coordParts= ppath,
+                coordParts = ppath,
                 width = 8.dp,
                 colorParts = colorParts,
                 progress = 0.5, // ✅ 전체 경로의 50% 지점까지를 '지나온 경로'로 설정
