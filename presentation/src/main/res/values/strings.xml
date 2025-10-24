@@ -18,37 +18,27 @@
     <!--BottomNav End-->
 
     <!-- region Onboadring -->
-    <string name="onboarding_current_page_index">%1$d</string>
-    <string name="onboarding_page_size">/%1$d</string>
+
+    <!-- Onboarding titles -->
+    <string name="onboarding_title_1">혼자 뛰는 건 어려워도, 함께라면 두근두근 즐겁게!</string>
+    <string name="onboarding_title_2">친구들의 러닝 현황을 확인해요</string>
+    <string name="onboarding_title_3">오늘의 러닝, 피드에 인증해요</string>
+
+    <!-- Onboarding descriptions -->
+    <string name="onboarding_desc_1">친구와 함께 러닝을 습관으로 만들어보세요.</string>
+    <string name="onboarding_desc_2">지도에 표시된 친구들의 러닝 현황을 보며\n멀리서도 함께 뛰는 기분을 느껴요.</string>
+    <string name="onboarding_desc_3">오늘의 러닝을 피드에 남기고,\n친구와 러닝세션을 추억으로 함께 달려요.</string>
+
+    <!-- Onboarding Buttons & labels -->
+    <string name="onboarding_sign_up">회원가입</string>
+    <string name="onboarding_signin">로그인</string>
+    <string name="onboarding_already_have_account">이미 가입하셨나요?</string>
 
     <string name="onboarding_permission_title">서비스 이용을 위해 \n앱 권한을 허용해 주세요.</string>
     <string name="onboarding_permission_agree_all">약관 전체 동의</string>
     <string name="onboarding_permission_term_location">[필수] 위치기반 정보 수집 동의</string>
     <string name="onboarding_permission_term_privacy">[필수] 개인정보 수집/이용 동의</string>
     <string name="onboarding_permission_term_marketing">[선택] 마케팅 정보 수신 동의</string>
-
-    <string name="onboarding_level_title">평소 러닝 수준을 알려주세요</string>
-    <string name="onboarding_level_beginner_title">이제 막 시작했어요</string>
-    <string name="onboarding_level_beginner_sub_title">최근 달린 경험이 없어요</string>
-    <string name="onboarding_level_occasional_title">가끔 달려요</string>
-    <string name="onboarding_level_occasional_sub_title">주 1-2회 이하로 가볍게 달려요.</string>
-    <string name="onboarding_level_consistent_title">꾸준히 달려요</string>
-    <string name="onboarding_level_consistent_sub_title">주 3회 이상 루틴대로 달려요</string>
-
-    <string name="onboarding_goal_marathon_title">마라톤에 도전할래요</string>
-    <string name="onboarding_goal_marathon_sub_title">10km · 21km · 42km</string>
-    <string name="onboarding_goal_stamina_title">체력을 키울래요</string>
-    <string name="onboarding_goal_stamina_sub_title">30분 달리기</string>
-    <string name="onboarding_goal_zone_title">지구력을 키울래요</string>
-    <string name="onboarding_goal_zone2_sub_title">Zone2 러닝</string>
-    <string name="onboarding_goal_title">도전하고 싶은 목표가 있나요?</string>
-
-    <string name="onboarding_finish_title">나에게 꼭 맞는\n목표가 준비되었어요!</string>
-    <string name="onboarding_finish_recommend_button">추천</string>
-    <string name="onboarding_finish_goal_round_count">달성 회차</string>
-    <string name="onboarding_finish_goal_duration">권장 러닝 시간</string>
-    <string name="onboarding_finish_goal_pace">권장 페이스</string>
-    <string name="onboarding_finish_button">두런두런 시작하기</string>
     <!-- endregion-->
 
 
