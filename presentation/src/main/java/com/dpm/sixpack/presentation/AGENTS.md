@@ -64,6 +64,581 @@ com.dpm.sixpack.presentation.routes.[feature_name]
 ### **[FeatureName]Navigation.kt**
 - **역할**: Jetpack Navigation Component를 사용하여 화면으로 이동하는 경로와 방법을 정의합니다.
 - **구현**: `NavGraphBuilder`의 확장 함수 형태로 작성하며, `composable` 함수를 사용하여 `[FeatureName]Route`를 NavGraph에 등록합니다.
+- **세부 구현**: 자세한 내용은 섹션 3-1 참조
+
+## 3-1. Navigation System (Type-Safe Navigation)
+
+**IMPORTANT**: SixPack은 Jetpack Navigation의 Type-Safe Navigation을 사용합니다. 모든 Route는 `@Serializable`을 사용하여 정의해야 합니다.
+
+### Route 정의 (destinations 패키지)
+
+모든 Route는 `com.dpm.sixpack.presentation.destinations` 패키지에 정의합니다.
+
+**기본 Route 인터페이스:**
+```kotlin
+// destinations/Route.kt
+@Serializable
+sealed interface Route
+```
+
+**화면별 Route 정의:**
+
+**1. 단일 화면 Route (data object 사용):**
+```kotlin
+// destinations/OnboardingRoute.kt
+@Serializable
+data object OnboardingRoute : Route
+
+// destinations/SessionReportRoute.kt
+@Serializable
+data object SessionReportRoute : Route
+```
+
+**2. 탭 그룹 Route (sealed interface 사용):**
+```kotlin
+// destinations/MainRoute.kt
+@Serializable
+sealed interface MainRoute : Route {
+    @Serializable
+    data object Running : MainRoute
+
+    @Serializable
+    data object Feed : MainRoute
+
+    @Serializable
+    data object MyPage : MainRoute
+}
+```
+
+**3. 파라미터가 있는 Route (data class 사용):**
+```kotlin
+// 예시: SessionReport에 파라미터가 필요한 경우
+@Serializable
+data class SessionReportRoute(
+    val sessionId: Long,
+) : Route
+```
+
+### Navigation 함수 정의 (navigation 패키지)
+
+각 화면별로 `navigation` 패키지에 Navigation 함수를 정의합니다.
+
+**파일 위치:**
+```
+routes/[feature_name]/navigation/[FeatureName]Navigation.kt
+```
+
+**필수 구현 요소:**
+
+**1. NavController 확장 함수 (navigate 함수):**
+```kotlin
+fun NavController.navigate[FeatureName](navOptions: NavOptions? = null) {
+    navigate([FeatureName]Route, navOptions)
+}
+
+// 파라미터가 있는 경우
+fun NavController.navigate[FeatureName](
+    sessionId: Long,
+    navOptions: NavOptions? = null
+) {
+    navigate([FeatureName]Route(sessionId = sessionId), navOptions)
+}
+```
+
+**2. NavGraphBuilder 확장 함수 (NavGraph 추가):**
+```kotlin
+fun NavGraphBuilder.add[FeatureName]NavGraph(
+    onNavigateToBack: () -> Unit,
+    // 필요한 navigation 콜백들 추가
+) {
+    composable<[FeatureName]Route> {
+        [FeatureName]Route(
+            onNavigateToBack = onNavigateToBack,
+            // 필요한 navigation 콜백들 전달
+        )
+    }
+}
+
+// 파라미터가 있는 경우 - backStackEntry에서 추출
+fun NavGraphBuilder.add[FeatureName]NavGraph(
+    onNavigateToBack: () -> Unit,
+) {
+    composable<[FeatureName]Route> { backStackEntry ->
+        val route = backStackEntry.toRoute<[FeatureName]Route>()
+        [FeatureName]Route(
+            sessionId = route.sessionId,
+            onNavigateToBack = onNavigateToBack,
+        )
+    }
+}
+```
+
+### Navigation 사용 예시
+
+**완전한 예시: SessionReport 화면**
+
+**1. Route 정의:**
+```kotlin
+// destinations/SessionReportRoute.kt
+package com.dpm.sixpack.presentation.destinations
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+data object SessionReportRoute : Route
+```
+
+**2. Navigation 함수 정의:**
+```kotlin
+// routes/sessionreport/navigation/SessionReportNavigation.kt
+package com.dpm.sixpack.presentation.routes.sessionreport.navigation
+
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptions
+import androidx.navigation.compose.composable
+import com.dpm.sixpack.presentation.destinations.SessionReportRoute
+import com.dpm.sixpack.presentation.routes.sessionreport.SessionReportRoute
+
+fun NavController.navigateSessionReport(navOptions: NavOptions? = null) {
+    navigate(SessionReportRoute, navOptions)
+}
+
+fun NavGraphBuilder.addSessionReportNavGraph(onNavigateToBack: () -> Unit) {
+    composable<SessionReportRoute> {
+        SessionReportRoute(
+            navigateBack = onNavigateToBack,
+        )
+    }
+}
+```
+
+**3. MainNavHost에 추가:**
+```kotlin
+// app/src/main/java/com/dpm/sixpack/main/navigation/MainNavHost.kt
+NavHost(
+    navController = navigator.navController,
+    startDestination = navigator.startDestination,
+) {
+    // ... 다른 화면들
+
+    addSessionReportNavGraph(
+        onNavigateToBack = navigator::popBackStack,
+    )
+}
+```
+
+**4. MainNavigator에 네비게이션 함수 추가:**
+```kotlin
+// app/src/main/java/com/dpm/sixpack/main/navigation/MainNavigator.kt
+class MainNavigator(...) {
+    // ...
+
+    fun navigateToSessionReport() {
+        navController.navigateSessionReport(
+            navOptions {
+                popUpTo(MainRoute.Running) {
+                    inclusive = false
+                }
+            }
+        )
+    }
+}
+```
+
+**5. 화면에서 호출:**
+```kotlin
+// Route에서 SideEffect 처리
+viewModel.collectSideEffect { sideEffect ->
+    when (sideEffect) {
+        is MySideEffect.NavigateToSessionReport ->
+            onNavigateToSessionReport()
+    }
+}
+```
+
+### Navigation 체크리스트
+
+새로운 화면의 Navigation을 구현할 때 확인하세요:
+
+**Route 정의:**
+- [ ] `destinations` 패키지에 Route 정의
+- [ ] `@Serializable` 어노테이션 추가
+- [ ] `Route` 인터페이스 상속
+- [ ] 파라미터가 필요하면 `data class`, 아니면 `data object` 사용
+
+**Navigation 함수:**
+- [ ] `routes/[feature]/navigation/[Feature]Navigation.kt` 파일 생성
+- [ ] `NavController.navigate[Feature]` 확장 함수 정의
+- [ ] `NavGraphBuilder.add[Feature]NavGraph` 확장 함수 정의
+- [ ] `composable<[Feature]Route>` 사용하여 type-safe navigation 구현
+
+**통합:**
+- [ ] `MainNavHost`에 `add[Feature]NavGraph` 호출 추가
+- [ ] 필요시 `MainNavigator`에 `navigateTo[Feature]` 함수 추가
+- [ ] Route에서 navigation 콜백 파라미터로 받기
+
+## 3-2. App-Level Navigation Structure
+
+**IMPORTANT**: 앱의 전체 네비게이션 구조는 `app` 모듈의 `main` 패키지에서 관리됩니다. 이 구조는 변경하지 말고, 새로운 화면을 추가할 때만 확장하세요.
+
+### MainActivity
+
+앱의 진입점이며, 다음을 담당합니다:
+
+**필수 구현 요소:**
+```kotlin
+@AndroidEntryPoint
+class MainActivity : ComponentActivity() {
+    @Inject
+    lateinit var networkMonitor: NetworkMonitor
+
+    @Inject
+    lateinit var timeZoneMonitor: TimeZoneMonitor
+
+    private val viewModel: MainViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        // 1. SplashScreen 설치
+        val splashScreen = installSplashScreen()
+        super.onCreate(savedInstanceState)
+
+        // 2. ViewModel의 isLoading을 기반으로 스플래시 유지
+        splashScreen.setKeepOnScreenCondition { viewModel.isLoading.value }
+
+        // 3. EdgeToEdge 활성화
+        enableEdgeToEdge()
+
+        setContent {
+            val startDestination by viewModel.startDestination.collectAsStateWithLifecycle()
+            val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+
+            // 4. 로딩 완료 후 UI 표시
+            if (!isLoading) {
+                val appState = rememberSixPackAppState(
+                    navigator = rememberMainNavigator(startDestination = startDestination),
+                    networkMonitor = networkMonitor,
+                    timeZoneMonitor = timeZoneMonitor,
+                )
+
+                val currentTimeZone by appState.currentTimeZone.collectAsStateWithLifecycle()
+
+                // 5. CompositionLocalProvider로 전역 상태 제공
+                CompositionLocalProvider(
+                    LocalTimeZone provides currentTimeZone,
+                ) {
+                    SixpackTheme(isDebug = BuildConfig.DEBUG) {
+                        MainScreen(appState = appState)
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+**핵심 패턴:**
+- `@AndroidEntryPoint`: Hilt 의존성 주입
+- `installSplashScreen()`: 스플래시 화면 설치
+- `setKeepOnScreenCondition`: ViewModel의 로딩 상태로 스플래시 유지
+- `enableEdgeToEdge()`: 전체 화면 사용 (StatusBar, NavigationBar 영역까지)
+- `rememberSixPackAppState`: 앱 전역 상태 관리
+- `CompositionLocalProvider`: 전역 값 제공 (TimeZone 등)
+
+### MainViewModel
+
+앱의 시작 화면(destination)과 로딩 상태를 관리합니다.
+
+**구현:**
+```kotlin
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val getOnboardingStatusUseCase: GetOnboardingStatusUseCase,
+) : ViewModel() {
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
+    private val _startDestination = MutableStateFlow<Route>(OnboardingRoute)
+    val startDestination: StateFlow<Route> = _startDestination.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            // 온보딩 완료 여부나 로그인 여부에 따라 startDestination 결정
+            val isOnboardingComplete = getOnboardingStatusUseCase()
+
+            _startDestination.value = if (isOnboardingComplete) {
+                MainRoute.Running
+            } else {
+                OnboardingRoute
+            }
+
+            delay(1000L) // 최소 스플래시 표시 시간
+            _isLoading.value = false
+        }
+    }
+}
+```
+
+**핵심 패턴:**
+- `BaseViewModel`을 사용하지 않음 (MVI 패턴 불필요)
+- `StateFlow`로 로딩 상태와 시작 화면 관리
+- `init` 블록에서 비즈니스 로직 실행 (온보딩 상태, 로그인 상태 체크)
+- 시작 화면을 동적으로 결정 (OnboardingRoute vs MainRoute)
+
+### MainScreen
+
+앱의 메인 Scaffold와 BottomBar를 구성합니다.
+
+**구현:**
+```kotlin
+@Composable
+internal fun MainScreen(
+    modifier: Modifier = Modifier,
+    appState: SixPackAppState,
+) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val isOffline by appState.isOffline.collectAsStateWithLifecycle()
+
+    // 오프라인 상태 체크
+    LaunchedEffect(isOffline) {
+        if (isOffline) {
+            snackbarHostState.showSnackbar(
+                message = "인터넷 연결을 확인해주세요.",
+                duration = Indefinite,
+            )
+        }
+    }
+
+    Scaffold(
+        bottomBar = {
+            MainBottomBar(
+                modifier = Modifier.navigationBarsPadding(),
+                visible = appState.navigator.shouldShowBottomBar(),
+                mainNavTabs = MainNavTab.entries,
+                currentTab = appState.navigator.currentTab,
+                onTabSelected = { tab ->
+                    appState.navigator.navigate(tab)
+                },
+            )
+        },
+        containerColor = SixpackTheme.colors.gray0,
+    ) { paddingValue ->
+        MainNavHost(
+            appState = appState,
+            onShowSnackbar = { message, action ->
+                snackbarHostState.showSnackbar(
+                    message = message,
+                    actionLabel = action,
+                    duration = SnackbarDuration.Short,
+                ) == ActionPerformed
+            },
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = paddingValue.calculateBottomPadding()),
+        )
+    }
+}
+```
+
+**핵심 패턴:**
+- `Scaffold` + `bottomBar`: 하단 네비게이션 구조
+- `SnackbarHostState`: 전역 스낵바 관리
+- `isOffline` 체크: 네트워크 상태 모니터링
+- `shouldShowBottomBar()`: 조건부 BottomBar 표시 (특정 화면에서만)
+- `navigationBarsPadding()`: 시스템 바 영역 패딩
+- `calculateBottomPadding()`: BottomBar 높이만큼 패딩
+
+### MainNavHost
+
+앱의 모든 NavGraph를 구성합니다.
+
+**구현:**
+```kotlin
+@Composable
+internal fun MainNavHost(
+    appState: SixPackAppState,
+    onShowSnackbar: suspend (String, String?) -> Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val navigator = appState.navigator
+
+    NavHost(
+        navController = navigator.navController,
+        startDestination = navigator.startDestination,
+    ) {
+        // 단일 화면 추가
+        composable<OnboardingRoute> {
+            OnboardingRoute(
+                onNavigateToSignUp = {
+                    // TODO: SignUp Navigation
+                },
+                onNavigateToSignIn = {
+                    // TODO: SignIn Navigation
+                },
+            )
+        }
+
+        // NavGraph 추가 (모듈화된 화면 그룹)
+        addRunningSessionNavGraph(
+            onNavigateToBack = navigator::popBackStack,
+            navigateToSessionReport = navigator::navigateToSessionReport,
+        )
+
+        addSessionReportNavGraph(
+            onNavigateToBack = navigator::popBackStack,
+        )
+    }
+}
+```
+
+**핵심 패턴:**
+- `NavHost`: 모든 화면의 컨테이너
+- `startDestination`: MainNavigator에서 전달받은 동적 시작 화면
+- `composable<Route>`: Type-safe navigation으로 단일 화면 등록
+- `add[Feature]NavGraph`: NavGraphBuilder 확장 함수로 화면 그룹 등록
+- `navigator::method`: 메서드 참조로 네비게이션 콜백 전달
+
+**새로운 화면 추가 시:**
+```kotlin
+// 1. 단일 화면인 경우
+composable<MyNewRoute> {
+    MyNewRoute(
+        onNavigateToBack = navigator::popBackStack,
+    )
+}
+
+// 2. 화면 그룹인 경우 (여러 관련 화면)
+addMyFeatureNavGraph(
+    onNavigateToBack = navigator::popBackStack,
+    navigateToNextScreen = navigator::navigateToNextScreen,
+)
+```
+
+### MainNavigator
+
+NavController를 래핑하여 앱 전체의 네비게이션을 관리하는 클래스입니다.
+
+**구현:**
+```kotlin
+class MainNavigator(
+    val navController: NavHostController,
+    val startDestination: Route,
+) {
+    private val previousDestination = mutableStateOf<NavDestination?>(null)
+
+    // 현재 화면
+    val currentDestination: NavDestination?
+        @Composable get() {
+            val currentEntry = navController.currentBackStackEntryFlow
+                .collectAsState(initial = null)
+
+            return currentEntry.value?.destination.also { destination ->
+                if (destination != null) {
+                    previousDestination.value = destination
+                }
+            } ?: previousDestination.value
+        }
+
+    // 현재 선택된 탭
+    val currentTab: MainNavTab?
+        @Composable get() = MainNavTab.find { tab ->
+            currentDestination?.hasRoute(tab::class) == true
+        }
+
+    // 뒤로가기
+    fun popBackStack() {
+        navController.popBackStack()
+    }
+
+    // 특정 화면으로 이동
+    fun navigateToSessionReport() {
+        navController.navigateSessionReport(
+            navOptions {
+                popUpTo(MainRoute.Running) {
+                    inclusive = false
+                }
+            }
+        )
+    }
+
+    // 탭 네비게이션
+    fun navigate(tab: MainNavTab) {
+        val navOptions = navOptions {
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+
+        when (tab) {
+            MainNavTab.RUNNING -> {
+                navController.navigateRunning(navOptions)
+            }
+            MainNavTab.FEED -> {
+                navController.navigateFeed(navOptions)
+            }
+            MainNavTab.MY_PAGE -> {
+                navController.navigateMyPage(navOptions)
+            }
+        }
+    }
+
+    // BottomBar 표시 여부
+    @Composable
+    fun shouldShowBottomBar() = MainNavTab.contains {
+        currentDestination?.hasRoute(it::class) == true
+    }
+}
+
+@Composable
+internal fun rememberMainNavigator(
+    startDestination: Route,
+    navController: NavHostController = rememberNavController(),
+): MainNavigator = remember(navController, startDestination) {
+    MainNavigator(navController, startDestination)
+}
+```
+
+**핵심 패턴:**
+- `NavHostController` 래핑: 전역 네비게이션 로직을 한곳에서 관리
+- `currentDestination`: 현재 화면 추적 (previousDestination을 fallback으로 사용)
+- `currentTab`: 현재 선택된 탭 계산 (BottomBar 상태 표시용)
+- `shouldShowBottomBar()`: 현재 화면이 탭 화면인지 확인
+- `navigate(tab)`: 탭 네비게이션 시 `saveState`/`restoreState` 사용
+- `navOptions`: 백스택 관리를 위한 옵션 설정 (popUpTo, launchSingleTop 등)
+- `rememberMainNavigator`: Composable 함수로 Navigator 인스턴스 생성
+
+**새로운 네비게이션 함수 추가:**
+```kotlin
+// MainNavigator에 함수 추가
+fun navigateToMyNewScreen() {
+    navController.navigateMyNewScreen(
+        navOptions {
+            popUpTo(MainRoute.Home) {
+                inclusive = false
+            }
+        }
+    )
+}
+```
+
+### 체크리스트: 새로운 화면의 앱 수준 통합
+
+새로운 화면을 앱에 통합할 때 확인하세요:
+
+**MainNavHost 업데이트:**
+- [ ] `MainNavHost`에 `composable<MyRoute>` 또는 `addMyNavGraph` 추가
+- [ ] 필요한 네비게이션 콜백 전달 (onNavigateToBack, navigate... 등)
+
+**MainNavigator 업데이트 (필요시):**
+- [ ] 여러 곳에서 호출되는 화면이라면 `navigateToMyScreen()` 함수 추가
+- [ ] 백스택 관리가 필요하면 `navOptions` 설정
+- [ ] 탭 화면이라면 `MainNavTab`에 추가하고 `navigate(tab)` 업데이트
+
+**Bottom Navigation (필요시):**
+- [ ] 탭 화면인 경우 `MainNavTab` enum에 추가
+- [ ] `shouldShowBottomBar()` 로직 확인
 
 ## 4. 코드 스타일
 
