@@ -89,6 +89,10 @@
 
     <!-- endregion-->
 
+    <!--region Feed-->
+    <string name="feed_calender_post_count_label">+%1$d</string>
+    <!--endregion -->
+
     <!--region Screen Selection Tab-->
     <string name="screen_tab_goal_title">목표</string>
     <string name="screen_tab_map_title">지도</string>

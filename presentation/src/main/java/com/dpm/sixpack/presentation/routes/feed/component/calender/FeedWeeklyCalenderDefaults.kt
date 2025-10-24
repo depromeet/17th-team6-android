@@ -14,44 +14,53 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
  *
  * @param calendarBackgroundColor 달력 컴포넌트 전체의 배경색.
  * @param weeklyDateTextColor '월', '화' 등 요일 텍스트의 색상.
- * @param selectedCountCellBackgroundColor 선택된 날짜 셀의 배경색.
- * @param defaultCountCellBackgroundColor 기본 상태(선택되지 않은) 날짜 셀의 배경색.
- * @param disabledCountCellBackgroundColor 비활성화된(선택 불가능한) 날짜 셀의 배경색.
- * @param selectedCountCellTextColor 선택된 날짜 셀 내부 텍스트의 색상.
- * @param defaultCountCellTextColor 기본 상태 날짜 셀 내부 텍스트의 색상.
- * @param disabledCountCellTextColor 비활성화된 날짜 셀 내부 텍스트의 색상.
- * @param selectedDayCellDateTextColor 선택된 날짜의 '일'(숫자) 텍스트 색상.
- * @param defaultDayCellDateTextColor 기본 상태 날짜의 '일'(숫자) 텍스트 색상.
- * @param disabledDayCellDateTextColor 비활성화된 날짜의 '일'(숫자) 텍스트 색상.
  * @param headerNavigationIconColor 헤더의 '이전'/'다음' 탐색 아이콘(<, >) 색상.
  * @param headerDateColor 헤더의 '연/월' 텍스트 색상.
+ *
+ * [비활성화(Disabled) 상태]
+ * @param disabledCountCellBackgroundColor 비활성화된(선택 불가능한) 날짜 셀의 배경색.
+ * @param disabledCountCellTextColor 비활성화된 날짜 셀 내부 텍스트의 색상.
+ * @param disabledDayCellDateTextColor 비활성화된 날짜의 '일'(숫자) 텍스트 색상.
+ *
+ * [선택(Selected) 상태]
+ * @param selectedCountCellBackgroundColor 선택된 날짜 셀의 배경색.
+ * @param selectedCountCellTextColor 선택된 날짜 셀 내부 텍스트의 색상.
+ * @param selectedDayCellDateTextColor 선택된 날짜의 '일'(숫자) 텍스트 색상.
+ *
+ * [기본(Default) 상태]
+ * @param defaultCountCellBackgroundColor 기본 상태(선택되지 않은) 날짜 셀의 배경색.
+ * @param defaultCountCellTextColor 기본 상태 날짜 셀 내부 텍스트의 색상.
+ * @param defaultDayCellDateTextColor 기본 상태 날짜의 '일'(숫자) 텍스트 색상.
  */
 @Immutable
 data class WeeklyCalendarColors(
     val calendarBackgroundColor: Color,
     val weeklyDateTextColor: Color,
-    val selectedCountCellBackgroundColor: Color,
-    val defaultCountCellBackgroundColor: Color,
-    val disabledCountCellBackgroundColor: Color,
-    val selectedCountCellTextColor: Color,
-    val defaultCountCellTextColor: Color,
-    val disabledCountCellTextColor: Color,
-    val selectedDayCellDateTextColor: Color,
-    val defaultDayCellDateTextColor: Color,
-    val disabledDayCellDateTextColor: Color,
     val headerNavigationIconColor: Color,
     val headerDateColor: Color,
+    // Disabled state colors
+    val disabledCountCellBackgroundColor: Color,
+    val disabledCountCellTextColor: Color,
+    val disabledDayCellDateTextColor: Color,
+    // Selected state colors
+    val selectedCountCellBackgroundColor: Color,
+    val selectedCountCellTextColor: Color,
+    val selectedDayCellDateTextColor: Color,
+    // Default state colors
+    val defaultCountCellBackgroundColor: Color,
+    val defaultCountCellTextColor: Color,
+    val defaultDayCellDateTextColor: Color,
 ) {
     /**
      * 날짜 셀의 선택 여부와 활성화 여부에 따라 적절한 배경색을 반환하는 함수.
      *
      * @param isSelected 해당 날짜 셀이 선택되었는지 여부.
-     * @param isEnabled 해당 날짜가 활성화되었는지 여부.
+     * @param isDisabled 해당 날짜가 활성화되었는지 여부.
      * @return 계산된 [Color] 값.
      */
-    fun dayCountBackgroundColor(isSelected: Boolean, isEnabled: Boolean): Color {
+    fun dayCountBackgroundColor(isSelected: Boolean, isDisabled: Boolean): Color {
         return when {
-            !isEnabled -> disabledCountCellBackgroundColor
+            isDisabled -> disabledCountCellBackgroundColor
             isSelected -> selectedCountCellBackgroundColor
             else -> defaultCountCellBackgroundColor
         }
@@ -64,9 +73,9 @@ data class WeeklyCalendarColors(
      * @param isEnabled 해당 날짜가 활성화되었는지 여부.
      * @return 계산된 [Color] 값.
      */
-    fun dayCountTextColor(isSelected: Boolean, isEnabled: Boolean): Color {
+    fun dayCountTextColor(isSelected: Boolean, isDisabled: Boolean): Color {
         return when {
-            !isEnabled -> disabledCountCellTextColor
+            isDisabled -> disabledCountCellTextColor
             isSelected -> selectedCountCellTextColor
             else -> defaultCountCellTextColor
         }
@@ -78,9 +87,9 @@ data class WeeklyCalendarColors(
      * @param isSelected 해당 날짜 셀이 선택되었는지 여부.
      * @return 계산된 [Color] 값.
      */
-    fun dayCellDateTextColor(isSelected: Boolean, isEnabled: Boolean): Color {
+    fun dayCellDateTextColor(isSelected: Boolean, isDisabled: Boolean): Color {
         return when {
-            !isEnabled -> disabledDayCellDateTextColor
+            isDisabled -> disabledDayCellDateTextColor
             isSelected -> selectedDayCellDateTextColor
             else -> defaultDayCellDateTextColor
         }
@@ -114,48 +123,48 @@ object FeedWeeklyCalendarDefaults {
     @Composable
     fun colors(
         calendarBackgroundColor: Color = SixpackTheme.colors.gray0,
-        weeklyDateTextColor: Color = SixpackTheme.colors.gray50,
-        selectedCountCellBackgroundColor: Color = SixpackTheme.colors.blue900,
-        defaultCountCellBackgroundColor: Color = SixpackTheme.colors.blue300,
-        disabledCountCellBackgroundColor: Color = SixpackTheme.colors.gray100,
-        selectedCountCellTextColor: Color = SixpackTheme.colors.gray0,
-        defaultCountCellTextColor: Color = SixpackTheme.colors.blue900,
-        disabledCountCellTextColor: Color = SixpackTheme.colors.gray300,
-        selectedDayCellDateTextColor: Color = SixpackTheme.colors.blue600,
-        defaultDayCellDateTextColor: Color = SixpackTheme.colors.gray900,
-        disabledDayCellDateTextColor: Color = SixpackTheme.colors.gray100,
-        headerNavigationIconColor: Color = SixpackTheme.colors.gray900,
+        weeklyDateTextColor: Color = SixpackTheme.colors.gray500,
+        headerNavigationIconColor: Color = SixpackTheme.colors.gray800,
         headerDateColor: Color = SixpackTheme.colors.gray900,
+        disabledCountCellBackgroundColor: Color = SixpackTheme.colors.gray50,
+        disabledCountCellTextColor: Color = SixpackTheme.colors.gray300,
+        disabledDayCellDateTextColor: Color = SixpackTheme.colors.gray300,
+        selectedCountCellBackgroundColor: Color = SixpackTheme.colors.blue600,
+        selectedCountCellTextColor: Color = SixpackTheme.colors.gray0,
+        selectedDayCellDateTextColor: Color = SixpackTheme.colors.blue600,
+        defaultCountCellBackgroundColor: Color = SixpackTheme.colors.blue100,
+        defaultCountCellTextColor: Color = SixpackTheme.colors.blue600,
+        defaultDayCellDateTextColor: Color = SixpackTheme.colors.gray900,
     ): WeeklyCalendarColors {
         return remember(
             calendarBackgroundColor,
             weeklyDateTextColor,
-            selectedCountCellBackgroundColor,
-            defaultCountCellBackgroundColor,
-            disabledCountCellBackgroundColor,
-            selectedCountCellTextColor,
-            defaultCountCellTextColor,
-            disabledCountCellTextColor,
-            selectedDayCellDateTextColor,
-            defaultDayCellDateTextColor,
-            disabledDayCellDateTextColor,
             headerNavigationIconColor,
             headerDateColor,
+            disabledCountCellBackgroundColor,
+            disabledCountCellTextColor,
+            disabledDayCellDateTextColor,
+            selectedCountCellBackgroundColor,
+            selectedCountCellTextColor,
+            selectedDayCellDateTextColor,
+            defaultCountCellBackgroundColor,
+            defaultCountCellTextColor,
+            defaultDayCellDateTextColor,
         ) {
             WeeklyCalendarColors(
                 calendarBackgroundColor = calendarBackgroundColor,
                 weeklyDateTextColor = weeklyDateTextColor,
-                selectedCountCellBackgroundColor = selectedCountCellBackgroundColor,
-                defaultCountCellBackgroundColor = defaultCountCellBackgroundColor,
-                disabledCountCellBackgroundColor = disabledCountCellBackgroundColor,
-                selectedCountCellTextColor = selectedCountCellTextColor,
-                defaultCountCellTextColor = defaultCountCellTextColor,
-                disabledCountCellTextColor = disabledCountCellTextColor,
-                selectedDayCellDateTextColor = selectedDayCellDateTextColor,
-                defaultDayCellDateTextColor = defaultDayCellDateTextColor,
-                disabledDayCellDateTextColor = disabledDayCellDateTextColor,
                 headerNavigationIconColor = headerNavigationIconColor,
                 headerDateColor = headerDateColor,
+                disabledCountCellBackgroundColor = disabledCountCellBackgroundColor,
+                disabledCountCellTextColor = disabledCountCellTextColor,
+                disabledDayCellDateTextColor = disabledDayCellDateTextColor,
+                selectedCountCellBackgroundColor = selectedCountCellBackgroundColor,
+                selectedCountCellTextColor = selectedCountCellTextColor,
+                selectedDayCellDateTextColor = selectedDayCellDateTextColor,
+                defaultCountCellBackgroundColor = defaultCountCellBackgroundColor,
+                defaultCountCellTextColor = defaultCountCellTextColor,
+                defaultDayCellDateTextColor = defaultDayCellDateTextColor,
             )
         }
     }
