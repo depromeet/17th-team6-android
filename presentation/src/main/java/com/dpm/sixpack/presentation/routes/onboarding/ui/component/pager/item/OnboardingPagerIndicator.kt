@@ -19,9 +19,9 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 fun OnboardingPagerIndicator(
-    modifier: Modifier = Modifier,
     size: Int,
-    currentPage: Int
+    currentPage: Int,
+    modifier: Modifier = Modifier
 ) {
     val indicatorHeight = 8.dp
     val selectedWidth = 16.dp
