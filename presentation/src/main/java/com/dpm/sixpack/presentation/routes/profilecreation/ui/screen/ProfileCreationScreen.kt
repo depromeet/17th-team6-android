@@ -51,7 +51,7 @@ fun ProfileCreationScreen(
                 modifier =
                     Modifier
                         .weight(1f)
-                        .padding(horizontal = SixPackDimen.defaultSideMargin)
+                        .padding(horizontal = SixPackDimen.defaultSideMargin),
             ) {
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -69,13 +69,11 @@ fun ProfileCreationScreen(
                     profileName = state.profileName,
                     profileImageUri = state.profileImageUri,
                     onNameChanged = { onIntent(ProfileCreationIntent.OnProfileNameChanged(it)) },
-                    onImagePickerClick = {
-                        // TODO: Implement image picker
-                        // For now, this will be handled by the ViewModel with a file picker intent
-                    },
+                    onImagePickerClick = { onIntent(ProfileCreationIntent.OnPickImageClick) },
                     enabled = !state.isLoading,
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(),
                 )
 
                 // Error Message

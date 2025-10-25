@@ -29,6 +29,7 @@ class ProfileCreationViewModel @Inject constructor(
     override fun onIntent(intent: ProfileCreationIntent) {
         when (intent) {
             is ProfileCreationIntent.OnProfileNameChanged -> handleProfileNameChanged(intent.name)
+            is ProfileCreationIntent.OnPickImageClick -> handlePickImage()
             is ProfileCreationIntent.OnProfileImageSelected -> handleProfileImageSelected(intent.imageUri)
             is ProfileCreationIntent.OnCompleteProfileClick -> handleCompleteProfile()
             is ProfileCreationIntent.OnBackButtonClick -> handleBackButtonClick()
@@ -43,6 +44,11 @@ class ProfileCreationViewModel @Inject constructor(
                     errorMessage = null,
                 )
             }
+        }
+
+    private fun handlePickImage() =
+        intent {
+            postSideEffect(ProfileCreationSideEffect.LaunchImagePicker)
         }
 
     private fun handleProfileImageSelected(imageUri: String) =

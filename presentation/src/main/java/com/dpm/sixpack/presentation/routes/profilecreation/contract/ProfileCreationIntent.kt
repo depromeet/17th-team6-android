@@ -7,6 +7,8 @@ sealed interface ProfileCreationIntent : UiIntent {
         val name: String,
     ) : ProfileCreationIntent
 
+    data object OnPickImageClick : ProfileCreationIntent
+
     data class OnProfileImageSelected(
         val imageUri: String,
     ) : ProfileCreationIntent
