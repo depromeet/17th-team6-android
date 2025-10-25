@@ -16,9 +16,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
@@ -60,10 +62,12 @@ fun SignUpScreen(
                 // Title
                 Text(
                     text =
-                        when (state.step) {
-                            SignUpStep.PHONE_INPUT -> "환영합니다!\n휴대폰 번호로 가입해주세요."
-                            SignUpStep.VERIFICATION_INPUT -> "인증번호 6자리를\n입력해주세요."
-                        },
+                        stringResource(
+                            when (state.step) {
+                                SignUpStep.PHONE_INPUT -> R.string.signup_title_phone_input
+                                SignUpStep.VERIFICATION_INPUT -> R.string.signup_title_verification_input
+                            },
+                        ),
                     style = SixpackTheme.typography.h2Bold,
                     color = SixpackTheme.colors.gray900,
                 )
@@ -84,7 +88,7 @@ fun SignUpScreen(
                         OutlinedTextField(
                             value = state.phoneNumber,
                             onValueChange = {},
-                            label = { Text("휴대폰 번호") },
+                            label = { Text(stringResource(R.string.signup_label_phone_number)) },
                             modifier = Modifier.fillMaxWidth(),
                             enabled = false,
                             colors =
@@ -125,10 +129,12 @@ fun SignUpScreen(
             // Bottom Button
             DoRunDefaultButton(
                 text =
-                    when (state.step) {
-                        SignUpStep.PHONE_INPUT -> "다음"
-                        SignUpStep.VERIFICATION_INPUT -> "완료"
-                    },
+                    stringResource(
+                        when (state.step) {
+                            SignUpStep.PHONE_INPUT -> R.string.common_next
+                            SignUpStep.VERIFICATION_INPUT -> R.string.common_complete
+                        },
+                    ),
                 onClick = {
                     when (state.step) {
                         SignUpStep.PHONE_INPUT -> onIntent(SignUpIntent.OnSendVerificationCodeClick)
@@ -157,7 +163,7 @@ private fun PhoneNumberInput(
     OutlinedTextField(
         value = phoneNumber,
         onValueChange = onPhoneNumberChanged,
-        placeholder = { Text("010-0000-0000") },
+        placeholder = { Text(stringResource(R.string.signup_placeholder_phone_number)) },
         modifier = modifier.fillMaxWidth(),
         enabled = enabled,
         keyboardOptions =
@@ -195,7 +201,7 @@ private fun VerificationCodeInput(
     OutlinedTextField(
         value = verificationCode,
         onValueChange = onVerificationCodeChanged,
-        placeholder = { Text("000000") },
+        placeholder = { Text(stringResource(R.string.signup_placeholder_verification_code)) },
         trailingIcon = {
             Text(
                 text = remainingTime,

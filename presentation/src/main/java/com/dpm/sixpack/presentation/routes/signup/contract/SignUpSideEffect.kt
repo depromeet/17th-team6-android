@@ -7,7 +7,15 @@ sealed interface SignUpSideEffect : SideEffect {
 
     data object NavigateBack : SignUpSideEffect
 
-    data class ShowToast(
-        val message: String,
-    ) : SignUpSideEffect
+    data object ShowInvalidPhoneNumberError : SignUpSideEffect
+
+    data object ShowCodeSentSuccess : SignUpSideEffect
+
+    data object ShowCodeSendFailedError : SignUpSideEffect
+
+    data object ShowInvalidCodeLengthError : SignUpSideEffect
+
+    data object ShowCodeMismatchError : SignUpSideEffect
+
+    data object ShowCodeExpiredError : SignUpSideEffect
 }

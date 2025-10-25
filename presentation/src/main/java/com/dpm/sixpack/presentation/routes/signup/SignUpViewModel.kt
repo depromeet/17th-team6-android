@@ -69,7 +69,7 @@ class SignUpViewModel @Inject constructor(
     private fun handleSendVerificationCode() =
         intent {
             if (!state.isPhoneNumberValid) {
-                postSideEffect(SignUpSideEffect.ShowToast("올바른 전화번호를 입력해주세요."))
+                postSideEffect(SignUpSideEffect.ShowInvalidPhoneNumberError)
                 return@intent
             }
 
@@ -89,24 +89,24 @@ class SignUpViewModel @Inject constructor(
                 }
 
                 startTimer()
-                postSideEffect(SignUpSideEffect.ShowToast("인증번호가 발송되었습니다."))
+                postSideEffect(SignUpSideEffect.ShowCodeSentSuccess)
                 Timber.d("Verification code sent to ${state.phoneNumber}")
             } catch (e: Exception) {
                 Timber.e(e, "Failed to send verification code")
                 reduce {
                     state.copy(
                         isLoading = false,
-                        errorMessage = "인증번호 발송에 실패했습니다.",
+                        errorMessage = null,
                     )
                 }
-                postSideEffect(SignUpSideEffect.ShowToast("인증번호 발송에 실패했습니다."))
+                postSideEffect(SignUpSideEffect.ShowCodeSendFailedError)
             }
         }
 
     private fun handleVerifyCode() =
         intent {
             if (!state.isVerificationCodeValid) {
-                postSideEffect(SignUpSideEffect.ShowToast("6자리 인증번호를 입력해주세요."))
+                postSideEffect(SignUpSideEffect.ShowInvalidCodeLengthError)
                 return@intent
             }
 
@@ -130,10 +130,10 @@ class SignUpViewModel @Inject constructor(
                 reduce {
                     state.copy(
                         isLoading = false,
-                        errorMessage = "인증번호가 일치하지 않습니다.",
+                        errorMessage = null,
                     )
                 }
-                postSideEffect(SignUpSideEffect.ShowToast("인증번호가 일치하지 않습니다."))
+                postSideEffect(SignUpSideEffect.ShowCodeMismatchError)
             }
         }
 
@@ -187,9 +187,9 @@ class SignUpViewModel @Inject constructor(
                 // Timer expired
                 intent {
                     reduce {
-                        state.copy(errorMessage = "인증 시간이 만료되었습니다. 다시 시도해주세요.")
+                        state.copy(errorMessage = null)
                     }
-                    postSideEffect(SignUpSideEffect.ShowToast("인증 시간이 만료되었습니다."))
+                    postSideEffect(SignUpSideEffect.ShowCodeExpiredError)
                 }
             }
     }

@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.routes.signup.contract.SignUpSideEffect
 import com.dpm.sixpack.presentation.routes.signup.ui.screen.SignUpScreen
 import org.orbitmvi.orbit.compose.collectAsState
@@ -25,8 +26,47 @@ fun SignUpRoute(
         when (sideEffect) {
             is SignUpSideEffect.NavigateToTermsAgreement -> onNavigateToTermsAgreement()
             is SignUpSideEffect.NavigateBack -> onNavigateBack()
-            is SignUpSideEffect.ShowToast -> {
-                Toast.makeText(context, sideEffect.message, Toast.LENGTH_SHORT).show()
+            is SignUpSideEffect.ShowInvalidPhoneNumberError -> {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.signup_error_invalid_phone_number),
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+            is SignUpSideEffect.ShowCodeSentSuccess -> {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.signup_success_code_sent),
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+            is SignUpSideEffect.ShowCodeSendFailedError -> {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.signup_error_code_send_failed),
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+            is SignUpSideEffect.ShowInvalidCodeLengthError -> {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.signup_error_code_length),
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+            is SignUpSideEffect.ShowCodeMismatchError -> {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.signup_error_code_mismatch),
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+            is SignUpSideEffect.ShowCodeExpiredError -> {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.signup_error_code_expired),
+                    Toast.LENGTH_SHORT,
+                ).show()
             }
         }
     }

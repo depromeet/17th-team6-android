@@ -992,7 +992,242 @@ Box(
 )
 ```
 
-## 4-4. 재사용 체크리스트
+## 4-4. String Resources (문자열 리소스)
+
+**IMPORTANT**: UI에 표시되는 번역이 필요한 모든 텍스트는 반드시 `strings.xml` 리소스 파일을 사용해야 합니다. 하드코딩된 문자열을 직접 작성하지 마세요.
+
+### 기본 원칙
+
+1. **UI 텍스트는 모두 strings.xml에 정의**
+   - Composable 함수의 `Text`, `OutlinedTextField`, 버튼 텍스트 등 모든 UI 텍스트는 `stringResource()`를 사용
+   - 토스트 메시지, 다이얼로그 메시지도 string 리소스 사용
+   - 예외: 로그 메시지(Timber), 개발자용 주석
+
+2. **ViewModel에서 String 리소스 사용**
+   - ViewModel은 Context에 직접 접근할 수 없으므로 `@StringRes Int`를 사용
+   - SideEffect에서 메시지를 전달할 때 String 대신 `@StringRes Int` 사용
+   - Route에서 `context.getString()`으로 변환하여 표시
+
+3. **리소스 이름 규칙**
+   - `[화면이름]_[카테고리]_[설명]` 형식 사용
+   - 예시:
+     - `signup_title_phone_input` - SignUp 화면의 타이틀
+     - `signup_error_invalid_phone_number` - SignUp 화면의 에러 메시지
+     - `signup_placeholder_verification_code` - SignUp 화면의 placeholder
+     - `common_next`, `common_complete` - 여러 화면에서 공통으로 사용되는 텍스트
+
+### Composable에서 String 리소스 사용
+
+```kotlin
+// ✅ 올바른 예시
+@Composable
+fun MyScreen() {
+    Text(
+        text = stringResource(R.string.signup_title_phone_input),
+        style = SixpackTheme.typography.h2Bold
+    )
+
+    OutlinedTextField(
+        placeholder = { Text(stringResource(R.string.signup_placeholder_phone_number)) },
+        label = { Text(stringResource(R.string.signup_label_phone_number)) }
+    )
+
+    DoRunDefaultButton(
+        text = stringResource(R.string.common_next),
+        onClick = { /* ... */ }
+    )
+}
+
+// ❌ 잘못된 예시
+@Composable
+fun MyScreen() {
+    Text(
+        text = "환영합니다!", // 하드코딩된 텍스트
+        style = SixpackTheme.typography.h2Bold
+    )
+
+    OutlinedTextField(
+        placeholder = { Text("010-0000-0000") } // 하드코딩된 텍스트
+    )
+}
+```
+
+### ViewModel과 SideEffect에서 String 리소스 사용
+
+**IMPORTANT**: ViewModel이 Android framework의 R 클래스에 의존하지 않도록, **SideEffect를 구체적으로 정의**하는 것을 권장합니다. 이는 테스트 가능성을 높이고 더 명확한 의미를 제공합니다.
+
+**SideEffect 정의 (contract):**
+```kotlin
+// ✅ 올바른 예시 - 구체적인 SideEffect 정의 (권장)
+sealed interface SignUpSideEffect : SideEffect {
+    data object NavigateToTermsAgreement : SignUpSideEffect
+    data object NavigateBack : SignUpSideEffect
+
+    // 각 메시지를 구체적인 SideEffect로 정의
+    data object ShowInvalidPhoneNumberError : SignUpSideEffect
+    data object ShowCodeSentSuccess : SignUpSideEffect
+    data object ShowCodeSendFailedError : SignUpSideEffect
+    data object ShowInvalidCodeLengthError : SignUpSideEffect
+    data object ShowCodeMismatchError : SignUpSideEffect
+    data object ShowCodeExpiredError : SignUpSideEffect
+}
+
+// ⚠️ 허용되지만 권장하지 않는 예시 - ViewModel이 R 클래스에 의존
+sealed interface SignUpSideEffect : SideEffect {
+    data class ShowToast(
+        @StringRes val messageResId: Int, // ViewModel에서 R.string 사용 필요
+    ) : SignUpSideEffect
+}
+
+// ❌ 잘못된 예시 - 하드코딩된 문자열 사용
+sealed interface SignUpSideEffect : SideEffect {
+    data class ShowToast(
+        val message: String, // 하드코딩된 문자열 사용 금지
+    ) : SignUpSideEffect
+}
+```
+
+**ViewModel 구현:**
+```kotlin
+// ✅ 올바른 예시 - R 클래스에 의존하지 않음 (권장)
+@HiltViewModel
+class SignUpViewModel @Inject constructor(...) : BaseViewModel<...>() {
+
+    private fun handleSendCode() = intent {
+        if (!state.isPhoneNumberValid) {
+            postSideEffect(SignUpSideEffect.ShowInvalidPhoneNumberError)
+            return@intent
+        }
+        // ...
+        postSideEffect(SignUpSideEffect.ShowCodeSentSuccess)
+    }
+}
+
+// ⚠️ 허용되지만 권장하지 않는 예시 - ViewModel이 R 클래스에 의존
+@HiltViewModel
+class SignUpViewModel @Inject constructor(...) : BaseViewModel<...>() {
+
+    private fun handleSendCode() = intent {
+        if (!state.isPhoneNumberValid) {
+            postSideEffect(SignUpSideEffect.ShowToast(R.string.signup_error_invalid_phone_number))
+            return@intent
+        }
+    }
+}
+
+// ❌ 잘못된 예시 - 하드코딩된 문자열
+@HiltViewModel
+class SignUpViewModel @Inject constructor(...) : BaseViewModel<...>() {
+
+    private fun handleSendCode() = intent {
+        if (!state.isPhoneNumberValid) {
+            postSideEffect(SignUpSideEffect.ShowToast("올바른 전화번호를 입력해주세요."))
+            return@intent
+        }
+    }
+}
+```
+
+**Route에서 SideEffect 처리:**
+```kotlin
+// ✅ 올바른 예시 - 구체적인 SideEffect 처리 (권장)
+@Composable
+fun SignUpRoute(...) {
+    val context = LocalContext.current
+
+    viewModel.collectSideEffect { sideEffect ->
+        when (sideEffect) {
+            is SignUpSideEffect.NavigateToTermsAgreement -> onNavigateToTermsAgreement()
+            is SignUpSideEffect.NavigateBack -> onNavigateBack()
+            is SignUpSideEffect.ShowInvalidPhoneNumberError -> {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.signup_error_invalid_phone_number),
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+            is SignUpSideEffect.ShowCodeSentSuccess -> {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.signup_success_code_sent),
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+            // ... 다른 SideEffect들
+        }
+    }
+}
+
+// ⚠️ 허용되지만 권장하지 않는 예시 - @StringRes 사용
+@Composable
+fun SignUpRoute(...) {
+    val context = LocalContext.current
+
+    viewModel.collectSideEffect { sideEffect ->
+        when (sideEffect) {
+            is SignUpSideEffect.ShowToast -> {
+                val message = context.getString(sideEffect.messageResId)
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+}
+```
+
+**구체적인 SideEffect를 사용하는 이유:**
+1. **테스트 가능성**: ViewModel이 Android framework(R 클래스)에 의존하지 않아 단위 테스트가 쉬워집니다.
+2. **명확성**: 각 SideEffect의 의미가 명확하여 코드 가독성이 향상됩니다.
+3. **타입 안정성**: 컴파일 타임에 모든 SideEffect가 처리되었는지 확인할 수 있습니다.
+4. **유지보수성**: 새로운 메시지가 추가될 때 ViewModel과 Route 모두 수정이 필요하지만, 변경 사항을 추적하기 쉽습니다.
+
+### strings.xml 구조
+
+모든 string 리소스는 `presentation/src/main/res/values/strings.xml`에 정의합니다.
+
+**카테고리별로 구분:**
+```xml
+<resources>
+    <!-- region Common -->
+    <string name="common_next">다음</string>
+    <string name="common_complete">완료</string>
+    <!-- endregion -->
+
+    <!-- region Sign Up -->
+    <string name="signup_title_phone_input">환영합니다!\n휴대폰 번호로 가입해주세요.</string>
+    <string name="signup_title_verification_input">인증번호 6자리를\n입력해주세요.</string>
+    <string name="signup_label_phone_number">휴대폰 번호</string>
+    <string name="signup_placeholder_phone_number">010-0000-0000</string>
+    <string name="signup_error_invalid_phone_number">올바른 전화번호를 입력해주세요.</string>
+    <!-- endregion -->
+
+    <!-- region Running Session -->
+    <string name="session_title">러닝 세션</string>
+    <!-- endregion -->
+</resources>
+```
+
+### 주의사항
+
+1. **다국어 지원 대비**
+   - 현재는 한국어만 지원하지만, 추후 다국어 지원을 위해 모든 텍스트를 리소스로 관리
+
+2. **동적 텍스트 (String Formatting)**
+   ```xml
+   <!-- strings.xml -->
+   <string name="home_goal_session_count">%d회차 목표</string>
+   ```
+   ```kotlin
+   // Composable
+   Text(text = stringResource(R.string.home_goal_session_count, sessionCount))
+   ```
+
+3. **줄바꿈 포함 텍스트**
+   ```xml
+   <!-- strings.xml -->
+   <string name="signup_title_phone_input">환영합니다!\n휴대폰 번호로 가입해주세요.</string>
+   ```
+
+## 4-5. 재사용 체크리스트
 
 새로운 화면을 만들기 전에 아래 체크리스트를 확인하세요:
 
@@ -1001,6 +1236,12 @@ Box(
 - [ ] 모든 텍스트 스타일은 `SixpackTheme.typography`에서 사용
 - [ ] 모든 Shape는 `SixpackTheme.shapes`에서 사용
 - [ ] 좌우 여백은 `SixPackDimen.defaultSideMargin` 사용
+
+**String Resources:**
+- [ ] 모든 UI 텍스트는 `strings.xml`에 정의
+- [ ] Composable에서는 `stringResource(R.string.xxx)` 사용
+- [ ] ViewModel SideEffect에서는 `@StringRes Int` 사용
+- [ ] Toast/Snackbar 메시지도 string 리소스 사용
 
 **Components:**
 - [ ] 버튼이 필요하면 `DoRunDefaultButton` 사용
