@@ -30,10 +30,11 @@ fun TermsAgreementComponent(
         Spacer(modifier = Modifier.Companion.height(20.dp))
 
         Spacer(
-            modifier = Modifier.Companion
-                .fillMaxWidth()
-                .height(1.dp)
-                .background(color = SixpackTheme.colors.gray50),
+            modifier =
+                Modifier.Companion
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(color = SixpackTheme.colors.gray50),
         )
 
         Spacer(modifier = Modifier.Companion.height(20.dp))

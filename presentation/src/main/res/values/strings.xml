@@ -55,6 +55,8 @@
     <string name="signup_error_code_mismatch">인증번호가 일치하지 않습니다.</string>
     <string name="signup_error_code_expired_detailed">인증 시간이 만료되었습니다. 다시 시도해주세요.</string>
     <string name="signup_error_code_expired">인증 시간이 만료되었습니다.</string>
+    <string name="signup_title_profile_creation">프로필을 생성해주세요.</string>
+    <string name="signup_placeholder_profile_name">이름을 입력해주세요</string>
     <!-- endregion-->
 
 

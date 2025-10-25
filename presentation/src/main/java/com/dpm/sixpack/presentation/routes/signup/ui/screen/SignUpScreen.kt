@@ -128,10 +128,11 @@ fun SignUpScreen(
 
             // Bottom Button
             DoRunDefaultButton(
-                text = stringResource(
+                text =
+                    stringResource(
                         when (state.step) {
                             SignUpStep.PHONE_INPUT -> R.string.common_next
-                            SignUpStep.VERIFICATION_INPUT -> R.string.common_complete
+                            SignUpStep.VERIFICATION_INPUT -> R.string.common_next
                         },
                     ),
                 onClick = {

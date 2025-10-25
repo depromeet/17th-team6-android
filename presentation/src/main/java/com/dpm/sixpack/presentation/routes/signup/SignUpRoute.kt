@@ -16,7 +16,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 fun SignUpRoute(
     modifier: Modifier = Modifier,
     viewModel: SignUpViewModel = hiltViewModel(),
-    onNavigateToHome: () -> Unit,
+    onNavigateToProfileCreation: () -> Unit,
     onNavigateBack: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -24,7 +24,7 @@ fun SignUpRoute(
 
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
-            is SignUpSideEffect.NavigateToHome -> onNavigateToHome()
+            is SignUpSideEffect.NavigateToProfileCreation -> onNavigateToProfileCreation()
             is SignUpSideEffect.NavigateBack -> onNavigateBack()
             is SignUpSideEffect.ShowInvalidPhoneNumberError -> {
                 Toast

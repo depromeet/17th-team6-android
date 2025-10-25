@@ -12,12 +12,12 @@ fun NavController.navigateSignUp(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.addSignUpNavGraph(
-    onNavigateToHome: () -> Unit,
+    onNavigateToProfileCreation: () -> Unit,
     onNavigateToBack: () -> Unit,
 ) {
     composable<SignUpRoute> {
         SignUpRoute(
-            onNavigateToHome = onNavigateToHome,
+            onNavigateToProfileCreation = onNavigateToProfileCreation,
             onNavigateBack = onNavigateToBack,
         )
     }

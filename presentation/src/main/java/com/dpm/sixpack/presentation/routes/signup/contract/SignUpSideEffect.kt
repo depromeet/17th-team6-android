@@ -3,7 +3,7 @@ package com.dpm.sixpack.presentation.routes.signup.contract
 import com.dpm.sixpack.presentation.common.base.SideEffect
 
 sealed interface SignUpSideEffect : SideEffect {
-    data object NavigateToHome : SignUpSideEffect
+    data object NavigateToProfileCreation : SignUpSideEffect
 
     data object NavigateBack : SignUpSideEffect
 

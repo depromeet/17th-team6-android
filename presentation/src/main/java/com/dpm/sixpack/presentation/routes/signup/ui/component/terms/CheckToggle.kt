@@ -3,7 +3,6 @@ package com.dpm.sixpack.presentation.routes.signup.ui.component.terms
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,7 +13,6 @@ import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
-import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 fun CheckToggle(
@@ -22,21 +20,23 @@ fun CheckToggle(
     onClick: (Boolean) -> Unit = {},
     isChecked: Boolean = false,
 ) {
-    val iconRes = if (isChecked) {
-        R.drawable.ic_check_fill
-    } else {
-        R.drawable.ic_check
-    }
+    val iconRes =
+        if (isChecked) {
+            R.drawable.ic_check_fill
+        } else {
+            R.drawable.ic_check
+        }
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier
-            .size(32.dp)
-            .noRippleClickable(onClick = { onClick(!isChecked) }),
+        modifier =
+            modifier
+                .size(32.dp)
+                .noRippleClickable(onClick = { onClick(!isChecked) }),
     ) {
         Image(
             imageVector = ImageVector.vectorResource(iconRes),
-            contentDescription = null
+            contentDescription = null,
         )
     }
 }

@@ -9,6 +9,8 @@ import androidx.navigation.compose.composable
 import com.dpm.sixpack.SixPackAppState
 import com.dpm.sixpack.presentation.destinations.OnboardingRoute
 import com.dpm.sixpack.presentation.routes.onboarding.OnboardingRoute
+import com.dpm.sixpack.presentation.routes.profilecreation.navigation.addProfileCreationNavGraph
+import com.dpm.sixpack.presentation.routes.profilecreation.navigation.navigateProfileCreation
 import com.dpm.sixpack.presentation.routes.session.navigation.addRunningSessionNavGraph
 import com.dpm.sixpack.presentation.routes.sessionreport.navigation.addSessionReportNavGraph
 import com.dpm.sixpack.presentation.routes.signup.navigation.addSignUpNavGraph
@@ -50,6 +52,13 @@ internal fun MainNavHost(
             )
 
             addSignUpNavGraph(
+                onNavigateToProfileCreation = {
+                    navigator.navController.navigateProfileCreation()
+                },
+                onNavigateToBack = navigator::popBackStack,
+            )
+
+            addProfileCreationNavGraph(
                 onNavigateToHome = {
                     // TODO SR-N: Home 화면으로 이동 또는 메인 탭 네비게이션으로 이동
                 },

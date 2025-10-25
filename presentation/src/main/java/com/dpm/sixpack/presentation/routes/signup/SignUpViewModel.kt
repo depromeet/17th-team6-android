@@ -123,8 +123,8 @@ class SignUpViewModel @Inject constructor(
                 stopTimer()
                 reduce { state.copy(isLoading = false) }
 
-                postSideEffect(SignUpSideEffect.NavigateToHome)
-                Timber.d("Phone number verified successfully")
+                postSideEffect(SignUpSideEffect.NavigateToProfileCreation)
+                Timber.d("Phone number verified successfully, moving to profile creation")
             } catch (e: Exception) {
                 Timber.e(e, "Failed to verify phone number")
                 reduce {
