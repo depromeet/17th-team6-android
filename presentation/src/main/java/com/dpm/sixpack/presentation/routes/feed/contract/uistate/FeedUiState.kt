@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.feed.contract
+package com.dpm.sixpack.presentation.routes.feed.contract.uistate
 
 import android.os.Parcelable
 import com.dpm.sixpack.presentation.common.base.UiState
