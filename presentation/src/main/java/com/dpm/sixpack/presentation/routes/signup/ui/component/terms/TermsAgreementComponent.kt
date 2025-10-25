@@ -17,7 +17,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 @Composable
 fun TermsAgreementComponent(
     termsState: Map<TermType, Boolean>,
-    modifier: Modifier = Modifier.Companion,
+    modifier: Modifier = Modifier,
     isAllTermsChecked: Boolean = false,
     onToggleAllTerms: (Boolean) -> Unit = {},
     onToggle: (TermType, Boolean) -> Unit = { _, _ -> },
@@ -30,11 +30,10 @@ fun TermsAgreementComponent(
         Spacer(modifier = Modifier.Companion.height(20.dp))
 
         Spacer(
-            modifier =
-                Modifier.Companion
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(color = SixpackTheme.colors.gray50),
+            modifier = Modifier.Companion
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(color = SixpackTheme.colors.gray50),
         )
 
         Spacer(modifier = Modifier.Companion.height(20.dp))

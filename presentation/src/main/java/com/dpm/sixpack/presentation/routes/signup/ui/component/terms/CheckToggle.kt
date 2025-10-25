@@ -1,5 +1,6 @@
 package com.dpm.sixpack.presentation.routes.signup.ui.component.terms
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -21,31 +22,21 @@ fun CheckToggle(
     onClick: (Boolean) -> Unit = {},
     isChecked: Boolean = false,
 ) {
-    val color =
-        if (isChecked) {
-            SixpackTheme.colors.blue600
-        } else {
-            SixpackTheme.colors.gray200
-        }
-
-    val iconRes =
-        if (isChecked) {
-            R.drawable.ic_check_fill
-        } else {
-            R.drawable.ic_check
-        }
+    val iconRes = if (isChecked) {
+        R.drawable.ic_check_fill
+    } else {
+        R.drawable.ic_check
+    }
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier =
-            modifier
-                .size(32.dp)
-                .noRippleClickable(onClick = { onClick(!isChecked) }),
+        modifier = modifier
+            .size(32.dp)
+            .noRippleClickable(onClick = { onClick(!isChecked) }),
     ) {
-        Icon(
+        Image(
             imageVector = ImageVector.vectorResource(iconRes),
-            contentDescription = null,
-            tint = color,
+            contentDescription = null
         )
     }
 }
