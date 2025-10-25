@@ -52,8 +52,14 @@ fun ProfileCreationComponent(
                     contentDescription = "Profile image",
                     modifier = Modifier
                         .size(97.dp)
+                        .clip(CircleShape),
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .size(97.dp)
                         .clip(CircleShape)
-                        .background(SixpackTheme.colors.gray200),
+                        .background(SixpackTheme.colors.gray200)
                 )
             }
 
