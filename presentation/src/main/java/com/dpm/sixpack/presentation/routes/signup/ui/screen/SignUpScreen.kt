@@ -1,11 +1,12 @@
 package com.dpm.sixpack.presentation.routes.signup.ui.screen
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
@@ -13,7 +14,6 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -45,16 +45,16 @@ fun SignUpScreen(
         },
         containerColor = SixpackTheme.colors.gray0,
     ) { paddingValues ->
-        Box(
+        Column(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .padding(paddingValues),
+                    .padding(top = paddingValues.calculateTopPadding()),
         ) {
             Column(
                 modifier =
                     Modifier
-                        .fillMaxSize()
+                        .weight(1f)
                         .padding(horizontal = SixPackDimen.defaultSideMargin),
             ) {
                 Spacer(modifier = Modifier.height(24.dp))
@@ -128,8 +128,7 @@ fun SignUpScreen(
 
             // Bottom Button
             DoRunDefaultButton(
-                text =
-                    stringResource(
+                text = stringResource(
                         when (state.step) {
                             SignUpStep.PHONE_INPUT -> R.string.common_next
                             SignUpStep.VERIFICATION_INPUT -> R.string.common_complete
@@ -145,9 +144,10 @@ fun SignUpScreen(
                 modifier =
                     Modifier
                         .fillMaxWidth()
+                        .consumeWindowInsets(paddingValues)
+                        .imePadding()
                         .padding(horizontal = SixPackDimen.defaultSideMargin)
-                        .padding(bottom = 12.dp)
-                        .align(Alignment.BottomCenter),
+                        .padding(bottom = 12.dp),
             )
         }
     }
