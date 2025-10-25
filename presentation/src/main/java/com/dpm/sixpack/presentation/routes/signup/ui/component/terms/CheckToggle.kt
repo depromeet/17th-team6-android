@@ -28,6 +28,13 @@ fun CheckToggle(
             SixpackTheme.colors.gray200
         }
 
+    val iconRes =
+        if (isChecked) {
+            R.drawable.ic_check_fill
+        } else {
+            R.drawable.ic_check
+        }
+
     Box(
         contentAlignment = Alignment.Center,
         modifier =
@@ -36,7 +43,7 @@ fun CheckToggle(
                 .noRippleClickable(onClick = { onClick(!isChecked) }),
     ) {
         Icon(
-            imageVector = ImageVector.vectorResource(R.drawable.ic_check),
+            imageVector = ImageVector.vectorResource(iconRes),
             contentDescription = null,
             tint = color,
         )
