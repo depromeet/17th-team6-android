@@ -11,5 +11,5 @@ import javax.inject.Singleton
 class GetGpsDataUseCase @Inject constructor(
     private val gpsRepository: GpsRepository,
 ) {
-    operator fun invoke(): Flow<DoRunResult<Location>> = gpsRepository.getLocationFlow()
+    operator fun invoke(): Flow<DoRunResult<Location>> = gpsRepository.locationFlow
 }

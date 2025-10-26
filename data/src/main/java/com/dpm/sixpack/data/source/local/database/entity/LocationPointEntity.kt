@@ -9,15 +9,6 @@ import androidx.room.PrimaryKey
  */
 @Entity(
     tableName = "location_points",
-    foreignKeys = [
-        ForeignKey(
-            // CourseEntity를 외래키로 참조
-            entity = CourseEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["courseId"],
-            onDelete = ForeignKey.CASCADE,
-        ),
-    ],
 )
 data class LocationPointEntity(
     @PrimaryKey(autoGenerate = true)

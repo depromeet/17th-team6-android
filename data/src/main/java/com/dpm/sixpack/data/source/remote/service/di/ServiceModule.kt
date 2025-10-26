@@ -1,6 +1,5 @@
 package com.dpm.sixpack.data.source.remote.service.di
 
-import com.dpm.sixpack.data.source.remote.service.RunningGoalService
 import com.dpm.sixpack.data.source.remote.service.RunningSessionService
 import dagger.Module
 import dagger.Provides
@@ -13,11 +12,6 @@ import kotlin.jvm.java
 @Module
 @InstallIn(SingletonComponent::class)
 object ServiceModule {
-    @Provides
-    @Singleton
-    fun provideRunningGoalService(retrofit: Retrofit): RunningGoalService =
-        retrofit.create(RunningGoalService::class.java)
-
     @Provides
     @Singleton
     fun provideRunningSessionService(retrofit: Retrofit): RunningSessionService =

@@ -10,11 +10,11 @@ class StartRunningUseCase @Inject constructor(
     private val runningSessionRepository: RunningSessionRepository,
     private val userPreferenceRepository: UserPreferenceRepository,
 ) {
-    suspend operator fun invoke(goalPlanId: Long): DoRunResult<Long> {
+    suspend operator fun invoke(): DoRunResult<Long> {
         val localSessionId = userPreferenceRepository.getSessionId()
 
         return if (localSessionId == null) {
-            runningSessionRepository.start(goalPlanId).onSuccess { newSessionId ->
+            runningSessionRepository.start().onSuccess { newSessionId ->
                 userPreferenceRepository.updateSessionId(newSessionId)
             }
         } else {

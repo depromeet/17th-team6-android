@@ -2,7 +2,6 @@ package com.dpm.sixpack.data.source.remote.service
 
 import com.dpm.sixpack.data.source.remote.dto.request.FinishRunningRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.SaveSegmentDataRequestsDto
-import com.dpm.sixpack.data.source.remote.dto.request.StartRunningRequestDto
 import com.dpm.sixpack.data.source.remote.dto.response.FinishRunningResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.SaveSegmentResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.StartRunningResponseDto
@@ -28,7 +27,5 @@ interface RunningSessionService {
     ): BaseResponse<SaveSegmentResponseDto>
 
     @POST("$API/$RUNS/$SESSIONS/start")
-    suspend fun postStartRunning(
-        @Body startRunningRequestDto: StartRunningRequestDto,
-    ): BaseResponse<StartRunningResponseDto>
+    suspend fun postStartSession(): BaseResponse<StartRunningResponseDto>
 }

@@ -1,8 +1,9 @@
 package com.dpm.sixpack.data.repository
 
 import com.dpm.sixpack.data.repository.di.MockRequestDataFactory
+import com.dpm.sixpack.data.source.local.gps.GpsDataSource
+import com.dpm.sixpack.data.source.local.sensor.SensorDataSource
 import com.dpm.sixpack.data.source.remote.datasoruce.RunningSessionDataSource
-import com.dpm.sixpack.data.source.remote.dto.request.StartRunningRequestDto
 import com.dpm.sixpack.domain.exception.DoRunException
 import com.dpm.sixpack.domain.model.RealtimeRunningData
 import com.dpm.sixpack.domain.model.RunningSessionResult
@@ -15,12 +16,13 @@ import javax.inject.Inject
 
 class RunningSessionRepositoryImpl @Inject constructor(
     private val runningSessionDataSource: RunningSessionDataSource,
+    private val gpsDataSource: GpsDataSource,
+    private val sensorDataSource: SensorDataSource,
 ) : RunningSessionRepository {
-    override suspend fun start(goalPlanId: Long): DoRunResult<Long> =
+    override suspend fun start(): DoRunResult<Long> =
         withContext(Dispatchers.IO) {
             try {
-                val response =
-                    runningSessionDataSource.postStartRunning(StartRunningRequestDto(goalPlanId))
+                val response = runningSessionDataSource.postStartSession()
 
                 val sessionId =
                     response.data?.sessionId

@@ -11,6 +11,5 @@ import javax.inject.Singleton
 class GetStepCountUseCase @Inject constructor(
     private val sensorRepository: SensorRepository,
 ) {
-    operator fun invoke(): Flow<DoRunResult<Int>> =
-        sensorRepository.getTotalStep().onStart { emit(DoRunResult.Success(0)) }
+    operator fun invoke(): Flow<DoRunResult<Int>> = sensorRepository.totalStep.onStart { emit(DoRunResult.Success(0)) }
 }
