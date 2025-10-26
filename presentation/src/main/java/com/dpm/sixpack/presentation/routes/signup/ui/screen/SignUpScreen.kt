@@ -1,5 +1,10 @@
 package com.dpm.sixpack.presentation.routes.signup.ui.screen
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -81,23 +86,31 @@ fun SignUpScreen(
                         )
                     }
                     SignUpStep.VERIFICATION_INPUT -> {
-                        // Phone Number (Disabled State)
-                        DoRunSignInputField(
-                            value = state.phoneNumber,
-                            onValueChange = {},
-                            label = stringResource(R.string.signup_label_phone_number),
-                            enabled = false,
-                        )
-
-                        Spacer(modifier = Modifier.height(24.dp))
-
                         // Verification Code Input
-                        VerificationCodeInput(
-                            verificationCode = state.verificationCode,
-                            onVerificationCodeChanged = { onIntent(SignUpIntent.OnVerificationCodeChanged(it)) },
-                            remainingTime = state.formattedRemainingTime,
-                            enabled = !state.isLoading && state.remainingTimeInSeconds > 0,
-                        )
+                        AnimatedVisibility(
+                            visible = true,
+                            enter = slideInHorizontally(initialOffsetX = { it }) + fadeIn(),
+                            exit = slideOutHorizontally(targetOffsetX = { it }) + fadeOut(),
+                        ) {
+                            Column {
+                                VerificationCodeInput(
+                                    verificationCode = state.verificationCode,
+                                    onVerificationCodeChanged = { onIntent(SignUpIntent.OnVerificationCodeChanged(it)) },
+                                    remainingTime = state.formattedRemainingTime,
+                                    enabled = !state.isLoading && state.remainingTimeInSeconds > 0,
+                                )
+
+                                Spacer(modifier = Modifier.height(24.dp))
+
+                                // Phone Number (Disabled State)
+                                DoRunSignInputField(
+                                    value = state.phoneNumber,
+                                    onValueChange = {},
+                                    label = stringResource(R.string.signup_label_phone_number),
+                                    enabled = false,
+                                )
+                            }
+                        }
                     }
                 }
 
