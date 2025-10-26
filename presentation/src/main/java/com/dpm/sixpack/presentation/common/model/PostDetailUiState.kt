@@ -8,7 +8,6 @@ data class PostDetailUiState(
     val date: String,
     val userName: String,
     val userImageUrl: String,
-    val postTime: String,
     val postImageUrl: String,
     val runningInfo: RunningSummaryUiState,
     val reactions: List<PostReactionUiState>
