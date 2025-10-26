@@ -43,6 +43,7 @@ fun TermRow(
         Text(
             text = stringResource(term.title),
             style = SixpackTheme.typography.b1Regular,
+            color = SixpackTheme.colors.gray700
         )
 
         Spacer(modifier = Modifier.weight(1f))

@@ -35,7 +35,6 @@ fun ProfileCreationScreen(
         modifier = modifier.fillMaxSize(),
         topBar = {
             DoRunNavigationTopBar(
-                modifier = Modifier.padding(start = 10.dp),
                 navigateToBack = { onIntent(ProfileCreationIntent.OnBackButtonClick) },
             )
         },

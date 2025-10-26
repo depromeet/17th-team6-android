@@ -42,6 +42,7 @@ class TermsViewModel @Inject constructor(
         reduce {
             state.copy(termsState = updatedTermsState)
         }
+        // TODO SR-N 외부 브라우저로 링크 이동
     }
 
     private fun handleAllTermsToggled(isChecked: Boolean) =

@@ -41,16 +41,14 @@ fun TermsAgreementScreen(
         containerColor = SixpackTheme.colors.gray0,
     ) { paddingValues ->
         Column(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(top = paddingValues.calculateTopPadding()),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = paddingValues.calculateTopPadding()),
         ) {
             Column(
-                modifier =
-                    Modifier
-                        .weight(1f)
-                        .padding(horizontal = SixPackDimen.defaultSideMargin),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = SixPackDimen.defaultSideMargin),
             ) {
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -76,7 +74,7 @@ fun TermsAgreementScreen(
 
             // Bottom Button
             DoRunDefaultButton(
-                text = stringResource(R.string.common_next),
+                text = stringResource(R.string.signup_title_terms_agreement_action),
                 onClick = {
                     onIntent(TermsIntent.OnAgreeClick)
                 },
@@ -87,7 +85,7 @@ fun TermsAgreementScreen(
                         .consumeWindowInsets(paddingValues)
                         .imePadding()
                         .padding(horizontal = SixPackDimen.defaultSideMargin)
-                        .padding(bottom = 12.dp),
+                        .padding(bottom = 24.dp),
             )
         }
     }
