@@ -1,6 +1,7 @@
 package com.dpm.sixpack.presentation.routes.signup.ui.component.terms
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,6 +22,7 @@ fun TermsAgreementComponent(
     isAllTermsChecked: Boolean = false,
     onToggleAllTerms: (Boolean) -> Unit = {},
     onToggle: (TermType, Boolean) -> Unit = { _, _ -> },
+    onTermDetailClick: (String) -> Unit = {},
 ) {
     Column(modifier = modifier) {
         AgreeAllTermsRow(
@@ -29,7 +31,7 @@ fun TermsAgreementComponent(
         )
         Spacer(modifier = Modifier.Companion.height(20.dp))
 
-        Spacer(
+        Box(
             modifier =
                 Modifier.Companion
                     .fillMaxWidth()
@@ -46,6 +48,7 @@ fun TermsAgreementComponent(
                 onClickToggle = { isChecked ->
                     onToggle(term, isChecked)
                 },
+                onTermDetailClick = onTermDetailClick,
             )
 
             Spacer(Modifier.Companion.height(16.dp))

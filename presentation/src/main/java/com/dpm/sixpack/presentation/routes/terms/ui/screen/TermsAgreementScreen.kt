@@ -41,14 +41,16 @@ fun TermsAgreementScreen(
         containerColor = SixpackTheme.colors.gray0,
     ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = paddingValues.calculateTopPadding()),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(top = paddingValues.calculateTopPadding()),
         ) {
             Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = SixPackDimen.defaultSideMargin),
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .padding(horizontal = SixPackDimen.defaultSideMargin),
             ) {
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -68,6 +70,9 @@ fun TermsAgreementScreen(
                     onToggleAllTerms = { onIntent(TermsIntent.OnAllTermsToggled(it)) },
                     onToggle = { termType, isChecked ->
                         onIntent(TermsIntent.OnTermToggled(termType, isChecked))
+                    },
+                    onTermDetailClick = { url ->
+                        onIntent(TermsIntent.OnTermDetailClick(url))
                     },
                 )
             }

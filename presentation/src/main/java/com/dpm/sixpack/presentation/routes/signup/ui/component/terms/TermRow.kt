@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
@@ -28,6 +29,7 @@ fun TermRow(
     isChecked: Boolean,
     onClickToggle: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    onTermDetailClick: (String) -> Unit = {},
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -43,12 +45,14 @@ fun TermRow(
         Text(
             text = stringResource(term.title),
             style = SixpackTheme.typography.b1Regular,
-            color = SixpackTheme.colors.gray700
+            color = SixpackTheme.colors.gray700,
         )
 
         Spacer(modifier = Modifier.weight(1f))
 
-        TermDetailButton(onClick = {})
+        TermDetailButton(
+            onClick = { onTermDetailClick(term.url) },
+        )
     }
 }
 
@@ -67,7 +71,10 @@ fun TermDetailButton(
         Icon(
             imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_right),
             contentDescription = null,
-            modifier = Modifier.size(24.dp),
+            modifier =
+                Modifier
+                    .size(24.dp)
+                    .padding(8.dp),
             tint = SixpackTheme.colors.gray200,
         )
     }

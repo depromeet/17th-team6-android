@@ -30,6 +30,7 @@ class TermsViewModel @Inject constructor(
             is TermsIntent.OnAllTermsToggled -> handleAllTermsToggled(intent.isChecked)
             is TermsIntent.OnAgreeClick -> handleAgreeClick()
             is TermsIntent.OnBackButtonClick -> handleBackButtonClick()
+            is TermsIntent.OnTermDetailClick -> handleTermDetailClick(intent.url)
         }
     }
 
@@ -42,7 +43,6 @@ class TermsViewModel @Inject constructor(
         reduce {
             state.copy(termsState = updatedTermsState)
         }
-        // TODO SR-N 외부 브라우저로 링크 이동
     }
 
     private fun handleAllTermsToggled(isChecked: Boolean) =
@@ -78,5 +78,10 @@ class TermsViewModel @Inject constructor(
     private fun handleBackButtonClick() =
         intent {
             postSideEffect(TermsSideEffect.NavigateBack)
+        }
+
+    private fun handleTermDetailClick(url: String) =
+        intent {
+            postSideEffect(TermsSideEffect.OpenTermUrl(url))
         }
 }

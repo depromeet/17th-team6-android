@@ -6,4 +6,8 @@ sealed interface TermsSideEffect : SideEffect {
     data object NavigateToSignUp : TermsSideEffect
 
     data object NavigateBack : TermsSideEffect
+
+    data class OpenTermUrl(
+        val url: String,
+    ) : TermsSideEffect
 }

@@ -16,4 +16,8 @@ sealed interface TermsIntent : UiIntent {
     data object OnAgreeClick : TermsIntent
 
     data object OnBackButtonClick : TermsIntent
+
+    data class OnTermDetailClick(
+        val url: String,
+    ) : TermsIntent
 }
