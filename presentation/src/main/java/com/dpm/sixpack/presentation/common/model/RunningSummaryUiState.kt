@@ -4,7 +4,6 @@ import androidx.compose.runtime.Immutable
 
 @Immutable
 data class RunningSummaryUiState(
-    val postTime: String,
     val totalDistance: Double,
     val totalRunTime: Int,
     val averagePace: String,
