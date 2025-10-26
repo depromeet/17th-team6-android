@@ -30,9 +30,9 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
+import com.dpm.sixpack.presentation.common.util.calculateSecDiff
+import com.dpm.sixpack.presentation.common.util.convertTimeDiffToString
 import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
-import com.dpm.sixpack.presentation.routes.freind.calculateSecDiff
-import com.dpm.sixpack.presentation.routes.freind.convertTimeDiffToString
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 // TODO SK: Typo 적용

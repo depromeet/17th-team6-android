@@ -1,7 +1,6 @@
 package com.dpm.sixpack.presentation.routes.freind.components
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
@@ -9,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
-import com.dpm.sixpack.presentation.routes.freind.contract.FriendItem
+import com.dpm.sixpack.presentation.common.model.FriendItem
 
 @Composable
 fun FriendsLazyColumn(
@@ -18,9 +17,8 @@ fun FriendsLazyColumn(
     onCheerClick: (Long) -> Unit = {},
 ) {
     LazyColumn(
-        modifier = modifier.fillMaxWidth(),
-        // 아이템 사이의 간격
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         // 친구 목록 아이템들을 표시
         items(

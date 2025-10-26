@@ -5,12 +5,13 @@ import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.routes.freind.contract.FriendIntent
 import com.dpm.sixpack.presentation.routes.freind.contract.FriendSideEffect
 import com.dpm.sixpack.presentation.routes.freind.contract.FriendUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
+@HiltViewModel
 class FriendViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<FriendUiState, FriendIntent, FriendSideEffect>() {

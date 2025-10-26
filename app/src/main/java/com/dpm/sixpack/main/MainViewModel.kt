@@ -24,19 +24,17 @@ class MainViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
-    private val _startDestination = MutableStateFlow<Route>(OnboardingRoute.Onboarding)
+    private val _startDestination = MutableStateFlow<Route>(MainRoute.Running)
     val startDestination: StateFlow<Route> = _startDestination.asStateFlow()
 
     private val _showFullScreenLoading = MutableStateFlow(false)
     val showFullScreenLoading: StateFlow<Boolean> = _showFullScreenLoading.asStateFlow()
 
-    var onFabClick: (() -> Unit)? by mutableStateOf(null)
-
     init {
         viewModelScope.launch {
-            // TODO: 로그인여부 따라 분기 처리
+            // TODO SR-N 로그인여부 따라 분기 처리
             val isOnboardingComplete = getOnboardingStatusUseCase()
-            _startDestination.value = MainRoute.Running
+//            _startDestination.value = OnboardingRoute
 
             delay(1000L)
             _isLoading.value = false

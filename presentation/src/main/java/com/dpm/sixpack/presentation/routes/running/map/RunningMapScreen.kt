@@ -36,7 +36,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.common.util.PermissionHandler
-import com.dpm.sixpack.presentation.routes.freind.contract.FriendItem
+import com.dpm.sixpack.presentation.routes.freind.sampleFriendList
 import com.dpm.sixpack.presentation.routes.running.map.component.DraggableFriendBottomSheet
 import com.dpm.sixpack.presentation.routes.running.map.component.LocationTrackingButton
 import com.dpm.sixpack.presentation.routes.running.map.component.SheetDragState
@@ -61,6 +61,9 @@ import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 import timber.log.Timber
 import kotlin.math.roundToInt
+
+private val sheetPeekHeight = 72.dp
+private val startButtonHeightDp = 72.dp
 
 @OptIn(ExperimentalNaverMapApi::class)
 @Composable
@@ -122,8 +125,8 @@ private fun RunningMapScreenContent(
     modifier: Modifier,
 ) {
     val density = LocalDensity.current
-    val sheetPeekHeight = 64.dp
     val sheetPeekHeightPx = with(density) { sheetPeekHeight.toPx() }
+    val startButtonHeightPx = with(density) { startButtonHeightDp.toPx() }
 
     val draggableState =
         remember {
@@ -143,7 +146,9 @@ private fun RunningMapScreenContent(
         val boxHeight = with(density) { constraints.maxHeight.toFloat() }
 
         var guidelineFraction by remember { mutableFloatStateOf(0.1f) }
-        var mapBottomPadding by remember { mutableStateOf(0.dp) }
+
+        // 시트의 최대 높이를 저장할 변수
+        var sheetMaxHeight by remember { mutableStateOf(0.dp) }
 
         LaunchedEffect(draggableState.offset) {
             val yOffset = draggableState.offset
@@ -152,14 +157,12 @@ private fun RunningMapScreenContent(
             }
         }
 
-        LaunchedEffect(guidelineFraction) {
-            val obscuredHeightPx = boxHeight * (1.0f - guidelineFraction)
-            mapBottomPadding = with(density) { obscuredHeightPx.toDp() }
-        }
+        LaunchedEffect(boxHeight, startButtonHeightPx) {
+            val collapsedOffset = (boxHeight - sheetPeekHeightPx) - startButtonHeightPx
+            val halfExpandedOffset = (boxHeight / 1.8f) - startButtonHeightPx
 
-        LaunchedEffect(boxHeight) {
-            val collapsedOffset = boxHeight - sheetPeekHeightPx
-            val halfExpandedOffset = boxHeight / 1.8f
+            sheetMaxHeight = with(density) { (boxHeight - halfExpandedOffset).toDp() }
+
             draggableState.updateAnchors(
                 DraggableAnchors {
                     SheetDragState.Collapsed at collapsedOffset
@@ -268,7 +271,7 @@ private fun RunningMapScreenContent(
 
                                 when (mapState.mapViewState) {
                                     is MapViewState.Friend -> {
-                                        bottom.linkTo(sheetTopGuideline, margin = sheetPeekHeight + 20.dp)
+                                        bottom.linkTo(sheetTopGuideline, margin = 20.dp)
                                     }
 
                                     is MapViewState.Running -> {
@@ -287,7 +290,8 @@ private fun RunningMapScreenContent(
                     modifier =
                         Modifier
                             .constrainAs(sheetRef) {
-                                bottom.linkTo(startButtonRef.top)
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
                             }.fillMaxWidth()
                             .offset {
                                 val yOffset = draggableState.offset
@@ -299,6 +303,8 @@ private fun RunningMapScreenContent(
                             },
                     draggableState = draggableState,
                     friendList = sampleFriendList,
+                    sheetHeight = sheetMaxHeight,
+                    startButtonHeight = startButtonHeightDp,
                 )
             }
 
@@ -343,37 +349,3 @@ private fun RunningStartButton(
         )
     }
 }
-
-private val sampleFriendList =
-    listOf(
-        FriendItem(
-            userId = 12345,
-            nickName = "승규",
-            isMe = true,
-            profileImgUrl = "",
-            lastestRunAt = "2025-10-19T19:57:13Z",
-            distanceInMeter = 5000,
-            latitude = 37.5301,
-            longitude = 127.12345,
-        ),
-        FriendItem(
-            userId = 12315,
-            nickName = "소래",
-            isMe = false,
-            profileImgUrl = "",
-            lastestRunAt = "2025-10-20T09:57:13Z",
-            distanceInMeter = 900,
-            latitude = 37.5301,
-            longitude = 127.12345,
-        ),
-        FriendItem(
-            userId = 112415,
-            nickName = "소래",
-            isMe = false,
-            profileImgUrl = "",
-            lastestRunAt = "2025-10-16T19:57:13Z",
-            distanceInMeter = 3000,
-            latitude = 37.5301,
-            longitude = 127.12345,
-        ),
-    )

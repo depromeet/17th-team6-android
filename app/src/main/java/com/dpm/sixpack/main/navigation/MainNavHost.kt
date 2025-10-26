@@ -5,10 +5,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
-import androidx.navigation.navOptions
+import androidx.navigation.compose.composable
 import com.dpm.sixpack.SixPackAppState
 import com.dpm.sixpack.presentation.destinations.OnboardingRoute
-import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
+import com.dpm.sixpack.presentation.routes.onboarding.OnboardingRoute
 import com.dpm.sixpack.presentation.routes.running.navigation.addRunningSessionNavGraph
 import com.dpm.sixpack.presentation.routes.sessionreport.navigation.addSessionReportNavGraph
 
@@ -29,18 +29,16 @@ internal fun MainNavHost(
             navController = navigator.navController,
             startDestination = navigator.startDestination,
         ) {
-            addOnboardingNavGraph(
-                navController = navigator.navController,
-                navigateToHome = {
-                    navigator.navigateToHome(
-                        navOptions {
-                            popUpTo(OnboardingRoute.Onboarding) {
-                                inclusive = true
-                            }
-                        },
-                    )
-                },
-            )
+            composable<OnboardingRoute> {
+                OnboardingRoute(
+                    onNavigateToSignUp = {
+                        // TODO SR-N SignUp Navigation 구현
+                    },
+                    onNavigateToSignIn = {
+                        // TODO SR-N SignIn Navigation 구현
+                    },
+                )
+            }
 
             addRunningSessionNavGraph(
                 onNavigateToBack = navigator::popBackStack,
