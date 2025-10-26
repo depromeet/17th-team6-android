@@ -24,7 +24,21 @@ fun DoRunDefaultButton(
     disabledTextColor: Color = SixpackTheme.colors.gray400,
     disabledContainerColor: Color = SixpackTheme.colors.gray100,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
+    style: ButtonStyle = ButtonStyle.PRIMARY,
 ) {
+    val (finalTextColor, finalContainerColor, finalDisabledTextColor, finalDisabledContainerColor) =
+        when (style) {
+            ButtonStyle.PRIMARY ->
+                ButtonColorScheme(textColor, containerColor, disabledTextColor, disabledContainerColor)
+            ButtonStyle.SECONDARY ->
+                ButtonColorScheme(
+                    SixpackTheme.colors.gray900,
+                    SixpackTheme.colors.gray200,
+                    SixpackTheme.colors.gray400,
+                    SixpackTheme.colors.gray100,
+                )
+        }
+
     Button(
         modifier = modifier,
         onClick = {
@@ -34,8 +48,8 @@ fun DoRunDefaultButton(
         enabled = enabled,
         colors =
             ButtonDefaults.buttonColors(
-                containerColor = containerColor,
-                disabledContainerColor = disabledContainerColor,
+                containerColor = finalContainerColor,
+                disabledContainerColor = finalDisabledContainerColor,
             ),
         contentPadding = contentPadding,
     ) {
@@ -43,9 +57,21 @@ fun DoRunDefaultButton(
             modifier = Modifier.padding(vertical = 8.dp),
             text = text,
             style = SixpackTheme.typography.b1Bold,
-            color = if (enabled) textColor else disabledTextColor,
+            color = if (enabled) finalTextColor else finalDisabledTextColor,
         )
     }
+}
+
+data class ButtonColorScheme(
+    val textColor: Color,
+    val containerColor: Color,
+    val disabledTextColor: Color,
+    val disabledContainerColor: Color,
+)
+
+enum class ButtonStyle {
+    PRIMARY,
+    SECONDARY,
 }
 
 @Preview

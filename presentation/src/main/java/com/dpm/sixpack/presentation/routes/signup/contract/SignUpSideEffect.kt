@@ -18,4 +18,8 @@ sealed interface SignUpSideEffect : SideEffect {
     data object ShowCodeMismatchError : SignUpSideEffect
 
     data object ShowCodeExpiredError : SignUpSideEffect
+
+    data class ShowAlreadyRegisteredUserDialog(
+        val phoneNumber: String,
+    ) : SignUpSideEffect
 }

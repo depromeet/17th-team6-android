@@ -17,6 +17,7 @@ fun SignUpRoute(
     modifier: Modifier = Modifier,
     viewModel: SignUpViewModel = hiltViewModel(),
     onNavigateToProfileCreation: () -> Unit,
+    onNavigateToSignIn: (phoneNumber: String) -> Unit,
     onNavigateBack: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -73,6 +74,9 @@ fun SignUpRoute(
                         context.getString(R.string.signup_error_code_expired),
                         Toast.LENGTH_SHORT,
                     ).show()
+            }
+            is SignUpSideEffect.ShowAlreadyRegisteredUserDialog -> {
+                onNavigateToSignIn(sideEffect.phoneNumber)
             }
         }
     }

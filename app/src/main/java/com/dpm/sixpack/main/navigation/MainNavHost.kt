@@ -13,6 +13,8 @@ import com.dpm.sixpack.presentation.routes.profilecreation.navigation.addProfile
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.navigateProfileCreation
 import com.dpm.sixpack.presentation.routes.session.navigation.addRunningSessionNavGraph
 import com.dpm.sixpack.presentation.routes.sessionreport.navigation.addSessionReportNavGraph
+import com.dpm.sixpack.presentation.routes.signin.navigation.addSignInNavGraph
+import com.dpm.sixpack.presentation.routes.signin.navigation.navigateSignIn
 import com.dpm.sixpack.presentation.routes.signup.navigation.addSignUpNavGraph
 import com.dpm.sixpack.presentation.routes.signup.navigation.navigateSignUp
 import com.dpm.sixpack.presentation.routes.terms.navigation.addTermsNavGraph
@@ -39,7 +41,7 @@ internal fun MainNavHost(
                         navigator.navController.navigateTerms()
                     },
                     onNavigateToSignIn = {
-                        // TODO SR-N SignIn Navigation 구현
+                        navigator.navController.navigateSignIn()
                     },
                 )
             }
@@ -51,9 +53,22 @@ internal fun MainNavHost(
                 onNavigateToBack = navigator::popBackStack,
             )
 
+            addSignInNavGraph(
+                onNavigateToHome = {
+                    // TODO SR-N: Home 화면으로 이동 또는 메인 탭 네비게이션으로 이동
+                },
+                onNavigateToSignUp = { phoneNumber ->
+                    navigator.navController.navigateSignUp()
+                },
+                onNavigateBack = navigator::popBackStack,
+            )
+
             addSignUpNavGraph(
                 onNavigateToProfileCreation = {
                     navigator.navController.navigateProfileCreation()
+                },
+                onNavigateToSignIn = { phoneNumber ->
+                    // TODO SR-N 계정찾기 화면으로 이동
                 },
                 onNavigateToBack = navigator::popBackStack,
             )

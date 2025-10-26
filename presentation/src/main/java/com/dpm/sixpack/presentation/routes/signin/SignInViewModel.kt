@@ -1,12 +1,12 @@
-package com.dpm.sixpack.presentation.routes.signup
+package com.dpm.sixpack.presentation.routes.signin
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
-import com.dpm.sixpack.presentation.routes.signup.contract.SignUpIntent
-import com.dpm.sixpack.presentation.routes.signup.contract.SignUpSideEffect
-import com.dpm.sixpack.presentation.routes.signup.contract.SignUpState
-import com.dpm.sixpack.presentation.routes.signup.contract.SignUpStep
+import com.dpm.sixpack.presentation.routes.signin.contract.SignInIntent
+import com.dpm.sixpack.presentation.routes.signin.contract.SignInSideEffect
+import com.dpm.sixpack.presentation.routes.signin.contract.SignInState
+import com.dpm.sixpack.presentation.routes.signin.contract.SignInStep
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -17,30 +17,30 @@ import org.orbitmvi.orbit.viewmodel.container
 import timber.log.Timber
 import javax.inject.Inject
 
-private typealias SignUpSyntax = Syntax<SignUpState, SignUpSideEffect>
+private typealias SignInSyntax = Syntax<SignInState, SignInSideEffect>
 
 @HiltViewModel
-class SignUpViewModel @Inject constructor(
+class SignInViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     // TODO: Inject use cases
     // private val sendVerificationCodeUseCase: SendVerificationCodeUseCase,
     // private val verifyPhoneNumberUseCase: VerifyPhoneNumberUseCase,
-) : BaseViewModel<SignUpState, SignUpIntent, SignUpSideEffect>() {
-    override val initialState: SignUpState = SignUpState()
+) : BaseViewModel<SignInState, SignInIntent, SignInSideEffect>() {
+    override val initialState: SignInState = SignInState()
 
-    override val container: Container<SignUpState, SignUpSideEffect> =
+    override val container: Container<SignInState, SignInSideEffect> =
         container(initialState = initialState, savedStateHandle = savedStateHandle)
 
     private var timerJob: Job? = null
 
-    override fun onIntent(intent: SignUpIntent) {
+    override fun onIntent(intent: SignInIntent) {
         when (intent) {
-            is SignUpIntent.OnPhoneNumberChanged -> handlePhoneNumberChanged(intent.phoneNumber)
-            is SignUpIntent.OnVerificationCodeChanged -> handleVerificationCodeChanged(intent.code)
-            is SignUpIntent.OnSendVerificationCodeClick -> handleSendVerificationCode()
-            is SignUpIntent.OnVerifyCodeClick -> handleVerifyCode()
-            is SignUpIntent.OnResendCodeClick -> handleResendCode()
-            is SignUpIntent.OnBackButtonClick -> handleBackButtonClick()
+            is SignInIntent.OnPhoneNumberChanged -> handlePhoneNumberChanged(intent.phoneNumber)
+            is SignInIntent.OnVerificationCodeChanged -> handleVerificationCodeChanged(intent.code)
+            is SignInIntent.OnSendVerificationCodeClick -> handleSendVerificationCode()
+            is SignInIntent.OnVerifyCodeClick -> handleVerifyCode()
+            is SignInIntent.OnResendCodeClick -> handleResendCode()
+            is SignInIntent.OnBackButtonClick -> handleBackButtonClick()
         }
     }
 
@@ -69,7 +69,7 @@ class SignUpViewModel @Inject constructor(
     private fun handleSendVerificationCode() =
         intent {
             if (!state.isPhoneNumberValid) {
-                postSideEffect(SignUpSideEffect.ShowInvalidPhoneNumberError)
+                postSideEffect(SignInSideEffect.ShowInvalidPhoneNumberError)
                 return@intent
             }
 
@@ -82,14 +82,14 @@ class SignUpViewModel @Inject constructor(
 
                 reduce {
                     state.copy(
-                        step = SignUpStep.VERIFICATION_INPUT,
+                        step = SignInStep.VERIFICATION_INPUT,
                         isLoading = false,
                         remainingTimeInSeconds = 180,
                     )
                 }
 
                 startTimer()
-                postSideEffect(SignUpSideEffect.ShowCodeSentSuccess)
+                postSideEffect(SignInSideEffect.ShowCodeSentSuccess)
                 Timber.d("Verification code sent to ${state.phoneNumber}")
             } catch (e: Exception) {
                 Timber.e(e, "Failed to send verification code")
@@ -99,14 +99,14 @@ class SignUpViewModel @Inject constructor(
                         errorMessage = null,
                     )
                 }
-                postSideEffect(SignUpSideEffect.ShowCodeSendFailedError)
+                postSideEffect(SignInSideEffect.ShowCodeSendFailedError)
             }
         }
 
     private fun handleVerifyCode() =
         intent {
             if (!state.isVerificationCodeValid) {
-                postSideEffect(SignUpSideEffect.ShowInvalidCodeLengthError)
+                postSideEffect(SignInSideEffect.ShowInvalidCodeLengthError)
                 return@intent
             }
 
@@ -122,18 +122,18 @@ class SignUpViewModel @Inject constructor(
 
                 stopTimer()
 
-                // Check if user is already registered
+                // Check user registration status
                 // TODO: This should be determined by API response
-                val isAlreadyRegistered = false // Placeholder
-                if (isAlreadyRegistered) {
+                val isRegistered = false // Placeholder
+                if (!isRegistered) {
                     reduce { state.copy(isLoading = false) }
                     postSideEffect(
-                        SignUpSideEffect.ShowAlreadyRegisteredUserDialog(state.phoneNumber),
+                        SignInSideEffect.ShowUnregisteredUserDialog(state.phoneNumber),
                     )
                 } else {
                     reduce { state.copy(isLoading = false) }
-                    postSideEffect(SignUpSideEffect.NavigateToProfileCreation)
-                    Timber.d("Phone number verified successfully, moving to profile creation")
+                    postSideEffect(SignInSideEffect.NavigateToHome)
+                    Timber.d("Sign in verified, navigating to home")
                 }
             } catch (e: Exception) {
                 Timber.e(e, "Failed to verify phone number")
@@ -143,7 +143,7 @@ class SignUpViewModel @Inject constructor(
                         errorMessage = null,
                     )
                 }
-                postSideEffect(SignUpSideEffect.ShowCodeMismatchError)
+                postSideEffect(SignInSideEffect.ShowCodeMismatchError)
             }
         }
 
@@ -165,14 +165,14 @@ class SignUpViewModel @Inject constructor(
     private fun handleBackButtonClick() =
         intent {
             when (state.step) {
-                SignUpStep.PHONE_INPUT -> {
-                    postSideEffect(SignUpSideEffect.NavigateBack)
+                SignInStep.PHONE_INPUT -> {
+                    postSideEffect(SignInSideEffect.NavigateBack)
                 }
-                SignUpStep.VERIFICATION_INPUT -> {
+                SignInStep.VERIFICATION_INPUT -> {
                     stopTimer()
                     reduce {
                         state.copy(
-                            step = SignUpStep.PHONE_INPUT,
+                            step = SignInStep.PHONE_INPUT,
                             verificationCode = "",
                             remainingTimeInSeconds = 180,
                             errorMessage = null,
@@ -199,7 +199,7 @@ class SignUpViewModel @Inject constructor(
                     reduce {
                         state.copy(errorMessage = null)
                     }
-                    postSideEffect(SignUpSideEffect.ShowCodeExpiredError)
+                    postSideEffect(SignInSideEffect.ShowCodeExpiredError)
                 }
             }
     }

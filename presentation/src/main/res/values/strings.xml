@@ -6,6 +6,8 @@
     <string name="common_session_total_count">/ 총 %d회</string>
     <string name="common_next">다음</string>
     <string name="common_complete">완료</string>
+    <string name="common_cancel">닫기</string>
+    <string name="common_find_account">계정찾기</string>
     <string name="common_recommended_duration">권장 러닝 시간</string>
     <string name="common_recommended_pace">권장 페이스</string>
 
@@ -41,7 +43,24 @@
     <string name="onboarding_permission_term_marketing">[선택] 마케팅 정보 수신 동의</string>
     <!-- endregion-->
 
-ㅣ    <!-- region Sign Up -->
+    <!-- region Sign In -->
+    <string name="signin_title_phone_input">휴대폰 번호를\n입력해주세요.</string>
+    <string name="signin_title_verification_input">인증번호 6자리를\n입력해주세요.</string>
+    <string name="signin_label_phone_number">휴대폰 번호</string>
+    <string name="signin_placeholder_phone_number">010-0000-0000</string>
+    <string name="signin_placeholder_verification_code">000000</string>
+    <string name="signin_find_account">휴대폰 번호가 변경되었나요? 계정찾기</string>
+    <string name="signin_error_invalid_phone_number">올바른 전화번호를 입력해주세요.</string>
+    <string name="signin_success_code_sent">인증번호가 발송되었습니다.</string>
+    <string name="signin_error_code_send_failed">인증번호 발송에 실패했습니다.</string>
+    <string name="signin_error_code_length">6자리 인증번호를 입력해주세요.</string>
+    <string name="signin_error_code_mismatch">인증번호가 일치하지 않습니다.</string>
+    <string name="signin_error_code_expired">인증 시간이 만료되었습니다.</string>
+    <string name="signin_error_already_registered">이미 가입된 번호에요.\n계정찾기를 진행해주세요!</string>
+    <string name="signin_unregistered_user_message">아직 가입하지 않은 번호에요.\n회원가입을 진행할까요?</string>
+    <!-- endregion-->
+
+    <!-- region Sign Up -->
     <string name="signup_title_phone_input">환영합니다!\n휴대폰 번호로 가입해주세요.</string>
     <string name="signup_title_verification_input">인증번호 6자리를\n입력해주세요.</string>
     <string name="signup_title_terms_agreement">회원가입을 위해\n아래 약관에\n동의해주세요.</string>
@@ -57,6 +76,7 @@
     <string name="signup_error_code_expired">인증 시간이 만료되었습니다.</string>
     <string name="signup_title_profile_creation">프로필을 생성해주세요.</string>
     <string name="signup_placeholder_profile_name">이름을 입력해주세요</string>
+    <string name="signup_already_registered_user_message">이미 가입된 번호에요.\n계정찾기를 진행해주세요!</string>
     <!-- endregion-->
 
 
