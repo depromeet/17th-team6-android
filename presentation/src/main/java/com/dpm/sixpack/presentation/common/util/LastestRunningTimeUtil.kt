@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.freind
+package com.dpm.sixpack.presentation.common.util
 
 import android.content.Context
 import com.dpm.sixpack.core.util.TimeUtil.isoStringToEpochSeconds

@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.freind.contract
+package com.dpm.sixpack.presentation.common.model
 
 import android.os.Parcelable
 import com.dpm.sixpack.domain.model.Friend

@@ -27,7 +27,7 @@ object PaceColorCalculator {
             when {
                 // 1분 이하 -> 비정상인 값 투명처리
                 paceInSeconds <= 60 -> {
-                    Color.Companion.Transparent
+                    Color.Transparent
                 }
                 // 가장 빠른 페이스보다 더 빠를 경우
                 paceInSeconds <= paceColorPoints.first().paceInSeconds -> {
