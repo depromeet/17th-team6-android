@@ -32,7 +32,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
  * @param modifier 레이아웃 모디파이어
  */
 @Composable
-fun CommonInputField(
+fun DoRunSignInputField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
@@ -96,7 +96,7 @@ fun CommonInputField(
 private fun CommonInputFieldPreview() {
     DoRunPreviewWrapper {
         Column(modifier = Modifier.fillMaxWidth()) {
-            CommonInputField(
+            DoRunSignInputField(
                 value = "",
                 onValueChange = {},
                 label = "라벨 텍스트",
@@ -105,7 +105,7 @@ private fun CommonInputFieldPreview() {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            CommonInputField(
+            DoRunSignInputField(
                 value = "입력된 텍스트",
                 onValueChange = {},
                 label = "라벨 텍스트",
@@ -113,7 +113,7 @@ private fun CommonInputFieldPreview() {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            CommonInputField(
+            DoRunSignInputField(
                 value = "",
                 onValueChange = {},
                 label = "라벨 텍스트",

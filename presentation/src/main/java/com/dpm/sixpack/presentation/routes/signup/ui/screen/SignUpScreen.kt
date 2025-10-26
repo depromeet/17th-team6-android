@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
-import com.dpm.sixpack.presentation.common.components.textfield.CommonInputField
+import com.dpm.sixpack.presentation.common.components.textfield.DoRunSignInputField
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
 import com.dpm.sixpack.presentation.routes.signup.contract.SignUpIntent
 import com.dpm.sixpack.presentation.routes.signup.contract.SignUpState
@@ -82,7 +82,7 @@ fun SignUpScreen(
                     }
                     SignUpStep.VERIFICATION_INPUT -> {
                         // Phone Number (Disabled State)
-                        CommonInputField(
+                        DoRunSignInputField(
                             value = state.phoneNumber,
                             onValueChange = {},
                             label = stringResource(R.string.signup_label_phone_number),
@@ -147,7 +147,7 @@ private fun PhoneNumberInput(
     enabled: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    CommonInputField(
+    DoRunSignInputField(
         value = phoneNumber,
         onValueChange = onPhoneNumberChanged,
         label = stringResource(R.string.signup_label_phone_number),
@@ -168,7 +168,7 @@ private fun VerificationCodeInput(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        CommonInputField(
+        DoRunSignInputField(
             value = verificationCode,
             onValueChange = onVerificationCodeChanged,
             label = stringResource(R.string.signup_label_verification_code),
