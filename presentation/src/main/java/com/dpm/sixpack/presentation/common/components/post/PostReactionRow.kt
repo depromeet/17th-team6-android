@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
@@ -44,15 +46,21 @@ fun PostReactionRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(
-            horizontalArrangement = Arrangement.spacedBy(7.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            reactions.take(5).forEach { reaction ->
+            reactions.take(3).forEach { reaction ->
                 ReactionChip(
                     reaction = reaction,
                     onClick = { onReactionClick(reaction.emoji.type) }
                 )
             }
-            AddReactionButton(onAddReactionClick = onAddReactionClick)
+            if (reactions.size > 3) {
+                MoreReactionChip(
+                    count = reactions.size - 3
+                )
+
+                AddReactionButton(onAddReactionClick = onAddReactionClick)
+            }
         }
     }
 }
@@ -98,7 +106,7 @@ private fun ReactionChip(
             .border(
                 1.dp, color = borderColor, shape = RoundedCornerShape(16.dp)
             )
-            .padding(horizontal = 6.dp, vertical = 6.dp), // 패딩을 background와 border 안쪽으로 이동
+            .padding(all = 6.dp), // 패딩을 background와 border 안쪽으로 이동
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
@@ -122,6 +130,32 @@ private fun ReactionChip(
     }
 }
 
+/**
+ * 더 많은 리액션 칩
+ */
+@Composable
+private fun MoreReactionChip(count: Int, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .background(
+                color = SixpackTheme.colors.gray50,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .padding(all = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "+$count",
+            style = SixpackTheme.typography.b2Medium,
+            color = SixpackTheme.colors.gray700,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .padding(vertical = 2.dp)
+                .widthIn(min = 40.dp)
+        )
+    }
+}
 @Preview
 @Composable
 fun PostReactionRowPreview1() {
