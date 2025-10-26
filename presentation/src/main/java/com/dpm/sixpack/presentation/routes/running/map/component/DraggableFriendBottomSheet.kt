@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,27 +24,41 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.dpm.sixpack.presentation.common.model.FriendItem
 import com.dpm.sixpack.presentation.routes.freind.components.FriendsLazyColumn
-import com.dpm.sixpack.presentation.routes.freind.contract.FriendItem
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 internal fun DraggableFriendBottomSheet(
     draggableState: AnchoredDraggableState<SheetDragState>,
     friendList: List<FriendItem>,
+    sheetHeight: Dp,
+    startButtonHeight: Dp,
     modifier: Modifier = Modifier,
 ) {
+    if (sheetHeight == 0.dp) return
+
     Surface(
-        modifier = modifier.anchoredDraggable(draggableState, Orientation.Vertical),
+        modifier =
+            modifier
+                .anchoredDraggable(draggableState, Orientation.Vertical)
+                .height(sheetHeight),
         shape = MaterialTheme.shapes.large,
         color = SixpackTheme.colors.gray0,
         shadowElevation = 12.dp,
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp)
+                    .padding(bottom = startButtonHeight),
             horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top,
         ) {
+            // 드래그 핸들 (고정 크기)
             Box(
                 modifier =
                     Modifier
@@ -62,24 +77,24 @@ internal fun DraggableFriendBottomSheet(
                             ),
                 )
             }
-            Column(
+
+            // 타이틀 (유동 크기)
+            FriendListTitle(
                 modifier =
                     Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 24.dp)
+                        .fillMaxWidth()
                         .padding(top = 8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                FriendListTitle()
-                // 친구 목록
-                FriendsLazyColumn(
-                    modifier =
-                        Modifier
-                            .fillMaxSize()
-                            .padding(top = 12.dp),
-                    friendList = friendList,
-                )
-            }
+            )
+
+            // 친구 목록 (스크롤 영역)
+            FriendsLazyColumn(
+                modifier =
+                    Modifier
+                        .padding(top = 12.dp)
+                        .fillMaxWidth()
+                        .weight(1f),
+                friendList = friendList,
+            )
         }
     }
 }
@@ -87,7 +102,7 @@ internal fun DraggableFriendBottomSheet(
 @Composable
 private fun FriendListTitle(modifier: Modifier = Modifier) {
     Row(
-        modifier = Modifier,
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
