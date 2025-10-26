@@ -8,14 +8,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,6 +19,8 @@ import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
+import com.dpm.sixpack.presentation.common.components.textfield.SixPackTextField
+import com.dpm.sixpack.presentation.common.components.textfield.SixPackTextFieldCompleted
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
 import com.dpm.sixpack.presentation.routes.signin.contract.SignInIntent
 import com.dpm.sixpack.presentation.routes.signin.contract.SignInState
@@ -94,22 +92,9 @@ fun SignInScreen(
                     }
                     SignInStep.VERIFICATION_INPUT -> {
                         // Phone Number (Completed State)
-                        OutlinedTextField(
+                        SixPackTextFieldCompleted(
                             value = state.phoneNumber,
-                            onValueChange = {},
-                            label = { Text(stringResource(R.string.signin_label_phone_number)) },
-                            modifier = Modifier.fillMaxWidth(),
-                            enabled = false,
-                            colors =
-                                OutlinedTextFieldDefaults.colors(
-                                    disabledTextColor = SixpackTheme.colors.gray900,
-                                    disabledBorderColor = SixpackTheme.colors.gray300,
-                                    disabledLabelColor = SixpackTheme.colors.gray500,
-                                    focusedBorderColor = SixpackTheme.colors.blue600,
-                                    unfocusedBorderColor = SixpackTheme.colors.gray300,
-                                    disabledContainerColor = Color.Transparent,
-                                ),
-                            shape = SixpackTheme.shapes.round12,
+                            label = stringResource(R.string.signin_label_phone_number),
                         )
 
                         Spacer(modifier = Modifier.height(24.dp))
@@ -170,33 +155,14 @@ private fun PhoneNumberInput(
     enabled: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    OutlinedTextField(
+    SixPackTextField(
         value = phoneNumber,
         onValueChange = onPhoneNumberChanged,
-        placeholder = { Text(stringResource(R.string.signin_placeholder_phone_number)) },
-        modifier = modifier.fillMaxWidth(),
+        placeholder = stringResource(R.string.signin_placeholder_phone_number),
+        modifier = modifier,
         enabled = enabled,
-        keyboardOptions =
-            KeyboardOptions(
-                keyboardType = KeyboardType.Number,
-            ),
+        keyboardType = KeyboardType.Number,
         singleLine = true,
-        colors =
-            OutlinedTextFieldDefaults.colors(
-                focusedTextColor = SixpackTheme.colors.gray900,
-                unfocusedTextColor = SixpackTheme.colors.gray900,
-                disabledTextColor = SixpackTheme.colors.gray500,
-                focusedBorderColor = SixpackTheme.colors.blue600,
-                unfocusedBorderColor = SixpackTheme.colors.gray300,
-                disabledBorderColor = SixpackTheme.colors.gray200,
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent,
-                cursorColor = SixpackTheme.colors.blue600,
-                focusedPlaceholderColor = SixpackTheme.colors.gray400,
-                unfocusedPlaceholderColor = SixpackTheme.colors.gray400,
-            ),
-        shape = SixpackTheme.shapes.round12,
     )
 }
 
@@ -208,10 +174,10 @@ private fun VerificationCodeInput(
     enabled: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    OutlinedTextField(
+    SixPackTextField(
         value = verificationCode,
         onValueChange = onVerificationCodeChanged,
-        placeholder = { Text(stringResource(R.string.signin_placeholder_verification_code)) },
+        placeholder = stringResource(R.string.signin_placeholder_verification_code),
         trailingIcon = {
             Text(
                 text = remainingTime,
@@ -219,29 +185,10 @@ private fun VerificationCodeInput(
                 color = SixpackTheme.colors.red,
             )
         },
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier,
         enabled = enabled,
-        keyboardOptions =
-            KeyboardOptions(
-                keyboardType = KeyboardType.Number,
-            ),
+        keyboardType = KeyboardType.Number,
         singleLine = true,
-        colors =
-            OutlinedTextFieldDefaults.colors(
-                focusedTextColor = SixpackTheme.colors.gray900,
-                unfocusedTextColor = SixpackTheme.colors.gray900,
-                disabledTextColor = SixpackTheme.colors.gray500,
-                focusedBorderColor = SixpackTheme.colors.blue600,
-                unfocusedBorderColor = SixpackTheme.colors.gray300,
-                disabledBorderColor = SixpackTheme.colors.gray200,
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent,
-                cursorColor = SixpackTheme.colors.blue600,
-                focusedPlaceholderColor = SixpackTheme.colors.gray400,
-                unfocusedPlaceholderColor = SixpackTheme.colors.gray400,
-            ),
-        shape = SixpackTheme.shapes.round12,
     )
 }
 
