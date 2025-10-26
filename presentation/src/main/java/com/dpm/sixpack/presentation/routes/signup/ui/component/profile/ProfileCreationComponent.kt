@@ -10,15 +10,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -26,6 +22,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.dpm.sixpack.presentation.R
+import com.dpm.sixpack.presentation.common.components.textfield.DoRunSignInputField
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
@@ -104,32 +101,18 @@ private fun ProfileNameInput(
     enabled: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    OutlinedTextField(
+    DoRunSignInputField(
         value = profileName,
-        onValueChange = onNameChanged,
-        placeholder = { Text(stringResource(R.string.signup_placeholder_profile_name)) },
-        modifier = modifier,
+        onValueChange = { newValue ->
+            if (newValue.length <= 8) {
+                onNameChanged(newValue)
+            }
+        },
+        placeholder = stringResource(R.string.signup_placeholder_profile_name),
+        helperText = stringResource(R.string.signup_helper_text_profile_name),
+        helperTextRight = "${profileName.length}/8",
         enabled = enabled,
-        keyboardOptions =
-            KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-            ),
-        singleLine = true,
-        colors =
-            OutlinedTextFieldDefaults.colors(
-                focusedTextColor = SixpackTheme.colors.gray900,
-                unfocusedTextColor = SixpackTheme.colors.gray900,
-                disabledTextColor = SixpackTheme.colors.gray500,
-                focusedBorderColor = SixpackTheme.colors.blue600,
-                unfocusedBorderColor = SixpackTheme.colors.gray300,
-                disabledBorderColor = SixpackTheme.colors.gray200,
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent,
-                cursorColor = SixpackTheme.colors.blue600,
-                focusedPlaceholderColor = SixpackTheme.colors.gray400,
-                unfocusedPlaceholderColor = SixpackTheme.colors.gray400,
-            ),
-        shape = SixpackTheme.shapes.round12,
+        keyboardType = KeyboardType.Text,
+        modifier = modifier,
     )
 }

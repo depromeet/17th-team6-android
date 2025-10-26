@@ -56,25 +56,28 @@ fun SignUpScreen(
         containerColor = SixpackTheme.colors.gray0,
     ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = paddingValues.calculateTopPadding()),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(top = paddingValues.calculateTopPadding()),
         ) {
             Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = SixPackDimen.defaultSideMargin),
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .padding(horizontal = SixPackDimen.defaultSideMargin),
             ) {
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // Title
                 Text(
-                    text = stringResource(
-                        when (state.step) {
-                            SignUpStep.PHONE_INPUT -> R.string.signup_title_phone_input
-                            SignUpStep.VERIFICATION_INPUT -> R.string.signup_title_verification_input
-                        },
-                    ),
+                    text =
+                        stringResource(
+                            when (state.step) {
+                                SignUpStep.PHONE_INPUT -> R.string.signup_title_phone_input
+                                SignUpStep.VERIFICATION_INPUT -> R.string.signup_title_verification_input
+                            },
+                        ),
                     style = SixpackTheme.typography.h2Bold,
                     color = SixpackTheme.colors.gray900,
                 )
@@ -141,12 +144,13 @@ fun SignUpScreen(
 
             // Bottom Button
             DoRunDefaultButton(
-                text = stringResource(
-                    when (state.step) {
-                        SignUpStep.PHONE_INPUT -> R.string.common_next
-                        SignUpStep.VERIFICATION_INPUT -> R.string.common_next
-                    },
-                ),
+                text =
+                    stringResource(
+                        when (state.step) {
+                            SignUpStep.PHONE_INPUT -> R.string.common_next
+                            SignUpStep.VERIFICATION_INPUT -> R.string.common_next
+                        },
+                    ),
                 onClick = {
                     when (state.step) {
                         SignUpStep.PHONE_INPUT -> onIntent(SignUpIntent.OnSendVerificationCodeClick)
@@ -154,12 +158,13 @@ fun SignUpScreen(
                     }
                 },
                 enabled = state.isNextButtonEnabled,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .consumeWindowInsets(paddingValues)
-                    .imePadding()
-                    .padding(horizontal = SixPackDimen.defaultSideMargin)
-                    .padding(bottom = 12.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .consumeWindowInsets(paddingValues)
+                        .imePadding()
+                        .padding(horizontal = SixPackDimen.defaultSideMargin)
+                        .padding(bottom = 12.dp),
             )
         }
     }
@@ -225,12 +230,14 @@ private fun VerificationCodeInput(
                     TextButton(
                         onClick = onResendClick,
                         shape = SixpackTheme.shapes.round8,
-                        modifier = Modifier
-                            .height(32.dp)
-                            .padding(end = 12.dp),
-                        colors = ButtonDefaults.textButtonColors(
-                            containerColor = SixpackTheme.colors.blue200,
-                        ),
+                        modifier =
+                            Modifier
+                                .height(32.dp)
+                                .padding(end = 12.dp),
+                        colors =
+                            ButtonDefaults.textButtonColors(
+                                containerColor = SixpackTheme.colors.blue200,
+                            ),
                     ) {
                         Text(
                             text = stringResource(R.string.signup_button_resend),
@@ -249,10 +256,11 @@ private fun VerificationCodeInput(
 private fun SignUpScreenPhoneInputPreview() {
     DoRunPreviewWrapper {
         SignUpScreen(
-            state = SignUpState(
-                step = SignUpStep.PHONE_INPUT,
-                phoneNumber = "01012345678",
-            ),
+            state =
+                SignUpState(
+                    step = SignUpStep.PHONE_INPUT,
+                    phoneNumber = "01012345678",
+                ),
             onIntent = {},
         )
     }
@@ -263,12 +271,13 @@ private fun SignUpScreenPhoneInputPreview() {
 private fun SignUpScreenVerificationInputPreview() {
     DoRunPreviewWrapper {
         SignUpScreen(
-            state = SignUpState(
-                step = SignUpStep.VERIFICATION_INPUT,
-                phoneNumber = "01012345678",
-                verificationCode = "123456",
-                remainingTimeInSeconds = 150,
-            ),
+            state =
+                SignUpState(
+                    step = SignUpStep.VERIFICATION_INPUT,
+                    phoneNumber = "01012345678",
+                    verificationCode = "123456",
+                    remainingTimeInSeconds = 150,
+                ),
             onIntent = {},
         )
     }

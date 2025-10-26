@@ -1,6 +1,8 @@
 package com.dpm.sixpack.presentation.common.components.textfield
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,6 +32,8 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
  * @param style "default" 또는 "id" 스타일
  * @param keyboardType 키보드 타입
  * @param trailingIcon 우측 아이콘 컨텐츠 (선택사항)
+ * @param helperText 보조 텍스트 (선택사항)
+ * @param helperTextRight 우측 보조 텍스트 (선택사항)
  * @param modifier 레이아웃 모디파이어
  */
 @Composable
@@ -45,6 +49,8 @@ fun DoRunSignInputField(
     keyboardType: KeyboardType = KeyboardType.Text,
     singleLine: Boolean = true,
     trailingIcon: @Composable (() -> Unit)? = null,
+    helperText: String? = null,
+    helperTextRight: String? = null,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         // Label
@@ -56,7 +62,9 @@ fun DoRunSignInputField(
             )
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        if (label != null) {
+            Spacer(modifier = Modifier.height(8.dp))
+        }
 
         // Input Field
         OutlinedTextField(
@@ -93,6 +101,28 @@ fun DoRunSignInputField(
                 ),
             shape = SixpackTheme.shapes.round8,
         )
+
+        // Helper Text
+        if (helperText != null || helperTextRight != null) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(
+                    text = helperText ?: "",
+                    style = SixpackTheme.typography.c1Regular,
+                    color = SixpackTheme.colors.gray600,
+                )
+                helperTextRight?.let {
+                    Text(
+                        text = it,
+                        style = SixpackTheme.typography.c1Regular,
+                        color = SixpackTheme.colors.gray600,
+                    )
+                }
+            }
+        }
     }
 }
 

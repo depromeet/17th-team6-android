@@ -13,7 +13,7 @@ data class ProfileCreationState(
 ) : UiState,
     Parcelable {
     val isProfileNameValid: Boolean
-        get() = profileName.isNotBlank()
+        get() = profileName.length in 2..8
 
     val isCompleteButtonEnabled: Boolean
         get() = isProfileNameValid && !isLoading
