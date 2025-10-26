@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -67,7 +66,6 @@ fun FeedPostCard(
             postTime = postDetail.postTime,
             postImageUrl = postDetail.postImageUrl,
             runningSummary = postDetail.runningInfo,
-            modifier = Modifier.padding(top = 12.dp)
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -97,7 +95,7 @@ private fun PostUserInfoRow(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        PostUserDateInfo(
+        PostUserInfo(
             userImageUrl = userImageUrl,
             userName = userName,
             postTime = postTime,

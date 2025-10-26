@@ -33,7 +33,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
  * 메뉴 버튼이 필요 없는 다른 화면에서도 사용할 수 있습니다.
  */
 @Composable
-fun PostUserDateInfo(
+fun PostUserInfo(
     userImageUrl: String,
     userName: String,
     postTime: String,
@@ -104,7 +104,7 @@ fun PostUserDateInfo(
 @Composable
 fun PostUserInfoRowMyPostPreview() {
     DoRunPreviewWrapper {
-        PostUserDateInfo(
+        PostUserInfo(
             userImageUrl = "",
             userName = "비락식혜",
             postTime = "36분 전",
@@ -117,7 +117,7 @@ fun PostUserInfoRowMyPostPreview() {
 @Composable
 fun PostUserInfoRowOthersPostPreview() {
     DoRunPreviewWrapper {
-        PostUserDateInfo(
+        PostUserInfo(
             userImageUrl = "",
             userName = "다른 사용자",
             postTime = "1시간 전",
