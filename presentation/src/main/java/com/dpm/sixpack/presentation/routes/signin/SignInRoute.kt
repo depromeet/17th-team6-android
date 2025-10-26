@@ -7,9 +7,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dpm.sixpack.presentation.R
-import com.dpm.sixpack.presentation.common.components.dialog.UnregisteredUserDialog
+import com.dpm.sixpack.presentation.common.components.dialog.CommonDialog
 import com.dpm.sixpack.presentation.common.util.context.showToastByResId
 import com.dpm.sixpack.presentation.routes.signin.contract.SignInSideEffect
 import com.dpm.sixpack.presentation.routes.signin.ui.screen.SignInScreen
@@ -63,12 +64,18 @@ fun SignInRoute(
     }
 
     if (showUnregisteredDialog) {
-        UnregisteredUserDialog(
-            onSignUpClick = {
+        CommonDialog(
+            title = stringResource(R.string.signin_unregistered_user_title),
+            description = stringResource(R.string.signin_unregistered_user_message),
+            onDismiss = {
                 showUnregisteredDialog = false
+            },
+            primaryButtonText = stringResource(R.string.onboarding_sign_up),
+            primaryButtonOnClick = {
                 onNavigateToSignUp(unregisteredPhoneNumber)
             },
-            onDismiss = {
+            secondaryButtonText = stringResource(R.string.common_cancel),
+            secondaryButtonOnClick = {
                 showUnregisteredDialog = false
             },
         )

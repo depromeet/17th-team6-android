@@ -25,76 +25,6 @@ import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrappe
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 /**
- * Dialog shown when user tries to sign in but is not registered
- * Prompts user to sign up instead
- */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun UnregisteredUserDialog(
-    onSignUpClick: () -> Unit,
-    onDismiss: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    BasicAlertDialog(
-        onDismissRequest = onDismiss,
-        modifier = modifier,
-    ) {
-        Column(
-            modifier =
-                Modifier
-                    .fillMaxWidth(0.85f)
-                    .background(
-                        color = SixpackTheme.colors.gray0,
-                        shape = RoundedCornerShape(16.dp),
-                    ).padding(20.dp),
-        ) {
-            // Title
-            Text(
-                text = stringResource(R.string.signin_unregistered_user_message),
-                style = SixpackTheme.typography.h3Bold,
-                color = SixpackTheme.colors.gray900,
-                textAlign = TextAlign.Center,
-                modifier =
-                    Modifier
-                        .fillMaxWidth(),
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // Buttons Row
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                // Close Button
-                DoRunDefaultButton(
-                    text = stringResource(R.string.common_cancel),
-                    onClick = onDismiss,
-                    modifier =
-                        Modifier
-                            .weight(1f)
-                            .height(48.dp),
-                    enabled = true,
-                    style = ButtonStyle.SECONDARY,
-                )
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                // Sign Up Button
-                DoRunDefaultButton(
-                    text = stringResource(R.string.onboarding_sign_up),
-                    onClick = onSignUpClick,
-                    modifier =
-                        Modifier
-                            .weight(1f)
-                            .height(48.dp),
-                    enabled = true,
-                )
-            }
-        }
-    }
-}
-
-/**
  * Dialog shown when user tries to sign up with already registered phone number
  * Prompts user to find account instead
  */
@@ -161,17 +91,6 @@ fun AlreadyRegisteredUserDialog(
                 )
             }
         }
-    }
-}
-
-@Preview
-@Composable
-private fun UnregisteredUserDialogPreview() {
-    DoRunPreviewWrapper {
-        UnregisteredUserDialog(
-            onSignUpClick = {},
-            onDismiss = {},
-        )
     }
 }
 

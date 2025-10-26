@@ -5,10 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import com.dpm.sixpack.SixPackAppState
-import com.dpm.sixpack.presentation.destinations.OnboardingRoute
-import com.dpm.sixpack.presentation.routes.onboarding.OnboardingRoute
 import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.addProfileCreationNavGraph
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.navigateProfileCreation

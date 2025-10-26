@@ -18,40 +18,46 @@ import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrappe
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 /**
- * 공통 TextField 컴포넌트
- * Figma 디자인 가이드에 따라 일관된 스타일 제공
+ * 공통 입력필드 컴포넌트 (Figma: input field)
+ * 여러 스타일과 상태를 지원합니다.
  *
  * @param value 입력값
  * @param onValueChange 입력값 변경 콜백
- * @param label 라벨 텍스트 (선택사항)
+ * @param label 라벨 텍스트
  * @param placeholder 플레이스홀더 텍스트 (선택사항)
  * @param enabled 입력 활성화 여부
  * @param isError 에러 상태 여부
- * @param errorMessage 에러 메시지 (선택사항)
+ * @param style "default" 또는 "id" 스타일
  * @param keyboardType 키보드 타입
- * @param trailingIcon 우측 아이콘 (선택사항)
  * @param modifier 레이아웃 모디파이어
  */
 @Composable
-fun SixPackTextField(
+fun CommonInputField(
     value: String,
     onValueChange: (String) -> Unit,
+    label: String,
     modifier: Modifier = Modifier,
-    label: String? = null,
     placeholder: String? = null,
     enabled: Boolean = true,
     isError: Boolean = false,
-    errorMessage: String? = null,
+    style: String = "default",
     keyboardType: KeyboardType = KeyboardType.Text,
-    trailingIcon: @Composable (() -> Unit)? = null,
     singleLine: Boolean = true,
 ) {
-    Column(modifier = modifier) {
-        // Figma: input field 높이 52px
+    Column(modifier = modifier.fillMaxWidth()) {
+        // Label
+        Text(
+            text = label,
+            style = SixpackTheme.typography.b2Regular,
+            color = SixpackTheme.colors.gray700,
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Input Field
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            label = label?.let { { Text(it) } },
             placeholder = placeholder?.let { { Text(it) } },
             modifier =
                 Modifier
@@ -64,14 +70,13 @@ fun SixPackTextField(
                     keyboardType = keyboardType,
                 ),
             singleLine = singleLine,
-            trailingIcon = trailingIcon,
             colors =
                 OutlinedTextFieldDefaults.colors(
                     focusedTextColor = SixpackTheme.colors.gray900,
                     unfocusedTextColor = SixpackTheme.colors.gray900,
                     disabledTextColor = SixpackTheme.colors.gray500,
-                    focusedBorderColor = SixpackTheme.colors.blue600,
-                    unfocusedBorderColor = SixpackTheme.colors.gray300,
+                    focusedBorderColor = SixpackTheme.colors.gray900,
+                    unfocusedBorderColor = SixpackTheme.colors.gray200,
                     disabledBorderColor = SixpackTheme.colors.gray200,
                     errorBorderColor = SixpackTheme.colors.red,
                     focusedContainerColor = Color.Transparent,
@@ -80,85 +85,39 @@ fun SixPackTextField(
                     cursorColor = SixpackTheme.colors.blue600,
                     focusedPlaceholderColor = SixpackTheme.colors.gray400,
                     unfocusedPlaceholderColor = SixpackTheme.colors.gray400,
-                    focusedLabelColor = SixpackTheme.colors.gray900,
-                    unfocusedLabelColor = SixpackTheme.colors.gray500,
-                    disabledLabelColor = SixpackTheme.colors.gray500,
                 ),
-            shape = SixpackTheme.shapes.round12,
+            shape = SixpackTheme.shapes.round8,
         )
-
-        // 에러 메시지 표시 (Figma: 간격 8dp)
-        if (isError && errorMessage != null) {
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = errorMessage,
-                style = SixpackTheme.typography.c1Regular,
-                color = SixpackTheme.colors.red,
-            )
-        }
     }
-}
-
-/**
- * 비활성화 상태의 완료된 TextField (읽기 전용)
- * Figma 디자인: 52px 높이
- *
- * @param value 입력값
- * @param label 라벨 텍스트 (선택사항)
- * @param modifier 레이아웃 모디파이어
- */
-@Composable
-fun SixPackTextFieldCompleted(
-    value: String,
-    modifier: Modifier = Modifier,
-    label: String? = null,
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = {},
-        label = label?.let { { Text(it) } },
-        modifier =
-            modifier
-                .fillMaxWidth()
-                .height(52.dp),
-        enabled = false,
-        colors =
-            OutlinedTextFieldDefaults.colors(
-                disabledTextColor = SixpackTheme.colors.gray900,
-                disabledBorderColor = SixpackTheme.colors.gray300,
-                disabledLabelColor = SixpackTheme.colors.gray500,
-                focusedBorderColor = SixpackTheme.colors.blue600,
-                unfocusedBorderColor = SixpackTheme.colors.gray300,
-                disabledContainerColor = Color.Transparent,
-            ),
-        shape = SixpackTheme.shapes.round12,
-    )
 }
 
 @Preview
 @Composable
-private fun SixPackTextFieldPreview() {
+private fun CommonInputFieldPreview() {
     DoRunPreviewWrapper {
-        Column {
-            SixPackTextField(
+        Column(modifier = Modifier.fillMaxWidth()) {
+            CommonInputField(
                 value = "",
                 onValueChange = {},
-                placeholder = "01012345678",
+                label = "라벨 텍스트",
+                placeholder = "플레이스홀더",
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            SixPackTextFieldCompleted(
-                value = "01012345678",
+            CommonInputField(
+                value = "입력된 텍스트",
+                onValueChange = {},
+                label = "라벨 텍스트",
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            SixPackTextField(
+            CommonInputField(
                 value = "",
                 onValueChange = {},
+                label = "라벨 텍스트",
                 isError = true,
-                errorMessage = "올바른 휴대폰 번호를 입력해주세요.",
             )
         }
     }

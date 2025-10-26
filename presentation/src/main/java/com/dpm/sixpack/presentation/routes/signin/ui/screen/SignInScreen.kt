@@ -19,8 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
-import com.dpm.sixpack.presentation.common.components.textfield.SixPackTextField
-import com.dpm.sixpack.presentation.common.components.textfield.SixPackTextFieldCompleted
+import com.dpm.sixpack.presentation.common.components.textfield.CommonInputField
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
 import com.dpm.sixpack.presentation.routes.signin.contract.SignInIntent
 import com.dpm.sixpack.presentation.routes.signin.contract.SignInState
@@ -91,10 +90,12 @@ fun SignInScreen(
                         )
                     }
                     SignInStep.VERIFICATION_INPUT -> {
-                        // Phone Number (Completed State)
-                        SixPackTextFieldCompleted(
+                        // Phone Number (Disabled State)
+                        CommonInputField(
                             value = state.phoneNumber,
+                            onValueChange = {},
                             label = stringResource(R.string.signin_label_phone_number),
+                            enabled = false,
                         )
 
                         Spacer(modifier = Modifier.height(24.dp))
@@ -155,9 +156,10 @@ private fun PhoneNumberInput(
     enabled: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    SixPackTextField(
+    CommonInputField(
         value = phoneNumber,
         onValueChange = onPhoneNumberChanged,
+        label = stringResource(R.string.signin_label_phone_number),
         placeholder = stringResource(R.string.signin_placeholder_phone_number),
         modifier = modifier,
         enabled = enabled,
@@ -174,22 +176,17 @@ private fun VerificationCodeInput(
     enabled: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    SixPackTextField(
-        value = verificationCode,
-        onValueChange = onVerificationCodeChanged,
-        placeholder = stringResource(R.string.signin_placeholder_verification_code),
-        trailingIcon = {
-            Text(
-                text = remainingTime,
-                style = SixpackTheme.typography.b2Regular,
-                color = SixpackTheme.colors.red,
-            )
-        },
-        modifier = modifier,
-        enabled = enabled,
-        keyboardType = KeyboardType.Number,
-        singleLine = true,
-    )
+    Column(modifier = modifier) {
+        CommonInputField(
+            value = verificationCode,
+            onValueChange = onVerificationCodeChanged,
+            label = stringResource(R.string.signin_label_verification_code),
+            placeholder = stringResource(R.string.signin_placeholder_verification_code),
+            enabled = enabled,
+            keyboardType = KeyboardType.Number,
+            singleLine = true,
+        )
+    }
 }
 
 @Preview
