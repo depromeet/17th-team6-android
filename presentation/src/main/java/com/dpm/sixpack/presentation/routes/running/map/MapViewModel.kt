@@ -14,6 +14,7 @@ import com.dpm.sixpack.presentation.routes.running.session.contract.state.PathSt
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.naver.maps.geometry.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
@@ -47,6 +48,17 @@ class MapViewModel @Inject constructor(
             is MapIntent.UpdateUserLocation -> handleUserLocationChange(intent.latLng)
             is MapIntent.UpdatePermission -> handlePermissionUpdate(intent.isGranted)
             is MapIntent.UpdateRunningMapPath -> updateRunningMapPath(intent.pathState)
+        }
+    }
+
+    init {
+        intent {
+            delay(2000L)
+            reduce {
+                state.copy(
+                    mapViewState = MapViewState.Friend(),
+                )
+            }
         }
     }
 

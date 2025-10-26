@@ -9,7 +9,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class MapUiState(
     val isFollowingModeEnabled: Boolean = true,
-    val mapViewState: MapViewState = MapViewState.Friend(),
+    val mapViewState: MapViewState = MapViewState.Loading,
 ) : RunningRouteUiState
 
 sealed interface MapViewState : Parcelable {

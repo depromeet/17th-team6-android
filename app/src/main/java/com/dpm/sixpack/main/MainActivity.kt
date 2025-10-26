@@ -40,6 +40,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val startDestination by viewModel.startDestination.collectAsStateWithLifecycle()
             val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+            val showFullScreenLoading by viewModel.showFullScreenLoading.collectAsStateWithLifecycle()
 
             if (!isLoading) {
                 val appState =
@@ -57,6 +58,8 @@ class MainActivity : ComponentActivity() {
                     SixpackTheme(isDebug = BuildConfig.DEBUG) {
                         MainScreen(
                             appState = appState,
+                            showFullScreenLoading = showFullScreenLoading,
+                            setFullScreenLoading = { viewModel.setFullScreenLoading(it) },
                         )
                     }
                 }

@@ -27,6 +27,9 @@ class MainViewModel @Inject constructor(
     private val _startDestination = MutableStateFlow<Route>(OnboardingRoute.Onboarding)
     val startDestination: StateFlow<Route> = _startDestination.asStateFlow()
 
+    private val _showFullScreenLoading = MutableStateFlow(false)
+    val showFullScreenLoading: StateFlow<Boolean> = _showFullScreenLoading.asStateFlow()
+
     var onFabClick: (() -> Unit)? by mutableStateOf(null)
 
     init {
@@ -38,5 +41,9 @@ class MainViewModel @Inject constructor(
             delay(1000L)
             _isLoading.value = false
         }
+    }
+
+    fun setFullScreenLoading(show: Boolean) {
+        _showFullScreenLoading.value = show
     }
 }

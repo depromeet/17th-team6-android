@@ -69,6 +69,7 @@ internal fun RunningMapScreen(
     locationSource: LocationSource,
     modifier: Modifier = Modifier,
     mapViewModel: MapViewModel = hiltViewModel(),
+    setFullScreenLoading: (Boolean) -> Unit,
     onBottomBarVisibilityChange: (Boolean) -> Unit,
     navigateToReport: () -> Unit,
 ) {
@@ -105,6 +106,7 @@ internal fun RunningMapScreen(
         mapState = mapState,
         cameraPositionState = cameraPositionState,
         locationSource = locationSource,
+        setFullScreenLoading = setFullScreenLoading,
         onMapIntent = mapViewModel::onIntent,
     )
 }
@@ -115,6 +117,7 @@ private fun RunningMapScreenContent(
     mapState: MapUiState,
     cameraPositionState: CameraPositionState,
     locationSource: LocationSource,
+    setFullScreenLoading: (Boolean) -> Unit,
     onMapIntent: (MapIntent) -> Unit,
     modifier: Modifier,
 ) {
@@ -232,6 +235,12 @@ private fun RunningMapScreenContent(
                         }
                     }
                 }
+            }
+
+            if (mapState.mapViewState is MapViewState.Loading) {
+                setFullScreenLoading(true)
+            } else {
+                setFullScreenLoading(false)
             }
 
             if (mapState.mapViewState is MapViewState.Running) {

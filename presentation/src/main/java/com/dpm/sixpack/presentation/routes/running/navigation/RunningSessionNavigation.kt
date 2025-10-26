@@ -14,6 +14,7 @@ fun NavController.navigateRunningSession(navOptions: NavOptions? = null) {
 fun NavGraphBuilder.addRunningSessionNavGraph(
     onNavigateToBack: () -> Unit,
     navigateToSessionReport: () -> Unit,
+    showFullScreenLoading: (Boolean) -> Unit,
     onBottomBarVisibilityChange: (Boolean) -> Unit,
 ) {
     composable<MainRoute.Running> {
@@ -21,6 +22,7 @@ fun NavGraphBuilder.addRunningSessionNavGraph(
             onNavigateToBack = onNavigateToBack,
             onBottomBarVisibilityChange = onBottomBarVisibilityChange,
             navigateToReport = navigateToSessionReport,
+            setFullScreenLoading = showFullScreenLoading,
         )
     }
 }
