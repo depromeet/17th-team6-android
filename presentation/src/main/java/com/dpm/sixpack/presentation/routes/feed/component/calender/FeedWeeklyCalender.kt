@@ -1,18 +1,14 @@
 package com.dpm.sixpack.presentation.routes.feed.component.calender
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,26 +23,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.routes.feed.contract.uistate.FeedCalendarUiState
+import com.dpm.sixpack.presentation.theme.SixpackTheme
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.time.format.TextStyle.*
+import java.time.format.TextStyle.SHORT
 import java.time.temporal.WeekFields
 import java.util.Locale
-import kotlin.text.get
 
 private const val PAGER_PAGE_COUNT = Int.MAX_VALUE
 
@@ -269,10 +262,10 @@ private fun DayCell(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
 ) {
-    val countBackgroundColor =
-        colors.dayCountBackgroundColor(isSelected = isSelected, isDisabled = dayData.isDisabled)
-    val countTextColor = colors.dayCountTextColor(isSelected = isSelected, isDisabled = dayData.isDisabled)
-    val dateTextColor = colors.dayCellDateTextColor(isSelected = isSelected, isDisabled = dayData.isDisabled)
+    val dateTextColor = colors.dateTextColor(isSelected = isSelected, isDisabled = dayData.isDisabled)
+    val dateBackgroundColor =
+        colors.dateBackgroundColor(isSelected = isSelected)
+    val postCountTextColor = colors.feedCountTextColor(isDisabled = dayData.isDisabled || dayData.postCount == 0)
 
     Column(
         modifier =
@@ -287,51 +280,36 @@ private fun DayCell(
                 SHORT,
                 Locale.getDefault()
             ),
-            color = dateTextColor,
+            color = SixpackTheme.colors.gray500,
             style = typography.weeklyDateTextStyle,
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(if(dayData.isToday) 4.dp else 8.dp))
 
-        DayFeedCount(
-            count = dayData.postCount,
-            backgroundColor = countBackgroundColor,
-            textColor = countTextColor,
-            typography = typography.dayCountTextStyle,
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = dayData.date.dayOfMonth.toString(),
-            color = dateTextColor,
-            style = typography.dayCellDateTextStyle,
-        )
-    }
-}
-
-@Composable
-fun DayFeedCount(
-    count: Int,
-    backgroundColor: Color,
-    textColor: Color,
-    typography: TextStyle,
-    modifier: Modifier = Modifier,
-) {
-    val text = if (count > 0) stringResource(R.string.feed_calender_post_count_label, count) else count.toString()
-    Box(
-        modifier =
-            modifier
+        Box(
+            modifier = Modifier
                 .fillMaxWidth()
-                .background(color = backgroundColor, shape = RoundedCornerShape(12.dp))
-                .clip(shape = RoundedCornerShape(12.dp)),
-        contentAlignment = Alignment.Center,
-    ) {
+                .background(color = dateBackgroundColor, shape = RoundedCornerShape(12.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = if (dayData.isToday) "오늘" else dayData.date.dayOfMonth.toString(),
+                color = dateTextColor,
+                style = typography.dayCellDateTextStyle,
+            )
+        }
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        // 3. 포스트 수 (텍스트만)
+        val postCountText = if (dayData.postCount > 0) stringResource(
+            R.string.feed_calender_post_count_label,
+            dayData.postCount
+        ) else dayData.postCount.toString()
         Text(
-            text = text,
-            modifier = Modifier.padding(vertical = 5.dp),
-            color = textColor,
-            style = typography,
+            text = postCountText,
+            color = postCountTextColor,
+            style = typography.dayCountTextStyle,
         )
     }
 }
@@ -364,7 +342,6 @@ private fun generateWeekDaysList(
     today: LocalDate,
     postCounts: Map<LocalDate, Int>,
 ): List<WeeklyCalendarDay> {
-    // TODO SB 디자이너 요구에 맞춰서 isDisabled 수정
     return List(DAYS_IN_WEEK) { i ->
         val date = startDateOfWeek.plusDays(i.toLong())
         val postCount = postCounts[date] ?: 0
@@ -373,7 +350,7 @@ private fun generateWeekDaysList(
             date = date,
             isToday = date.isEqual(today),
             postCount = postCount,
-            isDisabled = date.isAfter(today) || postCount == 0,
+            isDisabled = date.isAfter(today) ,
         )
     }
 }
@@ -398,7 +375,9 @@ fun WeeklyCalendarPreview() {
             val postCounts = mapOf(
                 today.minusDays(2) to 3,
                 selectedDate to 1,
-                today to 5
+                today to 5,
+                today.plusDays(1) to 0,
+                today.plusDays(2) to 1
             )
 
             FeedWeeklyCalendar(
@@ -414,4 +393,3 @@ fun WeeklyCalendarPreview() {
     }
 
 }
-
