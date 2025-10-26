@@ -64,7 +64,7 @@
 
     <!-- region Sign Up -->
     <string name="signup_title_phone_input">환영합니다!\n휴대폰 번호로 가입해주세요.</string>
-    <string name="signup_title_verification_input">인증번호 6자리를\n입력해주세요.</string>
+    <string name="signup_title_verification_input">인증번호 6자리를 입력해주세요.</string>
     <string name="signup_title_terms_agreement">회원가입을 위해 아래 약관에 동의해주세요.</string>
     <string name="signup_title_terms_agreement_action">동의하고 계속하기</string>
     <string name="signup_label_phone_number">휴대폰 번호</string>
