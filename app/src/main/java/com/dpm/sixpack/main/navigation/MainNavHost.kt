@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import com.dpm.sixpack.SixPackAppState
 import com.dpm.sixpack.presentation.destinations.OnboardingRoute
 import com.dpm.sixpack.presentation.routes.onboarding.OnboardingRoute
+import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.addProfileCreationNavGraph
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.navigateProfileCreation
 import com.dpm.sixpack.presentation.routes.session.navigation.addRunningSessionNavGraph
@@ -35,16 +36,14 @@ internal fun MainNavHost(
             navController = navigator.navController,
             startDestination = navigator.startDestination,
         ) {
-            composable<OnboardingRoute> {
-                OnboardingRoute(
-                    onNavigateToSignUp = {
-                        navigator.navController.navigateTerms()
-                    },
-                    onNavigateToSignIn = {
-                        navigator.navController.navigateSignIn()
-                    },
-                )
-            }
+            addOnboardingNavGraph(
+                onNavigateToSignUp = {
+                    navigator.navController.navigateTerms()
+                },
+                onNavigateToSignIn = {
+                    navigator.navController.navigateSignIn()
+                },
+            )
 
             addTermsNavGraph(
                 onNavigateToSignUp = {
