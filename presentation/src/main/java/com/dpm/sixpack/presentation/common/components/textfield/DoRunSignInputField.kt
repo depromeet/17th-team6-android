@@ -29,28 +29,32 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
  * @param isError 에러 상태 여부
  * @param style "default" 또는 "id" 스타일
  * @param keyboardType 키보드 타입
+ * @param trailingIcon 우측 아이콘 컨텐츠 (선택사항)
  * @param modifier 레이아웃 모디파이어
  */
 @Composable
 fun DoRunSignInputField(
     value: String,
     onValueChange: (String) -> Unit,
-    label: String,
     modifier: Modifier = Modifier,
+    label: String? = null,
     placeholder: String? = null,
     enabled: Boolean = true,
     isError: Boolean = false,
     style: String = "default",
     keyboardType: KeyboardType = KeyboardType.Text,
     singleLine: Boolean = true,
+    trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         // Label
-        Text(
-            text = label,
-            style = SixpackTheme.typography.b2Regular,
-            color = SixpackTheme.colors.gray700,
-        )
+        label?.let {
+            Text(
+                text = label,
+                style = SixpackTheme.typography.b2Regular,
+                color = SixpackTheme.colors.gray700,
+            )
+        }
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -70,21 +74,22 @@ fun DoRunSignInputField(
                     keyboardType = keyboardType,
                 ),
             singleLine = singleLine,
+            trailingIcon = trailingIcon,
             colors =
                 OutlinedTextFieldDefaults.colors(
                     focusedTextColor = SixpackTheme.colors.gray900,
                     unfocusedTextColor = SixpackTheme.colors.gray900,
-                    disabledTextColor = SixpackTheme.colors.gray500,
+                    disabledTextColor = SixpackTheme.colors.gray900,
                     focusedBorderColor = SixpackTheme.colors.gray900,
-                    unfocusedBorderColor = SixpackTheme.colors.gray200,
-                    disabledBorderColor = SixpackTheme.colors.gray200,
+                    unfocusedBorderColor = SixpackTheme.colors.gray100,
+                    disabledBorderColor = SixpackTheme.colors.gray100,
                     errorBorderColor = SixpackTheme.colors.red,
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
                     disabledContainerColor = Color.Transparent,
                     cursorColor = SixpackTheme.colors.blue600,
-                    focusedPlaceholderColor = SixpackTheme.colors.gray400,
-                    unfocusedPlaceholderColor = SixpackTheme.colors.gray400,
+                    focusedPlaceholderColor = SixpackTheme.colors.gray300,
+                    unfocusedPlaceholderColor = SixpackTheme.colors.gray300,
                 ),
             shape = SixpackTheme.shapes.round8,
         )

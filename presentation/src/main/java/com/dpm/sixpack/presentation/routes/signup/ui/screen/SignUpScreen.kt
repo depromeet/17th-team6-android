@@ -5,7 +5,10 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,10 +16,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,28 +56,25 @@ fun SignUpScreen(
         containerColor = SixpackTheme.colors.gray0,
     ) { paddingValues ->
         Column(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(top = paddingValues.calculateTopPadding()),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = paddingValues.calculateTopPadding()),
         ) {
             Column(
-                modifier =
-                    Modifier
-                        .weight(1f)
-                        .padding(horizontal = SixPackDimen.defaultSideMargin),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = SixPackDimen.defaultSideMargin),
             ) {
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // Title
                 Text(
-                    text =
-                        stringResource(
-                            when (state.step) {
-                                SignUpStep.PHONE_INPUT -> R.string.signup_title_phone_input
-                                SignUpStep.VERIFICATION_INPUT -> R.string.signup_title_verification_input
-                            },
-                        ),
+                    text = stringResource(
+                        when (state.step) {
+                            SignUpStep.PHONE_INPUT -> R.string.signup_title_phone_input
+                            SignUpStep.VERIFICATION_INPUT -> R.string.signup_title_verification_input
+                        },
+                    ),
                     style = SixpackTheme.typography.h2Bold,
                     color = SixpackTheme.colors.gray900,
                 )
@@ -82,9 +87,11 @@ fun SignUpScreen(
                         PhoneNumberInput(
                             phoneNumber = state.phoneNumber,
                             onPhoneNumberChanged = { onIntent(SignUpIntent.OnPhoneNumberChanged(it)) },
+                            onClickClear = { onIntent(SignUpIntent.OnPhoneNumberChanged("")) },
                             enabled = !state.isLoading,
                         )
                     }
+
                     SignUpStep.VERIFICATION_INPUT -> {
                         // Verification Code Input
                         AnimatedVisibility(
@@ -95,9 +102,16 @@ fun SignUpScreen(
                             Column {
                                 VerificationCodeInput(
                                     verificationCode = state.verificationCode,
-                                    onVerificationCodeChanged = { onIntent(SignUpIntent.OnVerificationCodeChanged(it)) },
+                                    onVerificationCodeChanged = {
+                                        onIntent(
+                                            SignUpIntent.OnVerificationCodeChanged(it),
+                                        )
+                                    },
                                     remainingTime = state.formattedRemainingTime,
                                     enabled = !state.isLoading && state.remainingTimeInSeconds > 0,
+                                    onResendClick = {
+                                        onIntent(SignUpIntent.OnResendCodeClick)
+                                    },
                                 )
 
                                 Spacer(modifier = Modifier.height(24.dp))
@@ -127,13 +141,12 @@ fun SignUpScreen(
 
             // Bottom Button
             DoRunDefaultButton(
-                text =
-                    stringResource(
-                        when (state.step) {
-                            SignUpStep.PHONE_INPUT -> R.string.common_next
-                            SignUpStep.VERIFICATION_INPUT -> R.string.common_next
-                        },
-                    ),
+                text = stringResource(
+                    when (state.step) {
+                        SignUpStep.PHONE_INPUT -> R.string.common_next
+                        SignUpStep.VERIFICATION_INPUT -> R.string.common_next
+                    },
+                ),
                 onClick = {
                     when (state.step) {
                         SignUpStep.PHONE_INPUT -> onIntent(SignUpIntent.OnSendVerificationCodeClick)
@@ -141,13 +154,12 @@ fun SignUpScreen(
                     }
                 },
                 enabled = state.isNextButtonEnabled,
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .consumeWindowInsets(paddingValues)
-                        .imePadding()
-                        .padding(horizontal = SixPackDimen.defaultSideMargin)
-                        .padding(bottom = 12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .consumeWindowInsets(paddingValues)
+                    .imePadding()
+                    .padding(horizontal = SixPackDimen.defaultSideMargin)
+                    .padding(bottom = 12.dp),
             )
         }
     }
@@ -157,6 +169,7 @@ fun SignUpScreen(
 private fun PhoneNumberInput(
     phoneNumber: String,
     onPhoneNumberChanged: (String) -> Unit,
+    onClickClear: () -> Unit,
     enabled: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -169,6 +182,16 @@ private fun PhoneNumberInput(
         enabled = enabled,
         keyboardType = KeyboardType.Number,
         singleLine = true,
+        trailingIcon = {
+            if (phoneNumber.isNotBlank()) {
+                IconButton(onClick = onClickClear) {
+                    Image(
+                        painter = painterResource(R.drawable.ic_input_clear),
+                        contentDescription = "phone number clear button",
+                    )
+                }
+            }
+        },
     )
 }
 
@@ -178,17 +201,45 @@ private fun VerificationCodeInput(
     onVerificationCodeChanged: (String) -> Unit,
     remainingTime: String,
     enabled: Boolean,
+    onResendClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
         DoRunSignInputField(
             value = verificationCode,
             onValueChange = onVerificationCodeChanged,
-            label = stringResource(R.string.signup_label_verification_code),
             placeholder = stringResource(R.string.signup_placeholder_verification_code),
             enabled = enabled,
             keyboardType = KeyboardType.Number,
             singleLine = true,
+            trailingIcon = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Text(
+                        text = remainingTime,
+                        style = SixpackTheme.typography.b2Regular,
+                        color = SixpackTheme.colors.red,
+                    )
+                    TextButton(
+                        onClick = onResendClick,
+                        shape = SixpackTheme.shapes.round8,
+                        modifier = Modifier
+                            .height(32.dp)
+                            .padding(end = 12.dp),
+                        colors = ButtonDefaults.textButtonColors(
+                            containerColor = SixpackTheme.colors.blue200,
+                        ),
+                    ) {
+                        Text(
+                            text = stringResource(R.string.signup_button_resend),
+                            style = SixpackTheme.typography.c1Bold,
+                            color = SixpackTheme.colors.blue600,
+                        )
+                    }
+                }
+            },
         )
     }
 }
@@ -198,11 +249,10 @@ private fun VerificationCodeInput(
 private fun SignUpScreenPhoneInputPreview() {
     DoRunPreviewWrapper {
         SignUpScreen(
-            state =
-                SignUpState(
-                    step = SignUpStep.PHONE_INPUT,
-                    phoneNumber = "01012345678",
-                ),
+            state = SignUpState(
+                step = SignUpStep.PHONE_INPUT,
+                phoneNumber = "01012345678",
+            ),
             onIntent = {},
         )
     }
@@ -213,13 +263,12 @@ private fun SignUpScreenPhoneInputPreview() {
 private fun SignUpScreenVerificationInputPreview() {
     DoRunPreviewWrapper {
         SignUpScreen(
-            state =
-                SignUpState(
-                    step = SignUpStep.VERIFICATION_INPUT,
-                    phoneNumber = "01012345678",
-                    verificationCode = "123456",
-                    remainingTimeInSeconds = 150,
-                ),
+            state = SignUpState(
+                step = SignUpStep.VERIFICATION_INPUT,
+                phoneNumber = "01012345678",
+                verificationCode = "123456",
+                remainingTimeInSeconds = 150,
+            ),
             onIntent = {},
         )
     }

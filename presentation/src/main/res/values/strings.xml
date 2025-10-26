@@ -81,6 +81,7 @@
     <string name="signup_title_profile_creation">프로필을 생성해주세요.</string>
     <string name="signup_placeholder_profile_name">이름을 입력해주세요</string>
     <string name="signup_already_registered_user_message">이미 가입된 번호에요.\n계정찾기를 진행해주세요!</string>
+    <string name="signup_button_resend">재전송</string>
     <!-- endregion-->
 
 
