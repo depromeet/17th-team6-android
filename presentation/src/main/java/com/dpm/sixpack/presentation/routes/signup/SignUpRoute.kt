@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dpm.sixpack.presentation.R
-import com.dpm.sixpack.presentation.common.util.showToastByResId
+import com.dpm.sixpack.presentation.common.util.context.showToastByResId
 import com.dpm.sixpack.presentation.routes.signup.contract.SignUpSideEffect
 import com.dpm.sixpack.presentation.routes.signup.ui.screen.SignUpScreen
 import org.orbitmvi.orbit.compose.collectAsState

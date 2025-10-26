@@ -10,7 +10,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.dialog.UnregisteredUserDialog
-import com.dpm.sixpack.presentation.common.util.showToastByResId
+import com.dpm.sixpack.presentation.common.util.context.showToastByResId
 import com.dpm.sixpack.presentation.routes.signin.contract.SignInSideEffect
 import com.dpm.sixpack.presentation.routes.signin.ui.screen.SignInScreen
 import org.orbitmvi.orbit.compose.collectAsState

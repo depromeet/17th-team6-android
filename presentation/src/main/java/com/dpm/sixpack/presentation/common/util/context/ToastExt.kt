@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.common.util
+package com.dpm.sixpack.presentation.common.util.context
 
 import android.content.Context
 import android.widget.Toast
