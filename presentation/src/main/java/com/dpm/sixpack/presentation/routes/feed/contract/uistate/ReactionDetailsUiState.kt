@@ -7,5 +7,6 @@ import com.dpm.sixpack.presentation.common.model.ReactingUserUiState
 @Immutable
 data class ReactionDetailsUiState(
     val allUsersSortedByTime: List<ReactingUserUiState>,
-    val usersByEmoji: Map<Emoji, List<ReactingUserUiState>>
+    val usersByEmoji: Map<Emoji, List<ReactingUserUiState>>,
+    val selectedType : String = ""
 )

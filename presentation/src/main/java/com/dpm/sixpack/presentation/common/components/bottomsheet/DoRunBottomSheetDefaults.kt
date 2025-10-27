@@ -47,7 +47,7 @@ object DoRunBottomSheetDefaults {
 
     // 색상
     @Composable
-    fun containerColor() = SixpackTheme.colors.gray200
+    fun containerColor() = SixpackTheme.colors.gray0
 
     @Composable
     fun dragHandleColor() = SixpackTheme.colors.gray100

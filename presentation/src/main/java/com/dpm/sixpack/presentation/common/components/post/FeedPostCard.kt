@@ -136,9 +136,9 @@ fun FeedPostCardPreview() {
                     recordDateTime = "2023-08-01T00:00:00"
                 ),
                 reactions = listOf(
-                    PostReactionUiState(Emoji.HEART, 10, true),
-                    PostReactionUiState(Emoji.FIRE, 5, false),
-                    PostReactionUiState(Emoji.SHOOT, 2, false)
+                    PostReactionUiState(Emoji.HEART, "10", true),
+                    PostReactionUiState(Emoji.FIRE, "5", false),
+                    PostReactionUiState(Emoji.SHOOT, "2", false)
                 )
             ),
             currentUserName = "비락식혜"

@@ -1,5 +1,8 @@
 package com.dpm.sixpack.presentation.common.components.post
 
+import android.R.attr.onClick
+import android.R.attr.type
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.background
@@ -53,7 +56,9 @@ fun PostReactionRow(
         ) {
             reactions.take(3).forEach { reaction ->
                 ReactionChip(
-                    reaction = reaction,
+                    count = reaction.count,
+                    iconRes = reaction.emoji.iconRes,
+                    isReacted = reaction.isReacted,
                     onClick = { onReactionChipClick(reaction.emoji.type) },
                     onLongClick = { onReactionChipLongClick(reaction.emoji.type) },
                 )
@@ -92,19 +97,21 @@ private fun AddReactionButton(onAddReactionClick: () -> Unit) {
  * 개별 이모지 반응 칩 컴포넌트
  */
 @Composable
-private fun ReactionChip(
-    reaction: PostReactionUiState,
-    onClick: (String) -> Unit,
-    onLongClick: (String) -> Unit,
+fun ReactionChip(
+    count : String,
+    @DrawableRes iconRes : Int,
+    isReacted: Boolean,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    onLongClick: () -> Unit = {},
 ) {
-    val backgroundColor = if (reaction.isReacted) SixpackTheme.colors.blue100 else SixpackTheme.colors.gray50
-    val borderColor = if (reaction.isReacted) SixpackTheme.colors.blue600 else SixpackTheme.colors.gray0
+    val backgroundColor = if (isReacted) SixpackTheme.colors.blue100 else SixpackTheme.colors.gray50
+    val borderColor = if (isReacted) SixpackTheme.colors.blue600 else SixpackTheme.colors.gray0
     Row(
         modifier = modifier
             .combinedClickable(
-                onClick = { onClick(reaction.emoji.type) },
-                onLongClick = { onLongClick(reaction.emoji.type) }
+                onClick = { onClick() },
+                onLongClick = { onLongClick() }
             )
             .background(
                 color = backgroundColor,
@@ -113,7 +120,7 @@ private fun ReactionChip(
             .border(
                 1.dp, color = borderColor, shape = RoundedCornerShape(16.dp)
             )
-            .padding(all = 6.dp), // 패딩을 background와 border 안쪽으로 이동
+            .padding(all = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
@@ -121,7 +128,7 @@ private fun ReactionChip(
             modifier = Modifier
                 .size(20.dp)
                 .clip(CircleShape),
-            imageVector = ImageVector.vectorResource(reaction.emoji.iconRes),
+            imageVector = ImageVector.vectorResource(iconRes),
             contentDescription = "이모지",
         )
         Spacer(modifier = Modifier.width(2.dp))
@@ -131,7 +138,7 @@ private fun ReactionChip(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = reaction.count.toString(),
+                text = count.toString(),
                 style = SixpackTheme.typography.b2Medium,
                 color = SixpackTheme.colors.gray700
             )
@@ -176,9 +183,7 @@ private fun MoreReactionChip(
 fun PostReactionRowPreview1() {
     DoRunPreviewWrapper {
         PostReactionRow(
-            reactions = listOf(
-                PostReactionUiState(Emoji.HEART, 10, true)
-            ),
+            reactions = listOf(PostReactionUiState(Emoji.HEART, "10", true)),
             onReactionChipClick = {},
             onAddReactionClick = {},
             onReactionChipLongClick = {}
@@ -192,9 +197,9 @@ private fun PostReactionRowPreview3() {
     DoRunPreviewWrapper {
         PostReactionRow(
             reactions = listOf(
-                PostReactionUiState(Emoji.HEART, 10, true),
-                PostReactionUiState(Emoji.FIRE, 5, false),
-                PostReactionUiState(Emoji.SHOOT, 2, false)
+                PostReactionUiState(Emoji.HEART, "10", true),
+                PostReactionUiState(Emoji.FIRE, "5", false),
+                PostReactionUiState(Emoji.SHOOT, "2", false)
             ),
             onReactionChipClick = {},
             onAddReactionClick = {},
@@ -209,11 +214,11 @@ private fun PostReactionRowPreview5() {
     DoRunPreviewWrapper {
         PostReactionRow(
             reactions = listOf(
-                PostReactionUiState(Emoji.HEART, 10, true),
-                PostReactionUiState(Emoji.FIRE, 5, false),
-                PostReactionUiState(Emoji.SHOOT, 2, false),
-                PostReactionUiState(Emoji.FIRE, 5, false),
-                PostReactionUiState(Emoji.SHOOT, 2, false)
+                PostReactionUiState(Emoji.HEART, "10", true),
+                PostReactionUiState(Emoji.FIRE, "5", false),
+                PostReactionUiState(Emoji.SHOOT, "2", false),
+                PostReactionUiState(Emoji.FIRE, "5", false),
+                PostReactionUiState(Emoji.SHOOT, "2", false)
             ),
             onReactionChipClick = {},
             onAddReactionClick = {},

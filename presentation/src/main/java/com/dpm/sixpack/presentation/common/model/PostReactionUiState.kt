@@ -7,15 +7,15 @@ import com.dpm.sixpack.presentation.R
 @Immutable
 data class PostReactionUiState(
     val emoji: Emoji,
-    val count: Int,
-    val isReacted: Boolean,
-    val users: List<ReactingUserUiState> = listOf()
+    val count: String,
+    val isReacted: Boolean = false,
 )
 
 @Immutable
 data class ReactingUserUiState(
     val user: UserUiState,
     val reactedAt: String,
+    val emoji: Emoji = Emoji.UNKNOWN
 )
 
 enum class Emoji(

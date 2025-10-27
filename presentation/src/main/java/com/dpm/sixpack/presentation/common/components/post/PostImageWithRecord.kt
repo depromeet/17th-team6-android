@@ -61,7 +61,11 @@ fun PostImageWithRecord(
         )
 
         RunningSummaryOverlay(
-            runningSummary = runningSummary,
+            totalDistance = runningSummary.totalDistance,
+            totalTime = runningSummary.totalTime,
+            averagePace = runningSummary.averagePace,
+            cadence = runningSummary.cadence,
+            recordDateTime = runningSummary.recordDateTime,
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .padding(start = 20.dp, bottom = 20.dp, end = 20.dp)
@@ -71,7 +75,11 @@ fun PostImageWithRecord(
 
 @Composable
 private fun RunningSummaryOverlay(
-    runningSummary: RunningSummaryUiState,
+    totalDistance: String,
+    totalTime: String,
+    averagePace: String,
+    cadence: String,
+    recordDateTime: String,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -84,13 +92,13 @@ private fun RunningSummaryOverlay(
         ) {
             SummaryItem(
                 title = "달린 거리",
-                record = "${runningSummary.totalDistance}km",
+                record = "${totalDistance}km",
                 recordTextStyle = SixpackTheme.typography.h1Bold,
                 modifier = Modifier.weight(1f)
             )
             SummaryItem(
                 title = "달린 시간",
-                record = runningSummary.totalTime,
+                record = totalTime,
                 recordTextStyle = SixpackTheme.typography.h1Bold,
                 modifier = Modifier.weight(1f)
             )
@@ -102,13 +110,13 @@ private fun RunningSummaryOverlay(
         ) {
             SummaryItem(
                 title = "평균 페이스",
-                record = runningSummary.averagePace,
+                record = averagePace,
                 recordTextStyle = SixpackTheme.typography.t1Bold,
                 modifier = Modifier.weight(1f)
             )
             SummaryItem(
                 title = "케이던스",
-                record = "${runningSummary.cadence}spm",
+                record = "${cadence}spm",
                 recordTextStyle = SixpackTheme.typography.t1Bold,
                 modifier = Modifier.weight(1f)
             )

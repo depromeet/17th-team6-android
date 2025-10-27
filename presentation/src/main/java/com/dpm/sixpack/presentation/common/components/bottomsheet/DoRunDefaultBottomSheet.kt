@@ -1,5 +1,6 @@
 package com.dpm.sixpack.presentation.common.components.bottomsheet
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
@@ -48,7 +49,8 @@ fun DoRunBottomSheetSlot(
                 modifier =
                     modifier
                         .fillMaxWidth()
-                        .padding(contentPadding),
+                        .padding(contentPadding)
+                        .animateContentSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 title()
