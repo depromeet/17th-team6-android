@@ -1,5 +1,6 @@
 package com.dpm.sixpack.data.repository.mock
 
+// 현재 사용 X
 internal val Sungsoo =
     listOf(
         Pair(37.5469144928613, 127.066505849361),

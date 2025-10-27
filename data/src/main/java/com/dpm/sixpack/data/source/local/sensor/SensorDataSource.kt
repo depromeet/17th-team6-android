@@ -4,13 +4,9 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import com.dpm.sixpack.core.network.di.ApplicationScope
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.shareIn
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -18,7 +14,6 @@ import javax.inject.Singleton
 @Singleton
 class SensorDataSource @Inject constructor(
     private val sensorManager: SensorManager,
-    @ApplicationScope appScope: CoroutineScope,
 ) {
     val totalStepsFlow: Flow<Int> =
         callbackFlow {
@@ -65,9 +60,10 @@ class SensorDataSource @Inject constructor(
                 Timber.d("Data : SensorManager가 걸음수 수집을 중단합니다. (구독 취소)")
                 sensorManager.unregisterListener(sensorEventListener)
             }
-        }.shareIn(
-            scope = appScope, // 앱 생명주기를 따르는 스코프
-            started = SharingStarted.WhileSubscribed(1000L), // 구독자가 없어진 후 3초간 유지
-            replay = 1, // 새로운 구독자에게 최신 값 1개를 즉시 재전송
-        )
+        }
+//            .shareIn(
+//            scope = appScope, // 앱 생명주기를 따르는 스코프
+//            started = SharingStarted.WhileSubscribed(1000L), // 구독자가 없어진 후 3초간 유지
+//            replay = 1, // 새로운 구독자에게 최신 값 1개를 즉시 재전송
+//        )
 }
