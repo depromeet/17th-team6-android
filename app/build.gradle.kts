@@ -15,7 +15,6 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
     implementation(project(":core"))
-    implementation(project(":background"))
 
     implementation(libs.bundles.androidx.core)
     testImplementation(libs.junit)

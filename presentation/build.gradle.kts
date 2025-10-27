@@ -12,6 +12,7 @@ dependencies {
     implementation(project(":background"))
 
     implementation(libs.bundles.navermap)
+    implementation(libs.bundles.coil)
     implementation(libs.constraintlayout.compose)
     implementation(libs.androidx.lifecycle.service)
 }

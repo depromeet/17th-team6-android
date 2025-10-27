@@ -58,8 +58,6 @@ class SixPackAppState(
                 SharingStarted.WhileSubscribed(5_000),
                 TimeZone.currentSystemDefault(),
             )
-
-//    fun navigateToSearch() = navController.navigateTo
 }
 
 val LocalTimeZone = compositionLocalOf { TimeZone.currentSystemDefault() }

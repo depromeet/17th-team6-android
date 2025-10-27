@@ -4,7 +4,6 @@ import com.dpm.sixpack.domain.model.RealtimeRunningData
 import com.dpm.sixpack.domain.model.RunningSessionResult
 import com.dpm.sixpack.domain.usecase.SaveRealtimeRunningDataResult
 import com.dpm.sixpack.domain.util.DoRunResult
-import kotlinx.coroutines.flow.Flow
 
 interface RunningSessionRepository {
     suspend fun start(goalPlanId: Long): DoRunResult<Long>

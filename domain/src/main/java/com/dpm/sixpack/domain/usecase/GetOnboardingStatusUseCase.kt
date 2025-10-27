@@ -7,5 +7,5 @@ class GetOnboardingStatusUseCase @Inject constructor(
     private val userPreferenceRepository: UserPreferenceRepository,
 ) {
     suspend operator fun invoke(): Boolean = false
-        //TODO userPreferenceRepository.getIsOnboardingComplete()
+    // TODO userPreferenceRepository.getIsOnboardingComplete()
 }

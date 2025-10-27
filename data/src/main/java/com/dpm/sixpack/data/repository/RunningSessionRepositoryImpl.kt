@@ -10,16 +10,8 @@ import com.dpm.sixpack.domain.repository.RunningSessionRepository
 import com.dpm.sixpack.domain.usecase.SaveRealtimeRunningDataResult
 import com.dpm.sixpack.domain.util.DoRunResult
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import kotlin.coroutines.coroutineContext
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.random.Random
 
 class RunningSessionRepositoryImpl @Inject constructor(
     private val runningSessionDataSource: RunningSessionDataSource,
