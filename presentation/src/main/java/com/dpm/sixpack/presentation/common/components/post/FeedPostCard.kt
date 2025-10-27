@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -108,7 +109,7 @@ private fun PostUserInfoRow(
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_meatball_menu),
-                contentDescription = "Post options menu",
+                contentDescription = stringResource(id = R.string.feed_post_card_options_menu_description),
                 tint = SixpackTheme.colors.gray600,
             )
         }

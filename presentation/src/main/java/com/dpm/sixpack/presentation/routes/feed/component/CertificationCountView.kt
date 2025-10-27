@@ -19,33 +19,37 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.model.PostingUserUiState
+import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 fun CertificationCountView(
     users: List<PostingUserUiState>,
     isMeCertified: Boolean,
+    onViewClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (users.isEmpty()) return
 
     val text =
         if (isMeCertified) {
-            "'나'를 제외한 ${users.size}명이 인증했어요!"
+            stringResource(id = R.string.feed_certification_count_view_me_certified, users.size - 1)
         } else {
-            "${users.size}명이 인증했어요!"
+            stringResource(id = R.string.feed_certification_count_view_others_certified, users.size)
         }
 
     Row(
-        modifier = modifier,
+        modifier = modifier.noRippleClickable(onClick = onViewClick),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         OverlappingProfiles(users = users)
@@ -63,25 +67,20 @@ private fun OverlappingProfiles(
     users: List<PostingUserUiState>,
     modifier: Modifier = Modifier,
 ) {
+    // 최대 3명의 프로필만 표시하고, 가장 최근에 인증한 사람이 가장 위에 보이도록 reversed()를 사용
+    val visibleUsers = users.take(3).reversed()
+
     Box(modifier = modifier) {
         val profileCircleSize = 25.dp
         val overlap = 10.dp
         val offset = profileCircleSize - overlap
 
-        ProfileImageCircle(
-            imageUrl = users[2].userImageUrl,
-            modifier = Modifier.padding(start = 28.dp + offset * 2),
-        )
-
-        ProfileImageCircle(
-            imageUrl = users[1].userImageUrl,
-            modifier = Modifier.padding(start = 28.dp + offset),
-        )
-
-        ProfileImageCircle(
-            imageUrl = users[0].userImageUrl,
-            modifier = Modifier.padding(start = 28.dp),
-        )
+        visibleUsers.forEachIndexed { index, user ->
+            ProfileImageCircle(
+                imageUrl = user.userImageUrl,
+                modifier = Modifier.padding(start = 28.dp + (offset * (visibleUsers.size - 1 - index))),
+            )
+        }
 
         CountCircle(
             count = users.size,
@@ -103,7 +102,7 @@ private fun CountCircle(
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = "+$count",
+            text = stringResource(id = R.string.feed_certification_count_view_count_label, count),
             color = SixpackTheme.colors.blue600,
             style = SixpackTheme.typography.b2Medium,
             textAlign = TextAlign.Center,
@@ -134,7 +133,7 @@ private fun ProfileImageCircle(
                     .data(imageUrl)
                     .crossfade(true)
                     .build(),
-            contentDescription = "User profile image",
+            contentDescription = stringResource(id = R.string.feed_post_user_info_profile_image_description),
             modifier =
                 Modifier
                     .matchParentSize()
@@ -153,12 +152,12 @@ private fun CertificationCountViewWithMePreview() {
         CertificationCountView(
             users =
                 listOf(
-                    PostingUserUiState(userName = "User1", userImageUrl = ""),
                     PostingUserUiState(userName = "User2", userImageUrl = ""),
                     PostingUserUiState(userName = "User3", userImageUrl = ""),
                 ),
             isMeCertified = true,
             modifier = Modifier.padding(16.dp),
+            onViewClick = {},
         )
     }
 }
@@ -177,6 +176,7 @@ private fun CertificationCountViewWithoutMePreview() {
                 ),
             isMeCertified = false,
             modifier = Modifier.padding(16.dp),
+            onViewClick = {},
         )
     }
 }

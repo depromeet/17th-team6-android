@@ -18,12 +18,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.model.RunningSummaryUiState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
@@ -70,7 +72,6 @@ fun PostImageWithRecord(
             totalTime = runningSummary.totalTime,
             averagePace = runningSummary.averagePace,
             cadence = runningSummary.cadence,
-            recordDateTime = runningSummary.recordDateTime,
             modifier =
                 Modifier
                     .align(Alignment.BottomStart)
@@ -85,7 +86,6 @@ private fun RunningSummaryOverlay(
     totalTime: String,
     averagePace: String,
     cadence: String,
-    recordDateTime: String,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -98,13 +98,13 @@ private fun RunningSummaryOverlay(
             modifier = Modifier.fillMaxWidth(),
         ) {
             SummaryItem(
-                title = "달린 거리",
+                title = stringResource(id = R.string.feed_post_image_record_distance),
                 record = "${totalDistance}km",
                 recordTextStyle = SixpackTheme.typography.h1Bold,
                 modifier = Modifier.weight(1f),
             )
             SummaryItem(
-                title = "달린 시간",
+                title = stringResource(id = R.string.feed_post_image_record_time),
                 record = totalTime,
                 recordTextStyle = SixpackTheme.typography.h1Bold,
                 modifier = Modifier.weight(1f),
@@ -116,13 +116,13 @@ private fun RunningSummaryOverlay(
             horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
             SummaryItem(
-                title = "평균 페이스",
+                title = stringResource(id = R.string.feed_post_image_record_pace),
                 record = averagePace,
                 recordTextStyle = SixpackTheme.typography.t1Bold,
                 modifier = Modifier.weight(1f),
             )
             SummaryItem(
-                title = "케이던스",
+                title = stringResource(id = R.string.feed_post_image_record_cadence),
                 record = "${cadence}spm",
                 recordTextStyle = SixpackTheme.typography.t1Bold,
                 modifier = Modifier.weight(1f),

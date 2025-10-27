@@ -177,13 +177,12 @@ private fun AllTab(
     ) {
         Row(
             modifier =
-            modifier
-                .background(
-                    color = if (selected) SixpackTheme.colors.blue600 else SixpackTheme.colors.gray50,
-                    shape = RoundedCornerShape(16.dp),
-                )
-                .padding(horizontal = 6.dp)
-                .clickable(onClick = onClick),
+                modifier
+                    .background(
+                        color = if (selected) SixpackTheme.colors.blue600 else SixpackTheme.colors.gray50,
+                        shape = RoundedCornerShape(16.dp),
+                    ).padding(horizontal = 6.dp)
+                    .clickable(onClick = onClick),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
         ) {
@@ -193,9 +192,9 @@ private fun AllTab(
                 color = if (selected) SixpackTheme.colors.gray0 else SixpackTheme.colors.gray500,
                 textAlign = TextAlign.Center,
                 modifier =
-                Modifier
-                    .padding(vertical = 6.dp)
-                    .widthIn(min = 40.dp),
+                    Modifier
+                        .padding(vertical = 6.dp)
+                        .widthIn(min = 40.dp),
             )
         }
 
@@ -217,9 +216,9 @@ private fun ReactingUserRow(
 ) {
     Row(
         modifier =
-        modifier
-            .fillMaxWidth()
-            .padding(vertical = 12.dp),
+            modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
@@ -254,23 +253,26 @@ private fun ReactionUserInfo(
     ) {
         Box(
             modifier =
-            Modifier
-                .size(52.dp)
-                .border(width = 1.dp, color = SixpackTheme.colors.gray200, shape = CircleShape)
-                .noRippleClickable(onClick = onUserProfileClick),
+                Modifier
+                    .size(52.dp)
+                    .border(width = 1.dp, color = SixpackTheme.colors.gray200, shape = CircleShape)
+                    .noRippleClickable(onClick = onUserProfileClick),
         ) {
             AsyncImage(
                 model =
-                ImageRequest
-                    .Builder(LocalContext.current)
-                    .data(userImageUrl)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = stringResource(id = R.string.feed_reaction_bottom_sheet_user_profile_image_description),
+                    ImageRequest
+                        .Builder(LocalContext.current)
+                        .data(userImageUrl)
+                        .crossfade(true)
+                        .build(),
+                contentDescription =
+                    stringResource(
+                        id = R.string.feed_reaction_bottom_sheet_user_profile_image_description,
+                    ),
                 modifier =
-                Modifier
-                    .size(52.dp)
-                    .clip(CircleShape),
+                    Modifier
+                        .size(52.dp)
+                        .clip(CircleShape),
                 placeholder = ColorPainter(SixpackTheme.colors.gray500),
                 error = ColorPainter(SixpackTheme.colors.gray100),
                 contentScale = ContentScale.Crop,
@@ -328,12 +330,12 @@ fun ReactionUsersBottomSheetPreview() {
 
                 ReactingUserUiState(
                     user =
-                    UserUiState(
-                        id = index.toLong(),
-                        name = name,
-                        profileImageUrl = "",
-                        isMe = index == 1, // 첫 번째 사용자만 '나'로 설정
-                    ),
+                        UserUiState(
+                            id = index.toLong(),
+                            name = name,
+                            profileImageUrl = "",
+                            isMe = index == 1, // 첫 번째 사용자만 '나'로 설정
+                        ),
                     emoji = emoji,
                     reactedAt = reactedAt,
                 )
@@ -344,38 +346,38 @@ fun ReactionUsersBottomSheetPreview() {
                 selectedType = "HEART",
                 usersByEmoji = dummyUsers.groupBy { it.emoji },
                 allUsersSortedByTime =
-                dummyUsers.sortedWith(
-                    compareBy {
-                        when {
-                            it.reactedAt == "방금" -> 0
-                            it.reactedAt.endsWith("분 전") ->
-                                it.reactedAt
-                                    .removeSuffix("분 전")
-                                    .trim()
-                                    .toIntOrNull() ?: Int.MAX_VALUE
+                    dummyUsers.sortedWith(
+                        compareBy {
+                            when {
+                                it.reactedAt == "방금" -> 0
+                                it.reactedAt.endsWith("분 전") ->
+                                    it.reactedAt
+                                        .removeSuffix("분 전")
+                                        .trim()
+                                        .toIntOrNull() ?: Int.MAX_VALUE
 
-                            it.reactedAt.endsWith("시간 전") ->
-                                (
+                                it.reactedAt.endsWith("시간 전") ->
+                                    (
                                         it.reactedAt
                                             .removeSuffix("시간 전")
                                             .trim()
                                             .toIntOrNull()
                                             ?: Int.MAX_VALUE
-                                        ) * 60
+                                    ) * 60
 
-                            it.reactedAt.endsWith("일 전") ->
-                                (
+                                it.reactedAt.endsWith("일 전") ->
+                                    (
                                         it.reactedAt
                                             .removeSuffix("일 전")
                                             .trim()
                                             .toIntOrNull()
                                             ?: Int.MAX_VALUE
-                                        ) * 60 * 24
+                                    ) * 60 * 24
 
-                            else -> Int.MAX_VALUE
-                        }
-                    },
-                ),
+                                else -> Int.MAX_VALUE
+                            }
+                        },
+                    ),
             )
 
         ReactionUsersBottomSheet(
@@ -394,17 +396,17 @@ fun ReactingUserRowPreview() {
         Column {
             ReactingUserRow(
                 user =
-                ReactingUserUiState(
-                    user =
-                    UserUiState(
-                        id = 1,
-                        name = "김육팩",
-                        profileImageUrl = "",
-                        isMe = true,
+                    ReactingUserUiState(
+                        user =
+                            UserUiState(
+                                id = 1,
+                                name = "김육팩",
+                                profileImageUrl = "",
+                                isMe = true,
+                            ),
+                        emoji = Emoji.HEART,
+                        reactedAt = "1분 전",
                     ),
-                    emoji = Emoji.HEART,
-                    reactedAt = "1분 전",
-                ),
                 onUserProfileClick = {},
             )
         }

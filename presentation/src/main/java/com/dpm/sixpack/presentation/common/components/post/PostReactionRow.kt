@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -89,7 +90,7 @@ private fun AddReactionButton(onAddReactionClick: () -> Unit) {
     ) {
         Image(
             imageVector = ImageVector.vectorResource(id = R.drawable.ic_add_reaction),
-            contentDescription = "이모지 추가",
+            contentDescription = stringResource(id = R.string.feed_post_reaction_row_add_reaction_description),
         )
     }
 }
@@ -131,7 +132,7 @@ fun ReactionChip(
                     .size(20.dp)
                     .clip(CircleShape),
             imageVector = ImageVector.vectorResource(iconRes),
-            contentDescription = "이모지",
+            contentDescription = stringResource(id = R.string.feed_post_reaction_row_emoji_description),
         )
         Spacer(modifier = Modifier.width(2.dp))
 

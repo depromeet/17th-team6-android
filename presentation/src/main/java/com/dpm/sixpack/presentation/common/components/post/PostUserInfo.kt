@@ -17,12 +17,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
@@ -56,7 +58,7 @@ fun PostUserInfo(
                         .data(userImageUrl)
                         .crossfade(true)
                         .build(),
-                contentDescription = "User profile image",
+                contentDescription = stringResource(id = R.string.feed_post_user_info_profile_image_description),
                 modifier =
                     Modifier
                         .size(40.dp)
@@ -85,7 +87,7 @@ fun PostUserInfo(
             ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                    text = "나",
+                    text = stringResource(id = R.string.feed_post_user_info_my_post_badge),
                     color = SixpackTheme.colors.gray0,
                     style = SixpackTheme.typography.c1Medium,
                 )
