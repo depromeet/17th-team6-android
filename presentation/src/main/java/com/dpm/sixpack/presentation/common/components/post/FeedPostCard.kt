@@ -32,7 +32,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
  *
  * @param postDetail 포스트 상세 정보
  * @param currentUserName 현재 사용자 이름 (본인 포스트 표시용)
- * @param onReactionClick  반응 클릭 핸들러
+ * @param onReactionChipClick  반응 클릭 핸들러
  * @param onAddReactionClick 이모지 추가 버튼 클릭 핸들러
  * @param modifier 컴포저블 수정자
  */
@@ -42,7 +42,8 @@ fun FeedPostCard(
     currentUserName: String,
     modifier: Modifier = Modifier,
     onMenuClick: () -> Unit = {},
-    onReactionClick: (String) -> Unit = {},
+    onReactionChipClick: (String) -> Unit = {},
+    onReactionChipLongClick: (String) -> Unit = {},
     onAddReactionClick: () -> Unit = {},
 ) {
     Column(
@@ -68,7 +69,8 @@ fun FeedPostCard(
 
         PostReactionRow(
             reactions = postDetail.reactions,
-            onReactionClick = onReactionClick,
+            onReactionChipClick = onReactionChipClick,
+            onReactionChipLongClick = onReactionChipLongClick,
             onAddReactionClick = onAddReactionClick,
         )
     }
