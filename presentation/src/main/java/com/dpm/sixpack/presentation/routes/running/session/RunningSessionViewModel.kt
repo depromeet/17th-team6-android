@@ -18,7 +18,6 @@ import com.dpm.sixpack.presentation.routes.running.session.contract.RunningSessi
 import com.dpm.sixpack.presentation.routes.running.session.contract.RunningSessionSideEffect
 import com.dpm.sixpack.presentation.routes.running.session.contract.RunningSessionUiState
 import com.dpm.sixpack.presentation.routes.running.session.contract.RunningSessionUiState.Companion.INITIAL_COUNTDOWN
-import com.dpm.sixpack.presentation.routes.running.session.contract.state.INITIAL_RECORD_STATE
 import com.dpm.sixpack.presentation.routes.running.session.contract.state.PathState
 import com.dpm.sixpack.presentation.routes.running.session.contract.state.RecordState
 import com.dpm.sixpack.runningservice.RunningActions
@@ -158,9 +157,7 @@ class RunningSessionViewModel @Inject constructor(
                 handleReadyState(RunningSessionUiState.Ready())
 
                 reduce {
-                    RunningSessionUiState.Running(
-                        recordState = INITIAL_RECORD_STATE,
-                    )
+                    RunningSessionUiState.Running()
                 }
 
                 startObservingRealtimeData()

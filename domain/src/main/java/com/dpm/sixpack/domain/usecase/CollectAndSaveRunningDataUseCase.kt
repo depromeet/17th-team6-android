@@ -6,7 +6,10 @@ import com.dpm.sixpack.domain.repository.GpsRepository
 import com.dpm.sixpack.domain.repository.RunningSessionRepository
 import com.dpm.sixpack.domain.repository.SensorRepository
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,12 +24,17 @@ class CollectAndSaveRunningDataUseCase @Inject constructor(
     private val sensorRepository: SensorRepository,
     private val runningSessionRepository: RunningSessionRepository,
 ) {
+    private val useCaseScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
     // --- 내부 상태 관리 변수 ---
+    private var isPaused = true
+
     private var durationInSeconds: Int = 0
     private var lastLocation: Location? = null
     private var totalDistance: Double = 0.0
     private var stepsBeforePause: Long = 0L
     private var currentSteps: Long = 0L
+
     private var paceAverage: Int = 0
     private var cadence: Int = 0
 
@@ -41,30 +49,31 @@ class CollectAndSaveRunningDataUseCase @Inject constructor(
 
     /**
      * 러닝 데이터 수집 및 저장을 시작합니다.
-     * @param scope UseCase의 생명주기를 관리할 CoroutineScope (e.g., viewModelScope)
      */
-    fun start(scope: CoroutineScope) {
+    fun start() {
         if (timerJob?.isActive == true) return // 이미 실행 중이면 무시
 
         initStates()
-        startJobs(scope)
+        isPaused = false
+        startJobs()
     }
 
     /**
      * 일시정지. 데이터 수집을 중단합니다.
      */
     fun pause() {
+        isPaused = true
         stepsBeforePause = currentSteps
         cancelJobs()
     }
 
     /**
      * 다시 시작. 데이터 수집을 재개합니다.
-     * @param scope UseCase의 생명주기를 관리할 CoroutineScope (e.g., viewModelScope)
      */
-    fun resume(scope: CoroutineScope) {
+    fun resume() {
         if (timerJob?.isActive == true) return // 이미 실행 중이면 무시
-        startJobs(scope)
+        isPaused = false
+        startJobs()
     }
 
     /**
@@ -72,14 +81,22 @@ class CollectAndSaveRunningDataUseCase @Inject constructor(
      */
     fun stop() {
         cancelJobs()
+        isPaused = true
         initStates()
         // TODO: 세션 종료 정보를 Repository를 통해 저장하는 로직 추가
     }
 
-    private fun startJobs(scope: CoroutineScope) {
-        startTimer(scope)
-        startLocationCollection(scope)
-        startStepCollection(scope)
+    /**
+     * (유지) UseCase가 종료될 때 외부에서 Scope를 정리(cancel)하기 위한 메서드
+     */
+    fun close() {
+        useCaseScope.cancel()
+    }
+
+    private fun startJobs() {
+//        startTimer(useCaseScope)
+        startLocationCollection(useCaseScope)
+        startStepCollection(useCaseScope)
     }
 
     private fun cancelJobs() {
@@ -95,10 +112,12 @@ class CollectAndSaveRunningDataUseCase @Inject constructor(
         durationInSeconds = 0
         lastLocation = null
         totalDistance = 0.0
-        paceAverage = 0
-        cadence = 0
         stepsBeforePause = 0L
         currentSteps = 0L
+
+        paceAverage = 0
+        cadence = 0
+
         _runningDataState.value = null
     }
 
@@ -110,7 +129,6 @@ class CollectAndSaveRunningDataUseCase @Inject constructor(
                     delay(1000L)
                     durationInSeconds += 1
 
-                    // 주기적으로 평균 페이스와 케이던스 계산
                     if (durationInSeconds % CALCULATE_PERIOD == 0 || durationInSeconds == 1) {
                         paceAverage = calculateAvgPace(totalDistance, durationInSeconds)
                         cadence = calculateAvgCadence(currentSteps, durationInSeconds)
@@ -150,10 +168,18 @@ class CollectAndSaveRunningDataUseCase @Inject constructor(
             scope.launch {
                 gpsRepository.locationFlow.collect { result ->
                     result.onSuccess { newLocation ->
-                        lastLocation?.let {
-                            totalDistance += it.distanceTo(newLocation)
+                        if (!isPaused) {
+                            val isFirstLocation = (lastLocation == null)
+
+                            lastLocation?.let {
+                                totalDistance += it.distanceTo(newLocation)
+                            }
+                            lastLocation = newLocation
+
+                            if (isFirstLocation) {
+                                startTimer(useCaseScope)
+                            }
                         }
-                        lastLocation = newLocation
                     }
                 }
             }
@@ -167,14 +193,15 @@ class CollectAndSaveRunningDataUseCase @Inject constructor(
             scope.launch {
                 sensorRepository.totalStep.collect { result ->
                     result.onSuccess { stepsSinceResume ->
-                        currentSteps = stepsBeforePause + stepsSinceResume.toLong()
+                        if (!isPaused) {
+                            currentSteps = stepsBeforePause + stepsSinceResume.toLong()
+                        }
                     }
                 }
             }
     }
 
     // --- 계산 헬퍼 함수 ---
-
     private fun calculateAvgPace(
         totalDistanceInMeters: Double,
         durationInSeconds: Int,
@@ -190,9 +217,11 @@ class CollectAndSaveRunningDataUseCase @Inject constructor(
         totalSteps: Long,
         durationInSeconds: Int,
     ): Int {
-        if (durationInSeconds <= 0L) return 0
+        if (durationInSeconds <= 0L) {
+            return 0
+        }
         val durationInMinutes = durationInSeconds / 60.0
-        if (durationInMinutes <= 0) return 0
+        if (durationInMinutes == 0.0) return 0
         return (totalSteps / durationInMinutes).toInt()
     }
 
