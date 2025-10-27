@@ -15,7 +15,7 @@ data class PostReactionUiState(
 data class ReactingUserUiState(
     val user: UserUiState,
     val reactedAt: String,
-    val emoji: Emoji = Emoji.UNKNOWN
+    val emoji: Emoji = Emoji.UNKNOWN,
 )
 
 enum class Emoji(
@@ -26,23 +26,22 @@ enum class Emoji(
     FIRE("fire"),
     SHOOT("shoot"),
     SAD("sad"),
-    UNKNOWN("unknown");
+    UNKNOWN("unknown"),
+    ;
 
     val iconRes: Int
         @DrawableRes
-        get() = when (this) {
-            LIKE -> R.drawable.ill_endurance
-            HEART -> R.drawable.ill_endurance
-            FIRE -> R.drawable.ill_endurance
-            SHOOT -> R.drawable.ill_endurance
-            SAD -> R.drawable.ill_endurance
-            UNKNOWN -> R.drawable.ic_add_reaction
-        }
+        get() =
+            when (this) {
+                LIKE -> R.drawable.ill_endurance
+                HEART -> R.drawable.ill_endurance
+                FIRE -> R.drawable.ill_endurance
+                SHOOT -> R.drawable.ill_endurance
+                SAD -> R.drawable.ill_endurance
+                UNKNOWN -> R.drawable.ic_add_reaction
+            }
 
     companion object {
-        fun from(type: String?): Emoji {
-            return entries.find { it.name.equals(type, ignoreCase = true) } ?: UNKNOWN
-        }
+        fun from(type: String?): Emoji = entries.find { it.name.equals(type, ignoreCase = true) } ?: UNKNOWN
     }
 }
-

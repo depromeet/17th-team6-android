@@ -25,40 +25,43 @@ import com.dpm.sixpack.presentation.theme.SixPackDimen
 fun OnboardingNavigationComponent(
     modifier: Modifier = Modifier,
     onClickSignUp: () -> Unit = {},
-    onClickSignIn: () -> Unit = {}
+    onClickSignIn: () -> Unit = {},
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = SixPackDimen.defaultSideMargin)
-            .padding(bottom = 12.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(horizontal = SixPackDimen.defaultSideMargin)
+                .padding(bottom = 12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         DoRunDefaultButton(
             text = stringResource(R.string.onboarding_sign_up),
             onClick = onClickSignUp,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         Text(
-            text = buildAnnotatedString {
-                val already = stringResource(R.string.onboarding_already_have_account) + " "
-                val signin = stringResource(R.string.onboarding_signin)
+            text =
+                buildAnnotatedString {
+                    val already = stringResource(R.string.onboarding_already_have_account) + " "
+                    val signin = stringResource(R.string.onboarding_signin)
 
-                append(already)
+                    append(already)
 
-                pushLink(LinkAnnotation.Clickable(tag = "login") { onClickSignIn() })
-                withStyle(SpanStyle(textDecoration = TextDecoration.Underline)) {
-                    append(signin)
-                }
-                pop()
-            },
+                    pushLink(LinkAnnotation.Clickable(tag = "login") { onClickSignIn() })
+                    withStyle(SpanStyle(textDecoration = TextDecoration.Underline)) {
+                        append(signin)
+                    }
+                    pop()
+                },
             textAlign = TextAlign.Center,
-            modifier = Modifier
-                .padding(top = 12.dp)
-                .fillMaxWidth()
-                .padding(horizontal = SixPackDimen.defaultSideMargin)
-                .padding(vertical = 4.dp)
+            modifier =
+                Modifier
+                    .padding(top = 12.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = SixPackDimen.defaultSideMargin)
+                    .padding(vertical = 4.dp),
         )
     }
 }

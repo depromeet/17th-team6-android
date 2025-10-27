@@ -21,14 +21,14 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 fun OnboardingPagerIndicator(
     size: Int,
     currentPage: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val indicatorHeight = 8.dp
     val selectedWidth = 16.dp
     val unselectedWidth = 8.dp
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(space = 8.dp, alignment = Alignment.CenterHorizontally)
+        horizontalArrangement = Arrangement.spacedBy(space = 8.dp, alignment = Alignment.CenterHorizontally),
     ) {
         for (i in 0 until size) {
             val selected = i == currentPage
@@ -40,12 +40,12 @@ fun OnboardingPagerIndicator(
             val animatedColor by animateColorAsState(targetValue = targetColor)
 
             Box(
-                modifier = Modifier
-                    .width(animatedWidth)
-                    .height(indicatorHeight)
-                    .background(color = animatedColor, shape = RoundedCornerShape(percent = 50))
+                modifier =
+                    Modifier
+                        .width(animatedWidth)
+                        .height(indicatorHeight)
+                        .background(color = animatedColor, shape = RoundedCornerShape(percent = 50)),
             )
         }
     }
 }
-

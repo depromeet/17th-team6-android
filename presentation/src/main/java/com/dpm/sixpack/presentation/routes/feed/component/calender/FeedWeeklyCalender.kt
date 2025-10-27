@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
-import com.dpm.sixpack.presentation.routes.feed.contract.uistate.FeedCalendarUiState
+import com.dpm.sixpack.presentation.routes.feed.contract.uistate.FeedCalenderUiState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
@@ -49,20 +49,18 @@ private const val DAYS_IN_WEEK = 7
 
 private const val HEADER_DATE_PATTERN = "M'월' W'주차'"
 
-
 @Immutable
 private data class WeeklyCalendarDay(
     val date: LocalDate,
     val isToday: Boolean,
     val isDisabled: Boolean,
-    val postCount: Int
+    val postCount: Int,
 )
-
 
 @Composable
 fun FeedWeeklyCalendar(
     modifier: Modifier = Modifier,
-    feedCalenderUiState: FeedCalendarUiState = FeedCalendarUiState(),
+    feedCalenderUiState: FeedCalenderUiState = FeedCalenderUiState(),
     startDayOfWeek: DayOfWeek = DayOfWeek.SUNDAY,
     colors: WeeklyCalendarColors = FeedWeeklyCalendarDefaults.colors(),
     typography: WeeklyCalendarTypography = FeedWeeklyCalendarDefaults.typography(),
@@ -94,7 +92,7 @@ fun FeedWeeklyCalendar(
         modifier =
             modifier
                 .fillMaxWidth()
-                .background(colors.calendarBackgroundColor)
+                .background(colors.calendarBackgroundColor),
     ) {
         WeeklyCalendarHeader(
             currentDisplayWeekViewStartDate = currentDisplayWeekStartDate,
@@ -131,13 +129,13 @@ fun FeedWeeklyCalendar(
             val currentPageWeekDays by remember(
                 key1 = firstDayForThisPage,
                 key2 = today,
-                key3 = feedCalenderUiState.postCounts
+                key3 = feedCalenderUiState.postCounts,
             ) {
                 derivedStateOf {
                     generateWeekDaysList(
                         startDateOfWeek = firstDayForThisPage,
                         today = today,
-                        postCounts = feedCalenderUiState.postCounts
+                        postCounts = feedCalenderUiState.postCounts,
                     )
                 }
             }
@@ -187,11 +185,11 @@ private fun WeeklyCalendarHeader(
 
         Spacer(Modifier.weight(1f))
 
-
         Box(
-            modifier = Modifier
-                .noRippleClickable(onClick = onPreviousWeek)
-                .padding(3.dp),
+            modifier =
+                Modifier
+                    .noRippleClickable(onClick = onPreviousWeek)
+                    .padding(3.dp),
             contentAlignment = Alignment.Center,
         ) {
             Icon(
@@ -202,9 +200,10 @@ private fun WeeklyCalendarHeader(
         }
 
         Box(
-            modifier = Modifier
-                .noRippleClickable(onClick = onNextWeek)
-                .padding(3.dp),
+            modifier =
+                Modifier
+                    .noRippleClickable(onClick = onNextWeek)
+                    .padding(3.dp),
             contentAlignment = Alignment.Center,
         ) {
             Icon(
@@ -229,7 +228,7 @@ private fun WeekRow(
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(20.dp)
+        horizontalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         days.forEach { day ->
             val isSelected = day.date == selectedDate
@@ -276,21 +275,23 @@ private fun DayCell(
         verticalArrangement = Arrangement.Center,
     ) {
         Text(
-            text = dayData.date.dayOfWeek.getDisplayName(
-                SHORT,
-                Locale.getDefault()
-            ),
+            text =
+                dayData.date.dayOfWeek.getDisplayName(
+                    SHORT,
+                    Locale.getDefault(),
+                ),
             color = SixpackTheme.colors.gray500,
             style = typography.weeklyDateTextStyle,
         )
 
-        Spacer(modifier = Modifier.height(if(dayData.isToday) 4.dp else 8.dp))
+        Spacer(modifier = Modifier.height(if (dayData.isToday) 4.dp else 8.dp))
 
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(color = dateBackgroundColor, shape = RoundedCornerShape(12.dp)),
-            contentAlignment = Alignment.Center
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(color = dateBackgroundColor, shape = RoundedCornerShape(12.dp)),
+            contentAlignment = Alignment.Center,
         ) {
             Text(
                 text = if (dayData.isToday) "오늘" else dayData.date.dayOfMonth.toString(),
@@ -302,10 +303,15 @@ private fun DayCell(
         Spacer(modifier = Modifier.height(4.dp))
 
         // 3. 포스트 수 (텍스트만)
-        val postCountText = if (dayData.postCount > 0) stringResource(
-            R.string.feed_calender_post_count_label,
-            dayData.postCount
-        ) else dayData.postCount.toString()
+        val postCountText =
+            if (dayData.postCount > 0) {
+                stringResource(
+                    R.string.feed_calender_post_count_label,
+                    dayData.postCount,
+                )
+            } else {
+                dayData.postCount.toString()
+            }
         Text(
             text = postCountText,
             color = postCountTextColor,
@@ -322,7 +328,10 @@ private fun DayCell(
 private fun LocalDate.getDisplayMonth(selectedDate: LocalDate): LocalDate {
     val lastDayOfWeek = this.plusDays(DAYS_IN_WEEK - 1L)
     return if (this.month != lastDayOfWeek.month) {
-        if (selectedDate.isAfter(this) && selectedDate.isBefore(lastDayOfWeek) && selectedDate.month == lastDayOfWeek.month) {
+        if (selectedDate.isAfter(this) &&
+            selectedDate.isBefore(lastDayOfWeek) &&
+            selectedDate.month == lastDayOfWeek.month
+        ) {
             selectedDate
         } else {
             this
@@ -341,8 +350,8 @@ private fun generateWeekDaysList(
     startDateOfWeek: LocalDate,
     today: LocalDate,
     postCounts: Map<LocalDate, Int>,
-): List<WeeklyCalendarDay> {
-    return List(DAYS_IN_WEEK) { i ->
+): List<WeeklyCalendarDay> =
+    List(DAYS_IN_WEEK) { i ->
         val date = startDateOfWeek.plusDays(i.toLong())
         val postCount = postCounts[date] ?: 0
 
@@ -350,10 +359,9 @@ private fun generateWeekDaysList(
             date = date,
             isToday = date.isEqual(today),
             postCount = postCount,
-            isDisabled = date.isAfter(today) ,
+            isDisabled = date.isAfter(today),
         )
     }
-}
 
 private fun LocalDate.startOfWeek(startDayOfWeek: DayOfWeek): LocalDate {
     val weekFields = WeekFields.of(startDayOfWeek, 1)
@@ -372,24 +380,25 @@ fun WeeklyCalendarPreview() {
         ) {
             val today = LocalDate.now()
             val selectedDate = today.minusDays(1)
-            val postCounts = mapOf(
-                today.minusDays(2) to 3,
-                selectedDate to 1,
-                today to 5,
-                today.plusDays(1) to 0,
-                today.plusDays(2) to 1
-            )
+            val postCounts =
+                mapOf(
+                    today.minusDays(2) to 3,
+                    selectedDate to 1,
+                    today to 5,
+                    today.plusDays(1) to 0,
+                    today.plusDays(2) to 1,
+                )
 
             FeedWeeklyCalendar(
-                feedCalenderUiState = FeedCalendarUiState(
-                    today = today,
-                    selectedDate = selectedDate,
-                    postCounts = postCounts
-                ),
+                feedCalenderUiState =
+                    FeedCalenderUiState(
+                        today = today,
+                        selectedDate = selectedDate,
+                        postCounts = postCounts,
+                    ),
                 onDateSelected = {
                 },
             )
         }
     }
-
 }

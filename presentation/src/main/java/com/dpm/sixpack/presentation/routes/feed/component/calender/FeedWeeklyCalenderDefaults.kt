@@ -38,16 +38,13 @@ data class WeeklyCalendarColors(
     val weeklyDateTextColor: Color,
     val headerNavigationIconColor: Color,
     val headerDateColor: Color,
-
     // Date Background Colors
     val selectedDateBackgroundColor: Color,
     val defaultDateBackgroundColor: Color,
-
     // Date Text Colors
     val selectedDateTextColor: Color,
     val defaultDateTextColor: Color,
     val disabledDateTextColor: Color,
-
     // Feed Count Text Colors
     val defaultFeedCountTextColor: Color,
     val disabledFeedCountTextColor: Color,
@@ -58,12 +55,11 @@ data class WeeklyCalendarColors(
      * @param isSelected 해당 날짜 셀이 선택되었는지 여부.
      * @return 계산된 [Color] 값.
      */
-    fun dateBackgroundColor(isSelected: Boolean): Color {
-        return when {
+    fun dateBackgroundColor(isSelected: Boolean): Color =
+        when {
             isSelected -> selectedDateBackgroundColor
             else -> defaultDateBackgroundColor
         }
-    }
 
     /**
      * 날짜 셀의 선택 여부와 활성화 여부에 따라 적절한 텍스트 색상을 반환하는 함수.
@@ -72,13 +68,15 @@ data class WeeklyCalendarColors(
      * @param isDisabled 해당 날짜가 활성화되었는지 여부.
      * @return 계산된 [Color] 값.
      */
-    fun dateTextColor(isSelected: Boolean, isDisabled: Boolean): Color {
-        return when {
+    fun dateTextColor(
+        isSelected: Boolean,
+        isDisabled: Boolean,
+    ): Color =
+        when {
             isDisabled -> disabledDateTextColor
             isSelected -> selectedDateTextColor
             else -> defaultDateTextColor
         }
-    }
 
     /**
      * 날짜 셀의 선택 여부에 따라 적절한 날짜 텍스트 색상을 반환하는 함수
@@ -86,12 +84,11 @@ data class WeeklyCalendarColors(
      * @param isDisabled 해당 날짜 셀이 비활성화되었는지 여부.
      * @return 계산된 [Color] 값.
      */
-    fun feedCountTextColor(isDisabled: Boolean): Color {
-        return when {
+    fun feedCountTextColor(isDisabled: Boolean): Color =
+        when {
             isDisabled -> disabledFeedCountTextColor
             else -> defaultFeedCountTextColor
         }
-    }
 }
 
 /**
@@ -124,21 +121,18 @@ object FeedWeeklyCalendarDefaults {
         weeklyDateTextColor: Color = SixpackTheme.colors.gray500,
         headerNavigationIconColor: Color = SixpackTheme.colors.gray800,
         headerDateColor: Color = SixpackTheme.colors.gray900,
-
         // Date Background Colors
         selectedDateBackgroundColor: Color = SixpackTheme.colors.blue600,
         defaultDateBackgroundColor: Color = SixpackTheme.colors.gray0,
-
         // Date Text Colors
         selectedDateTextColor: Color = SixpackTheme.colors.gray0,
         defaultDateTextColor: Color = SixpackTheme.colors.gray900,
         disabledDateTextColor: Color = SixpackTheme.colors.gray400,
-
         // Feed Count Text Colors
         defaultFeedCountTextColor: Color = SixpackTheme.colors.blue600,
         disabledFeedCountTextColor: Color = SixpackTheme.colors.gray400,
-    ): WeeklyCalendarColors {
-        return remember(
+    ): WeeklyCalendarColors =
+        remember(
             calendarBackgroundColor,
             weeklyDateTextColor,
             headerNavigationIconColor,
@@ -165,7 +159,6 @@ object FeedWeeklyCalendarDefaults {
                 disabledFeedCountTextColor = disabledFeedCountTextColor,
             )
         }
-    }
 
     /**
      * [FeedWeeklyCalendar]의 기본 텍스트 스타일 구성을 생성하는 함수.
@@ -184,8 +177,8 @@ object FeedWeeklyCalendarDefaults {
         dayCellDateTextStyle: TextStyle = SixpackTheme.typography.b2Medium,
         dayCountTextStyle: TextStyle = SixpackTheme.typography.c1Medium,
         headerDateTextStyle: TextStyle = SixpackTheme.typography.t2Bold,
-    ): WeeklyCalendarTypography {
-        return remember(
+    ): WeeklyCalendarTypography =
+        remember(
             weeklyDateTextStyle,
             dayCellDateTextStyle,
             dayCountTextStyle,
@@ -198,5 +191,4 @@ object FeedWeeklyCalendarDefaults {
                 headerDateTextStyle = headerDateTextStyle,
             )
         }
-    }
 }

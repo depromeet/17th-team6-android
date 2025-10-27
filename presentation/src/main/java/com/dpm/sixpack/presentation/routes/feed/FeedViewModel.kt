@@ -15,8 +15,8 @@ class FeedViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<FeedUiState, FeedIntent, FeedSideEffect>() {
     override val initialState: FeedUiState = FeedUiState()
-    override val container: Container<FeedUiState, FeedSideEffect> = container(initialState = initialState, savedStateHandle = savedStateHandle)
-
+    override val container: Container<FeedUiState, FeedSideEffect> =
+        container(initialState = initialState, savedStateHandle = savedStateHandle)
 
     override fun onIntent(intent: FeedIntent) {
         when (intent) {
@@ -24,8 +24,9 @@ class FeedViewModel @Inject constructor(
         }
     }
 
-    private fun handleOnRefresh() = intent {
-        // TODO: Implement refresh logic
-        postSideEffect(FeedSideEffect.ShowToast("Refreshed!"))
-    }
+    private fun handleOnRefresh() =
+        intent {
+            // TODO: Implement refresh logic
+            postSideEffect(FeedSideEffect.ShowToast("Refreshed!"))
+        }
 }

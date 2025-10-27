@@ -25,7 +25,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 fun FeedTopBar(
     onGroupIconClick: () -> Unit,
     onAlarmIconClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     DoRunTopBarSlot(
         modifier = modifier.padding(start = 20.dp, end = 10.dp),
@@ -33,24 +33,24 @@ fun FeedTopBar(
             Text(
                 text = "인증 피드",
                 style = SixpackTheme.typography.t1Bold,
-                color = SixpackTheme.colors.gray900
+                color = SixpackTheme.colors.gray900,
             )
         },
         trailingContent = {
             Row(
                 modifier = Modifier.padding(10.dp),
-
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Box(
-                    modifier = Modifier
-                        .noRippleClickable(onClick = onGroupIconClick),
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .noRippleClickable(onClick = onGroupIconClick),
+                    contentAlignment = Alignment.Center,
                 ) {
                     Image(
                         imageVector = ImageVector.vectorResource(R.drawable.ic_group),
                         contentDescription = "검색",
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(24.dp),
                     )
                 }
 
@@ -58,17 +58,16 @@ fun FeedTopBar(
 
                 Box(
                     modifier = Modifier.noRippleClickable(onClick = onAlarmIconClick),
-                    contentAlignment = Alignment.Center
-
+                    contentAlignment = Alignment.Center,
                 ) {
                     Image(
                         imageVector = ImageVector.vectorResource(R.drawable.ic_alarm),
                         contentDescription = "알림",
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(24.dp),
                     )
                 }
             }
-        }
+        },
     )
 }
 
@@ -78,7 +77,7 @@ fun FeedTopBarPreview() {
     DoRunPreviewWrapper {
         FeedTopBar(
             onGroupIconClick = { },
-            onAlarmIconClick = { }
+            onAlarmIconClick = { },
         )
     }
 }

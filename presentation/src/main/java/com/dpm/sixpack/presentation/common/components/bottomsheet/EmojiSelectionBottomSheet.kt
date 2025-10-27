@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -38,28 +37,30 @@ fun EmojiSelectionBottomSheet(
         sheetState = sheetState,
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 24.dp),
-            horizontalArrangement = Arrangement.SpaceAround
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 24.dp),
+            horizontalArrangement = Arrangement.SpaceAround,
         ) {
             emojis.forEach { emoji ->
                 Image(
                     painter = painterResource(id = emoji.iconRes),
                     contentDescription = emoji.name,
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clickable {
-                            onEmojiSelected(emoji)
-                            onDismissRequest()
-                        }
+                    modifier =
+                        Modifier
+                            .size(48.dp)
+                            .clickable {
+                                onEmojiSelected(emoji)
+                                onDismissRequest()
+                            },
                 )
             }
         }
     }
 }
 
-@Preview(backgroundColor = 0xFFFFFF , showBackground = true)
+@Preview(backgroundColor = 0xFFFFFF, showBackground = true)
 @Composable
 private fun EmojiSelectionBottomSheetPreview() {
     DoRunPreviewWrapper {
@@ -67,17 +68,17 @@ private fun EmojiSelectionBottomSheetPreview() {
             EmojiSelectionBottomSheet(
                 isBottomSheetVisible = true,
                 onDismissRequest = {},
-                onEmojiSelected = {}
+                onEmojiSelected = {},
             )
             EmojiSelectionBottomSheet(
                 isBottomSheetVisible = true,
                 onDismissRequest = {},
-                onEmojiSelected = {}
+                onEmojiSelected = {},
             )
             EmojiSelectionBottomSheet(
                 isBottomSheetVisible = true,
                 onDismissRequest = {},
-                onEmojiSelected = {}
+                onEmojiSelected = {},
             )
         }
     }

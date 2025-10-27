@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -49,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.post.ReactionChip
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.model.Emoji
@@ -71,17 +73,19 @@ fun ReactionUsersBottomSheet(
     val emojiTabs = listOf(null) + reactionDetails.usersByEmoji.keys.toList()
 
     var selectedTabIndex by remember(reactionDetails) {
-        val initialIndex = if (reactionDetails.selectedType.equals("ALL", ignoreCase = true)) {
-            0
-        } else {
-            val emojiIndex = emojiTabs.indexOfFirst {
-                it?.type.equals(
-                    reactionDetails.selectedType,
-                    ignoreCase = true
-                )
+        val initialIndex =
+            if (reactionDetails.selectedType.equals("ALL", ignoreCase = true)) {
+                0
+            } else {
+                val emojiIndex =
+                    emojiTabs.indexOfFirst {
+                        it?.type.equals(
+                            reactionDetails.selectedType,
+                            ignoreCase = true,
+                        )
+                    }
+                if (emojiIndex != -1) emojiIndex else 0
             }
-            if (emojiIndex != -1) emojiIndex else 0
-        }
 
         mutableIntStateOf(initialIndex)
     }
@@ -97,12 +101,12 @@ fun ReactionUsersBottomSheet(
         sheetState = sheetState,
         title = {
             Row(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(
-                    text = "반응",
+                    text = stringResource(id = R.string.feed_reaction_bottom_sheet_title),
                     style = SixpackTheme.typography.t1Bold,
-                    color = SixpackTheme.colors.gray900
+                    color = SixpackTheme.colors.gray900,
                 )
 
                 Spacer(modifier = Modifier.width(4.dp))
@@ -112,7 +116,7 @@ fun ReactionUsersBottomSheet(
                     style = SixpackTheme.typography.t1Bold,
                     color = SixpackTheme.colors.gray500,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(top = 4.dp, bottom = 2.dp)
+                    modifier = Modifier.padding(top = 4.dp, bottom = 2.dp),
                 )
             }
 
@@ -128,7 +132,7 @@ fun ReactionUsersBottomSheet(
                     if (emoji == null) {
                         AllTab(
                             selected = selectedTabIndex == index,
-                            onClick = { selectedTabIndex = index }
+                            onClick = { selectedTabIndex = index },
                         )
                     } else {
                         ReactionChip(
@@ -144,10 +148,11 @@ fun ReactionUsersBottomSheet(
             Spacer(modifier = Modifier.height(16.dp))
         },
         content = {
-            val usersToShow = when (val selectedEmoji = emojiTabs[selectedTabIndex]) {
-                null -> reactionDetails.allUsersSortedByTime
-                else -> reactionDetails.usersByEmoji[selectedEmoji] ?: emptyList()
-            }
+            val usersToShow =
+                when (val selectedEmoji = emojiTabs[selectedTabIndex]) {
+                    null -> reactionDetails.allUsersSortedByTime
+                    else -> reactionDetails.usersByEmoji[selectedEmoji] ?: emptyList()
+                }
 
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
@@ -156,40 +161,41 @@ fun ReactionUsersBottomSheet(
                     ReactingUserRow(user = user, onUserProfileClick = onUserProfileClick)
                 }
             }
-        }
+        },
     )
 }
-
 
 @Composable
 private fun AllTab(
     selected: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.Center,
     ) {
         Row(
-            modifier = modifier
+            modifier =
+            modifier
                 .background(
                     color = if (selected) SixpackTheme.colors.blue600 else SixpackTheme.colors.gray50,
-                    shape = RoundedCornerShape(16.dp)
+                    shape = RoundedCornerShape(16.dp),
                 )
                 .padding(horizontal = 6.dp)
                 .clickable(onClick = onClick),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+            horizontalArrangement = Arrangement.Center,
         ) {
             Text(
-                text = "모두",
+                text = stringResource(id = R.string.feed_reaction_bottom_sheet_all_tab),
                 style = SixpackTheme.typography.b2Medium,
                 color = if (selected) SixpackTheme.colors.gray0 else SixpackTheme.colors.gray500,
                 textAlign = TextAlign.Center,
-                modifier = Modifier
+                modifier =
+                Modifier
                     .padding(vertical = 6.dp)
-                    .widthIn(min = 40.dp)
+                    .widthIn(min = 40.dp),
             )
         }
 
@@ -198,9 +204,8 @@ private fun AllTab(
         VerticalDivider(
             modifier = Modifier.height(8.dp),
             thickness = 1.dp,
-            color = SixpackTheme.colors.gray100
+            color = SixpackTheme.colors.gray100,
         )
-
     }
 }
 
@@ -208,14 +213,15 @@ private fun AllTab(
 private fun ReactingUserRow(
     user: ReactingUserUiState,
     onUserProfileClick: (Long) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
+        modifier =
+        modifier
             .fillMaxWidth()
             .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         ReactionUserInfo(
             userImageUrl = user.user.profileImageUrl,
@@ -229,9 +235,8 @@ private fun ReactingUserRow(
         Image(
             imageVector = ImageVector.vectorResource(id = user.emoji.iconRes),
             contentDescription = user.emoji.name,
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(24.dp),
         )
-
     }
 }
 
@@ -245,26 +250,30 @@ private fun ReactionUserInfo(
 ) {
     Row(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .size(52.dp)
                 .border(width = 1.dp, color = SixpackTheme.colors.gray200, shape = CircleShape)
-                .noRippleClickable(onClick = onUserProfileClick)
+                .noRippleClickable(onClick = onUserProfileClick),
         ) {
             AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
+                model =
+                ImageRequest
+                    .Builder(LocalContext.current)
                     .data(userImageUrl)
                     .crossfade(true)
                     .build(),
-                contentDescription = "User profile image",
-                modifier = Modifier
+                contentDescription = stringResource(id = R.string.feed_reaction_bottom_sheet_user_profile_image_description),
+                modifier =
+                Modifier
                     .size(52.dp)
                     .clip(CircleShape),
                 placeholder = ColorPainter(SixpackTheme.colors.gray500),
                 error = ColorPainter(SixpackTheme.colors.gray100),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
             )
         }
 
@@ -274,7 +283,7 @@ private fun ReactionUserInfo(
             text = userName,
             style = SixpackTheme.typography.t2Bold,
             color = SixpackTheme.colors.gray900,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
         )
 
         Spacer(modifier = Modifier.width(4.dp))
@@ -286,7 +295,7 @@ private fun ReactionUserInfo(
             ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                    text = "나",
+                    text = stringResource(id = R.string.feed_reaction_bottom_sheet_my_reaction_badge),
                     color = SixpackTheme.colors.gray0,
                     style = SixpackTheme.typography.c1Medium,
                 )
@@ -305,51 +314,69 @@ fun ReactionUsersBottomSheetPreview() {
         val dummyNames = listOf("김육팩", "박복근", "이몸짱", "최헬스", "정운동", "강근육")
         val dummyTimeSuffixes = listOf("방금", "분 전", "시간 전", "일 전")
 
-        val dummyUsers = (1..21).map { index ->
-            val emoji = emojis[index % emojis.size]
-            val name = dummyNames[index % dummyNames.size]
-            val timeSuffix = dummyTimeSuffixes[index % dummyTimeSuffixes.size]
-            val timeValue = when (timeSuffix) {
-                "방금" -> ""
-                else -> (index * 2 + 1).toString()
-            }
-            val reactedAt = if (timeValue.isEmpty()) timeSuffix else "$timeValue$timeSuffix"
-
-            ReactingUserUiState(
-                user = UserUiState(
-                    id = index.toLong(),
-                    name = name,
-                    profileImageUrl = "",
-                    isMe = index == 1 // 첫 번째 사용자만 '나'로 설정
-                ),
-                emoji = emoji,
-                reactedAt = reactedAt
-            )
-        }
-
-        val dummyReactionDetails = ReactionDetailsUiState(
-            selectedType = "HEART",
-            usersByEmoji = dummyUsers.groupBy { it.emoji },
-            allUsersSortedByTime = dummyUsers.sortedWith(
-                compareBy {
-                    when {
-                        it.reactedAt == "방금" -> 0
-                        it.reactedAt.endsWith("분 전") ->
-                            it.reactedAt.removeSuffix("분 전").trim().toIntOrNull() ?: Int.MAX_VALUE
-
-                        it.reactedAt.endsWith("시간 전") ->
-                            (it.reactedAt.removeSuffix("시간 전").trim().toIntOrNull()
-                                ?: Int.MAX_VALUE) * 60
-
-                        it.reactedAt.endsWith("일 전") ->
-                            (it.reactedAt.removeSuffix("일 전").trim().toIntOrNull()
-                                ?: Int.MAX_VALUE) * 60 * 24
-
-                        else -> Int.MAX_VALUE
+        val dummyUsers =
+            (1..21).map { index ->
+                val emoji = emojis[index % emojis.size]
+                val name = dummyNames[index % dummyNames.size]
+                val timeSuffix = dummyTimeSuffixes[index % dummyTimeSuffixes.size]
+                val timeValue =
+                    when (timeSuffix) {
+                        "방금" -> ""
+                        else -> (index * 2 + 1).toString()
                     }
-                }
+                val reactedAt = if (timeValue.isEmpty()) timeSuffix else "$timeValue$timeSuffix"
+
+                ReactingUserUiState(
+                    user =
+                    UserUiState(
+                        id = index.toLong(),
+                        name = name,
+                        profileImageUrl = "",
+                        isMe = index == 1, // 첫 번째 사용자만 '나'로 설정
+                    ),
+                    emoji = emoji,
+                    reactedAt = reactedAt,
+                )
+            }
+
+        val dummyReactionDetails =
+            ReactionDetailsUiState(
+                selectedType = "HEART",
+                usersByEmoji = dummyUsers.groupBy { it.emoji },
+                allUsersSortedByTime =
+                dummyUsers.sortedWith(
+                    compareBy {
+                        when {
+                            it.reactedAt == "방금" -> 0
+                            it.reactedAt.endsWith("분 전") ->
+                                it.reactedAt
+                                    .removeSuffix("분 전")
+                                    .trim()
+                                    .toIntOrNull() ?: Int.MAX_VALUE
+
+                            it.reactedAt.endsWith("시간 전") ->
+                                (
+                                        it.reactedAt
+                                            .removeSuffix("시간 전")
+                                            .trim()
+                                            .toIntOrNull()
+                                            ?: Int.MAX_VALUE
+                                        ) * 60
+
+                            it.reactedAt.endsWith("일 전") ->
+                                (
+                                        it.reactedAt
+                                            .removeSuffix("일 전")
+                                            .trim()
+                                            .toIntOrNull()
+                                            ?: Int.MAX_VALUE
+                                        ) * 60 * 24
+
+                            else -> Int.MAX_VALUE
+                        }
+                    },
+                ),
             )
-        )
 
         ReactionUsersBottomSheet(
             isBottomSheetVisible = true,
@@ -366,17 +393,20 @@ fun ReactingUserRowPreview() {
     DoRunPreviewWrapper {
         Column {
             ReactingUserRow(
-                user = ReactingUserUiState(
-                    user = UserUiState(
+                user =
+                ReactingUserUiState(
+                    user =
+                    UserUiState(
                         id = 1,
                         name = "김육팩",
                         profileImageUrl = "",
-                        isMe = true
-                    ), emoji = Emoji.HEART, reactedAt = "1분 전"
+                        isMe = true,
+                    ),
+                    emoji = Emoji.HEART,
+                    reactedAt = "1분 전",
                 ),
-                onUserProfileClick = {}
+                onUserProfileClick = {},
             )
         }
     }
 }
-

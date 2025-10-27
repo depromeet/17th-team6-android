@@ -23,6 +23,6 @@ fun FeedRoute(
 
     FeedScreen(
         state = screenState,
-        onIntent = viewModel::onIntent
+        onIntent = viewModel::onIntent,
     )
 }

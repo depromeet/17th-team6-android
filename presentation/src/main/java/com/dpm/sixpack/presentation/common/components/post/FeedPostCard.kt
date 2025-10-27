@@ -47,9 +47,10 @@ fun FeedPostCard(
     onAddReactionClick: () -> Unit = {},
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(SixpackTheme.colors.gray0)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(SixpackTheme.colors.gray0),
     ) {
         // TODO SB postTime util로 변환한 변수 넣기
         PostUserInfoRow(
@@ -103,12 +104,12 @@ private fun PostUserInfoRow(
 
         IconButton(
             onClick = onMenuClick,
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(24.dp),
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_meatball_menu),
                 contentDescription = "Post options menu",
-                tint = SixpackTheme.colors.gray600
+                tint = SixpackTheme.colors.gray600,
             )
         }
     }
@@ -119,29 +120,33 @@ private fun PostUserInfoRow(
 fun FeedPostCardPreview() {
     DoRunPreviewWrapper {
         FeedPostCard(
-            postDetail = PostDetailUiState(
-                feedId = 1,
-                postImageUrl = "",
-                user = PostingUserUiState(
-                    userName = "비락식혜",
-                    userImageUrl = "",
-                    postingTime = "36분 전",
-                    isMe = true
+            postDetail =
+                PostDetailUiState(
+                    feedId = 1,
+                    postImageUrl = "",
+                    user =
+                        PostingUserUiState(
+                            userName = "비락식혜",
+                            userImageUrl = "",
+                            postingTime = "36분 전",
+                            isMe = true,
+                        ),
+                    runningInfo =
+                        RunningSummaryUiState(
+                            totalDistance = "10.09",
+                            totalTime = "4440", // 1시간 14분
+                            averagePace = "7'30''",
+                            cadence = "144",
+                            recordDateTime = "2023-08-01T00:00:00",
+                        ),
+                    reactions =
+                        listOf(
+                            PostReactionUiState(Emoji.HEART, "10", true),
+                            PostReactionUiState(Emoji.FIRE, "5", false),
+                            PostReactionUiState(Emoji.SHOOT, "2", false),
+                        ),
                 ),
-                runningInfo = RunningSummaryUiState(
-                    totalDistance = "10.09",
-                    totalTime = "4440", // 1시간 14분
-                    averagePace = "7'30''",
-                    cadence = "144",
-                    recordDateTime = "2023-08-01T00:00:00"
-                ),
-                reactions = listOf(
-                    PostReactionUiState(Emoji.HEART, "10", true),
-                    PostReactionUiState(Emoji.FIRE, "5", false),
-                    PostReactionUiState(Emoji.SHOOT, "2", false)
-                )
-            ),
-            currentUserName = "비락식혜"
+            currentUserName = "비락식혜",
         )
     }
 }

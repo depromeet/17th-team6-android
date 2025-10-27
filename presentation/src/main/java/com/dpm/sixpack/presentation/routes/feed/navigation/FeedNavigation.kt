@@ -10,9 +10,7 @@ fun NavController.navigateToFeed() {
     this.navigate(MainRoute.Feed)
 }
 
-fun NavGraphBuilder.addFeedScreen(
-    onNavigateToBack: () -> Unit,
-) {
+fun NavGraphBuilder.addFeedScreen(onNavigateToBack: () -> Unit) {
     composable<MainRoute.Feed> {
         FeedRoute(onNavigateToBack = onNavigateToBack)
     }

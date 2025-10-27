@@ -19,9 +19,9 @@ fun FeedScreen(
 @Composable
 private fun FeedScreenPreview() {
     // DoRunPreviewWrapper {
-        FeedScreen(
-            state = FeedUiState(),
-            onIntent = {},
-        )
+    FeedScreen(
+        state = FeedUiState(),
+        onIntent = {},
+    )
     // }
 }

@@ -17,8 +17,8 @@ fun PostDeleteDialog(
         onCancelClick = onCancelClick,
         confirmButtonText = "삭제하기",
         onConfirmClick = onConfirmClick,
-        confirmButtonTextColor =  SixpackTheme.colors.red   ,
-        confirmButtonContainerColor = SixpackTheme.colors.redLight
+        confirmButtonTextColor = SixpackTheme.colors.red,
+        confirmButtonContainerColor = SixpackTheme.colors.redLight,
     )
 }
 

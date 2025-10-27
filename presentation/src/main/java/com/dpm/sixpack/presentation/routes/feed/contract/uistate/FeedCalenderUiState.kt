@@ -4,8 +4,8 @@ import androidx.compose.runtime.Immutable
 import java.time.LocalDate
 
 @Immutable
-data class FeedCalendarUiState(
+data class FeedCalenderUiState(
     val today: LocalDate = LocalDate.now(),
     val selectedDate: LocalDate = LocalDate.now(),
-    val postCounts: Map<LocalDate, Int> = emptyMap()
+    val postCounts: Map<LocalDate, Int> = emptyMap(),
 )

@@ -24,39 +24,43 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 @Composable
 fun OnboardingPagerItem(
     modifier: Modifier = Modifier,
-    page: OnboardingPage
+    page: OnboardingPage,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         Image(
             painter = painterResource(id = page.imageRes),
             contentDescription = null,
-            modifier = Modifier
-                .size(268.dp)
-                .padding(bottom = 24.dp)
+            modifier =
+                Modifier
+                    .size(268.dp)
+                    .padding(bottom = 24.dp),
         )
         Text(
             text = stringResource(id = page.titleRes),
             style = SixpackTheme.typography.h2Bold,
             textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = SixPackDimen.defaultSideMargin)
-                .padding(bottom = 12.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = SixPackDimen.defaultSideMargin)
+                    .padding(bottom = 12.dp),
         )
         Text(
             text = stringResource(id = page.descriptionRes),
             style = SixpackTheme.typography.b1Regular,
             color = Color.Gray,
             textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = SixPackDimen.defaultSideMargin)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = SixPackDimen.defaultSideMargin),
         )
     }
 }
@@ -66,7 +70,7 @@ fun OnboardingPagerItem(
 private fun OnboardingPagerItemPreview() {
     DoRunPreviewWrapper {
         OnboardingPagerItem(
-            page = OnboardingPage.Page1
+            page = OnboardingPage.Page1,
         )
     }
 }

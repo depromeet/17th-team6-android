@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
-
 @Composable
 fun PostReportDialog(
     onDismissRequest: () -> Unit,
@@ -18,8 +17,8 @@ fun PostReportDialog(
         onCancelClick = onCancelClick,
         confirmButtonText = "신고하기",
         onConfirmClick = onConfirmClick,
-        confirmButtonTextColor =  SixpackTheme.colors.red   ,
-        confirmButtonContainerColor = SixpackTheme.colors.redLight
+        confirmButtonTextColor = SixpackTheme.colors.red,
+        confirmButtonContainerColor = SixpackTheme.colors.redLight,
     )
 }
 

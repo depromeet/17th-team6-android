@@ -4,10 +4,10 @@ import android.R.attr.onClick
 import android.R.attr.type
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -49,10 +49,10 @@ fun PostReactionRow(
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             reactions.take(3).forEach { reaction ->
                 ReactionChip(
@@ -81,10 +81,11 @@ fun PostReactionRow(
 @Composable
 private fun AddReactionButton(onAddReactionClick: () -> Unit) {
     Box(
-        modifier = Modifier
-            .noRippleClickable(onClick = onAddReactionClick)
-            .background(color = SixpackTheme.colors.gray50, shape = RoundedCornerShape(30.dp))
-            .padding(vertical = 6.dp, horizontal = 10.dp)
+        modifier =
+            Modifier
+                .noRippleClickable(onClick = onAddReactionClick)
+                .background(color = SixpackTheme.colors.gray50, shape = RoundedCornerShape(30.dp))
+                .padding(vertical = 6.dp, horizontal = 10.dp),
     ) {
         Image(
             imageVector = ImageVector.vectorResource(id = R.drawable.ic_add_reaction),
@@ -98,8 +99,8 @@ private fun AddReactionButton(onAddReactionClick: () -> Unit) {
  */
 @Composable
 fun ReactionChip(
-    count : String,
-    @DrawableRes iconRes : Int,
+    count: String,
+    @DrawableRes iconRes: Int,
     isReacted: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -108,26 +109,27 @@ fun ReactionChip(
     val backgroundColor = if (isReacted) SixpackTheme.colors.blue100 else SixpackTheme.colors.gray50
     val borderColor = if (isReacted) SixpackTheme.colors.blue600 else SixpackTheme.colors.gray0
     Row(
-        modifier = modifier
-            .combinedClickable(
-                onClick = { onClick() },
-                onLongClick = { onLongClick() }
-            )
-            .background(
-                color = backgroundColor,
-                shape = RoundedCornerShape(16.dp)
-            )
-            .border(
-                1.dp, color = borderColor, shape = RoundedCornerShape(16.dp)
-            )
-            .padding(all = 6.dp),
+        modifier =
+            modifier
+                .combinedClickable(
+                    onClick = { onClick() },
+                    onLongClick = { onLongClick() },
+                ).background(
+                    color = backgroundColor,
+                    shape = RoundedCornerShape(16.dp),
+                ).border(
+                    1.dp,
+                    color = borderColor,
+                    shape = RoundedCornerShape(16.dp),
+                ).padding(all = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.Center,
     ) {
         Image(
-            modifier = Modifier
-                .size(20.dp)
-                .clip(CircleShape),
+            modifier =
+                Modifier
+                    .size(20.dp)
+                    .clip(CircleShape),
             imageVector = ImageVector.vectorResource(iconRes),
             contentDescription = "이모지",
         )
@@ -135,12 +137,12 @@ fun ReactionChip(
 
         Box(
             modifier = Modifier.width(18.dp),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Text(
                 text = count.toString(),
                 style = SixpackTheme.typography.b2Medium,
-                color = SixpackTheme.colors.gray700
+                color = SixpackTheme.colors.gray700,
             )
         }
     }
@@ -153,27 +155,28 @@ fun ReactionChip(
 private fun MoreReactionChip(
     count: Int,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .background(
-                color = SixpackTheme.colors.gray50,
-                shape = RoundedCornerShape(16.dp)
-            )
-            .padding(all = 6.dp)
-            .clickable(onClick = onClick),
+        modifier =
+            modifier
+                .background(
+                    color = SixpackTheme.colors.gray50,
+                    shape = RoundedCornerShape(16.dp),
+                ).padding(all = 6.dp)
+                .clickable(onClick = onClick),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.Center,
     ) {
         Text(
             text = "+$count",
             style = SixpackTheme.typography.b2Medium,
             color = SixpackTheme.colors.gray700,
             textAlign = TextAlign.Center,
-            modifier = Modifier
-                .padding(vertical = 2.dp)
-                .widthIn(min = 40.dp)
+            modifier =
+                Modifier
+                    .padding(vertical = 2.dp)
+                    .widthIn(min = 40.dp),
         )
     }
 }
@@ -186,7 +189,7 @@ fun PostReactionRowPreview1() {
             reactions = listOf(PostReactionUiState(Emoji.HEART, "10", true)),
             onReactionChipClick = {},
             onAddReactionClick = {},
-            onReactionChipLongClick = {}
+            onReactionChipLongClick = {},
         )
     }
 }
@@ -196,14 +199,15 @@ fun PostReactionRowPreview1() {
 private fun PostReactionRowPreview3() {
     DoRunPreviewWrapper {
         PostReactionRow(
-            reactions = listOf(
-                PostReactionUiState(Emoji.HEART, "10", true),
-                PostReactionUiState(Emoji.FIRE, "5", false),
-                PostReactionUiState(Emoji.SHOOT, "2", false)
-            ),
+            reactions =
+                listOf(
+                    PostReactionUiState(Emoji.HEART, "10", true),
+                    PostReactionUiState(Emoji.FIRE, "5", false),
+                    PostReactionUiState(Emoji.SHOOT, "2", false),
+                ),
             onReactionChipClick = {},
             onAddReactionClick = {},
-            onReactionChipLongClick = {}
+            onReactionChipLongClick = {},
         )
     }
 }
@@ -213,16 +217,17 @@ private fun PostReactionRowPreview3() {
 private fun PostReactionRowPreview5() {
     DoRunPreviewWrapper {
         PostReactionRow(
-            reactions = listOf(
-                PostReactionUiState(Emoji.HEART, "10", true),
-                PostReactionUiState(Emoji.FIRE, "5", false),
-                PostReactionUiState(Emoji.SHOOT, "2", false),
-                PostReactionUiState(Emoji.FIRE, "5", false),
-                PostReactionUiState(Emoji.SHOOT, "2", false)
-            ),
+            reactions =
+                listOf(
+                    PostReactionUiState(Emoji.HEART, "10", true),
+                    PostReactionUiState(Emoji.FIRE, "5", false),
+                    PostReactionUiState(Emoji.SHOOT, "2", false),
+                    PostReactionUiState(Emoji.FIRE, "5", false),
+                    PostReactionUiState(Emoji.SHOOT, "2", false),
+                ),
             onReactionChipClick = {},
             onAddReactionClick = {},
-            onReactionChipLongClick = {}
+            onReactionChipLongClick = {},
         )
     }
 }
@@ -235,7 +240,7 @@ private fun PostReactionRowPreviewEmpty() {
             reactions = emptyList(),
             onReactionChipClick = {},
             onAddReactionClick = {},
-            onReactionChipLongClick = {}
+            onReactionChipLongClick = {},
         )
     }
 }

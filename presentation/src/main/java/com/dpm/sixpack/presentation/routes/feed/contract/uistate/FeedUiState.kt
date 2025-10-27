@@ -7,5 +7,6 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class FeedUiState(
     val isLoading: Boolean = true,
-    val error: String? = null
-) : UiState, Parcelable
+    val error: String? = null,
+) : UiState,
+    Parcelable

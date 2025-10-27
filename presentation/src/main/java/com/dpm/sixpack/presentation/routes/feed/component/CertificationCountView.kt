@@ -5,8 +5,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -35,26 +33,27 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 fun CertificationCountView(
     users: List<PostingUserUiState>,
     isMeCertified: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     if (users.isEmpty()) return
 
-    val text = if (isMeCertified) {
-        "'나'를 제외한 ${users.size}명이 인증했어요!"
-    } else {
-        "${users.size}명이 인증했어요!"
-    }
+    val text =
+        if (isMeCertified) {
+            "'나'를 제외한 ${users.size}명이 인증했어요!"
+        } else {
+            "${users.size}명이 인증했어요!"
+        }
 
     Row(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         OverlappingProfiles(users = users)
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = text,
             style = SixpackTheme.typography.b2Medium,
-            color = SixpackTheme.colors.gray800
+            color = SixpackTheme.colors.gray800,
         )
     }
 }
@@ -62,7 +61,7 @@ fun CertificationCountView(
 @Composable
 private fun OverlappingProfiles(
     users: List<PostingUserUiState>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
         val profileCircleSize = 25.dp
@@ -71,22 +70,22 @@ private fun OverlappingProfiles(
 
         ProfileImageCircle(
             imageUrl = users[2].userImageUrl,
-            modifier = Modifier.padding(start = 28.dp + offset * 2)
+            modifier = Modifier.padding(start = 28.dp + offset * 2),
         )
 
         ProfileImageCircle(
             imageUrl = users[1].userImageUrl,
-            modifier = Modifier.padding(start = 28.dp + offset)
+            modifier = Modifier.padding(start = 28.dp + offset),
         )
 
         ProfileImageCircle(
             imageUrl = users[0].userImageUrl,
-            modifier = Modifier.padding(start = 28.dp)
+            modifier = Modifier.padding(start = 28.dp),
         )
 
         CountCircle(
             count = users.size,
-            modifier = Modifier.padding(start = 0.dp)
+            modifier = Modifier.padding(start = 0.dp),
         )
     }
 }
@@ -94,23 +93,24 @@ private fun OverlappingProfiles(
 @Composable
 private fun CountCircle(
     count: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier
-            .background(SixpackTheme.colors.blue100, RoundedCornerShape(12.dp))
-            .border(width = 1.dp, color = SixpackTheme.colors.gray0, shape = RoundedCornerShape(12.dp)),
-        contentAlignment = Alignment.Center
+        modifier =
+            modifier
+                .background(SixpackTheme.colors.blue100, RoundedCornerShape(12.dp))
+                .border(width = 1.dp, color = SixpackTheme.colors.gray0, shape = RoundedCornerShape(12.dp)),
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             text = "+$count",
             color = SixpackTheme.colors.blue600,
             style = SixpackTheme.typography.b2Medium,
             textAlign = TextAlign.Center,
-            modifier = Modifier
-                .padding(horizontal = 8.dp, vertical = 4.5.dp)
-                .widthIn(min = 22.dp)
-
+            modifier =
+                Modifier
+                    .padding(horizontal = 8.dp, vertical = 4.5.dp)
+                    .widthIn(min = 22.dp),
         )
     }
 }
@@ -118,43 +118,47 @@ private fun CountCircle(
 @Composable
 private fun ProfileImageCircle(
     imageUrl: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier
-            .size(25.dp)
-            .clip(CircleShape)
-            .border(width = 1.dp, color = SixpackTheme.colors.gray0, shape = CircleShape)
+        modifier =
+            modifier
+                .size(25.dp)
+                .clip(CircleShape)
+                .border(width = 1.dp, color = SixpackTheme.colors.gray0, shape = CircleShape),
     ) {
         AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(imageUrl)
-                .crossfade(true)
-                .build(),
+            model =
+                ImageRequest
+                    .Builder(LocalContext.current)
+                    .data(imageUrl)
+                    .crossfade(true)
+                    .build(),
             contentDescription = "User profile image",
-            modifier = Modifier
-                .matchParentSize()
-                .clip(CircleShape),
+            modifier =
+                Modifier
+                    .matchParentSize()
+                    .clip(CircleShape),
             placeholder = ColorPainter(SixpackTheme.colors.gray200),
             error = ColorPainter(SixpackTheme.colors.gray200),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
         )
     }
 }
-
 
 @Preview(name = "With Me Certified", showBackground = true)
 @Composable
 private fun CertificationCountViewWithMePreview() {
     DoRunPreviewWrapper {
         CertificationCountView(
-            users = listOf(
-                PostingUserUiState(userName = "User1", userImageUrl = ""),
-                PostingUserUiState(userName = "User2", userImageUrl = ""),
-                PostingUserUiState(userName = "User3", userImageUrl = ""),
-            ),
+            users =
+                listOf(
+                    PostingUserUiState(userName = "User1", userImageUrl = ""),
+                    PostingUserUiState(userName = "User2", userImageUrl = ""),
+                    PostingUserUiState(userName = "User3", userImageUrl = ""),
+                ),
             isMeCertified = true,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         )
     }
 }
@@ -164,14 +168,15 @@ private fun CertificationCountViewWithMePreview() {
 private fun CertificationCountViewWithoutMePreview() {
     DoRunPreviewWrapper {
         CertificationCountView(
-            users = listOf(
-                PostingUserUiState(userName = "User1", userImageUrl = ""),
-                PostingUserUiState(userName = "User2", userImageUrl = ""),
-                PostingUserUiState(userName = "User3", userImageUrl = ""),
-                PostingUserUiState(userName = "User4", userImageUrl = ""),
-            ),
+            users =
+                listOf(
+                    PostingUserUiState(userName = "User1", userImageUrl = ""),
+                    PostingUserUiState(userName = "User2", userImageUrl = ""),
+                    PostingUserUiState(userName = "User3", userImageUrl = ""),
+                    PostingUserUiState(userName = "User4", userImageUrl = ""),
+                ),
             isMeCertified = false,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         )
     }
 }

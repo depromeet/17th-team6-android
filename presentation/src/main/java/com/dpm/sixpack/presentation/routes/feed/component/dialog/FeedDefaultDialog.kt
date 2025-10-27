@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -18,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.theme.SixpackTheme
@@ -32,7 +30,7 @@ fun FeedDefaultDialog(
     confirmButtonText: String,
     onConfirmClick: () -> Unit,
     confirmButtonTextColor: Color,
-    confirmButtonContainerColor: Color
+    confirmButtonContainerColor: Color,
 ) {
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -72,13 +70,15 @@ fun FeedDefaultDialog(
                     // 취소 버튼
                     Button(
                         onClick = onCancelClick,
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(56.dp),
+                        modifier =
+                            Modifier
+                                .weight(1f)
+                                .height(56.dp),
                         shape = SixpackTheme.shapes.round12,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = SixpackTheme.colors.gray100,
-                        ),
+                        colors =
+                            ButtonDefaults.buttonColors(
+                                containerColor = SixpackTheme.colors.gray100,
+                            ),
                     ) {
                         Text(
                             text = "취소",
@@ -89,14 +89,15 @@ fun FeedDefaultDialog(
 
                     // 확인 버튼
                     DoRunDefaultButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                            .height(56.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .weight(1f)
+                                .height(56.dp),
                         text = confirmButtonText,
                         onClick = onConfirmClick,
                         textColor = confirmButtonTextColor,
-                        containerColor = confirmButtonContainerColor
+                        containerColor = confirmButtonContainerColor,
                     )
                 }
             }

@@ -26,8 +26,6 @@ import coil3.request.crossfade
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
-
-
 /**
  * 사용자 프로필 이미지, 이름, 게시 시간을 표시하는 재사용 가능한 핵심 컴포넌트.
  * 메뉴 버튼이 필요 없는 다른 화면에서도 사용할 수 있습니다.
@@ -42,26 +40,30 @@ fun PostUserInfo(
 ) {
     Row(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         // 사용자 프로필 이미지
         Box(
-            modifier = Modifier
-                .size(32.dp)
-                .border(width = 1.dp, color = SixpackTheme.colors.gray100, shape = CircleShape)
+            modifier =
+                Modifier
+                    .size(32.dp)
+                    .border(width = 1.dp, color = SixpackTheme.colors.gray100, shape = CircleShape),
         ) {
             AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(userImageUrl)
-                    .crossfade(true)
-                    .build(),
+                model =
+                    ImageRequest
+                        .Builder(LocalContext.current)
+                        .data(userImageUrl)
+                        .crossfade(true)
+                        .build(),
                 contentDescription = "User profile image",
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(CircleShape),
+                modifier =
+                    Modifier
+                        .size(40.dp)
+                        .clip(CircleShape),
                 placeholder = ColorPainter(SixpackTheme.colors.gray0),
                 error = ColorPainter(SixpackTheme.colors.gray200),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
             )
         }
 
@@ -71,7 +73,7 @@ fun PostUserInfo(
             text = userName,
             style = SixpackTheme.typography.b1Medium,
             color = SixpackTheme.colors.gray900,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
         )
 
         Spacer(modifier = Modifier.width(4.dp))
@@ -98,7 +100,6 @@ fun PostUserInfo(
         )
     }
 }
-
 
 @Preview(name = "My Post")
 @Composable

@@ -66,60 +66,60 @@ fun DoRunBottomSheetSlot(
 @Composable
 private fun DoRunBottomSheetSlotPreview() {
     DoRunPreviewWrapper {
-         var isBottomSheetVisible by remember { mutableStateOf(true) }
-         var isBottomSheetVisible2 by remember { mutableStateOf(false) }
+        var isBottomSheetVisible by remember { mutableStateOf(true) }
+        var isBottomSheetVisible2 by remember { mutableStateOf(false) }
 
-         var text by remember { mutableStateOf("") }
+        var text by remember { mutableStateOf("") }
 
-         DoRunBottomSheetSlot(
-             isBottomSheetVisible = isBottomSheetVisible,
-             onDismissRequest = {
-                 isBottomSheetVisible = !isBottomSheetVisible
-                 isBottomSheetVisible2 = !isBottomSheetVisible2
-             },
-             title = {
-                 Text(
-                     text = "할 일 추가",
-                 )
-             },
-             content = {
-                 TextField(
-                     value = text,
-                     onValueChange = { newText -> text = newText },
-                     modifier = Modifier.fillMaxWidth(),
-                 )
-             },
-         )
-         DoRunBottomSheetSlot(
-             isBottomSheetVisible = isBottomSheetVisible2,
-             onDismissRequest = {
-                 isBottomSheetVisible = !isBottomSheetVisible
-                 isBottomSheetVisible2 = !isBottomSheetVisible2
-             },
-             title = {
-                 Text(
-                     text = "정말 삭제 하시겠어요?",
-                 )
-             },
-             content = {
-                 Text(
-                     text = "정말 삭제 하시겠어요?",
-                 )
-             },
-             interactRow = {
-                 Row(
-                     modifier = Modifier.fillMaxWidth(),
-                 ) {
-                     Button(
-                         modifier = Modifier.weight(1f),
-                         onClick = {},
-                     ) { }
-                     Button(
-                         modifier = Modifier.weight(1f),
-                         onClick = {},
-                     ) { }
-                 }
-             },
-         )
-     }
+        DoRunBottomSheetSlot(
+            isBottomSheetVisible = isBottomSheetVisible,
+            onDismissRequest = {
+                isBottomSheetVisible = !isBottomSheetVisible
+                isBottomSheetVisible2 = !isBottomSheetVisible2
+            },
+            title = {
+                Text(
+                    text = "할 일 추가",
+                )
+            },
+            content = {
+                TextField(
+                    value = text,
+                    onValueChange = { newText -> text = newText },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            },
+        )
+        DoRunBottomSheetSlot(
+            isBottomSheetVisible = isBottomSheetVisible2,
+            onDismissRequest = {
+                isBottomSheetVisible = !isBottomSheetVisible
+                isBottomSheetVisible2 = !isBottomSheetVisible2
+            },
+            title = {
+                Text(
+                    text = "정말 삭제 하시겠어요?",
+                )
+            },
+            content = {
+                Text(
+                    text = "정말 삭제 하시겠어요?",
+                )
+            },
+            interactRow = {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Button(
+                        modifier = Modifier.weight(1f),
+                        onClick = {},
+                    ) { }
+                    Button(
+                        modifier = Modifier.weight(1f),
+                        onClick = {},
+                    ) { }
+                }
+            },
+        )
+    }
 }

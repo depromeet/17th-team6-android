@@ -10,6 +10,6 @@ fun OnboardingRoute(
 ) {
     OnboardingScreen(
         onClickSignUp = onNavigateToSignUp,
-        onClickSignIn = onNavigateToSignIn
+        onClickSignIn = onNavigateToSignIn,
     )
 }

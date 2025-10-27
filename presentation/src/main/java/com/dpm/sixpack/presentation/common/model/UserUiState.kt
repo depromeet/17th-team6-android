@@ -7,5 +7,5 @@ data class UserUiState(
     val id: Long,
     val name: String,
     val profileImageUrl: String,
-    val isMe : Boolean = false
+    val isMe: Boolean = false,
 )

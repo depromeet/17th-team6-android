@@ -35,29 +35,34 @@ fun PostImageWithRecord(
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .aspectRatio(1f)
-            .clip(RoundedCornerShape(12.dp))
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .aspectRatio(1f)
+                .clip(RoundedCornerShape(12.dp)),
     ) {
         AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(postImageUrl)
-                .crossfade(true)
-                .build(),
+            model =
+                ImageRequest
+                    .Builder(LocalContext.current)
+                    .data(postImageUrl)
+                    .crossfade(true)
+                    .build(),
             contentDescription = "",
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier =
+                Modifier
+                    .fillMaxSize(),
             placeholder = ColorPainter(SixpackTheme.colors.gray0),
             error = ColorPainter(SixpackTheme.colors.gray200),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
         )
 
         PostTimeTextBox(
             postTime = runningSummary.recordDateTime,
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(top = 20.dp, start = 20.dp)
+            modifier =
+                Modifier
+                    .align(Alignment.TopStart)
+                    .padding(top = 20.dp, start = 20.dp),
         )
 
         RunningSummaryOverlay(
@@ -66,9 +71,10 @@ fun PostImageWithRecord(
             averagePace = runningSummary.averagePace,
             cadence = runningSummary.cadence,
             recordDateTime = runningSummary.recordDateTime,
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(start = 20.dp, bottom = 20.dp, end = 20.dp)
+            modifier =
+                Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(start = 20.dp, bottom = 20.dp, end = 20.dp),
         )
     }
 }
@@ -83,8 +89,9 @@ private fun RunningSummaryOverlay(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier =
+            modifier
+                .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Row(
@@ -94,36 +101,35 @@ private fun RunningSummaryOverlay(
                 title = "달린 거리",
                 record = "${totalDistance}km",
                 recordTextStyle = SixpackTheme.typography.h1Bold,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
             SummaryItem(
                 title = "달린 시간",
                 record = totalTime,
                 recordTextStyle = SixpackTheme.typography.h1Bold,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
         }
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
+            horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
             SummaryItem(
                 title = "평균 페이스",
                 record = averagePace,
                 recordTextStyle = SixpackTheme.typography.t1Bold,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
             SummaryItem(
                 title = "케이던스",
                 record = "${cadence}spm",
                 recordTextStyle = SixpackTheme.typography.t1Bold,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
         }
     }
 }
-
 
 @Composable
 private fun SummaryItem(
@@ -138,57 +144,60 @@ private fun SummaryItem(
         Text(
             text = title,
             style = SixpackTheme.typography.c1Regular,
-            color = SixpackTheme.colors.gray0
+            color = SixpackTheme.colors.gray0,
         )
         Text(
             text = record,
             style = recordTextStyle,
-            color = SixpackTheme.colors.gray0
+            color = SixpackTheme.colors.gray0,
         )
     }
 }
 
 @Composable
-fun PostTimeTextBox(postTime: String, modifier: Modifier = Modifier) {
+fun PostTimeTextBox(
+    postTime: String,
+    modifier: Modifier = Modifier,
+) {
     Box(
-        modifier = modifier
-            .background(
-                color = SixpackTheme.colors.gray900.copy(alpha = 0.4f),
-                shape = RoundedCornerShape(33.dp)
-            )
-            .padding(
-                vertical = 6.dp, horizontal = 12.dp
-            )
+        modifier =
+            modifier
+                .background(
+                    color = SixpackTheme.colors.gray900.copy(alpha = 0.4f),
+                    shape = RoundedCornerShape(33.dp),
+                ).padding(
+                    vertical = 6.dp,
+                    horizontal = 12.dp,
+                ),
     ) {
         Text(
             text = postTime,
             modifier = Modifier,
             color = SixpackTheme.colors.gray0,
-            style = SixpackTheme.typography.c1Regular
+            style = SixpackTheme.typography.c1Regular,
         )
     }
 }
-
 
 @Preview(showBackground = true, backgroundColor = 0xFF666666)
 @Composable
 fun PostImageWithRecordPreview() {
     DoRunPreviewWrapper {
-        val runningSummary = RunningSummaryUiState(
-            totalDistance = "5.2",
-            totalTime = "30분", // 30분
-            averagePace = "5'30''",
-            cadence = "160",
-            recordDateTime = "2023-10-01 14:30"
-        )
+        val runningSummary =
+            RunningSummaryUiState(
+                totalDistance = "5.2",
+                totalTime = "30분", // 30분
+                averagePace = "5'30''",
+                cadence = "160",
+                recordDateTime = "2023-10-01 14:30",
+            )
 
         Column {
             PostImageWithRecord(
                 postImageUrl = "",
                 runningSummary = runningSummary,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(16.dp),
             )
         }
     }
 }
-
