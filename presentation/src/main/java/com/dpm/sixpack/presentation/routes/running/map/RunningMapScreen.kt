@@ -62,7 +62,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 import timber.log.Timber
 import kotlin.math.roundToInt
 
-private val sheetPeekHeight = 72.dp
+private val sheetPeekHeight = 84.dp
 private val startButtonHeightDp = 72.dp
 
 @OptIn(ExperimentalNaverMapApi::class)

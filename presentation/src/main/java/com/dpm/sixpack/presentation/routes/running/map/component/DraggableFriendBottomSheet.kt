@@ -60,15 +60,15 @@ internal fun DraggableFriendBottomSheet(
                     Modifier
                         .fillMaxWidth()
                         .height(24.dp),
-                contentAlignment = Alignment.Center,
+                contentAlignment = Alignment.BottomCenter,
             ) {
                 Spacer(
                     modifier =
                         Modifier
-                            .width(36.dp)
+                            .width(40.dp)
                             .height(4.dp)
                             .background(
-                                color = SixpackTheme.colors.gray200,
+                                color = SixpackTheme.colors.gray100,
                                 shape = CircleShape,
                             ),
                 )
@@ -83,7 +83,7 @@ internal fun DraggableFriendBottomSheet(
                 onIconClick = onFriendIconClick,
             )
 
-            // 친구 목록 (스크롤 영역)
+            // 친구 목록
             FriendsLazyColumn(
                 modifier =
                     Modifier
