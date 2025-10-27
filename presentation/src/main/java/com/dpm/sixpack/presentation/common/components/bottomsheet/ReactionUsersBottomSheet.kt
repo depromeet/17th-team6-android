@@ -1,6 +1,5 @@
 package com.dpm.sixpack.presentation.common.components.bottomsheet
 
-import android.R.attr.onClick
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -53,9 +52,9 @@ import coil3.request.crossfade
 import com.dpm.sixpack.presentation.common.components.post.ReactionChip
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.model.Emoji
-import com.dpm.sixpack.presentation.common.model.PostReactionUiState
 import com.dpm.sixpack.presentation.common.model.ReactingUserUiState
 import com.dpm.sixpack.presentation.common.model.UserUiState
+import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.routes.feed.contract.uistate.ReactionDetailsUiState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
@@ -65,6 +64,7 @@ fun ReactionUsersBottomSheet(
     isBottomSheetVisible: Boolean,
     onDismissRequest: () -> Unit,
     reactionDetails: ReactionDetailsUiState,
+    onUserProfileClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
 ) {
@@ -153,7 +153,7 @@ fun ReactionUsersBottomSheet(
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 items(usersToShow) { user ->
-                    ReactingUserRow(user = user)
+                    ReactingUserRow(user = user, onUserProfileClick = onUserProfileClick)
                 }
             }
         }
@@ -207,6 +207,7 @@ private fun AllTab(
 @Composable
 private fun ReactingUserRow(
     user: ReactingUserUiState,
+    onUserProfileClick: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -219,7 +220,8 @@ private fun ReactingUserRow(
         ReactionUserInfo(
             userImageUrl = user.user.profileImageUrl,
             userName = user.user.name,
-            isMyReaction = user.user.isMe
+            isMyReaction = user.user.isMe,
+            onUserProfileClick = { onUserProfileClick(user.user.id) },
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -238,6 +240,7 @@ private fun ReactionUserInfo(
     userImageUrl: String,
     userName: String,
     isMyReaction: Boolean,
+    onUserProfileClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -248,6 +251,7 @@ private fun ReactionUserInfo(
             modifier = Modifier
                 .size(52.dp)
                 .border(width = 1.dp, color = SixpackTheme.colors.gray200, shape = CircleShape)
+                .noRippleClickable(onClick = onUserProfileClick)
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
@@ -350,7 +354,8 @@ fun ReactionUsersBottomSheetPreview() {
         ReactionUsersBottomSheet(
             isBottomSheetVisible = true,
             onDismissRequest = {},
-            reactionDetails = dummyReactionDetails
+            reactionDetails = dummyReactionDetails,
+            onUserProfileClick = {},
         )
     }
 }
@@ -368,7 +373,8 @@ fun ReactingUserRowPreview() {
                         profileImageUrl = "",
                         isMe = true
                     ), emoji = Emoji.HEART, reactedAt = "1분 전"
-                )
+                ),
+                onUserProfileClick = {}
             )
         }
     }
