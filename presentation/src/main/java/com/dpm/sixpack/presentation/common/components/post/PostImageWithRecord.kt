@@ -30,7 +30,6 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 fun PostImageWithRecord(
-     postTime: String,
     postImageUrl: String,
     runningSummary: RunningSummaryUiState,
     modifier: Modifier = Modifier,
@@ -55,7 +54,7 @@ fun PostImageWithRecord(
         )
 
         PostTimeTextBox(
-            postTime = postTime,
+            postTime = runningSummary.recordDateTime,
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(top = 20.dp, start = 20.dp)
@@ -91,7 +90,7 @@ private fun RunningSummaryOverlay(
             )
             SummaryItem(
                 title = "달린 시간",
-                record = "${runningSummary.totalRunTime}",
+                record = runningSummary.totalTime,
                 recordTextStyle = SixpackTheme.typography.h1Bold,
                 modifier = Modifier.weight(1f)
             )
@@ -168,16 +167,16 @@ fun PostTimeTextBox(postTime: String, modifier: Modifier = Modifier) {
 fun PostImageWithRecordPreview() {
     DoRunPreviewWrapper {
         val runningSummary = RunningSummaryUiState(
-            totalDistance = 5.2,
-            totalRunTime = 1800, // 30분
+            totalDistance = "5.2",
+            totalTime = "30분", // 30분
             averagePace = "5'30''",
-            cadence = 160
+            cadence = "160",
+            recordDateTime = "2023-10-01 14:30"
         )
 
         Column {
             PostImageWithRecord(
-                postTime = "2023-10-01 14:30",
-                postImageUrl = "", // Preview에서는 URL이 비어있어도 됩니다.
+                postImageUrl = "",
                 runningSummary = runningSummary,
                 modifier = Modifier.padding(16.dp)
             )

@@ -28,7 +28,7 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
-import com.dpm.sixpack.presentation.routes.feed.contract.uistate.PostingUserUiState
+import com.dpm.sixpack.presentation.common.model.PostingUserUiState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable

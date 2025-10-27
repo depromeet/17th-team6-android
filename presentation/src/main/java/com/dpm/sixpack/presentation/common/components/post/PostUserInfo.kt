@@ -36,7 +36,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 fun PostUserInfo(
     userImageUrl: String,
     userName: String,
-    postTime: String,
+    postingTime: String,
     isMyPost: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -92,7 +92,7 @@ fun PostUserInfo(
         }
 
         Text(
-            text = postTime,
+            text = postingTime,
             style = SixpackTheme.typography.b2Regular,
             color = SixpackTheme.colors.gray500,
         )
@@ -107,7 +107,7 @@ fun PostUserInfoRowMyPostPreview() {
         PostUserInfo(
             userImageUrl = "",
             userName = "비락식혜",
-            postTime = "36분 전",
+            postingTime = "36분 전",
             isMyPost = true,
         )
     }
@@ -120,7 +120,7 @@ fun PostUserInfoRowOthersPostPreview() {
         PostUserInfo(
             userImageUrl = "",
             userName = "다른 사용자",
-            postTime = "1시간 전",
+            postingTime = "1시간 전",
             isMyPost = false,
         )
     }

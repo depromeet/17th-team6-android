@@ -8,7 +8,14 @@ import com.dpm.sixpack.presentation.R
 data class PostReactionUiState(
     val emoji: Emoji,
     val count: Int,
-    val isReacted: Boolean
+    val isReacted: Boolean,
+    val users: List<ReactingUserUiState> = listOf()
+)
+
+@Immutable
+data class ReactingUserUiState(
+    val user: UserUiState,
+    val reactedAt: String,
 )
 
 enum class Emoji(
@@ -38,3 +45,4 @@ enum class Emoji(
         }
     }
 }
+

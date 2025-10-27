@@ -21,6 +21,7 @@ import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrappe
 import com.dpm.sixpack.presentation.common.model.Emoji
 import com.dpm.sixpack.presentation.common.model.PostDetailUiState
 import com.dpm.sixpack.presentation.common.model.PostReactionUiState
+import com.dpm.sixpack.presentation.common.model.PostingUserUiState
 import com.dpm.sixpack.presentation.common.model.RunningSummaryUiState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
@@ -31,8 +32,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
  *
  * @param postDetail 포스트 상세 정보
  * @param currentUserName 현재 사용자 이름 (본인 포스트 표시용)
- * @param onMoreClick 더보기 버튼 클릭 핸들러
- * @param onReactionClick 이모지 반응 클릭 핸들러
+ * @param onReactionClick  반응 클릭 핸들러
  * @param onAddReactionClick 이모지 추가 버튼 클릭 핸들러
  * @param modifier 컴포저블 수정자
  */
@@ -52,10 +52,7 @@ fun FeedPostCard(
     ) {
         // TODO SB postTime util로 변환한 변수 넣기
         PostUserInfoRow(
-            userImageUrl = postDetail.userImageUrl,
-            userName = postDetail.userName,
-            postTime = postDetail.postTime,
-            isMyPost = postDetail.userName == currentUserName,
+            postingUser = postDetail.user,
             onMenuClick = onMenuClick,
         )
 
@@ -63,7 +60,6 @@ fun FeedPostCard(
 
         // TODO SB postTime util로 변환한 변수 넣기
         PostImageWithRecord(
-            postTime = postDetail.postTime,
             postImageUrl = postDetail.postImageUrl,
             runningSummary = postDetail.runningInfo,
         )
@@ -84,10 +80,7 @@ fun FeedPostCard(
  */
 @Composable
 private fun PostUserInfoRow(
-    userImageUrl: String,
-    userName: String,
-    postTime: String,
-    isMyPost: Boolean,
+    postingUser: PostingUserUiState,
     onMenuClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -96,10 +89,12 @@ private fun PostUserInfoRow(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         PostUserInfo(
-            userImageUrl = userImageUrl,
-            userName = userName,
-            postTime = postTime,
-            isMyPost = isMyPost,
+            userImageUrl = postingUser.userImageUrl,
+            userName = postingUser.userName,
+            postingTime = postingUser.postingTime,
+            isMyPost = postingUser.isMe,
+            // TODO SB typography 적용
+            // textStyle = SixpackTheme.typography.body2,
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -124,16 +119,19 @@ fun FeedPostCardPreview() {
         FeedPostCard(
             postDetail = PostDetailUiState(
                 feedId = 1,
-                date = "2025-10-15",
-                userName = "비락식혜",
-                userImageUrl = "",
-                postTime = "36분 전",
-                postImageUrl = "https://example.com/map.jpg",
+                postImageUrl = "",
+                user = PostingUserUiState(
+                    userName = "비락식혜",
+                    userImageUrl = "",
+                    postingTime = "36분 전",
+                    isMe = true
+                ),
                 runningInfo = RunningSummaryUiState(
-                    totalDistance = 10.09,
-                    totalRunTime = 4440, // 1시간 14분
+                    totalDistance = "10.09",
+                    totalTime = "4440", // 1시간 14분
                     averagePace = "7'30''",
-                    cadence = 144
+                    cadence = "144",
+                    recordDateTime = "2023-08-01T00:00:00"
                 ),
                 reactions = listOf(
                     PostReactionUiState(Emoji.HEART, 10, true),
