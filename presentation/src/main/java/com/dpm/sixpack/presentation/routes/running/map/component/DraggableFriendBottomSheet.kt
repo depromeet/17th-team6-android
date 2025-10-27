@@ -7,7 +7,6 @@ import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,12 +14,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Group
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,6 +32,7 @@ internal fun DraggableFriendBottomSheet(
     sheetHeight: Dp,
     startButtonHeight: Dp,
     modifier: Modifier = Modifier,
+    onFriendIconClick: () -> Unit = {},
 ) {
     if (sheetHeight == 0.dp) return
 
@@ -79,11 +75,12 @@ internal fun DraggableFriendBottomSheet(
             }
 
             // 타이틀 (유동 크기)
-            FriendListTitle(
+            FriendSheetTitle(
                 modifier =
                     Modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp),
+                onIconClick = onFriendIconClick,
             )
 
             // 친구 목록 (스크롤 영역)
@@ -96,25 +93,5 @@ internal fun DraggableFriendBottomSheet(
                 friendList = friendList,
             )
         }
-    }
-}
-
-@Composable
-private fun FriendListTitle(modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(
-            text = "친구 두런 현황",
-            color = SixpackTheme.colors.gray900,
-            style = SixpackTheme.typography.t1Bold,
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        Icon(
-            imageVector = Icons.Default.Group,
-            contentDescription = "친구 아이콘",
-            tint = SixpackTheme.colors.gray800,
-        )
     }
 }
