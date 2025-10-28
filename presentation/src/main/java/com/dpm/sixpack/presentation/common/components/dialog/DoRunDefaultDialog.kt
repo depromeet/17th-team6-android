@@ -62,9 +62,10 @@ fun DoRunDefaultDialog(
                 Spacer(modifier = Modifier.height(20.dp))
 
                 DoRunDefaultButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(56.dp),
                     text = confirmButtonText,
                     onClick = onConfirmClick,
                     textColor = SixpackTheme.colors.gray0,
@@ -84,7 +85,7 @@ enum class DialogButtonType {
     Primary,
 
     /** 삭제 등 파괴적인 작업 (빨간색) */
-    Destructive
+    Destructive,
 }
 
 @Composable
@@ -99,17 +100,20 @@ fun DoRunDefaultDialog(
     confirmButtonType: DialogButtonType,
     modifier: Modifier = Modifier,
 ) {
-    val (confirmTextColor, confirmContainerColor) = when (confirmButtonType) {
-        DialogButtonType.Primary -> Pair(
-            SixpackTheme.colors.gray0,
-            SixpackTheme.colors.blue600
-        )
+    val (confirmTextColor, confirmContainerColor) =
+        when (confirmButtonType) {
+            DialogButtonType.Primary ->
+                Pair(
+                    SixpackTheme.colors.gray0,
+                    SixpackTheme.colors.blue600,
+                )
 
-        DialogButtonType.Destructive -> Pair(
-            SixpackTheme.colors.red,
-            SixpackTheme.colors.redLight
-        )
-    }
+            DialogButtonType.Destructive ->
+                Pair(
+                    SixpackTheme.colors.red,
+                    SixpackTheme.colors.redLight,
+                )
+        }
     Dialog(
         onDismissRequest = onDismissRequest,
     ) {
@@ -144,10 +148,11 @@ fun DoRunDefaultDialog(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     DoRunDefaultButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                            .height(56.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .weight(1f)
+                                .height(56.dp),
                         text = cancelButtonText,
                         onClick = onCancelClick,
                         textColor = SixpackTheme.colors.gray900,
@@ -155,10 +160,11 @@ fun DoRunDefaultDialog(
                     )
 
                     DoRunDefaultButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                            .height(56.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .weight(1f)
+                                .height(56.dp),
                         text = confirmButtonText,
                         onClick = onConfirmClick,
                         textColor = confirmTextColor,
