@@ -70,6 +70,7 @@ fun ProfileCreationScreen(
                     onNameChanged = { onIntent(ProfileCreationIntent.OnProfileNameChanged(it)) },
                     onImagePickerClick = { onIntent(ProfileCreationIntent.OnPickImageClick) },
                     enabled = !state.isLoading,
+                    isProfileNameValid = state.isProfileNameValid,
                     modifier =
                         Modifier
                             .fillMaxWidth(),

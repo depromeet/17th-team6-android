@@ -1,18 +1,26 @@
 package com.dpm.sixpack.presentation.common.components.textfield
 
+import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,8 +40,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
  * @param style "default" 또는 "id" 스타일
  * @param keyboardType 키보드 타입
  * @param trailingIcon 우측 아이콘 컨텐츠 (선택사항)
- * @param helperText 보조 텍스트 (선택사항)
- * @param helperTextRight 우측 보조 텍스트 (선택사항)
+ * @param bottomHelper 보조 텍스트 (선택사항)
  * @param modifier 레이아웃 모디파이어
  */
 @Composable
@@ -49,79 +56,88 @@ fun DoRunSignInputField(
     keyboardType: KeyboardType = KeyboardType.Text,
     singleLine: Boolean = true,
     trailingIcon: @Composable (() -> Unit)? = null,
-    helperText: String? = null,
-    helperTextRight: String? = null,
+    bottomHelper: @Composable (() -> Unit)? = null,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         // Label
-        label?.let {
+        if (label != null) {
             Text(
                 text = label,
                 style = SixpackTheme.typography.b2Regular,
                 color = SixpackTheme.colors.gray700,
             )
-        }
-
-        if (label != null) {
             Spacer(modifier = Modifier.height(8.dp))
         }
 
         // Input Field
-        OutlinedTextField(
+        val interactionSource = remember { MutableInteractionSource() }
+        val isFocused by interactionSource.collectIsFocusedAsState()
+        val borderColor =
+            when {
+                !enabled -> SixpackTheme.colors.gray100
+                isError -> SixpackTheme.colors.red
+                isFocused -> SixpackTheme.colors.gray900
+                else -> SixpackTheme.colors.gray100
+            }
+        val textColor =
+            when {
+                !enabled -> SixpackTheme.colors.gray900
+                else -> SixpackTheme.colors.gray900
+            }
+
+        BasicTextField(
             value = value,
             onValueChange = onValueChange,
-            placeholder = placeholder?.let { { Text(it) } },
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .height(52.dp),
+                    .heightIn(min = 52.dp)
+                    .border(
+                        width = 1.dp,
+                        color = borderColor,
+                        shape = SixpackTheme.shapes.round8,
+                    ),
             enabled = enabled,
-            isError = isError,
+            textStyle = SixpackTheme.typography.b2Regular.copy(color = textColor),
             keyboardOptions =
                 KeyboardOptions(
                     keyboardType = keyboardType,
                 ),
             singleLine = singleLine,
-            trailingIcon = trailingIcon,
-            colors =
-                OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = SixpackTheme.colors.gray900,
-                    unfocusedTextColor = SixpackTheme.colors.gray900,
-                    disabledTextColor = SixpackTheme.colors.gray900,
-                    focusedBorderColor = SixpackTheme.colors.gray900,
-                    unfocusedBorderColor = SixpackTheme.colors.gray100,
-                    disabledBorderColor = SixpackTheme.colors.gray100,
-                    errorBorderColor = SixpackTheme.colors.red,
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    disabledContainerColor = Color.Transparent,
-                    cursorColor = SixpackTheme.colors.blue600,
-                    focusedPlaceholderColor = SixpackTheme.colors.gray300,
-                    unfocusedPlaceholderColor = SixpackTheme.colors.gray300,
-                ),
-            shape = SixpackTheme.shapes.round8,
-        )
-
-        // Helper Text
-        if (helperText != null || helperTextRight != null) {
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Text(
-                    text = helperText ?: "",
-                    style = SixpackTheme.typography.c1Regular,
-                    color = SixpackTheme.colors.gray600,
-                )
-                helperTextRight?.let {
-                    Text(
-                        text = it,
-                        style = SixpackTheme.typography.c1Regular,
-                        color = SixpackTheme.colors.gray600,
-                    )
+            cursorBrush = SolidColor(SixpackTheme.colors.blue600),
+            interactionSource = interactionSource,
+            decorationBox = { innerTextField ->
+                Box(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(start = 16.dp, end = 12.dp),
+                    contentAlignment = Alignment.CenterStart,
+                ) {
+                    if (value.isEmpty() && placeholder != null) {
+                        Text(
+                            text = placeholder,
+                            style = SixpackTheme.typography.b2Regular,
+                            color = SixpackTheme.colors.gray300,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        Box(modifier = Modifier.weight(1f)) {
+                            innerTextField()
+                        }
+                        trailingIcon?.invoke()
+                    }
                 }
-            }
+            },
+        )
+        if (bottomHelper != null) {
+            Spacer(modifier = Modifier.height(8.dp))
+            bottomHelper()
         }
     }
 }

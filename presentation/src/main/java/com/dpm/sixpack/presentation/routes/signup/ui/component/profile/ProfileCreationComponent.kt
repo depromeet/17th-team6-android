@@ -5,11 +5,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -33,6 +36,7 @@ fun ProfileCreationComponent(
     onImagePickerClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    isProfileNameValid: Boolean
 ) {
     Column(
         modifier = modifier,
@@ -90,6 +94,7 @@ fun ProfileCreationComponent(
             onNameChanged = onNameChanged,
             enabled = enabled,
             modifier = Modifier.fillMaxWidth(),
+            isProfileNameValid = isProfileNameValid
         )
     }
 }
@@ -99,18 +104,30 @@ private fun ProfileNameInput(
     profileName: String,
     onNameChanged: (String) -> Unit,
     enabled: Boolean,
+    isProfileNameValid: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    val color = if (isProfileNameValid) SixpackTheme.colors.blue600 else SixpackTheme.colors.gray400
     DoRunSignInputField(
         value = profileName,
-        onValueChange = { newValue ->
-            if (newValue.length <= 8) {
-                onNameChanged(newValue)
-            }
-        },
+        onValueChange = onNameChanged,
         placeholder = stringResource(R.string.signup_placeholder_profile_name),
-        helperText = stringResource(R.string.signup_helper_text_profile_name),
-        helperTextRight = "${profileName.length}/8",
+        bottomHelper = {
+            Row {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_check_s),
+                    contentDescription = "Info",
+                    tint = color
+                )
+                Spacer(Modifier.width(4.dp))
+                Text(
+                    style = SixpackTheme.typography.c1Medium,
+                    text = stringResource(R.string.signup_helper_text_profile_name),
+                    color = color
+                )
+            }
+
+        },
         enabled = enabled,
         keyboardType = KeyboardType.Text,
         modifier = modifier,
