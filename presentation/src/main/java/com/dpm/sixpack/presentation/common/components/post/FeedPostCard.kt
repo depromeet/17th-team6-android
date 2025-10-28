@@ -144,7 +144,7 @@ fun FeedPostCardPreview() {
                         listOf(
                             PostReactionUiState(Emoji.HEART, "10", true),
                             PostReactionUiState(Emoji.FIRE, "5", false),
-                            PostReactionUiState(Emoji.SHOOT, "2", false),
+                            PostReactionUiState(Emoji.HEART, "2", false),
                         ),
                 ),
             currentUserName = "비락식혜",

@@ -21,11 +21,11 @@ data class ReactingUserUiState(
 enum class Emoji(
     val type: String,
 ) {
-    LIKE("like"),
+    SURPRISE("surprise"),
     HEART("heart"),
+    THUMBS_UP("thumbs_up"),
+    CONGRATS("congrats"),
     FIRE("fire"),
-    SHOOT("shoot"),
-    SAD("sad"),
     UNKNOWN("unknown"),
     ;
 
@@ -33,11 +33,11 @@ enum class Emoji(
         @DrawableRes
         get() =
             when (this) {
-                LIKE -> R.drawable.ill_endurance
+                SURPRISE -> R.drawable.ill_endurance // 적절한 아이콘 리소스로 변경 필요
                 HEART -> R.drawable.ill_endurance
+                THUMBS_UP -> R.drawable.ill_endurance // 적절한 아이콘 리소스로 변경 필요
+                CONGRATS -> R.drawable.ill_endurance // 적절한 아이콘 리소스로 변경 필요
                 FIRE -> R.drawable.ill_endurance
-                SHOOT -> R.drawable.ill_endurance
-                SAD -> R.drawable.ill_endurance
                 UNKNOWN -> R.drawable.ic_add_reaction
             }
 

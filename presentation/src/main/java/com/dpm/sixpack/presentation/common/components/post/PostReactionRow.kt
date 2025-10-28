@@ -141,7 +141,7 @@ fun ReactionChip(
             contentAlignment = Alignment.Center,
         ) {
             Text(
-                text = count.toString(),
+                text = count,
                 style = SixpackTheme.typography.b2Medium,
                 color = SixpackTheme.colors.gray700,
             )
@@ -204,7 +204,7 @@ private fun PostReactionRowPreview3() {
                 listOf(
                     PostReactionUiState(Emoji.HEART, "10", true),
                     PostReactionUiState(Emoji.FIRE, "5", false),
-                    PostReactionUiState(Emoji.SHOOT, "2", false),
+                    PostReactionUiState(Emoji.HEART, "2", false),
                 ),
             onReactionChipClick = {},
             onAddReactionClick = {},
@@ -222,9 +222,9 @@ private fun PostReactionRowPreview5() {
                 listOf(
                     PostReactionUiState(Emoji.HEART, "10", true),
                     PostReactionUiState(Emoji.FIRE, "5", false),
-                    PostReactionUiState(Emoji.SHOOT, "2", false),
+                    PostReactionUiState(Emoji.HEART, "2", false),
                     PostReactionUiState(Emoji.FIRE, "5", false),
-                    PostReactionUiState(Emoji.SHOOT, "2", false),
+                    PostReactionUiState(Emoji.HEART, "2", false),
                 ),
             onReactionChipClick = {},
             onAddReactionClick = {},
