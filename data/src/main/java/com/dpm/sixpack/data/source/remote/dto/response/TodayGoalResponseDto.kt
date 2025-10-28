@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class TodayGoalResponseDto(
     @SerialName("id")

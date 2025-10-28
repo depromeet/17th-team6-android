@@ -1,6 +1,7 @@
 [versions]
 
 # App Version
+annotationExperimental = "1.6.0-alpha01"
 coreSplashscreen = "1.0.1"
 versionCode = "00001"
 versionName = "0.0.1"
@@ -94,6 +95,7 @@ kotlinxDatetime = "0.7.1"
 [libraries]
 
 # Androidx
+androidx-annotation-experimental = { module = "androidx.annotation:annotation-experimental", version.ref = "annotationExperimental" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
