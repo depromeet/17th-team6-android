@@ -70,9 +70,15 @@ fun ConstraintLayoutScope.RunningSessionScreen(
                         applyPanelConstraints()
                     },
                 sessionState = sessionState,
-                onPauseClick = sessionViewModel::onIntent,
-                onResumeClick = sessionViewModel::onIntent,
-                onStopClick = sessionViewModel::onIntent,
+                onPauseClick = {
+                    sessionViewModel.onIntent(RunningSessionIntent.RunningPause)
+                },
+                onResumeClick = {
+                    sessionViewModel.onIntent(RunningSessionIntent.RunningResume)
+                },
+                onStopClick = {
+                    sessionViewModel.onIntent(RunningSessionIntent.RunningStop)
+                },
             )
         }
 
@@ -83,9 +89,15 @@ fun ConstraintLayoutScope.RunningSessionScreen(
                         applyPanelConstraints()
                     },
                 sessionState = sessionState,
-                onPauseClick = sessionViewModel::onIntent,
-                onResumeClick = sessionViewModel::onIntent,
-                onStopClick = sessionViewModel::onIntent,
+                onPauseClick = {
+                    sessionViewModel.onIntent(RunningSessionIntent.RunningPause)
+                },
+                onResumeClick = {
+                    sessionViewModel.onIntent(RunningSessionIntent.RunningResume)
+                },
+                onStopClick = {
+                    sessionViewModel.onIntent(RunningSessionIntent.RunningStop)
+                },
             )
 
             if (sessionState.showStopSessionConfirmDialog) {
