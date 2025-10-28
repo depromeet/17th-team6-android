@@ -1,12 +1,14 @@
 package com.dpm.sixpack.presentation.routes.running.map.contract.state
 
 import android.os.Parcelable
+import androidx.compose.runtime.Immutable
 import com.dpm.sixpack.presentation.routes.running.map.PaceColorCalculator
 import com.dpm.sixpack.presentation.routes.running.session.contract.state.PathState
 import com.naver.maps.geometry.LatLng
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
+@Immutable
 data class PathColorState(
     val paths: List<List<LatLng>> = listOf(),
     val paceColors: List<List<Int>> = listOf(),
