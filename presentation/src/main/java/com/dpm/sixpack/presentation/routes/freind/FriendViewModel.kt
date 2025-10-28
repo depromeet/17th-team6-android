@@ -9,7 +9,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @HiltViewModel
 class FriendViewModel @Inject constructor(
