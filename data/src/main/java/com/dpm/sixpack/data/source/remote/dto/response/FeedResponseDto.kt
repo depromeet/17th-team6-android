@@ -4,8 +4,10 @@ import com.dpm.sixpack.domain.model.Feed
 import com.dpm.sixpack.domain.model.FeedContent
 import com.dpm.sixpack.domain.model.FeedPage
 import com.dpm.sixpack.domain.model.Meta
-import com.dpm.sixpack.domain.model.Reaction
 import com.dpm.sixpack.domain.model.ReactingUser
+import com.dpm.sixpack.domain.model.Reaction
+import com.dpm.sixpack.domain.model.RunningSessionResult
+import com.dpm.sixpack.domain.model.User
 import com.dpm.sixpack.domain.model.UserSummary
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -64,7 +66,7 @@ data class UserSummaryDto(
 @Serializable
 data class FeedDto(
     @SerialName("feedId")
-    val feedId: Int,
+    val feedId: Long,
     @SerialName("date")
     val date: String,
     @SerialName("userName")
@@ -74,11 +76,11 @@ data class FeedDto(
     @SerialName("selfieTime")
     val selfieTime: String,
     @SerialName("totalDistance")
-    val totalDistance: Int,
+    val totalDistance: Long,
     @SerialName("totalRunTime")
-    val totalRunTime: Int,
+    val totalRunTime: Long,
     @SerialName("averagePace")
-    val averagePace: Int,
+    val averagePace: Long,
     @SerialName("cadence")
     val cadence: Int,
     @SerialName("imageUrl")
@@ -86,22 +88,26 @@ data class FeedDto(
     @SerialName("reactions")
     val reactions: List<ReactionDto>,
     @SerialName("isMe")
-    val isMe: Boolean = false,
+    val isMe: Boolean,
 ) {
     fun toDomain(): Feed =
         Feed(
             feedId = feedId,
             date = date,
-            userName = userName,
-            profileImageUrl = profileImageUrl,
+            user = User(
+                nickName = userName,
+                profileImgUrl = profileImageUrl,
+                isMe = isMe
+            ),
             selfieTime = selfieTime,
-            totalDistance = totalDistance,
-            totalRunTime = totalRunTime,
-            averagePace = averagePace,
-            cadence = cadence,
+            runningSessionResult = RunningSessionResult(
+                totalDistanceMeter = totalDistance,
+                totalDurationSec = totalRunTime,
+                avgPace = averagePace,
+                avgCadence = cadence,
+            ),
             imageUrl = imageUrl,
             reactions = reactions.map { it.toDomain() },
-            isMe = isMe,
         )
 }
 
@@ -125,7 +131,7 @@ data class ReactionDto(
 @Serializable
 data class ReactingUserDto(
     @SerialName("userId")
-    val userId: Int,
+    val userId: Long,
     @SerialName("nickname")
     val nickname: String,
     @SerialName("profileImageUrl")
@@ -137,12 +143,15 @@ data class ReactingUserDto(
 ) {
     fun toDomain(): ReactingUser =
         ReactingUser(
-            userId = userId,
-            nickname = nickname,
-            profileImageUrl = profileImageUrl,
+            User(
+                userId = userId,
+                nickName = nickname,
+                profileImgUrl = profileImageUrl,
+                isMe = isMe
+            ),
             reactedAt = reactedAt,
-            isMe = isMe,
-        )
+
+            )
 }
 
 @Serializable
@@ -152,7 +161,7 @@ data class MetaDto(
     @SerialName("size")
     val size: Int,
     @SerialName("totalElements")
-    val totalElements: Int,
+    val totalElements: Long,
     @SerialName("totalPages")
     val totalPages: Int,
     @SerialName("first")

@@ -19,15 +19,15 @@ data class FinishRunningResponseDto(
     @SerialName("roundCount")
     val roundCount: Int,
     @SerialName("totalDistance")
-    val totalDistance: Int,
+    val totalDistance: Long,
     @SerialName("totalDuration")
-    val totalDuration: Int,
+    val totalDuration: Long,
     @SerialName("avgPace")
-    val avgPace: Int,
+    val avgPace: Long,
     @SerialName("avgCadence")
-    val avgCadence: Long,
+    val avgCadence: Int,
     @SerialName("maxCadence")
-    val maxCadence: Long,
+    val maxCadence: Int,
 ) {
     fun toRunningSessionResult() =
         RunningSessionResult(

@@ -38,6 +38,7 @@ You will be provided inputs in the following format:
 11. **Service Interface**:
     * Functions **must** be `suspend`.
     * Functions **must** return `BaseResponse<DtoName>` (or `BaseResponse<Unit>` if response is empty).
+    * Before you write [URI_PATH] check @ApiConstants to use constants
     * Must use Retrofit annotations (`@GET`, `@POST`, `@Path`, `@Body`, etc.).
     * If the target `Service` interface does not exist, create a new file for it. If it exists, add the new function signature.
 12. **DataSource Class**:
@@ -48,7 +49,7 @@ You will be provided inputs in the following format:
         * For `@Path`, `@Query`, `@Header`, etc., parameters in the `Service` function, the `DataSource` function **must** accept the same parameters directly.
         * **For `@Body` parameters in the `Service` function (e.g., `@Body request: MyRequestDto`), the `DataSource` function MUST accept *all individual fields* defined within `MyRequestDto` as separate parameters.** The `DataSource` function will then be responsible for constructing the `MyRequestDto` instance internally before calling the `Service`.
     * The `DataSource` function **must** call the corresponding `Service` function and return its result (`BaseResponse<DtoName>`).
-    * If the `DataSource` file does not exist, create a new file for it. If it exists, add the new function.
+    * If the `DataSoruce` file does not exist, create a new file for it. If it exists, add the new function.
     * **No DI module generation** is needed for DataSources.
 
 ### Ruleset C: Repository Layer Generation
