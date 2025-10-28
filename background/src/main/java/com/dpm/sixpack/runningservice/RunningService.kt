@@ -133,7 +133,7 @@ class RunningService : LifecycleService() {
 
                     // 알림 업데이트 (data가 null이 아닐 때)
                     data?.let {
-                        updateNotification(it.duration)
+                        updateNotification(it.durationInSec)
                     }
                 }
             }

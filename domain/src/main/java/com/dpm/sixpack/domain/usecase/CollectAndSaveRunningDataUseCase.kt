@@ -148,11 +148,11 @@ class CollectAndSaveRunningDataUseCase @Inject constructor(
                     latitude = it.latitude,
                     longitude = it.longitude,
                     altitude = it.altitude,
-                    speed = it.speed,
+                    speed = it.speed.toDouble(),
                     pace = paceAverage,
                     cadence = cadence,
                     totalDistanceMeter = roundedDistance,
-                    duration = durationInSeconds,
+                    durationInSec = durationInSeconds,
                     timestamp = System.currentTimeMillis(),
                 )
 
