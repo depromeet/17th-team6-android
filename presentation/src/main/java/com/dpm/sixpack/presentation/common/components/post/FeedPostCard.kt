@@ -21,8 +21,8 @@ import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.model.Emoji
 import com.dpm.sixpack.presentation.common.model.PostDetailUiState
-import com.dpm.sixpack.presentation.common.model.PostReactionUiState
-import com.dpm.sixpack.presentation.common.model.PostingUserUiState
+import com.dpm.sixpack.presentation.common.model.PostReactionState
+import com.dpm.sixpack.presentation.common.model.PostingUserState
 import com.dpm.sixpack.presentation.common.model.RunningSummaryUiState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
@@ -84,7 +84,7 @@ fun FeedPostCard(
  */
 @Composable
 private fun PostUserInfoRow(
-    postingUser: PostingUserUiState,
+    postingUser: PostingUserState,
     onMenuClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -126,7 +126,7 @@ fun FeedPostCardPreview() {
                     feedId = 1,
                     postImageUrl = "",
                     user =
-                        PostingUserUiState(
+                        PostingUserState(
                             userName = "비락식혜",
                             userImageUrl = "",
                             postingTime = "36분 전",
@@ -142,9 +142,9 @@ fun FeedPostCardPreview() {
                         ),
                     reactions =
                         listOf(
-                            PostReactionUiState(Emoji.HEART, "10", true),
-                            PostReactionUiState(Emoji.FIRE, "5", false),
-                            PostReactionUiState(Emoji.HEART, "2", false),
+                            PostReactionState(Emoji.HEART, "10", true),
+                            PostReactionState(Emoji.FIRE, "5", false),
+                            PostReactionState(Emoji.HEART, "2", false),
                         ),
                 ),
             currentUserName = "비락식혜",

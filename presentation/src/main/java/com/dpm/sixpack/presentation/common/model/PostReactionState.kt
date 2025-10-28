@@ -1,26 +1,31 @@
 package com.dpm.sixpack.presentation.common.model
 
+import android.os.Parcelable
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Immutable
 import com.dpm.sixpack.presentation.R
+import kotlinx.parcelize.Parcelize
 
 @Immutable
-data class PostReactionUiState(
+@Parcelize
+data class PostReactionState(
     val emoji: Emoji,
     val count: String,
     val isReacted: Boolean = false,
-)
+) : Parcelable
 
 @Immutable
-data class ReactingUserUiState(
-    val user: UserUiState,
+@Parcelize
+data class ReactingUserState(
+    val user: UserState,
     val reactedAt: String,
     val emoji: Emoji = Emoji.UNKNOWN,
-)
+) : Parcelable
 
+@Parcelize
 enum class Emoji(
     val type: String,
-) {
+) : Parcelable {
     SURPRISE("surprise"),
     HEART("heart"),
     THUMBS_UP("thumbs_up"),

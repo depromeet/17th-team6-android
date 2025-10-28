@@ -54,8 +54,8 @@ import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.post.ReactionChip
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.model.Emoji
-import com.dpm.sixpack.presentation.common.model.ReactingUserUiState
-import com.dpm.sixpack.presentation.common.model.UserUiState
+import com.dpm.sixpack.presentation.common.model.ReactingUserState
+import com.dpm.sixpack.presentation.common.model.UserState
 import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.routes.feed.contract.uistate.ReactionDetailsUiState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
@@ -210,7 +210,7 @@ private fun AllTab(
 
 @Composable
 private fun ReactingUserRow(
-    user: ReactingUserUiState,
+    user: ReactingUserState,
     onUserProfileClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -328,9 +328,9 @@ fun ReactionUsersBottomSheetPreview() {
                     }
                 val reactedAt = if (timeValue.isEmpty()) timeSuffix else "$timeValue$timeSuffix"
 
-                ReactingUserUiState(
+                ReactingUserState(
                     user =
-                        UserUiState(
+                        UserState(
                             id = index.toLong(),
                             name = name,
                             profileImageUrl = "",
@@ -396,9 +396,9 @@ fun ReactingUserRowPreview() {
         Column {
             ReactingUserRow(
                 user =
-                    ReactingUserUiState(
+                    ReactingUserState(
                         user =
-                            UserUiState(
+                            UserState(
                                 id = 1,
                                 name = "김육팩",
                                 profileImageUrl = "",

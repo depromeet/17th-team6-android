@@ -28,13 +28,13 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
-import com.dpm.sixpack.presentation.common.model.PostingUserUiState
+import com.dpm.sixpack.presentation.common.model.PostingUserState
 import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 fun CertificationCountView(
-    users: List<PostingUserUiState>,
+    users: List<PostingUserState>,
     isMeCertified: Boolean,
     onViewClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -64,7 +64,7 @@ fun CertificationCountView(
 
 @Composable
 private fun OverlappingProfiles(
-    users: List<PostingUserUiState>,
+    users: List<PostingUserState>,
     modifier: Modifier = Modifier,
 ) {
     // 최대 3명의 프로필만 표시하고, 가장 최근에 인증한 사람이 가장 위에 보이도록 reversed()를 사용
@@ -152,8 +152,8 @@ private fun CertificationCountViewWithMePreview() {
         CertificationCountView(
             users =
                 listOf(
-                    PostingUserUiState(userName = "User2", userImageUrl = ""),
-                    PostingUserUiState(userName = "User3", userImageUrl = ""),
+                    PostingUserState(userName = "User2", userImageUrl = ""),
+                    PostingUserState(userName = "User3", userImageUrl = ""),
                 ),
             isMeCertified = true,
             modifier = Modifier.padding(16.dp),
@@ -169,10 +169,10 @@ private fun CertificationCountViewWithoutMePreview() {
         CertificationCountView(
             users =
                 listOf(
-                    PostingUserUiState(userName = "User1", userImageUrl = ""),
-                    PostingUserUiState(userName = "User2", userImageUrl = ""),
-                    PostingUserUiState(userName = "User3", userImageUrl = ""),
-                    PostingUserUiState(userName = "User4", userImageUrl = ""),
+                    PostingUserState(userName = "User1", userImageUrl = ""),
+                    PostingUserState(userName = "User2", userImageUrl = ""),
+                    PostingUserState(userName = "User3", userImageUrl = ""),
+                    PostingUserState(userName = "User4", userImageUrl = ""),
                 ),
             isMeCertified = false,
             modifier = Modifier.padding(16.dp),
