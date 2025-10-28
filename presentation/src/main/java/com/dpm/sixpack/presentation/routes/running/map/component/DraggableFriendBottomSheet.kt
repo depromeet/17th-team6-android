@@ -41,7 +41,7 @@ internal fun DraggableFriendBottomSheet(
             modifier
                 .anchoredDraggable(draggableState, Orientation.Vertical)
                 .height(sheetHeight),
-        shape = MaterialTheme.shapes.large,
+        shape = SixpackTheme.shapes.round24,
         color = SixpackTheme.colors.gray0,
         shadowElevation = 12.dp,
     ) {
