@@ -41,7 +41,7 @@ fun RowScope.BottomNavTabItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        val selectedColor = SixpackTheme.colors.blue600
+        val selectedColor = SixpackTheme.colors.gray900
         val unselectedColor = SixpackTheme.colors.gray300
 
         Spacer(modifier = Modifier.height(8.dp))

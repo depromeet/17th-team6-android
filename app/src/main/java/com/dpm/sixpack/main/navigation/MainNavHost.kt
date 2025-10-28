@@ -9,13 +9,14 @@ import androidx.navigation.compose.composable
 import com.dpm.sixpack.SixPackAppState
 import com.dpm.sixpack.presentation.destinations.OnboardingRoute
 import com.dpm.sixpack.presentation.routes.onboarding.OnboardingRoute
-import com.dpm.sixpack.presentation.routes.session.navigation.addRunningSessionNavGraph
+import com.dpm.sixpack.presentation.routes.running.navigation.addRunningSessionNavGraph
 import com.dpm.sixpack.presentation.routes.sessionreport.navigation.addSessionReportNavGraph
 
 @Composable
 internal fun MainNavHost(
     appState: SixPackAppState,
     onShowSnackbar: suspend (String, String?) -> Boolean,
+    onBottomBarVisibilityChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val navigator = appState.navigator
@@ -40,6 +41,7 @@ internal fun MainNavHost(
 
             addRunningSessionNavGraph(
                 onNavigateToBack = navigator::popBackStack,
+                onBottomBarVisibilityChange = onBottomBarVisibilityChange,
                 navigateToSessionReport = navigator::navigateToSessionReport,
             )
 

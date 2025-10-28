@@ -40,7 +40,7 @@ class RunningService : LifecycleService() {
 
     // 외부 공개 상태
     private val _runningDataState = MutableStateFlow<RealtimeRunningData?>(null)
-    val runningDataState = _runningDataState.asStateFlow()
+    val runningDataState get() = _runningDataState.asStateFlow()
 
     // --- 내부 상태 관리 변수 ---
     private var isServiceRunning = false

@@ -146,9 +146,16 @@
     <!--endregion-->
 
     <!--region RunningSessionScreen -->
-    <string name="session_start_running_button">러닝 시작</string>
+    <string name="session_start_running_button">오늘의 러닝 시작</string>
     <!--endregion-->
 
     <!-- Button Default Text -->
     <string name="button_default_next">다음</string>
+
+    <!-- region Friend List -->
+    <string name="minutes_before">%1$d분 전</string>
+    <string name="hours_before">%1$d시간 전</string>
+    <string name="days_before">%1$d일 전</string>
+    <string name="inactive_label_text">zzz</string>
+    <!--endregion-->
 </resources>

@@ -1,13 +1,12 @@
 package com.dpm.sixpack.main
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarDuration.Indefinite
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult.ActionPerformed
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -22,8 +21,8 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 internal fun MainScreen(
-    modifier: Modifier = Modifier,
     appState: SixPackAppState,
+    modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
@@ -42,8 +41,8 @@ internal fun MainScreen(
 
     MainScreenContent(
         modifier = modifier,
-        snackbarHostState = snackbarHostState,
         appState = appState,
+        snackbarHostState = snackbarHostState,
     )
 }
 
@@ -55,9 +54,9 @@ internal fun MainScreenContent(
 ) {
     Scaffold(
         modifier = modifier,
+        containerColor = SixpackTheme.colors.gray0,
         bottomBar = {
             MainBottomBar(
-                modifier = Modifier.navigationBarsPadding(),
                 visible = appState.navigator.shouldShowBottomBar(),
                 mainNavTabs = MainNavTab.entries,
                 currentTab = appState.navigator.currentTab,
@@ -66,21 +65,21 @@ internal fun MainScreenContent(
                 },
             )
         },
-        containerColor = SixpackTheme.colors.gray0,
     ) { paddingValue ->
         MainNavHost(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(bottom = paddingValue.calculateBottomPadding()),
             appState = appState,
             onShowSnackbar = { message, action ->
                 snackbarHostState.showSnackbar(
                     message = message,
                     actionLabel = action,
                     duration = SnackbarDuration.Short,
-                ) == ActionPerformed
+                ) == SnackbarResult.ActionPerformed
             },
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(bottom = paddingValue.calculateBottomPadding()),
+            onBottomBarVisibilityChange = appState.navigator::setBottomBarVisibility,
         )
     }
 }
