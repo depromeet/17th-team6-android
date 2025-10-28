@@ -1,6 +1,7 @@
 package com.dpm.sixpack.domain.repository
 
 import com.dpm.sixpack.domain.model.FeedPage
+import com.dpm.sixpack.domain.model.ReactionResult
 import com.dpm.sixpack.domain.util.DoRunResult
 
 interface FeedRepository {
@@ -10,4 +11,9 @@ interface FeedRepository {
         pageNum: Int,
         pageSize: Int,
     ): DoRunResult<FeedPage>
+
+    suspend fun postReaction(
+        selfieId: Int,
+        emojiType: String
+    ): DoRunResult<ReactionResult>
 }
