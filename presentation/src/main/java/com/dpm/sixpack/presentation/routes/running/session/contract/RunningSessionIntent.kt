@@ -5,7 +5,7 @@ import com.dpm.sixpack.presentation.routes.running.RunningRouteIntent
 sealed interface RunningSessionIntent : RunningRouteIntent {
     //region Common
 
-//    data object SessionStart : RunningSessionIntent
+    data object SessionStart : RunningSessionIntent
 
 //    data object ToggleFollowingMode : RunningSessionIntent
 

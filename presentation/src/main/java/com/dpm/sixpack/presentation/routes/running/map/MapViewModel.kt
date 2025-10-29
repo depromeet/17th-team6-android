@@ -123,7 +123,7 @@ class MapViewModel @Inject constructor(
                     mapViewState = MapViewState.Friend(),
                 )
             }
-            postSideEffect(MapSideEffect.NavigateToReport)
+//            postSideEffect(MapSideEffect.NavigateToReport)
         }
 
     private fun updateRunningMapPath(newPathState: PathState) =

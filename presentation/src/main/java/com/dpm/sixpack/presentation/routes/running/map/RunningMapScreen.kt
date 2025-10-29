@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,7 +26,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -36,8 +34,6 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.common.util.PermissionHandler
-import com.dpm.sixpack.presentation.routes.freind.sampleFriendList
-import com.dpm.sixpack.presentation.routes.running.map.component.DraggableFriendBottomSheet
 import com.dpm.sixpack.presentation.routes.running.map.component.LocationTrackingButton
 import com.dpm.sixpack.presentation.routes.running.map.component.SheetDragState
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapIntent
@@ -60,7 +56,6 @@ import com.naver.maps.map.compose.PathOverlay
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 import timber.log.Timber
-import kotlin.math.roundToInt
 
 private val sheetPeekHeight = 72.dp
 private val startButtonHeightDp = 72.dp
@@ -276,28 +271,28 @@ private fun RunningMapScreenContent(
                 )
             }
 
-            if (mapState.mapViewState is MapViewState.Friend) {
-                DraggableFriendBottomSheet(
-                    modifier =
-                        Modifier
-                            .constrainAs(sheetRef) {
-                                start.linkTo(parent.start)
-                                end.linkTo(parent.end)
-                            }.fillMaxWidth()
-                            .offset {
-                                val yOffset = draggableState.offset
-                                if (yOffset.isNaN()) {
-                                    IntOffset(x = 0, y = boxHeight.roundToInt())
-                                } else {
-                                    IntOffset(x = 0, y = yOffset.roundToInt())
-                                }
-                            },
-                    draggableState = draggableState,
-                    friendList = sampleFriendList,
-                    sheetHeight = sheetMaxHeight,
-                    startButtonHeight = startButtonHeightDp,
-                )
-            }
+//            if (mapState.mapViewState is MapViewState.Friend) {
+//                DraggableFriendBottomSheet(
+//                    modifier =
+//                        Modifier
+//                            .constrainAs(sheetRef) {
+//                                start.linkTo(parent.start)
+//                                end.linkTo(parent.end)
+//                            }.fillMaxWidth()
+//                            .offset {
+//                                val yOffset = draggableState.offset
+//                                if (yOffset.isNaN()) {
+//                                    IntOffset(x = 0, y = boxHeight.roundToInt())
+//                                } else {
+//                                    IntOffset(x = 0, y = yOffset.roundToInt())
+//                                }
+//                            },
+//                    draggableState = draggableState,
+//                    friendList = sampleFriendList,
+//                    sheetHeight = sheetMaxHeight,
+//                    startButtonHeight = startButtonHeightDp,
+//                )
+//            }
 
             if (mapState.mapViewState !is MapViewState.Running) {
                 RunningStartButton(
