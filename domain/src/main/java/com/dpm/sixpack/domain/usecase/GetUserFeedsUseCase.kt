@@ -12,7 +12,7 @@ import javax.inject.Inject
 class GetUserFeedsUseCase @Inject constructor(
     private val feedRepository: FeedRepository
 ) {
-    suspend operator fun invoke(userId: Long): Flow<PagingData<FeedContent>> =
+    operator fun invoke(userId: Long): Flow<PagingData<FeedContent>> =
     feedRepository.getFeedPagingStream(
     pageSize = 10,
     initialLoadSize = 20,
