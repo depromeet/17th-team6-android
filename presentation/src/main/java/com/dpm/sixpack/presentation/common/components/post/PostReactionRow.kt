@@ -82,6 +82,7 @@ private fun AddReactionButton(onAddReactionClick: () -> Unit) {
     Box(
         modifier =
             Modifier
+                .clip(SixpackTheme.shapes.round16 )
                 .noRippleClickable(onClick = onAddReactionClick)
                 .background(color = SixpackTheme.colors.gray50, shape = RoundedCornerShape(30.dp))
                 .padding(vertical = 6.dp, horizontal = 10.dp),
@@ -110,6 +111,7 @@ fun ReactionChip(
     Row(
         modifier =
             modifier
+                .clip(SixpackTheme.shapes.round16 )
                 .combinedClickable(
                     onClick = { onClick() },
                     onLongClick = { onLongClick() },
@@ -161,9 +163,11 @@ private fun MoreReactionChip(
             modifier
                 .background(
                     color = SixpackTheme.colors.gray50,
-                    shape = RoundedCornerShape(16.dp),
+                    shape = SixpackTheme.shapes.round16,
                 ).padding(all = 6.dp)
-                .clickable(onClick = onClick),
+                .clip(SixpackTheme.shapes.round16 )
+                .clickable(onClick = onClick)
+                ,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {

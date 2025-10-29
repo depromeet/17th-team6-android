@@ -80,6 +80,10 @@
     <!-- endregion-->
 
     <!--region Feed-->
+    <string name="feed_post_dropdown_menu_edit">수정하기</string>
+    <string name="feed_post_dropdown_menu_delete">삭제하기</string>
+    <string name="feed_post_dropdown_menu_save_image">이미지 저장</string>
+    <string name="feed_post_dropdown_menu_report">신고하기</string>
     <string name="feed_certification_count_view_count_label">+%1$d</string>
     <string name="feed_certification_count_view_me_certified">\'나\'를 제외한 %1$d명이 인증했어요!</string>
     <string name="feed_certification_count_view_others_certified">%1$d명이 인증했어요!</string>
