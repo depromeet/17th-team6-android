@@ -30,7 +30,6 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
  * LazyList에서 재사용 가능하도록 설계되었습니다.
  *
  * @param postDetail 포스트 상세 정보
- * @param currentUserName 현재 사용자 이름 (본인 포스트 표시용)
  * @param onReactionChipClick  반응 클릭 핸들러
  * @param onAddReactionClick 이모지 추가 버튼 클릭 핸들러
  * @param modifier 컴포저블 수정자
@@ -38,7 +37,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 @Composable
 fun FeedPostCard(
     postDetail: PostDetailUiState,
-    currentUserName: String,
+    isMenuExpanded: Boolean,
     modifier: Modifier = Modifier,
     onMenuClick: () -> Unit = {},
     onDropDownMenuClick: (PostDropDownActionType) -> Unit = {},
@@ -55,8 +54,9 @@ fun FeedPostCard(
         // TODO SB postTime util로 변환한 변수 넣기
         PostUserInfoRow(
             postingUser = postDetail.user,
+            isMenuExpanded = isMenuExpanded,
             onMenuClick = onMenuClick,
-            onDropDownMenuClick = onDropDownMenuClick
+            onDropDownMenuClick = onDropDownMenuClick,
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -85,6 +85,7 @@ fun FeedPostCard(
 @Composable
 private fun PostUserInfoRow(
     postingUser: PostingUserState,
+    isMenuExpanded: Boolean ,
     onMenuClick: () -> Unit,
     onDropDownMenuClick: (PostDropDownActionType) -> Unit,
     modifier: Modifier = Modifier,
@@ -107,7 +108,7 @@ private fun PostUserInfoRow(
 
         PostDropDownMenuIcon(
             isMyPost = postingUser.isMe,
-            isMenuExpanded = postingUser.isMenuExpanded,
+            isMenuExpanded = isMenuExpanded,
             onMenuClick = { isMenuExpanded -> onMenuClick() },
             onDropDownMenuClick = onDropDownMenuClick
         )
@@ -131,7 +132,6 @@ fun FeedPostCardPreview() {
                             userImageUrl = "",
                             postingTime = "36분 전",
                             isMe = true,
-                            isMenuExpanded = isMenuExpanded,
                         ),
                     runningInfo =
                         RunningSummaryUiState(
@@ -148,8 +148,8 @@ fun FeedPostCardPreview() {
                             PostReactionState(Emoji.HEART, "2", false),
                         ),
                 ),
-            currentUserName = "비락식혜",
-            onMenuClick = { isMenuExpanded = !isMenuExpanded}
+            isMenuExpanded ,
+            onMenuClick = { isMenuExpanded = !isMenuExpanded }
         )
     }
 }
@@ -171,7 +171,6 @@ fun FeedFreindPostCardPreview() {
                             userImageUrl = "",
                             postingTime = "36분 전",
                             isMe = false,
-                            isMenuExpanded = isMenuExpanded,
                         ),
                     runningInfo =
                         RunningSummaryUiState(
@@ -188,8 +187,8 @@ fun FeedFreindPostCardPreview() {
                             PostReactionState(Emoji.HEART, "2", false),
                         ),
                 ),
-            currentUserName = "비락식혜",
-            onMenuClick = { isMenuExpanded = !isMenuExpanded}
+            isMenuExpanded,
+            onMenuClick = { isMenuExpanded = !isMenuExpanded }
         )
     }
 }

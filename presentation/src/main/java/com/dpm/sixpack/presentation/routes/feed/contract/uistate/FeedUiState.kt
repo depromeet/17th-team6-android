@@ -10,9 +10,10 @@ import kotlinx.parcelize.Parcelize
 data class FeedUiState(
     val calendarState: FeedCalenderUiState = FeedCalenderUiState(),
     val bottomSheetState: FeedBottomSheetState = FeedBottomSheetState(),
-    val postCardsState : List<PostDetailUiState>  = listOf(),
+    val postCardsState: List<PostDetailUiState> = listOf(),
     val postingUserState: List<PostingUserState> = listOf(),
-    val reactionDetailsUiState: ReactionDetailsUiState  = ReactionDetailsUiState()
+    val reactionDetailsUiState: ReactionDetailsUiState = ReactionDetailsUiState(),
+    val menuExpandedFeedId: Int? = null
 ) : UiState,
     Parcelable
 

@@ -23,7 +23,6 @@ data class PostingUserState(
     val userImageUrl: String,
     val postingTime: String = "",
     val isMe: Boolean = false,
-    val isMenuExpanded : Boolean = false
 ) : Parcelable
 
 enum class PostDropDownActionType {
