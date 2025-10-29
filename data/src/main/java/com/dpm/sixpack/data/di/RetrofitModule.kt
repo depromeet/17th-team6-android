@@ -2,7 +2,6 @@ package com.dpm.sixpack.data.di
 
 import com.dpm.sixpack.core.BuildConfig
 import com.dpm.sixpack.core.BuildConfig.DEBUG
-import com.dpm.sixpack.data.source.remote.interceptor.HttpResponseInterceptor // Interceptor 임포트
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,18 +39,13 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun providesOkHttpClient(
-        loggingInterceptor: HttpLoggingInterceptor,
-        httpResponseInterceptor: HttpResponseInterceptor,
-    ): OkHttpClient =
+    fun providesOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient =
         OkHttpClient
             .Builder()
             .apply {
                 connectTimeout(10, TimeUnit.SECONDS)
                 writeTimeout(10, TimeUnit.SECONDS)
                 readTimeout(10, TimeUnit.SECONDS)
-
-                addInterceptor(httpResponseInterceptor)
 
                 addInterceptor(
                     Interceptor { chain ->
