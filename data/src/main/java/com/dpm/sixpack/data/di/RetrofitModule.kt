@@ -2,12 +2,14 @@ package com.dpm.sixpack.data.di
 
 import com.dpm.sixpack.core.BuildConfig
 import com.dpm.sixpack.core.BuildConfig.DEBUG
+import com.dpm.sixpack.data.source.remote.interceptor.HttpResponseInterceptor // Interceptor 임포트
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -38,13 +40,30 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun providesOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient =
+    fun providesOkHttpClient(
+        loggingInterceptor: HttpLoggingInterceptor,
+        httpResponseInterceptor: HttpResponseInterceptor,
+    ): OkHttpClient =
         OkHttpClient
             .Builder()
             .apply {
                 connectTimeout(10, TimeUnit.SECONDS)
                 writeTimeout(10, TimeUnit.SECONDS)
                 readTimeout(10, TimeUnit.SECONDS)
+
+                addInterceptor(httpResponseInterceptor)
+
+                addInterceptor(
+                    Interceptor { chain ->
+                        val originalRequest = chain.request()
+                        val newRequest =
+                            originalRequest
+                                .newBuilder()
+                                .header("Authorization", "Bearer 1")
+                                .build()
+                        chain.proceed(newRequest)
+                    },
+                )
                 if (DEBUG) addInterceptor(loggingInterceptor)
             }.build()
 

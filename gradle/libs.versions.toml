@@ -142,6 +142,8 @@ hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", ve
 
 # LocalDB
 androidx-room = { group = "androidx.room", name = "room-runtime", version.ref = "roomVersion" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomVersion" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomVersion" }
 
 # Map
 map-sdk = { module = "com.naver.maps:map-sdk", version.ref = "mapSdk" }

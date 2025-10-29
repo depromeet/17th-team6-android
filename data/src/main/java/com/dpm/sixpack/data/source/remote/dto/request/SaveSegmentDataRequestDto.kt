@@ -1,23 +1,24 @@
 package com.dpm.sixpack.data.source.remote.dto.request
 
 import android.annotation.SuppressLint
+import com.dpm.sixpack.core.util.TimeUtil.formatMillisToIsoUtc
+import com.dpm.sixpack.data.source.local.database.entity.RunningTrackPointEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.math.log
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class SaveSegmentDataRequestsDto(
     @SerialName("segments")
-    val segment: List<LocationDataRequestDto>,
+    val segment: List<SegmentDataDto>,
     @SerialName("isStopped")
     val isStopped: Boolean,
-    @SerialName("isEnded")
-    val isEnded: Boolean,
 )
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
-data class LocationDataRequestDto(
+data class SegmentDataDto(
     @SerialName("latitude")
     val latitude: Double,
     @SerialName("longitude")
@@ -29,9 +30,21 @@ data class LocationDataRequestDto(
     @SerialName("pace")
     val pace: Int,
     @SerialName("cadence")
-    val cadence: Long,
+    val cadence: Int,
     @SerialName("distance")
     val distance: Int,
     @SerialName("time")
-    val time: String,
+    val time: String, // "2024-01-15T09:00:00Z"
 )
+
+fun RunningTrackPointEntity.toSegmentDataDto(): SegmentDataDto =
+    SegmentDataDto(
+        latitude = latitude,
+        longitude = longitude,
+        altitude = altitude,
+        speed = speed,
+        pace = avgPace,
+        cadence = avgCadence,
+        distance = distanceInMeter,
+        time = formatMillisToIsoUtc(timestamp),
+    )

@@ -9,6 +9,8 @@ import kotlinx.serialization.Serializable
 data class BaseResponse<T>(
     @SerialName("status")
     val status: String,
+    @SerialName("code")
+    val code: Int = -1, // 기본값 -1 추가
     @SerialName("message")
     val message: String,
     @SerialName("timestamp")

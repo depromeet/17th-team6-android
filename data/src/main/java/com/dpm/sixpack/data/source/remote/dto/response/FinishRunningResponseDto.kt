@@ -14,29 +14,32 @@ data class FinishRunningResponseDto(
     val createdAt: String,
     @SerialName("updatedAt")
     val updatedAt: String,
-    @SerialName("finalGoalId")
-    val finalGoalId: Long,
-    @SerialName("clearedAt")
-    val clearedAt: String? = null,
-    @SerialName("roundCount")
-    val roundCount: Int,
-    @SerialName("totalDistance")
-    val totalDistance: Int,
-    @SerialName("totalDuration")
-    val totalDuration: Int,
-    @SerialName("avgPace")
-    val avgPace: Int,
-    @SerialName("avgCadence")
-    val avgCadence: Long,
-    @SerialName("maxCadence")
-    val maxCadence: Long,
+    @SerialName("finishedAt")
+    val finishedAt: String,
+    @SerialName("distanceTotal")
+    val distanceTotal: Int,
+    @SerialName("durationTotal")
+    val durationTotal: Int,
+    @SerialName("paceAvg")
+    val paceAvg: Int,
+    @SerialName("paceMax")
+    val paceMax: Int,
+    @SerialName("paceMaxLatitude")
+    val paceMaxLatitude: Double,
+    @SerialName("paceMaxLongitude")
+    val paceMaxLongitude: Double,
+    @SerialName("cadenceAvg")
+    val cadenceAvg: Int,
+    @SerialName("cadenceMax")
+    val cadenceMax: Int,
+    @SerialName("mapImage")
+    val mapImage: String,
 ) {
     fun toRunningSessionResult() =
         RunningSessionResult(
-            totalDistanceMeter = totalDistance,
-            totalDurationSec = totalDuration,
-            avgPace = avgPace,
-            avgCadence = avgCadence,
-            maxCadence = maxCadence,
+            totalDistanceMeter = distanceTotal,
+            totalDurationSec = durationTotal,
+            avgPace = paceAvg,
+            avgCadence = cadenceAvg,
         )
 }

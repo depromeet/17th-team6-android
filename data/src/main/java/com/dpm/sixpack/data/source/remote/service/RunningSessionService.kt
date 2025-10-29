@@ -14,6 +14,9 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface RunningSessionService {
+    @POST("$API/$RUNS/$SESSIONS/start")
+    suspend fun postStartSession(): BaseResponse<StartRunningResponseDto>
+
     @POST("$API/$RUNS/$SESSIONS/{sessionId}/complete")
     suspend fun postFinishRunning(
         @Path("sessionId") sessionId: Long,
@@ -25,7 +28,4 @@ interface RunningSessionService {
         @Path("sessionId") sessionId: Long,
         @Body saveSegmentDataRequestsDto: SaveSegmentDataRequestsDto,
     ): BaseResponse<SaveSegmentResponseDto>
-
-    @POST("$API/$RUNS/$SESSIONS/start")
-    suspend fun postStartSession(): BaseResponse<StartRunningResponseDto>
 }

@@ -108,7 +108,7 @@ class RunningSessionViewModel @Inject constructor(
                             getNewPathState(
                                 currentState,
                                 LatLng(realtimeData.latitude, realtimeData.longitude),
-                                realtimeData.pace,
+                                realtimeData.avgPace,
                             )
                         val newRecordState = getNewRecordUiState(realtimeData)
 
@@ -189,10 +189,10 @@ class RunningSessionViewModel @Inject constructor(
     private fun getNewRecordUiState(realtimeRunningData: RealtimeRunningData): RecordState {
         val newRecord =
             RecordState(
-                currentDistance = realtimeRunningData.totalDistanceMeter,
+                currentDistance = realtimeRunningData.distanceInMeter,
                 currentDuration = realtimeRunningData.durationInSec,
-                avgPace = realtimeRunningData.pace,
-                cadence = realtimeRunningData.cadence,
+                avgPace = realtimeRunningData.avgPace,
+                cadence = realtimeRunningData.avgCadence,
             )
         return newRecord
     }

@@ -13,10 +13,11 @@ class SaveRealtimeRunningDataUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(param: SaveRealtimeRunningDataParam): DoRunResult<SaveRealtimeRunningDataResult> =
         when (param) {
-            is SaveRealtimeRunningDataParam.LocalParam ->
-                runningSessionRepository.saveRealtimeData(
+            is SaveRealtimeRunningDataParam.LocalParam -> {
+                runningSessionRepository.saveRealtimeDataOnLocal(
                     data = param.data,
                 )
+            }
 
             is SaveRealtimeRunningDataParam.SyncParam -> {
                 val sessionId =
@@ -28,23 +29,4 @@ class SaveRealtimeRunningDataUseCase @Inject constructor(
                 runningSessionRepository.saveSegmentData(sessionId)
             }
         }
-}
-
-sealed class SaveRealtimeRunningDataParam {
-    data class LocalParam(
-        val data: RealtimeRunningData,
-    ) : SaveRealtimeRunningDataParam()
-
-    data class SyncParam(
-        val sessionId: Long,
-    ) : SaveRealtimeRunningDataParam()
-}
-
-sealed class SaveRealtimeRunningDataResult {
-    data object LocalResult : SaveRealtimeRunningDataResult()
-
-    data class SyncResult(
-        val segmentId: Long, // 구간 ID
-        val savedCount: Int, // 저장된 데이터 개수
-    ) : SaveRealtimeRunningDataResult()
 }

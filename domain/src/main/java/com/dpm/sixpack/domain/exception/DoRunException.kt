@@ -33,6 +33,14 @@ sealed class DoRunException(
     ) : DoRunException(message, cause)
 
     /**
+     * 데이터베이스 에러
+     */
+    data class DatabaseError(
+        override val message: String,
+        override val cause: Throwable? = null,
+    ) : DoRunException(message, cause)
+
+    /**
      * 비즈니스 로직 에러
      */
     data class BusinessError(

@@ -8,9 +8,14 @@ import com.dpm.sixpack.domain.util.DoRunResult
 interface RunningSessionRepository {
     suspend fun start(): DoRunResult<Long>
 
-    suspend fun saveRealtimeData(data: RealtimeRunningData): DoRunResult<SaveRealtimeRunningDataResult.LocalResult>
+    suspend fun saveRealtimeDataOnLocal(
+        data: RealtimeRunningData,
+    ): DoRunResult<SaveRealtimeRunningDataResult.LocalResult>
 
-    suspend fun saveSegmentData(sessionId: Long): DoRunResult<SaveRealtimeRunningDataResult.SyncResult>
+    suspend fun saveSegmentData(
+        sessionId: Long,
+        isPaused: Boolean,
+    ): DoRunResult<SaveRealtimeRunningDataResult.SyncResult>
 
     suspend fun finish(sessionId: Long): DoRunResult<RunningSessionResult>
 }
