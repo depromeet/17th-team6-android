@@ -5,17 +5,13 @@
 # For more details, see
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Keep all domain models, use cases, and utility classes
+-keep class com.dpm.sixpack.domain.model.** { *; }
+-keep class com.dpm.sixpack.domain.usecase.** { *; }
+-keep class com.dpm.sixpack.domain.util.** { *; }
+-keep interface com.dpm.sixpack.domain.repository.** { *; }
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
-
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Keep attributes for debugging
+-keepattributes SourceFile,LineNumberTable
+-keepattributes Signature
+-keepattributes *Annotation*

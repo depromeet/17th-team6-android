@@ -35,7 +35,7 @@ interface TimeZoneMonitor {
 }
 
 @Singleton
-internal class TimeZoneBroadcastMonitor @Inject constructor(
+class TimeZoneBroadcastMonitor @Inject constructor(
     @ApplicationContext private val context: Context,
     @ApplicationScope appScope: CoroutineScope,
     @Dispatcher(SixPackDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
