@@ -1,13 +1,10 @@
 package com.dpm.sixpack.domain.usecase
 
-import android.location.Location
-import com.dpm.sixpack.domain.exception.DoRunException
 import com.dpm.sixpack.domain.model.RealtimeRunningData
 import com.dpm.sixpack.domain.repository.GpsRepository
 import com.dpm.sixpack.domain.repository.RunningSessionRepository
 import com.dpm.sixpack.domain.repository.SensorRepository
 import com.dpm.sixpack.domain.repository.UserPreferenceRepository
-import com.dpm.sixpack.domain.util.DoRunResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -15,245 +12,126 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
-import kotlin.math.round
 
 class CollectAndSaveRunningDataUseCase @Inject constructor(
     private val gpsRepository: GpsRepository,
     private val sensorRepository: SensorRepository,
     private val runningSessionRepository: RunningSessionRepository,
     private val userPreferenceRepository: UserPreferenceRepository,
+    private val stateTracker: RunningStateTracker,
 ) {
     private val useCaseScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-
-    // --- 내부 상태 관리 변수 ---
-    private var isPaused = true
-
-    private var durationInSeconds: Int = 0
-    private var lastLocation: Location? = null
-    private var totalDistance: Double = 0.0
-    private var stepsBeforePause: Long = 0L
-    private var currentSteps: Long = 0L
-
-    private var paceAverage: Int = 0
-    private var cadence: Int = 0
 
     // Coroutine Jobs
     private var timerJob: Job? = null
     private var locationJob: Job? = null
     private var stepJob: Job? = null
 
-    // 외부 공개 상태
-    private val _runningDataState = MutableStateFlow<RealtimeRunningData?>(null)
-    val runningDataState: Flow<RealtimeRunningData?> = _runningDataState.asStateFlow()
+    // Tracker의 StateFlow를 그대로 외부에 노출
+    val runningDataState: Flow<RealtimeRunningData?> = stateTracker.runningDataState
 
-    /**
-     * 러닝 데이터 수집 및 저장을 시작합니다.
-     */
+    init {
+        // Tracker가 "첫 위치 받음" 이벤트를 보내면, 그때 타이머를 시작
+        useCaseScope.launch {
+            stateTracker.onFirstLocationReceived.collect {
+                startTimer()
+            }
+        }
+
+        // [핵심] 1초마다 로컬 저장을 '직접' 수행
+        useCaseScope.launch {
+            stateTracker.runningDataState.filterNotNull().collect { data ->
+                Timber.d("RealtimeRunningData: $data")
+//                runningSessionRepository.saveRealtimeDataOnLocal(data)
+            }
+        }
+    }
+
     fun start() {
-        if (timerJob?.isActive == true) return // 이미 실행 중이면 무시
-
-        initStates()
-        isPaused = false
-        startJobs()
+        if (timerJob?.isActive == true) return
+        stateTracker.initStates()
+        stateTracker.resume() // isPaused = false
+        startDataCollectionJobs()
     }
 
-    /**
-     * 일시정지. 데이터 수집을 중단합니다.
-     */
     fun pause() {
-        isPaused = true
-        stepsBeforePause = currentSteps
-        cancelJobs()
+        stateTracker.pause() // isPaused = true
+        cancelAllJobs()
     }
 
-    /**
-     * 다시 시작. 데이터 수집을 재개합니다.
-     */
     fun resume() {
-        if (timerJob?.isActive == true) return // 이미 실행 중이면 무시
-        isPaused = false
-        startJobs()
+        if (timerJob?.isActive == true) return
+        stateTracker.resume()
+        startDataCollectionJobs()
+
+        startTimer()
     }
 
-    /**
-     * 중지. 모든 데이터 수집을 중단하고 상태를 초기화합니다.
-     */
     fun stop() {
-        cancelJobs()
-        isPaused = true
-        initStates()
-        // TODO: 세션 종료 정보를 Repository를 통해 저장하는 로직 추가
+        cancelAllJobs()
+        stateTracker.initStates()
     }
 
-    /**
-     * (유지) UseCase가 종료될 때 외부에서 Scope를 정리(cancel)하기 위한 메서드
-     */
     fun close() {
         useCaseScope.cancel()
     }
 
-    private fun startJobs() {
-//        startTimer(useCaseScope)
+    private fun startDataCollectionJobs() {
         startLocationCollection(useCaseScope)
         startStepCollection(useCaseScope)
     }
 
-    private fun cancelJobs() {
+    private fun cancelAllJobs() {
         timerJob?.cancel()
         locationJob?.cancel()
         stepJob?.cancel()
+
         timerJob = null
         locationJob = null
         stepJob = null
     }
 
-    private fun initStates() {
-        durationInSeconds = 0
-        lastLocation = null
-        totalDistance = 0.0
-        stepsBeforePause = 0L
-        currentSteps = 0L
+    // 타이머는 단순히 "Tick" 이벤트만 Tracker에게 보냄
+    private fun startTimer() {
+        if (timerJob?.isActive == true) return
 
-        paceAverage = 0
-        cadence = 0
-
-        _runningDataState.value = null
-    }
-
-    // 시간 측정 및 주기적 계산
-    private fun startTimer(scope: CoroutineScope) {
         timerJob =
-            scope.launch {
+            useCaseScope.launch {
                 while (isActive) {
                     delay(1000L)
-                    durationInSeconds += 1
-
-                    if (durationInSeconds % CALCULATE_PERIOD == 0 || durationInSeconds == 1) {
-                        paceAverage = calculateAvgPace(totalDistance, durationInSeconds)
-                        cadence = calculateAvgCadence(currentSteps, durationInSeconds)
-                    }
-                    postCurrentRunningDataState()
+                    stateTracker.processTimerTick()
                 }
             }
     }
 
-    // 1초마다 RealTime 데이터 업데이트 및 저장
-    private fun postCurrentRunningDataState() {
-        lastLocation?.let {
-            val roundedDistance = (round(totalDistance / 10.0) * 10).toInt()
-
-            val data =
-                RealtimeRunningData(
-                    latitude = it.latitude,
-                    longitude = it.longitude,
-                    altitude = it.altitude,
-                    speed = it.speed.toDouble(),
-                    avgPace = paceAverage,
-                    avgCadence = cadence,
-                    distanceInMeter = roundedDistance,
-                    durationInSec = durationInSeconds,
-                    timestamp = System.currentTimeMillis(),
-                )
-
-            _runningDataState.value = data
-        }
-    }
-
-    /**
-     * GPS 데이터 구독하여 거리 업데이트
-     */
+    // GPS 데이터를 받아서 Tracker에게 전달
     private fun startLocationCollection(scope: CoroutineScope) {
         locationJob =
             scope.launch {
                 gpsRepository.locationFlow.collect { result ->
                     result.onSuccess { newLocation ->
-                        if (!isPaused) {
-                            val isFirstLocation = (lastLocation == null)
-
-                            lastLocation?.let {
-                                totalDistance += it.distanceTo(newLocation)
-                            }
-                            lastLocation = newLocation
-
-                            if (isFirstLocation) {
-                                startTimer(useCaseScope)
-                            }
-                        }
+                        stateTracker.processNewLocation(newLocation)
                     }
                 }
             }
     }
 
-    /**
-     * 걸음 수 데이터 구독하여 걸음 수를 누적 업데이트
-     */
+    // 걸음 수 데이터를 받아서 Tracker에게 전달
     private fun startStepCollection(scope: CoroutineScope) {
         stepJob =
             scope.launch {
                 sensorRepository.totalStep.collect { result ->
                     result.onSuccess { stepsSinceResume ->
-                        if (!isPaused) {
-                            currentSteps = stepsBeforePause + stepsSinceResume.toLong()
-                        }
+                        stateTracker.processNewSteps(stepsSinceResume.toLong())
                     }
                 }
             }
     }
-
-    // --- 계산 헬퍼 함수 ---
-    private fun calculateAvgPace(
-        totalDistanceInMeters: Double,
-        durationInSeconds: Int,
-    ): Int {
-        if (durationInSeconds <= 0) return 0
-        val speedInMps = totalDistanceInMeters / durationInSeconds
-        if (speedInMps <= 0) return 0
-        val secondsPerKilometer = 1000.0 / speedInMps
-        return secondsPerKilometer.toInt()
-    }
-
-    private fun calculateAvgCadence(
-        totalSteps: Long,
-        durationInSeconds: Int,
-    ): Int {
-        if (durationInSeconds <= 0L) {
-            return 0
-        }
-        val durationInMinutes = durationInSeconds / 60.0
-        if (durationInMinutes == 0.0) return 0
-        return (totalSteps / durationInMinutes).toInt()
-    }
-
-    companion object {
-        private const val CALCULATE_PERIOD = 3
-    }
-
-    suspend fun saveRunningData(
-        param: SaveRealtimeRunningDataParam,
-        isPaused: Boolean,
-    ): DoRunResult<SaveRealtimeRunningDataResult> =
-        when (param) {
-            is SaveRealtimeRunningDataParam.LocalParam -> {
-                runningSessionRepository.saveRealtimeDataOnLocal(
-                    data = param.data,
-                )
-            }
-
-            is SaveRealtimeRunningDataParam.SyncParam -> {
-                val sessionId =
-                    userPreferenceRepository.getSessionId()
-                        ?: return DoRunResult.Failure(
-                            DoRunException.DataError("저장된 세션 ID가 없어 동기화할 수 없습니다."),
-                        )
-
-                runningSessionRepository.saveSegmentData(sessionId, isPaused = isPaused)
-            }
-        }
 }
 
 sealed class SaveRealtimeRunningDataParam {
@@ -263,6 +141,7 @@ sealed class SaveRealtimeRunningDataParam {
 
     data class SyncParam(
         val sessionId: Long,
+        val isPaused: Boolean,
     ) : SaveRealtimeRunningDataParam()
 }
 
