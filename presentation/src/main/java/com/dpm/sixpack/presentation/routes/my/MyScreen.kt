@@ -115,7 +115,7 @@ fun SettingsScreen() {
             // 버전 정보 항목 (클릭 불가, 값 표시)
             SettingsInfoItem(
                 title = "버전 정보",
-                value = "1.0.0"
+                value = "0.0.1"
             )
 
             // 그룹 구분을 위한 Divider
