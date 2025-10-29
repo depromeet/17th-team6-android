@@ -32,6 +32,9 @@
 -keep class **_HiltComponents$** { *; }
 -keep class **_Factory { *; }
 -keep class **_MembersInjector { *; }
+-keep class hilt_aggregated_deps.** { *; }
+-keep class **_ComponentTreeDeps { *; }
+-keep class dagger.hilt.android.internal.** { *; }
 
 # Keep javax.inject annotations
 -keepattributes RuntimeVisibleAnnotations,RuntimeVisibleParameterAnnotations
@@ -87,6 +90,9 @@
 -keep class com.dpm.**.dto.** { *; }
 -keep class com.dpm.**.model.** { *; }
 -keep class com.dpm.**.entity.** { *; }
+
+# Keep all project classes (domain, data, presentation modules)
+-keep class com.dpm.sixpack.** { *; }
 
 # Keep Parcelable implementations
 -keep class * implements android.os.Parcelable {
