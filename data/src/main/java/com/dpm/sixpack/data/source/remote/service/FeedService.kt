@@ -15,7 +15,7 @@ interface FeedService {
     @GET("/api/selfie/feeds")
     suspend fun getFeeds(
         @Query("currentDate") currentDate: String?,
-        @Query("userId") userId: Int?,
+        @Query("userId") userId: Long?,
         @Query("page") page: Int,
         @Query("size") size: Int,
     ): BaseResponse<FeedPageDto>

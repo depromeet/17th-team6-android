@@ -8,5 +8,6 @@ android {
 
 dependencies {
     testImplementation(libs.junit)
+    implementation(libs.bundles.paging)
     androidTestImplementation(libs.bundles.android.test)
 }

@@ -1,18 +1,23 @@
 package com.dpm.sixpack.domain.repository
 
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.dpm.sixpack.domain.model.Feed
+import com.dpm.sixpack.domain.model.FeedContent
 import com.dpm.sixpack.domain.model.FeedPage
 import com.dpm.sixpack.domain.model.ReactionResult
 import com.dpm.sixpack.domain.model.SelfieCount
 import com.dpm.sixpack.domain.model.SelfieCounts
 import com.dpm.sixpack.domain.util.DoRunResult
+import kotlinx.coroutines.flow.Flow
 
 interface FeedRepository {
-    suspend fun getFeeds(
+    fun getFeedPagingStream(
+        pageSize : Int,
+        initialLoadSize : Int,
         currentDate: String?,
-        userId: Int?,
-        pageNum: Int,
-        pageSize: Int,
-    ): DoRunResult<FeedPage>
+        userId: Long?
+    ): Flow<PagingData<FeedContent>>
 
     suspend fun postReaction(
         selfieId: Int,

@@ -1,38 +1,42 @@
 package com.dpm.sixpack.data.repository
 
-import androidx.room.util.query
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.dpm.sixpack.data.paging.FeedPagingSource
 import com.dpm.sixpack.data.source.remote.datasoruce.FeedDataSource
 import com.dpm.sixpack.domain.exception.DoRunException
-import com.dpm.sixpack.domain.model.FeedPage
+import com.dpm.sixpack.domain.model.FeedContent
 import com.dpm.sixpack.domain.model.ReactionResult
-import com.dpm.sixpack.domain.model.SelfieCount
 import com.dpm.sixpack.domain.model.SelfieCounts
 import com.dpm.sixpack.domain.repository.FeedRepository
 import com.dpm.sixpack.domain.util.DoRunResult
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class FeedRepositoryImpl @Inject constructor(
     private val feedDataSource: FeedDataSource,
 ) : FeedRepository {
-    override suspend fun getFeeds(
+    override fun getFeedPagingStream(
+        pageSize : Int,
+        initialLoadSize : Int,
         currentDate: String?,
-        userId: Int?,
-        pageNum: Int,
-        pageSize: Int,
-    ): DoRunResult<FeedPage> =
-        withContext(Dispatchers.IO) {
-            try {
-                val response =
-                    feedDataSource.getFeeds(currentDate = currentDate, userId = userId, page = pageNum, size = pageSize)
-
-                val feeds = response.data?.toDomain() ?: throw DoRunException.DataError("데이터 변환에 실패했습니다")
-                DoRunResult.Success(feeds)
-            } catch (e: Exception) {
-                DoRunResult.Failure(DoRunException.DataError("네트워크 요청에 실패했습니다: ${e.message}"))
+        userId: Long?
+    ): Flow<PagingData<FeedContent>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 10, // 2. 성능 튜닝 섹션에서 권장한 값
+                initialLoadSize = 20,
+                prefetchDistance = 5,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = {
+                FeedPagingSource(feedDataSource, currentDate, userId)
             }
-        }
+        ).flow
+    }
 
 
     override suspend fun postReaction(

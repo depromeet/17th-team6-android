@@ -13,7 +13,7 @@ class FeedDataSource @Inject constructor(
 ) {
     suspend fun getFeeds(
         currentDate: String?,
-        userId: Int?,
+        userId: Long?,
         page: Int,
         size: Int,
     ): BaseResponse<FeedPageDto> = feedService.getFeeds(

@@ -1,6 +1,9 @@
 package com.dpm.sixpack.domain.usecase
 
+import androidx.paging.PagingData
+import com.dpm.sixpack.domain.model.FeedContent
 import com.dpm.sixpack.domain.repository.FeedRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 /*
@@ -9,14 +12,11 @@ import javax.inject.Inject
 class GetUserFeedsUseCase @Inject constructor(
     private val feedRepository: FeedRepository
 ) {
-    suspend operator fun invoke(
-        userId: Int,
-        pageNum: Int,
-        pageSize: Int
-    ) = feedRepository.getFeeds(
-        currentDate = null,
-        userId = userId,
-        pageNum = pageNum,
-        pageSize = pageSize
+    suspend operator fun invoke(userId: Long): Flow<PagingData<FeedContent>> =
+    feedRepository.getFeedPagingStream(
+    pageSize = 10,
+    initialLoadSize = 20,
+    currentDate = null,
+    userId = userId
     )
 }
