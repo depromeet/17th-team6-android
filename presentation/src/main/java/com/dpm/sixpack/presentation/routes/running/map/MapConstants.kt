@@ -11,8 +11,8 @@ object MapConstants {
 
     val DEFAULT_CAMERA_POSITION =
         CameraPosition(
-            // 성수
-            LatLng(37.546914, 127.066506),
+            // 서울 시
+            LatLng(37.565239, 126.977347),
             DEFAULT_ZOOM,
         )
 
