@@ -28,7 +28,7 @@ fun EmojiSelectionBottomSheet(
     modifier: Modifier = Modifier,
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
 ) {
-    val emojis = Emoji.entries.filter { it != Emoji.UNKNOWN }
+    val emojis = Emoji.entries.filter { it != Emoji.ALL }
 
     DoRunBottomSheetSlot(
         isBottomSheetVisible = isBottomSheetVisible,
