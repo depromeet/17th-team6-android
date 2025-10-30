@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.model.Emoji
-import com.dpm.sixpack.presentation.common.model.PostReactionState
+import com.dpm.sixpack.presentation.common.model.PostReaction
 import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
@@ -40,9 +40,9 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
  */
 @Composable
 fun PostReactionRow(
-    reactions: List<PostReactionState>,
-    onReactionChipClick: (String) -> Unit,
-    onReactionChipLongClick: (String) -> Unit,
+    reactions: List<PostReaction>,
+    onReactionChipClick: (Emoji) -> Unit,
+    onReactionChipLongClick: (Emoji) -> Unit,
     onAddReactionClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -58,14 +58,14 @@ fun PostReactionRow(
                     count = reaction.count,
                     iconRes = reaction.emoji.iconRes,
                     isReacted = reaction.isReacted,
-                    onClick = { onReactionChipClick(reaction.emoji.type) },
-                    onLongClick = { onReactionChipLongClick(reaction.emoji.type) },
+                    onClick = { onReactionChipClick(reaction.emoji) },
+                    onLongClick = { onReactionChipLongClick(reaction.emoji) },
                 )
             }
             if (reactions.size > 3) {
                 MoreReactionChip(
                     count = reactions.size - 3,
-                    onClick = { onReactionChipLongClick("ALL") },
+                    onClick = { onReactionChipLongClick(Emoji.ALL) },
                 )
 
                 AddReactionButton(onAddReactionClick = onAddReactionClick)
@@ -189,7 +189,7 @@ private fun MoreReactionChip(
 fun PostReactionRowPreview1() {
     DoRunPreviewWrapper {
         PostReactionRow(
-            reactions = listOf(PostReactionState(Emoji.HEART, "10", true)),
+            reactions = listOf(PostReaction(Emoji.HEART, "10", true)),
             onReactionChipClick = {},
             onAddReactionClick = {},
             onReactionChipLongClick = {},
@@ -204,9 +204,9 @@ private fun PostReactionRowPreview3() {
         PostReactionRow(
             reactions =
                 listOf(
-                    PostReactionState(Emoji.HEART, "10", true),
-                    PostReactionState(Emoji.FIRE, "5", false),
-                    PostReactionState(Emoji.HEART, "2", false),
+                    PostReaction(Emoji.HEART, "10", true),
+                    PostReaction(Emoji.FIRE, "5", false),
+                    PostReaction(Emoji.HEART, "2", false),
                 ),
             onReactionChipClick = {},
             onAddReactionClick = {},
@@ -222,11 +222,11 @@ private fun PostReactionRowPreview5() {
         PostReactionRow(
             reactions =
                 listOf(
-                    PostReactionState(Emoji.HEART, "10", true),
-                    PostReactionState(Emoji.FIRE, "5", false),
-                    PostReactionState(Emoji.HEART, "2", false),
-                    PostReactionState(Emoji.FIRE, "5", false),
-                    PostReactionState(Emoji.HEART, "2", false),
+                    PostReaction(Emoji.HEART, "10", true),
+                    PostReaction(Emoji.FIRE, "5", false),
+                    PostReaction(Emoji.HEART, "2", false),
+                    PostReaction(Emoji.FIRE, "5", false),
+                    PostReaction(Emoji.HEART, "2", false),
                 ),
             onReactionChipClick = {},
             onAddReactionClick = {},

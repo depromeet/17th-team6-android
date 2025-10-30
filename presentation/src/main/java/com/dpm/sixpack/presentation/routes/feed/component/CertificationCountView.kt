@@ -28,13 +28,14 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
-import com.dpm.sixpack.presentation.common.model.PostingUserState
+import com.dpm.sixpack.presentation.common.model.PostingUserInfo
+import com.dpm.sixpack.presentation.common.model.UserInfo
 import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 fun CertificationCountView(
-    users: List<PostingUserState>,
+    users: List<PostingUserInfo>,
     isMeCertified: Boolean,
     onViewClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -64,7 +65,7 @@ fun CertificationCountView(
 
 @Composable
 private fun OverlappingProfiles(
-    users: List<PostingUserState>,
+    users: List<PostingUserInfo>,
     modifier: Modifier = Modifier,
 ) {
     // 최대 3명의 프로필만 표시하고, 가장 최근에 인증한 사람이 가장 위에 보이도록 reversed()를 사용
@@ -75,9 +76,9 @@ private fun OverlappingProfiles(
         val overlap = 10.dp
         val offset = profileCircleSize - overlap
 
-        visibleUsers.forEachIndexed { index, user ->
+        visibleUsers.forEachIndexed { index, postingUser ->
             ProfileImageCircle(
-                imageUrl = user.userImageUrl,
+                imageUrl = postingUser.user.profileImageUrl,
                 modifier = Modifier.padding(start = 28.dp + (offset * (visibleUsers.size - 1 - index))),
             )
         }
@@ -152,8 +153,8 @@ private fun CertificationCountViewWithMePreview() {
         CertificationCountView(
             users =
                 listOf(
-                    PostingUserState(userName = "User2", userImageUrl = ""),
-                    PostingUserState(userName = "User3", userImageUrl = ""),
+                    PostingUserInfo(UserInfo(name = "User2", profileImageUrl = "")),
+                    PostingUserInfo(UserInfo(name = "User2", profileImageUrl = "")),
                 ),
             isMeCertified = true,
             modifier = Modifier.padding(16.dp),
@@ -169,10 +170,10 @@ private fun CertificationCountViewWithoutMePreview() {
         CertificationCountView(
             users =
                 listOf(
-                    PostingUserState(userName = "User1", userImageUrl = ""),
-                    PostingUserState(userName = "User2", userImageUrl = ""),
-                    PostingUserState(userName = "User3", userImageUrl = ""),
-                    PostingUserState(userName = "User4", userImageUrl = ""),
+                    PostingUserInfo(UserInfo(name = "User2", profileImageUrl = "")),
+                    PostingUserInfo(UserInfo(name = "User2", profileImageUrl = "")),
+                    PostingUserInfo(UserInfo(name = "User2", profileImageUrl = "")),
+                    PostingUserInfo(UserInfo(name = "User2", profileImageUrl = "")),
                 ),
             isMeCertified = false,
             modifier = Modifier.padding(16.dp),

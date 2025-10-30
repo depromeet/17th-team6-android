@@ -17,11 +17,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.model.Emoji
-import com.dpm.sixpack.presentation.common.model.PostDetailUiState
-import com.dpm.sixpack.presentation.common.model.PostDropDownActionType
-import com.dpm.sixpack.presentation.common.model.PostReactionState
-import com.dpm.sixpack.presentation.common.model.PostingUserState
-import com.dpm.sixpack.presentation.common.model.RunningSummaryUiState
+import com.dpm.sixpack.presentation.common.model.PostReaction
+import com.dpm.sixpack.presentation.common.model.PostResource
+import com.dpm.sixpack.presentation.common.model.PostingUserInfo
+import com.dpm.sixpack.presentation.common.model.RunningSummary
+import com.dpm.sixpack.presentation.common.model.UserInfo
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 /**
@@ -36,13 +36,13 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
  */
 @Composable
 fun FeedPostCard(
-    postDetail: PostDetailUiState,
+    postDetail: PostResource,
     isMenuExpanded: Boolean,
     modifier: Modifier = Modifier,
     onMenuClick: () -> Unit = {},
     onDropDownMenuClick: (PostDropDownActionType) -> Unit = {},
-    onReactionChipClick: (String) -> Unit = {},
-    onReactionChipLongClick: (String) -> Unit = {},
+    onReactionChipClick: (Emoji) -> Unit = {},
+    onReactionChipLongClick: (Emoji) -> Unit = {},
     onAddReactionClick: () -> Unit = {},
 ) {
     Column(
@@ -84,8 +84,8 @@ fun FeedPostCard(
  */
 @Composable
 private fun PostUserInfoRow(
-    postingUser: PostingUserState,
-    isMenuExpanded: Boolean ,
+    postingUser: PostingUserInfo,
+    isMenuExpanded: Boolean,
     onMenuClick: () -> Unit,
     onDropDownMenuClick: (PostDropDownActionType) -> Unit,
     modifier: Modifier = Modifier,
@@ -95,10 +95,10 @@ private fun PostUserInfoRow(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         PostUserInfo(
-            userImageUrl = postingUser.userImageUrl,
-            userName = postingUser.userName,
+            userImageUrl = postingUser.user.name,
+            userName = postingUser.user.profileImageUrl,
             postingTime = postingUser.postingTime,
-            isMyPost = postingUser.isMe,
+            isMyPost = postingUser.user.isMe,
             // TODO SB typography 적용
             // textStyle = SixpackTheme.typography.body2,
         )
@@ -107,7 +107,7 @@ private fun PostUserInfoRow(
 
 
         PostDropDownMenuIcon(
-            isMyPost = postingUser.isMe,
+            isMyPost = postingUser.user.isMe,
             isMenuExpanded = isMenuExpanded,
             onMenuClick = { isMenuExpanded -> onMenuClick() },
             onDropDownMenuClick = onDropDownMenuClick
@@ -123,18 +123,20 @@ fun FeedPostCardPreview() {
 
         FeedPostCard(
             postDetail =
-                PostDetailUiState(
+                PostResource(
                     feedId = 1,
                     postImageUrl = "",
                     user =
-                        PostingUserState(
-                            userName = "비락식혜",
-                            userImageUrl = "",
+                        PostingUserInfo(
+                            user = UserInfo(
+                                name = "비락식혜",
+                                profileImageUrl = "",
+                                isMe = true,
+                            ),
                             postingTime = "36분 전",
-                            isMe = true,
                         ),
                     runningInfo =
-                        RunningSummaryUiState(
+                        RunningSummary(
                             totalDistance = "10.09",
                             totalTime = "4440", // 1시간 14분
                             averagePace = "7'30''",
@@ -143,9 +145,9 @@ fun FeedPostCardPreview() {
                         ),
                     reactions =
                         listOf(
-                            PostReactionState(Emoji.HEART, "10", true),
-                            PostReactionState(Emoji.FIRE, "5", false),
-                            PostReactionState(Emoji.HEART, "2", false),
+                            PostReaction(Emoji.HEART, "10", true),
+                            PostReaction(Emoji.FIRE, "5", false),
+                            PostReaction(Emoji.HEART, "2", false),
                         ),
                 ),
             isMenuExpanded ,
@@ -162,18 +164,20 @@ fun FeedFreindPostCardPreview() {
 
         FeedPostCard(
             postDetail =
-                PostDetailUiState(
+                PostResource(
                     feedId = 1,
                     postImageUrl = "",
                     user =
-                        PostingUserState(
-                            userName = "비락식혜",
-                            userImageUrl = "",
+                        PostingUserInfo(
+                            user = UserInfo(
+                                name = "비락식혜",
+                                profileImageUrl = "",
+                                isMe = false,
+                            ),
                             postingTime = "36분 전",
-                            isMe = false,
                         ),
                     runningInfo =
-                        RunningSummaryUiState(
+                        RunningSummary(
                             totalDistance = "10.09",
                             totalTime = "4440", // 1시간 14분
                             averagePace = "7'30''",
@@ -182,9 +186,9 @@ fun FeedFreindPostCardPreview() {
                         ),
                     reactions =
                         listOf(
-                            PostReactionState(Emoji.HEART, "10", true),
-                            PostReactionState(Emoji.FIRE, "5", false),
-                            PostReactionState(Emoji.HEART, "2", false),
+                            PostReaction(Emoji.HEART, "10", true),
+                            PostReaction(Emoji.FIRE, "5", false),
+                            PostReaction(Emoji.HEART, "2", false),
                         ),
                 ),
             isMenuExpanded,

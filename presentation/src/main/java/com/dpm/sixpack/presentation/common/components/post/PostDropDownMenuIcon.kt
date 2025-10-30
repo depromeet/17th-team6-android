@@ -28,9 +28,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
-import com.dpm.sixpack.presentation.common.model.PostDropDownActionType
 import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.theme.SixpackTheme
+
+enum class PostDropDownActionType {
+    EDIT,
+    DELETE,
+    SAVE_IMAGE,
+    REPORT
+}
 
 @Composable
 fun PostDropDownMenuIcon(
@@ -100,7 +106,11 @@ private fun MyPostMenuItems(
         }
     )
 
-    HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(vertical = 4.dp), color = SixpackTheme.colors.gray50)
+    HorizontalDivider(
+        thickness = 1.dp,
+        modifier = Modifier.padding(vertical = 4.dp),
+        color = SixpackTheme.colors.gray50
+    )
 
     CustomDropdownMenuItem(
         text = stringResource(id = R.string.feed_post_dropdown_menu_delete),
@@ -110,7 +120,11 @@ private fun MyPostMenuItems(
         }
     )
 
-    HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(vertical = 4.dp), color = SixpackTheme.colors.gray50)
+    HorizontalDivider(
+        thickness = 1.dp,
+        modifier = Modifier.padding(vertical = 4.dp),
+        color = SixpackTheme.colors.gray50
+    )
 
     CustomDropdownMenuItem(
         text = stringResource(id = R.string.feed_post_dropdown_menu_save_image),
@@ -161,9 +175,6 @@ private fun CustomDropdownMenuItem(
         )
     }
 }
-
-
-
 
 
 @Preview

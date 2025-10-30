@@ -27,13 +27,13 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
-import com.dpm.sixpack.presentation.common.model.RunningSummaryUiState
+import com.dpm.sixpack.presentation.common.model.RunningSummary
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 fun PostImageWithRecord(
     postImageUrl: String,
-    runningSummary: RunningSummaryUiState,
+    runningSummary: RunningSummary,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -184,7 +184,7 @@ fun PostTimeTextBox(
 fun PostImageWithRecordPreview() {
     DoRunPreviewWrapper {
         val runningSummary =
-            RunningSummaryUiState(
+            RunningSummary(
                 totalDistance = "5.2",
                 totalTime = "30분", // 30분
                 averagePace = "5'30''",

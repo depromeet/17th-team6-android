@@ -1,15 +1,5 @@
 package com.dpm.sixpack.domain.model
 
-data class FeedPage(
-    val contents: List<FeedContent>,
-    val meta: Meta,
-)
-
-data class FeedContent(
-    val userSummary: UserSummary,
-    val feeds: List<Feed>,
-)
-
 data class UserSummary(
     val name: String,
     val imageUrl: String,
@@ -31,12 +21,22 @@ data class Feed(
 data class Reaction(
     val emojiType: String,
     val totalCount: Int,
+    val isReacted: Boolean,
     val users: List<ReactingUser>,
 )
 
 data class ReactingUser(
     val user: User,
     val reactedAt: String, // 이모티콘 남긴 시간
+)
+data class FeedPage(
+    val contents: FeedContent,
+    val meta: Meta,
+)
+
+data class FeedContent(
+    val userSummary: UserSummary,
+    val feeds: List<Feed>,
 )
 
 data class Meta(
@@ -49,3 +49,5 @@ data class Meta(
     val hasNext: Boolean, // 다음 페이지가 있는지 여부
     val hasPrevious: Boolean, // 이전 페이지가 있는지 여부
 )
+
+
