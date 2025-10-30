@@ -13,6 +13,8 @@ class LocalRunningDataSource @Inject constructor(
         runningSessionDao.insertRunningTrackPoint(point)
     }
 
+    suspend fun getLastRunningTrackPoint(): RunningTrackPointEntity? = runningSessionDao.getLastRunningTrackPoint()
+
     suspend fun getUnsyncedTrackPoints(): List<RunningTrackPointEntity> = runningSessionDao.getUnsyncedTrackPoints()
 
     suspend fun markPointsAsSynced(pointIds: List<Long>) = runningSessionDao.markPointsAsSynced(pointIds)

@@ -26,4 +26,11 @@ interface RunningSessionDao {
      */
     @Query("UPDATE running_track_point SET isSynced = 1 WHERE id IN (:pointIds)")
     suspend fun markPointsAsSynced(pointIds: List<Long>)
+
+    /**
+     * 저장된 마지막 트랙 포인트를 가져옵니다. (ID가 가장 큰 항목)
+     * 테이블이 비어있으면 null을 반환합니다.
+     */
+    @Query("SELECT * FROM running_track_point ORDER BY id DESC LIMIT 1")
+    suspend fun getLastRunningTrackPoint(): RunningTrackPointEntity?
 }

@@ -5,13 +5,12 @@ import com.dpm.sixpack.core.util.TimeUtil.formatMillisToIsoUtc
 import com.dpm.sixpack.data.source.local.database.entity.RunningTrackPointEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlin.math.log
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class SaveSegmentDataRequestsDto(
     @SerialName("segments")
-    val segment: List<SegmentDataDto>,
+    val segments: List<SegmentDataDto>,
     @SerialName("isStopped")
     val isStopped: Boolean,
 )
@@ -39,12 +38,12 @@ data class SegmentDataDto(
 
 fun RunningTrackPointEntity.toSegmentDataDto(): SegmentDataDto =
     SegmentDataDto(
+        time = formatMillisToIsoUtc(timestamp),
         latitude = latitude,
         longitude = longitude,
         altitude = altitude,
+        distance = distanceInMeter,
         speed = speed,
         pace = avgPace,
         cadence = avgCadence,
-        distance = distanceInMeter,
-        time = formatMillisToIsoUtc(timestamp),
     )

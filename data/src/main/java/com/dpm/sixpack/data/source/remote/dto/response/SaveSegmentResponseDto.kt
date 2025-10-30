@@ -12,10 +12,4 @@ data class SaveSegmentResponseDto(
     val segmentId: Long,
     @SerialName("savedCount")
     val savedCount: Int,
-) {
-    fun toSyncResult() =
-        SaveRealtimeRunningDataResult.SyncResult(
-            segmentId = segmentId,
-            savedCount = savedCount,
-        )
-}
+)

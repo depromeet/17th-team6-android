@@ -4,7 +4,6 @@ import com.dpm.sixpack.domain.model.RealtimeRunningData
 import com.dpm.sixpack.domain.repository.GpsRepository
 import com.dpm.sixpack.domain.repository.RunningSessionRepository
 import com.dpm.sixpack.domain.repository.SensorRepository
-import com.dpm.sixpack.domain.repository.UserPreferenceRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -17,12 +16,13 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class CollectAndSaveRunningDataUseCase @Inject constructor(
     private val gpsRepository: GpsRepository,
     private val sensorRepository: SensorRepository,
     private val runningSessionRepository: RunningSessionRepository,
-    private val userPreferenceRepository: UserPreferenceRepository,
     private val stateTracker: RunningStateTracker,
 ) {
     private val useCaseScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -43,11 +43,11 @@ class CollectAndSaveRunningDataUseCase @Inject constructor(
             }
         }
 
-        // [핵심] 1초마다 로컬 저장을 '직접' 수행
+        //  1초마다 로컬DB 저장 수행
         useCaseScope.launch {
             stateTracker.runningDataState.filterNotNull().collect { data ->
                 Timber.d("RealtimeRunningData: $data")
-//                runningSessionRepository.saveRealtimeDataOnLocal(data)
+                runningSessionRepository.saveRealtimeDataOnLocal(data)
             }
         }
     }

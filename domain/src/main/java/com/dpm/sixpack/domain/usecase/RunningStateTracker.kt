@@ -1,6 +1,7 @@
 package com.dpm.sixpack.domain.usecase
 
 import android.location.Location
+import com.dpm.sixpack.domain.model.MaxPaceData
 import com.dpm.sixpack.domain.model.RealtimeRunningData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -26,7 +27,7 @@ class RunningStateTracker @Inject constructor() {
     private var avgCadence: Int = 0
 
     // 최대값
-    private var maxPace: Int = 0
+    private var maxPace: MaxPaceData = MaxPaceData.default
     private var maxCadence: Int = 0
 
     // --- 외부 공개 상태 ---
@@ -46,7 +47,7 @@ class RunningStateTracker @Inject constructor() {
         currentSteps = 0L
         avgPace = 0
         avgCadence = 0
-        maxPace = 0
+        maxPace = MaxPaceData.default
         maxCadence = 0
         _runningDataState.value = null
         _onFirstLocationReceived.resetReplayCache()
@@ -118,7 +119,9 @@ class RunningStateTracker @Inject constructor() {
                     altitude = it.altitude,
                     speed = it.speed.toDouble(),
                     avgPace = avgPace,
+                    maxPace = maxPace,
                     avgCadence = avgCadence,
+                    maxCadence = maxCadence,
                     distanceInMeter = roundedDistance,
                     durationInSec = durationInSeconds,
                     timestamp = System.currentTimeMillis(),
@@ -136,14 +139,25 @@ class RunningStateTracker @Inject constructor() {
         durationInSeconds: Int,
     ): Int {
         if (durationInSeconds <= 0) return 0
+
         val speedInMps = totalDistanceInMeters / durationInSeconds
         if (speedInMps <= 0) return 0
         val secondsPerKilometer = 1000.0 / speedInMps
 
         val newPace = secondsPerKilometer.toInt()
-        if (newPace > 0) {
-            maxPace = if (maxPace == 0) newPace else minOf(maxPace, newPace)
+
+        // 최대 페이스 갱신
+        if (newPace > 0 && lastLocation != null) {
+            val maxPaceValue = if (maxPace.value == -1) newPace else minOf(maxPace.value, newPace)
+
+            maxPace =
+                MaxPaceData(
+                    value = maxPaceValue,
+                    latitude = lastLocation!!.latitude,
+                    longitude = lastLocation!!.longitude,
+                )
         }
+
         return newPace
     }
 

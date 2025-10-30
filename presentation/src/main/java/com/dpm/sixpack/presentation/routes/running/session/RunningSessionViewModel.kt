@@ -242,13 +242,15 @@ class RunningSessionViewModel @Inject constructor(
     private fun handleMainRunningStopConfirm() =
         intent {
             if (state is RunningSessionUiState.Pause) {
-                finishRunningSessionUseCase()
+                // TODO: Add capture image logic to confirm stop session
+                finishRunningSessionUseCase(mapImageUrl = "")
                     .onSuccess {
                         Timber.d("session finish success")
                     }.onError {
-                        Timber.d("session start failed: ${it.message}")
+                        Timber.d("session finish failed: ${it.message}")
                     }
 
+                // TOOD SK: 종료 실패 시 다이얼로그 등
                 reduce {
                     RunningSessionUiState.Initial
                 }

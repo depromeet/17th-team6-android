@@ -14,7 +14,7 @@ class StartRunningUseCase @Inject constructor(
         val localSessionId = userPreferenceRepository.getSessionId()
 
         return if (localSessionId == null) {
-            runningSessionRepository.start().onSuccess { newSessionId ->
+            runningSessionRepository.startSession().onSuccess { newSessionId ->
                 userPreferenceRepository.updateSessionId(newSessionId)
             }
         } else {
