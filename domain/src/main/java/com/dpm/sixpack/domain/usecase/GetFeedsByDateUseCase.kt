@@ -1,8 +1,9 @@
 package com.dpm.sixpack.domain.usecase
 
 import androidx.paging.PagingData
-import com.dpm.sixpack.domain.model.FeedContent
+import com.dpm.sixpack.domain.repository.FeedListItem
 import com.dpm.sixpack.domain.repository.FeedRepository
+import com.dpm.sixpack.domain.repository.FeedType
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -12,10 +13,11 @@ import javax.inject.Inject
 class GetFeedsByDateUseCase @Inject constructor(
     private val feedRepository: FeedRepository
 ) {
-    operator fun invoke(currentDate: String): Flow<PagingData<FeedContent>> =
+    operator fun invoke(currentDate: String): Flow<PagingData<FeedListItem>> =
         feedRepository.getFeedPagingStream(
             pageSize = 10,
             initialLoadSize = 20,
+            feedType = FeedType.MAIN_FEED,
             currentDate = currentDate,
             userId = null
         )

@@ -15,13 +15,13 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class FeedPageDto(
     @SerialName("contents")
-    val contents: List<FeedContentDto>,
+    val contents: FeedContentDto,
     @SerialName("meta")
     val meta: MetaDto,
 ) {
     fun toDomain(): FeedPage =
         FeedPage(
-            contents = contents.map { it.toDomain() },
+            contents = contents.toDomain(),
             meta = meta.toDomain(),
         )
 }
@@ -111,6 +111,7 @@ data class FeedDto(
         )
 }
 
+//TODO 서버값으로 바꾸기
 @Serializable
 data class ReactionDto(
     @SerialName("emojiType")
@@ -119,12 +120,15 @@ data class ReactionDto(
     val totalCount: Int,
     @SerialName("users")
     val users: List<ReactingUserDto>,
+    @SerialName("isReacted")
+     val isReacted: Boolean = false,
 ) {
     fun toDomain(): Reaction =
         Reaction(
             emojiType = emojiType,
             totalCount = totalCount,
             users = users.map { it.toDomain() },
+            isReacted = isReacted,
         )
 }
 

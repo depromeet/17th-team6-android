@@ -6,10 +6,11 @@ import androidx.paging.PagingData
 import com.dpm.sixpack.data.paging.FeedPagingSource
 import com.dpm.sixpack.data.source.remote.datasoruce.FeedDataSource
 import com.dpm.sixpack.domain.exception.DoRunException
-import com.dpm.sixpack.domain.model.FeedContent
 import com.dpm.sixpack.domain.model.ReactionResult
 import com.dpm.sixpack.domain.model.SelfieCounts
+import com.dpm.sixpack.domain.repository.FeedListItem
 import com.dpm.sixpack.domain.repository.FeedRepository
+import com.dpm.sixpack.domain.repository.FeedType
 import com.dpm.sixpack.domain.util.DoRunResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -20,11 +21,12 @@ class FeedRepositoryImpl @Inject constructor(
     private val feedDataSource: FeedDataSource,
 ) : FeedRepository {
     override fun getFeedPagingStream(
-        pageSize : Int,
-        initialLoadSize : Int,
+        pageSize: Int,
+        initialLoadSize: Int,
+        feedType: FeedType,
         currentDate: String?,
         userId: Long?
-    ): Flow<PagingData<FeedContent>> {
+    ): Flow<PagingData<FeedListItem>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 10, // 2. 성능 튜닝 섹션에서 권장한 값
@@ -33,7 +35,7 @@ class FeedRepositoryImpl @Inject constructor(
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
-                FeedPagingSource(feedDataSource, currentDate, userId)
+                FeedPagingSource(feedDataSource, feedType, currentDate, userId)
             }
         ).flow
     }
@@ -46,7 +48,7 @@ class FeedRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             try {
                 val response =
-                    feedDataSource.postReaction( selfieId, emojiType )
+                    feedDataSource.postReaction(selfieId, emojiType)
                 val reactionResult = response.data?.toDomain() ?: throw DoRunException.DataError("데이터 변환에 실패했습니다")
                 DoRunResult.Success(reactionResult)
             } catch (e: Exception) {
