@@ -2,6 +2,7 @@ package com.dpm.sixpack.presentation.routes.running.map
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.annotation.RequiresPermission
 import androidx.lifecycle.SavedStateHandle
@@ -49,7 +50,7 @@ class MapViewModel @Inject constructor(
             MapIntent.ReadyToFinish -> handleSessionFinishReady()
             MapIntent.ToggleFollowingMode -> handleToggleFollowingMode()
             MapIntent.FollowingModeOff -> handleToggleFollowingModeOff()
-            is MapIntent.SessionFinish -> handleSessionFinish(intent.mapImageUri)
+            is MapIntent.SessionFinish -> handleSessionFinish(intent.mapImage)
             is MapIntent.UpdateUserLocation -> handleUserLocationChange(intent.latLng)
             is MapIntent.UpdatePermission -> handlePermissionUpdate(intent.isGranted)
             is MapIntent.UpdateRunningMapPath -> updateRunningMapPath(intent.pathState)
@@ -165,9 +166,9 @@ class MapViewModel @Inject constructor(
             }
         }
 
-    private fun handleSessionFinish(mapImageUri: Uri) =
+    private fun handleSessionFinish(mapImage: Bitmap) =
         intent {
-            finishRunningSessionUseCase(mapImageUri)
+            finishRunningSessionUseCase(mapImage)
                 .onSuccess {
                     Timber.d("session finish success")
                 }.onError {

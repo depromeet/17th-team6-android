@@ -1,6 +1,6 @@
 package com.dpm.sixpack.data.repository
 
-import android.net.Uri
+import android.graphics.Bitmap
 import com.dpm.sixpack.data.source.local.database.LocalRunningDataSource
 import com.dpm.sixpack.data.source.local.database.toRealtimeRunningData
 import com.dpm.sixpack.data.source.local.database.toTrackPointEntity
@@ -174,7 +174,7 @@ class RunningSessionRepositoryImpl @Inject constructor(
      */
     override suspend fun finishSession(
         sessionId: Long,
-        mapImageUri: Uri,
+        mapImage: Bitmap,
     ): DoRunResult<RunningSessionResult> =
         withContext(Dispatchers.IO) {
             try {
@@ -188,7 +188,7 @@ class RunningSessionRepositoryImpl @Inject constructor(
                 val finishRequestDto = getFinishRequestDto()
 
                 // API 호출 (예외 발생 가능)
-                val runningSessionResult = requestFinishApi(sessionId, finishRequestDto, mapImageUri)
+                val runningSessionResult = requestFinishApi(sessionId, finishRequestDto, mapImage)
 
                 // API 호출 성공 시 로컬 데이터 삭제
                 localRunningDataSource.deleteAllRunningTrackPoints()
@@ -216,14 +216,14 @@ class RunningSessionRepositoryImpl @Inject constructor(
     private suspend fun requestFinishApi(
         sessionId: Long,
         finishRequestDto: FinishRunningRequestDto,
-        mapImageUri: Uri,
+        mapImage: Bitmap,
     ): RunningSessionResult =
         try {
             val finishResponse =
                 runningSessionDataSource.postFinishRunning(
                     sessionId,
                     finishRequestDto,
-                    mapImageUri,
+                    mapImage,
                 )
             finishResponse.data?.toRunningSessionResult()
                 ?: throw DoRunException.DataError("서버 응답 데이터(finish)가 비어 있습니다.")

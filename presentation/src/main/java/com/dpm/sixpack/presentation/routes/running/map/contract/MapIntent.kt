@@ -1,5 +1,6 @@
 package com.dpm.sixpack.presentation.routes.running.map.contract
 
+import android.graphics.Bitmap
 import android.net.Uri
 import com.dpm.sixpack.presentation.routes.running.RunningRouteIntent
 import com.dpm.sixpack.presentation.routes.running.session.contract.state.PathState
@@ -27,6 +28,6 @@ sealed interface MapIntent : RunningRouteIntent {
     data object ReadyToFinish : MapIntent
 
     data class SessionFinish(
-        val mapImageUri: Uri,
+        val mapImage: Bitmap,
     ) : MapIntent
 }

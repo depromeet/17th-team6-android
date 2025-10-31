@@ -1,9 +1,6 @@
 package com.dpm.sixpack.presentation.routes.running.map
 
-import android.content.Context
 import android.graphics.Bitmap
-import android.net.Uri
-import android.util.Log
 import android.view.Gravity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.AnchoredDraggableState
@@ -40,7 +37,6 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.dpm.sixpack.presentation.R
@@ -67,13 +63,9 @@ import com.naver.maps.map.compose.MapType
 import com.naver.maps.map.compose.MapUiSettings
 import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.PathOverlay
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 import timber.log.Timber
-import java.io.File
-import java.io.FileOutputStream
 import kotlin.math.roundToInt
 
 private val sheetPeekHeight = 84.dp
@@ -278,13 +270,7 @@ private fun RunningMapScreenContent(
                         val bitmap = graphicsLayer.graphicLayerToBitmap()
 
                         if (bitmap != null) {
-                            val uri = saveBitmapAndGetUri(context, bitmap)
-                            if (uri != null) {
-                                onMapIntent(MapIntent.SessionFinish(uri))
-                                Timber.d("캡처 성공 및 Uri 확보: $uri")
-                            } else {
-                                Timber.e("Uri를 가져오는 데 실패했습니다.")
-                            }
+                            onMapIntent(MapIntent.SessionFinish(bitmap))
                         } else {
                             Timber.e("캡처된 비트맵이 null입니다.")
                         }
@@ -414,42 +400,3 @@ private suspend fun GraphicsLayer.graphicLayerToBitmap(): Bitmap? =
         Timber.tag("GraphicsCapture").e(e, "GraphicsLayer 캡처 중 오류 발생")
         null // 오류 발생 시 null 반환
     }
-
-/**
- * 비트맵을 앱 캐시 디렉터리에 저장하고 FileProvider Uri를 반환합니다.
- *
- * @param context Context 객체
- * @param bitmap 저장할 Bitmap
- * @return content:// 형태의 Uri. 실패 시 null.
- */
-private suspend fun saveBitmapAndGetUri(
-    context: Context,
-    bitmap: Bitmap,
-): Uri? {
-    // File I/O 작업은 IO Dispatcher에서 수행
-    return withContext(Dispatchers.IO) {
-        try {
-            // 캐시 디렉터리에 "images" 폴더 생성
-            val cachePath = File(context.cacheDir, "images")
-            cachePath.mkdirs() // images 디렉터리가 없으면 생성
-
-            // 파일 생성 (파일 이름은 중복되지 않게 타임스탬프 사용)
-            val file = File(cachePath, "running_result_${System.currentTimeMillis()}.png")
-            val stream = FileOutputStream(file)
-
-            // 비트맵을 JPEG 형식으로 압축하여 파일에 쓰기
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-            stream.close()
-
-            // FileProvider를 사용하여 content:// Uri 생성
-            // 이 authority는 AndroidManifest.xml에 정의된 값과 일치해야 합니다.
-            val authority = "${context.packageName}.fileprovider"
-            val uri = FileProvider.getUriForFile(context, authority, file)
-
-            uri
-        } catch (e: Exception) {
-            Timber.e("비트맵 저장 또는 Uri 생성 실패")
-            null
-        }
-    }
-}

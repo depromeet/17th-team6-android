@@ -1,6 +1,6 @@
 package com.dpm.sixpack.domain.repository
 
-import android.net.Uri
+import android.graphics.Bitmap
 import com.dpm.sixpack.domain.model.RealtimeRunningData
 import com.dpm.sixpack.domain.model.RunningSessionResult
 import com.dpm.sixpack.domain.usecase.SaveRealtimeRunningDataResult
@@ -22,6 +22,6 @@ interface RunningSessionRepository {
 
     suspend fun finishSession(
         sessionId: Long,
-        mapImageUri: Uri,
+        mapImage: Bitmap,
     ): DoRunResult<RunningSessionResult>
 }
