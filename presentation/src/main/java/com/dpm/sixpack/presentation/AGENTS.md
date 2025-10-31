@@ -1229,31 +1229,7 @@ fun SignUpRoute(...) {
 
 ## 4-5. 재사용 체크리스트
 
-새로운 화면을 만들기 전에 아래 체크리스트를 확인하세요:
-
-**Theme:**
-- [ ] 모든 색상은 `SixpackTheme.colors`에서 사용
-- [ ] 모든 텍스트 스타일은 `SixpackTheme.typography`에서 사용
-- [ ] 모든 Shape는 `SixpackTheme.shapes`에서 사용
-- [ ] 좌우 여백은 `SixPackDimen.defaultSideMargin` 사용
-
-**String Resources:**
-- [ ] 모든 UI 텍스트는 `strings.xml`에 정의
-- [ ] Composable에서는 `stringResource(R.string.xxx)` 사용
-- [ ] ViewModel SideEffect에서는 `@StringRes Int` 사용
-- [ ] Toast/Snackbar 메시지도 string 리소스 사용
-
-**Components:**
-- [ ] 버튼이 필요하면 `DoRunDefaultButton` 사용
-- [ ] 뒤로가기가 필요하면 `DoRunNavigationTopBar` 사용
-- [ ] 복잡한 TopBar가 필요하면 `DoRunTopBarSlot` 사용
-- [ ] @Preview에서는 `DoRunPreviewWrapper` 사용
-- [ ] 권한이 필요하면 `PermissionHandler` 사용
-
-**Utilities:**
-- [ ] 시간 포맷이 필요하면 `formatSecondsToTime` 사용
-- [ ] 페이스 포맷이 필요하면 `formatPace` 사용
-- [ ] 리플 없는 클릭이 필요하면 `noRippleClickable` 사용
+새로운 화면을 만들기 전에 common 이름 붙은 패키지 한번 확인하세요.
 
 ## 5. 예시
 

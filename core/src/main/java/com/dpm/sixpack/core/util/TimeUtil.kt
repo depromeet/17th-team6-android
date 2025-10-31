@@ -1,6 +1,9 @@
 package com.dpm.sixpack.core.util
 
+import timber.log.Timber
 import java.time.Duration
+import java.time.Instant
+import java.time.format.DateTimeParseException
 
 object TimeUtil {
     /**
@@ -25,4 +28,14 @@ object TimeUtil {
             "$totalMinutes:$paddedSeconds"
         }
     }
+
+    fun isoStringToEpochSeconds(timestamp: String): Long? =
+        try {
+            val instant = Instant.parse(timestamp)
+            instant.epochSecond
+        } catch (e: DateTimeParseException) {
+            Timber.e("Error parsing timestamp: $timestamp")
+            e.printStackTrace()
+            null
+        }
 }

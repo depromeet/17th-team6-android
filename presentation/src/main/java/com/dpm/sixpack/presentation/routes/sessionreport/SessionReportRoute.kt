@@ -37,7 +37,7 @@ import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
 import com.dpm.sixpack.presentation.common.util.formatPaceToString
 import com.dpm.sixpack.presentation.common.util.formatSecondsToTime
 import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
-import com.dpm.sixpack.presentation.routes.session.component.panel.RecordItem
+import com.dpm.sixpack.presentation.routes.running.session.component.panel.RecordItem
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds

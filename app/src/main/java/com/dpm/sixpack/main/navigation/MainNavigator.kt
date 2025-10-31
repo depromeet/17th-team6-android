@@ -14,7 +14,7 @@ import androidx.navigation.navOptions
 import com.dpm.sixpack.presentation.destinations.MainRoute
 import com.dpm.sixpack.presentation.destinations.Route
 import com.dpm.sixpack.presentation.navigation.MainNavTab
-import com.dpm.sixpack.presentation.routes.session.navigation.navigateRunningSession
+import com.dpm.sixpack.presentation.routes.running.navigation.navigateRunningSession
 import com.dpm.sixpack.presentation.routes.sessionreport.navigation.navigateSessionReport
 import com.dpm.sixpack.presentation.routes.signup.navigation.navigateSignUp
 import timber.log.Timber
@@ -24,6 +24,7 @@ class MainNavigator(
     val startDestination: Route,
 ) {
     private val previousDestination = mutableStateOf<NavDestination?>(null)
+    private var bottomBarVisibility = mutableStateOf(true)
 
     val currentDestination: NavDestination?
         @Composable get() {
@@ -65,7 +66,7 @@ class MainNavigator(
     fun navigateToSessionReport() {
         navController.navigateSessionReport(
             navOptions {
-                popUpTo(MainRoute.Home) {
+                popUpTo(MainRoute.Running) {
                     inclusive = false
                 }
             },
@@ -104,9 +105,14 @@ class MainNavigator(
 
     @Composable
     fun shouldShowBottomBar() =
-        MainNavTab.contains {
-            currentDestination?.hasRoute(it::class) == true
-        }
+        bottomBarVisibility.value &&
+            MainNavTab.contains {
+                currentDestination?.hasRoute(it::class) == true
+            }
+
+    fun setBottomBarVisibility(isVisible: Boolean) {
+        bottomBarVisibility.value = isVisible
+    }
 }
 
 @Composable
