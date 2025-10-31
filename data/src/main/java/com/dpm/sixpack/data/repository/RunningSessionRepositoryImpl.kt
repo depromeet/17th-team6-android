@@ -1,5 +1,6 @@
 package com.dpm.sixpack.data.repository
 
+import android.net.Uri
 import com.dpm.sixpack.data.source.local.database.LocalRunningDataSource
 import com.dpm.sixpack.data.source.local.database.toRealtimeRunningData
 import com.dpm.sixpack.data.source.local.database.toTrackPointEntity
@@ -173,7 +174,7 @@ class RunningSessionRepositoryImpl @Inject constructor(
      */
     override suspend fun finishSession(
         sessionId: Long,
-        mapImageUrl: String,
+        mapImageUri: Uri,
     ): DoRunResult<RunningSessionResult> =
         withContext(Dispatchers.IO) {
             try {
@@ -184,10 +185,10 @@ class RunningSessionRepositoryImpl @Inject constructor(
                 }
 
                 // DTO 생성 로직 (예외 발생 가능)
-                val finishRequestDto = getFinishRequestDto(mapImageUrl)
+                val finishRequestDto = getFinishRequestDto()
 
                 // API 호출 (예외 발생 가능)
-                val runningSessionResult = requestFinishApi(sessionId, finishRequestDto)
+                val runningSessionResult = requestFinishApi(sessionId, finishRequestDto, mapImageUri)
 
                 // API 호출 성공 시 로컬 데이터 삭제
                 localRunningDataSource.deleteAllRunningTrackPoints()
@@ -215,12 +216,14 @@ class RunningSessionRepositoryImpl @Inject constructor(
     private suspend fun requestFinishApi(
         sessionId: Long,
         finishRequestDto: FinishRunningRequestDto,
+        mapImageUri: Uri,
     ): RunningSessionResult =
         try {
             val finishResponse =
                 runningSessionDataSource.postFinishRunning(
                     sessionId,
                     finishRequestDto,
+                    mapImageUri,
                 )
             finishResponse.data?.toRunningSessionResult()
                 ?: throw DoRunException.DataError("서버 응답 데이터(finish)가 비어 있습니다.")
@@ -234,7 +237,7 @@ class RunningSessionRepositoryImpl @Inject constructor(
             throw DoRunException.DataError("종료 API 요청 실패: ${e.message}")
         }
 
-    private suspend fun getFinishRequestDto(mapImageUrl: String): FinishRunningRequestDto {
+    private suspend fun getFinishRequestDto(): FinishRunningRequestDto {
         val lastTrackPoint =
             localRunningDataSource.getLastRunningTrackPoint()
                 ?: throw DoRunException.DatabaseError("저장된 로컬 데이터가 없습니다.")
@@ -258,7 +261,6 @@ class RunningSessionRepositoryImpl @Inject constructor(
         Timber.d("Final segments synced. Calling finish API...")
         return FinishRunningRequestDto(
             data = runningSessionResultDto,
-            mapImage = mapImageUrl,
         )
     }
 }

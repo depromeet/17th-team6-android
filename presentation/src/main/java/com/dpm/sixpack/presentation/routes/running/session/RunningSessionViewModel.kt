@@ -9,7 +9,6 @@ import android.os.IBinder
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dpm.sixpack.domain.model.RealtimeRunningData
-import com.dpm.sixpack.domain.usecase.FinishRunningSessionUseCase
 import com.dpm.sixpack.domain.usecase.StartRunningUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.common.util.MockLocationClient
@@ -43,7 +42,6 @@ class RunningSessionViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     @ApplicationContext private val context: Context,
     private val startRunningUseCase: StartRunningUseCase,
-    private val finishRunningSessionUseCase: FinishRunningSessionUseCase,
     private val fusedLocationProviderClient: FusedLocationProviderClient,
 ) : BaseViewModel<RunningSessionUiState, RunningSessionIntent, RunningSessionSideEffect>() {
     // FIXME: 프리런칭 시뮬레이션용
@@ -243,14 +241,13 @@ class RunningSessionViewModel @Inject constructor(
         intent {
             if (state is RunningSessionUiState.Pause) {
                 // TODO: Add capture image logic to confirm stop session
-                finishRunningSessionUseCase(mapImageUrl = "")
-                    .onSuccess {
-                        Timber.d("session finish success")
-                    }.onError {
-                        Timber.d("session finish failed: ${it.message}")
-                    }
+//                finishRunningSessionUseCase()
+//                    .onSuccess {
+//                        Timber.d("session finish success")
+//                    }.onError {
+//                        Timber.d("session finish failed: ${it.message}")
+//                    }
 
-                // TOOD SK: 종료 실패 시 다이얼로그 등
                 reduce {
                     RunningSessionUiState.Initial
                 }

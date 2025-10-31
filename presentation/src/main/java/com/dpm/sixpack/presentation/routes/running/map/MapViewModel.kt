@@ -2,9 +2,11 @@ package com.dpm.sixpack.presentation.routes.running.map
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.net.Uri
 import androidx.annotation.RequiresPermission
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.dpm.sixpack.domain.usecase.FinishRunningSessionUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapIntent
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapSideEffect
@@ -13,6 +15,7 @@ import com.dpm.sixpack.presentation.routes.running.map.contract.MapViewState
 import com.dpm.sixpack.presentation.routes.running.session.contract.state.PathState
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.naver.maps.geometry.LatLng
+import com.naver.maps.geometry.LatLngBounds
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -31,6 +34,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MapViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val finishRunningSessionUseCase: FinishRunningSessionUseCase,
     private val fusedLocationProviderClient: FusedLocationProviderClient,
 ) : BaseViewModel<MapUiState, MapIntent, MapSideEffect>() {
     override val initialState: MapUiState = MapUiState()
@@ -42,9 +46,10 @@ class MapViewModel @Inject constructor(
     override fun onIntent(intent: MapIntent) {
         when (intent) {
             MapIntent.SessionStartClick -> handleSessionStartButtonClick()
-            MapIntent.SessionFinished -> handleSessionFinished()
+            MapIntent.ReadyToFinish -> handleSessionFinishReady()
             MapIntent.ToggleFollowingMode -> handleToggleFollowingMode()
             MapIntent.FollowingModeOff -> handleToggleFollowingModeOff()
+            is MapIntent.SessionFinish -> handleSessionFinish(intent.mapImageUri)
             is MapIntent.UpdateUserLocation -> handleUserLocationChange(intent.latLng)
             is MapIntent.UpdatePermission -> handlePermissionUpdate(intent.isGranted)
             is MapIntent.UpdateRunningMapPath -> updateRunningMapPath(intent.pathState)
@@ -128,13 +133,53 @@ class MapViewModel @Inject constructor(
             postSideEffect(MapSideEffect.SetBottomBarVisibility(false))
         }
 
-    private fun handleSessionFinished() =
+    // 세션 종료 준비
+    private fun handleSessionFinishReady() =
+        // 종료 스크린샷
         intent {
+            val curState = state.mapViewState
+            if (curState is MapViewState.Running) {
+                val allRunningPaths: List<LatLng> = curState.pathColorState.paths.flatten()
+
+                if (allRunningPaths.isNotEmpty()) {
+                    val bounds =
+                        LatLngBounds
+                            .Builder()
+                            .include(allRunningPaths)
+                            .build()
+
+                    reduce {
+                        state.copy(
+                            mapViewState = MapViewState.Finishing(bounds),
+                        )
+                    }
+                } else {
+                    // allRunningPaths 비어있음 = 러닝 안함
+                    // TODO SK: 다이얼로그? ex) 러닝 기록이 없어요. 이대료 종료하면 저장되지 않아요.
+                    reduce {
+                        state.copy(
+                            mapViewState = MapViewState.Friend(),
+                        )
+                    }
+                }
+            }
+        }
+
+    private fun handleSessionFinish(mapImageUri: Uri) =
+        intent {
+            finishRunningSessionUseCase(mapImageUri)
+                .onSuccess {
+                    Timber.d("session finish success")
+                }.onError {
+                    Timber.d("session finish failed: ${it.message}")
+                }
+
             reduce {
                 state.copy(
                     mapViewState = MapViewState.Friend(),
                 )
             }
+
             postSideEffect(MapSideEffect.NavigateToReport)
         }
 

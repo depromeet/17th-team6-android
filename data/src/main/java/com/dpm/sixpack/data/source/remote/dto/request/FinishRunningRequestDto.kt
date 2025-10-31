@@ -9,6 +9,4 @@ import kotlinx.serialization.Serializable
 data class FinishRunningRequestDto(
     @SerialName("data")
     val data: RunningSessionResultDto,
-    @SerialName("mapImage")
-    val mapImage: String,
 )

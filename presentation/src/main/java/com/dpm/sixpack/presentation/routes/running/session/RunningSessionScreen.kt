@@ -2,14 +2,12 @@ package com.dpm.sixpack.presentation.routes.running.session
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.constraintlayout.compose.ConstrainScope
 import androidx.constraintlayout.compose.ConstrainedLayoutReference
 import androidx.constraintlayout.compose.ConstraintLayoutScope
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.dpm.sixpack.presentation.common.components.FullScreenLoadingIndicator
 import com.dpm.sixpack.presentation.routes.running.session.component.dialog.RunningStopDialog
 import com.dpm.sixpack.presentation.routes.running.session.component.panel.RunningRecordPanel
 import com.dpm.sixpack.presentation.routes.running.session.component.ready.ReadyOverlay
@@ -26,20 +24,16 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 fun ConstraintLayoutScope.RunningSessionScreen(
     panelRef: ConstrainedLayoutReference,
     updateNewRunningPath: (PathState) -> Unit,
-    onSessionFinished: () -> Unit,
+    onSessionFinish: () -> Unit,
+    setFullScreenLoading: (Boolean) -> Unit,
     sessionViewModel: RunningSessionViewModel = hiltViewModel(),
 ) {
     val sessionState = sessionViewModel.collectAsState().value
 
     sessionViewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
-            is RunningSessionSideEffect.SessionFinish -> {
-                onSessionFinished()
-            }
-
-            is RunningSessionSideEffect.UpdateRunningPath -> {
-                updateNewRunningPath(sideEffect.newPathState)
-            }
+            is RunningSessionSideEffect.SessionFinish -> onSessionFinish()
+            is RunningSessionSideEffect.UpdateRunningPath -> updateNewRunningPath(sideEffect.newPathState)
         }
     }
 
@@ -49,10 +43,12 @@ fun ConstraintLayoutScope.RunningSessionScreen(
 
     when (sessionState) {
         is RunningSessionUiState.Initial -> {
-            // do nothing
+            setFullScreenLoading(true)
+            sessionViewModel.onIntent(RunningSessionIntent.SessionStart)
         }
 
         is RunningSessionUiState.Ready -> {
+            setFullScreenLoading(false)
             ReadyOverlay(
                 modifier =
                     Modifier
@@ -111,11 +107,6 @@ fun ConstraintLayoutScope.RunningSessionScreen(
                 )
             }
         }
-    }
-
-    if (sessionState is RunningSessionUiState.Initial) {
-        FullScreenLoadingIndicator()
-        sessionViewModel.onIntent(RunningSessionIntent.SessionStart)
     }
 }
 

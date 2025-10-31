@@ -1,5 +1,9 @@
 package com.dpm.sixpack.presentation.routes.running.map
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.net.Uri
+import android.util.Log
 import android.view.Gravity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.AnchoredDraggableState
@@ -23,7 +27,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.layer.GraphicsLayer
+import androidx.compose.ui.graphics.layer.drawLayer
+import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
@@ -31,6 +40,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.dpm.sixpack.presentation.R
@@ -57,9 +67,13 @@ import com.naver.maps.map.compose.MapType
 import com.naver.maps.map.compose.MapUiSettings
 import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.PathOverlay
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 import timber.log.Timber
+import java.io.File
+import java.io.FileOutputStream
 import kotlin.math.roundToInt
 
 private val sheetPeekHeight = 84.dp
@@ -124,6 +138,9 @@ private fun RunningMapScreenContent(
     onMapIntent: (MapIntent) -> Unit,
     modifier: Modifier,
 ) {
+    val context = LocalContext.current
+    val graphicsLayer = rememberGraphicsLayer()
+
     val density = LocalDensity.current
     val sheetPeekHeightPx = with(density) { sheetPeekHeight.toPx() }
     val startButtonHeightPx = with(density) { startButtonHeightDp.toPx() }
@@ -187,6 +204,15 @@ private fun RunningMapScreenContent(
                             end.linkTo(parent.end)
                             width = Dimension.fillToConstraints
                             height = Dimension.fillToConstraints
+                        }.drawWithContent {
+                            // 컨텐츠를 GraphicsLayer에 기록(record)합니다.
+                            graphicsLayer.record {
+                                // this@drawWithContent.drawContent()를 호출하여 Composable의 실제 내용(지도)을 그립니다.
+                                this@drawWithContent.drawContent()
+                            }
+
+                            // 기록된 레이어를 화면에 그립니다. (이걸 해야 지도가 보임)
+                            drawLayer(graphicsLayer)
                         },
                 cameraPositionState = cameraPositionState,
                 properties =
@@ -240,22 +266,77 @@ private fun RunningMapScreenContent(
                 }
             }
 
-            if (mapState.mapViewState is MapViewState.Loading) {
-                setFullScreenLoading(true)
-            } else {
-                setFullScreenLoading(false)
-            }
+            when (mapState.mapViewState) {
+                MapViewState.Loading -> setFullScreenLoading(true)
+                is MapViewState.Finishing -> {
+                    setFullScreenLoading(true)
 
-            if (mapState.mapViewState is MapViewState.Running) {
-                RunningSessionScreen(
-                    panelRef = panelRef,
-                    updateNewRunningPath = { pathState ->
-                        onMapIntent(MapIntent.UpdateRunningMapPath(pathState))
-                    },
-                    onSessionFinished = {
-                        onMapIntent(MapIntent.SessionFinished)
-                    },
-                )
+                    LaunchedEffect(Unit) {
+                        val bounds = mapState.mapViewState.latLngBounds
+                        cameraPositionState.move(CameraUpdate.fitBounds(bounds, 50))
+
+                        val bitmap = graphicsLayer.graphicLayerToBitmap()
+
+                        if (bitmap != null) {
+                            val uri = saveBitmapAndGetUri(context, bitmap)
+                            if (uri != null) {
+                                onMapIntent(MapIntent.SessionFinish(uri))
+                                Timber.d("캡처 성공 및 Uri 확보: $uri")
+                            } else {
+                                Timber.e("Uri를 가져오는 데 실패했습니다.")
+                            }
+                        } else {
+                            Timber.e("캡처된 비트맵이 null입니다.")
+                        }
+                    }
+                }
+
+                is MapViewState.Friend -> {
+                    setFullScreenLoading(false)
+                    DraggableFriendBottomSheet(
+                        modifier =
+                            Modifier
+                                .constrainAs(sheetRef) {
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                }.fillMaxWidth()
+                                .offset {
+                                    val yOffset = draggableState.offset
+                                    if (yOffset.isNaN()) {
+                                        IntOffset(x = 0, y = boxHeight.roundToInt())
+                                    } else {
+                                        IntOffset(x = 0, y = yOffset.roundToInt())
+                                    }
+                                },
+                        draggableState = draggableState,
+                        friendList = sampleFriendList,
+                        sheetHeight = sheetMaxHeight,
+                        startButtonHeight = startButtonHeightDp,
+                    )
+
+                    RunningStartButton(
+                        modifier =
+                            Modifier.constrainAs(startButtonRef) {
+                                bottom.linkTo(parent.bottom)
+                            },
+                        onStartClick = {
+                            onMapIntent(MapIntent.SessionStartClick)
+                        },
+                    )
+                }
+
+                is MapViewState.Running -> {
+                    RunningSessionScreen(
+                        panelRef = panelRef,
+                        updateNewRunningPath = { pathState ->
+                            onMapIntent(MapIntent.UpdateRunningMapPath(pathState))
+                        },
+                        onSessionFinish = {
+                            onMapIntent(MapIntent.ReadyToFinish)
+                        },
+                        setFullScreenLoading = setFullScreenLoading,
+                    )
+                }
             }
 
             if (mapState.mapViewState !is MapViewState.Loading) {
@@ -278,45 +359,11 @@ private fun RunningMapScreenContent(
                                         bottom.linkTo(panelRef.top, margin = 24.dp)
                                     }
 
-                                    MapViewState.Loading -> { // do nothing
+                                    else -> {
+                                        // do nothing
                                     }
                                 }
                             },
-                )
-            }
-
-            if (mapState.mapViewState is MapViewState.Friend) {
-                DraggableFriendBottomSheet(
-                    modifier =
-                        Modifier
-                            .constrainAs(sheetRef) {
-                                start.linkTo(parent.start)
-                                end.linkTo(parent.end)
-                            }.fillMaxWidth()
-                            .offset {
-                                val yOffset = draggableState.offset
-                                if (yOffset.isNaN()) {
-                                    IntOffset(x = 0, y = boxHeight.roundToInt())
-                                } else {
-                                    IntOffset(x = 0, y = yOffset.roundToInt())
-                                }
-                            },
-                    draggableState = draggableState,
-                    friendList = sampleFriendList,
-                    sheetHeight = sheetMaxHeight,
-                    startButtonHeight = startButtonHeightDp,
-                )
-            }
-
-            if (mapState.mapViewState !is MapViewState.Running) {
-                RunningStartButton(
-                    modifier =
-                        Modifier.constrainAs(startButtonRef) {
-                            bottom.linkTo(parent.bottom)
-                        },
-                    onStartClick = {
-                        onMapIntent(MapIntent.SessionStartClick)
-                    },
                 )
             }
         }
@@ -347,5 +394,62 @@ private fun RunningStartButton(
             },
             text = stringResource(id = R.string.session_start_running_button),
         )
+    }
+}
+
+/**
+ * GraphicsLayer의 내용을 캡처하여 Android Bitmap으로 변환하는 suspend 확장 함수
+ * @return 캡처된 Bitmap. 오류 발생 시 null 반환
+ */
+private suspend fun GraphicsLayer.graphicLayerToBitmap(): Bitmap? =
+    try {
+        Timber.tag("GraphicsCapture").d("GraphicsLayer 캡처를 시작합니다...")
+
+        val imageBitmap = this.toImageBitmap()
+
+        Timber.tag("GraphicsCapture").d("GraphicsLayer 캡처 성공!")
+
+        imageBitmap.asAndroidBitmap()
+    } catch (e: Exception) {
+        Timber.tag("GraphicsCapture").e(e, "GraphicsLayer 캡처 중 오류 발생")
+        null // 오류 발생 시 null 반환
+    }
+
+/**
+ * 비트맵을 앱 캐시 디렉터리에 저장하고 FileProvider Uri를 반환합니다.
+ *
+ * @param context Context 객체
+ * @param bitmap 저장할 Bitmap
+ * @return content:// 형태의 Uri. 실패 시 null.
+ */
+private suspend fun saveBitmapAndGetUri(
+    context: Context,
+    bitmap: Bitmap,
+): Uri? {
+    // File I/O 작업은 IO Dispatcher에서 수행
+    return withContext(Dispatchers.IO) {
+        try {
+            // 캐시 디렉터리에 "images" 폴더 생성
+            val cachePath = File(context.cacheDir, "images")
+            cachePath.mkdirs() // images 디렉터리가 없으면 생성
+
+            // 파일 생성 (파일 이름은 중복되지 않게 타임스탬프 사용)
+            val file = File(cachePath, "running_result_${System.currentTimeMillis()}.png")
+            val stream = FileOutputStream(file)
+
+            // 비트맵을 JPEG 형식으로 압축하여 파일에 쓰기
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+            stream.close()
+
+            // FileProvider를 사용하여 content:// Uri 생성
+            // 이 authority는 AndroidManifest.xml에 정의된 값과 일치해야 합니다.
+            val authority = "${context.packageName}.fileprovider"
+            val uri = FileProvider.getUriForFile(context, authority, file)
+
+            uri
+        } catch (e: Exception) {
+            Timber.e("비트맵 저장 또는 Uri 생성 실패")
+            null
+        }
     }
 }

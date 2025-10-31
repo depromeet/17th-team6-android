@@ -1,5 +1,6 @@
 package com.dpm.sixpack.presentation.routes.running.map.contract
 
+import android.net.Uri
 import com.dpm.sixpack.presentation.routes.running.RunningRouteIntent
 import com.dpm.sixpack.presentation.routes.running.session.contract.state.PathState
 import com.naver.maps.geometry.LatLng
@@ -23,5 +24,9 @@ sealed interface MapIntent : RunningRouteIntent {
 
     data object SessionStartClick : MapIntent
 
-    data object SessionFinished : MapIntent
+    data object ReadyToFinish : MapIntent
+
+    data class SessionFinish(
+        val mapImageUri: Uri,
+    ) : MapIntent
 }
