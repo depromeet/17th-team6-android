@@ -12,7 +12,6 @@ import com.dpm.sixpack.presentation.routes.running.navigation.addRunningSessionN
 import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.addProfileCreationNavGraph
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.navigateProfileCreation
-import com.dpm.sixpack.presentation.routes.session.navigation.addRunningSessionNavGraph
 import com.dpm.sixpack.presentation.routes.sessionreport.navigation.addSessionReportNavGraph
 import com.dpm.sixpack.presentation.routes.signin.navigation.addSignInNavGraph
 import com.dpm.sixpack.presentation.routes.signin.navigation.navigateSignIn

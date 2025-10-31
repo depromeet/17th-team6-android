@@ -23,7 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.textfield.DoRunSignInputField
 import com.dpm.sixpack.presentation.theme.SixpackTheme
