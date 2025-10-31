@@ -14,7 +14,4 @@ data class FeedCalenderUiState(
     val today: LocalDate = LocalDate.now(),
     val selectedDate: LocalDate = LocalDate.now(),
     val postCounts: Map<LocalDate, Int> = emptyMap(),
-) : Parcelable {
-    @IgnoredOnParcel
-    val formattedSelectedDate: String get() =  selectedDate.toYyyyMmDdString()
-}
+) : Parcelable

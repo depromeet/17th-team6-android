@@ -249,7 +249,7 @@ private fun WeekRow(
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(20.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
         days.forEach { day ->
             val isSelected = day.date == selectedDate
@@ -314,21 +314,20 @@ private fun DayCell(
         Box(
             modifier =
                 Modifier
-                    .fillMaxWidth()
-                    .background(color = dateBackgroundColor, shape = RoundedCornerShape(12.dp)),
+                    .width(40.dp)
+                    .background(color = dateBackgroundColor, shape = SixpackTheme.shapes.full),
             contentAlignment = Alignment.Center,
         ) {
             Text(
                 text = if (dayData.isToday) "오늘" else dayData.date.dayOfMonth.toString(),
                 color = dateTextColor,
                 style = typography.dayCellDateTextStyle,
-                modifier = Modifier.padding(vertical = 1.dp)
+                modifier = Modifier.padding(bottom = 5.dp,top =3.dp)
             )
         }
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        // 3. 포스트 수 (텍스트만)
         val postCountText =
             if (dayData.postCount > 0) {
                 stringResource(
