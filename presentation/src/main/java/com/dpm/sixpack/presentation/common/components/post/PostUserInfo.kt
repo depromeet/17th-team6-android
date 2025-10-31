@@ -26,6 +26,7 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
+import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 /**
@@ -38,6 +39,7 @@ fun PostUserInfo(
     userName: String,
     postingTime: String,
     isMyPost: Boolean,
+    onPostUserProfileClick : () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -62,7 +64,8 @@ fun PostUserInfo(
                 modifier =
                     Modifier
                         .size(40.dp)
-                        .clip(CircleShape),
+                        .clip(CircleShape)
+                        .noRippleClickable(onClick = onPostUserProfileClick),
                 placeholder = ColorPainter(SixpackTheme.colors.gray0),
                 error = ColorPainter(SixpackTheme.colors.gray200),
                 contentScale = ContentScale.Crop,
@@ -112,6 +115,7 @@ fun PostUserInfoRowMyPostPreview() {
             userName = "비락식혜",
             postingTime = "36분 전",
             isMyPost = true,
+            onPostUserProfileClick = {}
         )
     }
 }
@@ -125,6 +129,7 @@ fun PostUserInfoRowOthersPostPreview() {
             userName = "다른 사용자",
             postingTime = "1시간 전",
             isMyPost = false,
+            onPostUserProfileClick = {}
         )
     }
 }

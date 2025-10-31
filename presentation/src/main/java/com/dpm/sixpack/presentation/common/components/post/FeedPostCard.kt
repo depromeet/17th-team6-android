@@ -39,6 +39,7 @@ fun FeedPostCard(
     postDetail: PostResource,
     isMenuExpanded: Boolean,
     modifier: Modifier = Modifier,
+    onPostUserProfileClick: (Long) -> Unit = {},
     onPostImageClick: (Long) -> Unit = {},
     onMenuClick: () -> Unit = {},
     onDropDownMenuClick: (PostDropDownActionType) -> Unit = {},
@@ -57,6 +58,7 @@ fun FeedPostCard(
             isMenuExpanded = isMenuExpanded,
             onMenuClick = onMenuClick,
             onDropDownMenuClick = onDropDownMenuClick,
+            onPostUserProfileClick = { onPostUserProfileClick(postDetail.user.user.id) } // userId를 통해 서버통신
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -88,6 +90,7 @@ private fun PostUserInfoRow(
     postingUser: PostingUserInfo,
     isMenuExpanded: Boolean,
     onMenuClick: () -> Unit,
+    onPostUserProfileClick: () -> Unit,
     onDropDownMenuClick: (PostDropDownActionType) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -100,8 +103,7 @@ private fun PostUserInfoRow(
             userName = postingUser.user.profileImageUrl,
             postingTime = postingUser.postingTime,
             isMyPost = postingUser.user.isMe,
-            // TODO SB typography 적용
-            // textStyle = SixpackTheme.typography.body2,
+            onPostUserProfileClick = onPostUserProfileClick
         )
 
         Spacer(modifier = Modifier.weight(1f))

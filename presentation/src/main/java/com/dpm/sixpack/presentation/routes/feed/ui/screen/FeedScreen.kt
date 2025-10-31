@@ -11,17 +11,21 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,9 +33,11 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.bottomsheet.EmojiSelectionBottomSheet
 import com.dpm.sixpack.presentation.common.components.bottomsheet.ReactionUsersBottomSheet
 import com.dpm.sixpack.presentation.common.components.post.FeedPostCard
+import com.dpm.sixpack.presentation.common.components.post.PostDropDownActionType
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.model.Emoji
 import com.dpm.sixpack.presentation.common.model.PostReaction
@@ -42,6 +48,8 @@ import com.dpm.sixpack.presentation.common.model.UserInfo
 import com.dpm.sixpack.presentation.routes.feed.component.CertificationCountView
 import com.dpm.sixpack.presentation.routes.feed.component.FeedTopBar
 import com.dpm.sixpack.presentation.routes.feed.component.calender.FeedWeeklyCalendar
+import com.dpm.sixpack.presentation.routes.feed.component.dialog.PostDeleteDialog
+import com.dpm.sixpack.presentation.routes.feed.component.dialog.PostReportDialog
 import com.dpm.sixpack.presentation.routes.feed.contract.FeedUiState
 import com.dpm.sixpack.presentation.routes.feed.contract.uistate.FeedCalenderUiState
 import com.dpm.sixpack.presentation.routes.feed.contract.uistate.FeedDateUiState
@@ -57,18 +65,21 @@ fun FeedScreen(
     onTopBarGroupIconClick: () -> Unit = {},
     onTopBarAlarmIconClick: () -> Unit = {},
     onDateSelected: (LocalDate) -> Unit = {},
-    onVisibleWeeksChanged: (LocalDate) -> Unit = {},
     onCertifiedUsersClick: () -> Unit = {},
-    onPostUserProfileClick: (Long, Boolean) -> Unit = { _, _ -> },
+    onPostUserProfileClick: (Long) -> Unit = {},
     onPostMenuClick: (Long) -> Unit = {},
-    onPostMapImageClick: (Int) -> Unit = {},
+    onPostImageClick: (Long) -> Unit = {},
     onPostReactionClick: (Long, Emoji) -> Unit = { _, _ -> },
     onPostReactionLongClick: (List<PostReaction>, Emoji) -> Unit = { _, _ -> },
     onPostAddReactionClick: (Long) -> Unit = {},
     onBottomSheetDismiss: () -> Unit = {},
     onBottomSheetUserProfileClick: (Long) -> Unit = {},
     onEmojiSelected: (Long, Emoji) -> Unit = { _, _ -> },
-    onWeekDisplayed: (LocalDate) -> Unit = {},
+    onVisibleWeeksChanged: (LocalDate) -> Unit = {},
+    onDropDownMenuClick: (PostDropDownActionType) -> Unit = {},
+    onDialogDismiss: () -> Unit = {},
+    onDialogConfirmClick: () -> Unit = {},
+    onFTAButtonClick: () -> Unit = {}
 ) {
     Scaffold(
         modifier = modifier
@@ -79,7 +90,22 @@ fun FeedScreen(
                 onAlarmIconClick = onTopBarAlarmIconClick,
             )
         },
-        containerColor = SixpackTheme.colors.gray0
+        containerColor = SixpackTheme.colors.gray0,
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = onFTAButtonClick,
+                shape = CircleShape,
+                containerColor = SixpackTheme.colors.blue600,
+                contentColor = SixpackTheme.colors.gray0,
+            ) {
+                Image(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_plus),
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -87,26 +113,24 @@ fun FeedScreen(
                 .fillMaxWidth(),
         ) {
             item {
-                Spacer(modifier = Modifier.height(16.dp))
-
                 FeedWeeklyCalendar(
-                    modifier = Modifier.padding(horizontal = 20.dp),
+                    modifier = Modifier
+                        .padding(horizontal = 20.dp)
+                        .padding(top = 16.dp),
                     feedCalenderUiState = state.calendarState,
                     onDateSelected = onDateSelected,
-                    onWeekDisplayed = onWeekDisplayed
+                    onWeekDisplayed = onVisibleWeeksChanged
                 )
             }
 
             item {
-                Spacer(modifier = Modifier.height(24.dp))
-
                 HorizontalDivider(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 24.dp),
                     thickness = 1.dp,
                     color = SixpackTheme.colors.gray50
                 )
-
-                Spacer(modifier = Modifier.height(24.dp))
             }
 
             when (state.feedDateState) {
@@ -122,7 +146,8 @@ fun FeedScreen(
                     item {
                         CertificationCountView(
                             users = state.postingUserInfo,
-                            onViewClick = onCertifiedUsersClick, modifier = Modifier.padding(horizontal = 20.dp)
+                            onViewClick = onCertifiedUsersClick,
+                            modifier = Modifier.padding(horizontal = 20.dp)
                         )
                     }
 
@@ -140,6 +165,9 @@ fun FeedScreen(
                                 postDetail = post,
                                 isMenuExpanded = isMenuExpanded,
                                 onMenuClick = { onPostMenuClick(post.feedId) },
+                                onDropDownMenuClick = onDropDownMenuClick,
+                                onPostImageClick = onPostImageClick,
+                                onPostUserProfileClick = onPostUserProfileClick,
                                 onReactionChipClick = onPostReactionClick,
                                 onReactionChipLongClick = onPostReactionLongClick,
                                 onAddReactionClick = { onPostAddReactionClick(post.feedId) }
@@ -180,8 +208,8 @@ fun FeedScreen(
                 }
             }
         }
-    }
 
+    }
 
     ReactionUsersBottomSheet(
         isBottomSheetVisible = state.bottomSheetState.reactionUsers,
@@ -197,6 +225,22 @@ fun FeedScreen(
         onDismissRequest = onBottomSheetDismiss,
         onEmojiSelected = onEmojiSelected
     )
+
+    if (state.dialogState.isDeleteVisible) {
+        PostDeleteDialog(
+            onDismissRequest = onDialogDismiss,
+            onCancelClick = onDialogDismiss,
+            onConfirmClick = onDialogConfirmClick
+        )
+    }
+
+    if (state.dialogState.isReportVisible) {
+        PostReportDialog(
+            onDismissRequest = onDialogDismiss,
+            onCancelClick = onDialogDismiss,
+            onConfirmClick = onDialogConfirmClick
+        )
+    }
 }
 
 @Composable
@@ -333,23 +377,6 @@ fun FeedScreenPreview() {
         FeedScreen(
             state = dummyState,
             feedPagingItems = dummyPagingItems,
-
-            // 모든 이벤트 핸들러는 비어있는 람다({})로 전달
-            onTopBarGroupIconClick = {},
-            onTopBarAlarmIconClick = {},
-            onDateSelected = {},
-            onVisibleWeeksChanged = {},
-            onCertifiedUsersClick = {},
-            onPostUserProfileClick = { _, _ -> },
-            onPostMenuClick = {},
-            onPostMapImageClick = {},
-            onPostReactionClick = { _, _ -> },
-            onPostReactionLongClick = { _, _ -> },
-            onPostAddReactionClick = {},
-            onBottomSheetDismiss = {},
-            onBottomSheetUserProfileClick = {},
-            onEmojiSelected = { _, _ -> },
-            onWeekDisplayed = {}
         )
     }
 }
@@ -365,21 +392,6 @@ private fun FeedScreenEmptyExpiredPreview() {
         FeedScreen(
             state = FeedUiState(feedDateState = FeedDateUiState.NoPostsAndExpired),
             feedPagingItems = dummyPagingItems,
-            onTopBarGroupIconClick = {},
-            onTopBarAlarmIconClick = {},
-            onDateSelected = {},
-            onVisibleWeeksChanged = {},
-            onCertifiedUsersClick = {},
-            onPostUserProfileClick = { _, _ -> },
-            onPostMenuClick = {},
-            onPostMapImageClick = {},
-            onPostReactionClick = { _, _ -> },
-            onPostReactionLongClick = { _, _ -> },
-            onPostAddReactionClick = {},
-            onBottomSheetDismiss = {},
-            onBottomSheetUserProfileClick = {},
-            onEmojiSelected = { _, _ -> },
-            onWeekDisplayed = {}
         )
     }
 }
@@ -395,21 +407,6 @@ private fun FeedScreenEmptyCertifiablePreview() {
         FeedScreen(
             state = FeedUiState(feedDateState = FeedDateUiState.NoPostsAndCertifiable),
             feedPagingItems = dummyPagingItems,
-            onTopBarGroupIconClick = {},
-            onTopBarAlarmIconClick = {},
-            onDateSelected = {},
-            onVisibleWeeksChanged = {},
-            onCertifiedUsersClick = {},
-            onPostUserProfileClick = { _, _ -> },
-            onPostMenuClick = {},
-            onPostMapImageClick = {},
-            onPostReactionClick = { _, _ -> },
-            onPostReactionLongClick = { _, _ -> },
-            onPostAddReactionClick = {},
-            onBottomSheetDismiss = {},
-            onBottomSheetUserProfileClick = {},
-            onEmojiSelected = { _, _ -> },
-            onWeekDisplayed = {}
         )
     }
 }
