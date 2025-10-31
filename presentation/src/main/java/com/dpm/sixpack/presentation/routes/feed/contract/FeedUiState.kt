@@ -6,15 +6,18 @@ import com.dpm.sixpack.presentation.common.model.PostResource
 import com.dpm.sixpack.presentation.common.model.PostingUserInfo
 import com.dpm.sixpack.presentation.routes.feed.contract.uistate.FeedBottomSheetState
 import com.dpm.sixpack.presentation.routes.feed.contract.uistate.FeedCalenderUiState
+import com.dpm.sixpack.presentation.routes.feed.contract.uistate.FeedDateUiState
 import com.dpm.sixpack.presentation.routes.feed.contract.uistate.ReactionDetailsUiState
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class FeedUiState(
+    val selectedFeedId : Long = -1,
     val calendarState: FeedCalenderUiState = FeedCalenderUiState(),
     val bottomSheetState: FeedBottomSheetState = FeedBottomSheetState(),
-    val postCardsState: List<PostResource> = listOf(),
+    val reactionDetailsUiState: ReactionDetailsUiState = ReactionDetailsUiState.Loading,
     val postingUserInfo: List<PostingUserInfo> = listOf(),
-    val menuExpandedFeedId: Int? = null
+    val optimisticPosts: Map<Long, PostResource> = emptyMap(),
+    val feedDateState : FeedDateUiState = FeedDateUiState.NoPostsAndExpired
 ) : UiState,
     Parcelable

@@ -1,5 +1,6 @@
 package com.dpm.sixpack.presentation.routes.feed.ui.screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,14 +9,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
@@ -37,6 +44,7 @@ import com.dpm.sixpack.presentation.routes.feed.component.FeedTopBar
 import com.dpm.sixpack.presentation.routes.feed.component.calender.FeedWeeklyCalendar
 import com.dpm.sixpack.presentation.routes.feed.contract.FeedUiState
 import com.dpm.sixpack.presentation.routes.feed.contract.uistate.FeedCalenderUiState
+import com.dpm.sixpack.presentation.routes.feed.contract.uistate.FeedDateUiState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 import kotlinx.coroutines.flow.flowOf
 import java.time.LocalDate
@@ -101,61 +109,73 @@ fun FeedScreen(
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
-            item {
-                CertificationCountView(
-                    users = state.postingUserInfo,
-                    onViewClick = onCertifiedUsersClick, modifier = Modifier.padding(horizontal = 20.dp)
-                )
-            }
-
-            item { Spacer(modifier = Modifier.height(32.dp)) }
-
-
-            items(
-                count = feedPagingItems.itemCount,
-                key = { feedPagingItems.peek(it)?.feedId!!.toInt() }
-            ) { index ->
-                feedPagingItems[index]?.let { post ->
-                    val isMenuExpanded = (state.selectedFeedId == post.feedId)
-                    FeedPostCard(
-                        modifier = Modifier.padding(horizontal = 20.dp),
-                        postDetail = post,
-                        isMenuExpanded = isMenuExpanded,
-                        onMenuClick = { onPostMenuClick(post.feedId) },
-                        onReactionChipClick = onPostReactionClick,
-                        onReactionChipLongClick = onPostReactionLongClick,
-                        onAddReactionClick = { onPostAddReactionClick(post.feedId) }
-                    )
+            when (state.feedDateState) {
+                FeedDateUiState.NoPostsAndCertifiable -> {
+                    item { EmptyStateCertifiable() }
                 }
-                Spacer( Modifier.height(40.dp))
-            }
 
-            feedPagingItems.loadState.apply {
-                when {
-                    refresh is LoadState.Loading -> {
-                        item {
-                            Box(
-                                modifier = Modifier.fillParentMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) { CircularProgressIndicator() }
+                FeedDateUiState.NoPostsAndExpired -> {
+                    item { EmptyStateExpired() }
+                }
+
+                FeedDateUiState.PostsAvailable -> {
+                    item {
+                        CertificationCountView(
+                            users = state.postingUserInfo,
+                            onViewClick = onCertifiedUsersClick, modifier = Modifier.padding(horizontal = 20.dp)
+                        )
+                    }
+
+                    item { Spacer(modifier = Modifier.height(32.dp)) }
+
+
+                    items(
+                        count = feedPagingItems.itemCount,
+                        key = { feedPagingItems.peek(it)?.feedId!!.toInt() }
+                    ) { index ->
+                        feedPagingItems[index]?.let { post ->
+                            val isMenuExpanded = (state.selectedFeedId == post.feedId)
+                            FeedPostCard(
+                                modifier = Modifier.padding(horizontal = 20.dp),
+                                postDetail = post,
+                                isMenuExpanded = isMenuExpanded,
+                                onMenuClick = { onPostMenuClick(post.feedId) },
+                                onReactionChipClick = onPostReactionClick,
+                                onReactionChipLongClick = onPostReactionLongClick,
+                                onAddReactionClick = { onPostAddReactionClick(post.feedId) }
+                            )
                         }
+                        Spacer(Modifier.height(40.dp))
                     }
 
-                    append is LoadState.Loading -> {
-                        item {
-                            Box(
-                                modifier = Modifier.fillMaxWidth(),
-                                contentAlignment = Alignment.Center
-                            ) { CircularProgressIndicator() }
+                    feedPagingItems.loadState.apply {
+                        when {
+                            refresh is LoadState.Loading -> {
+                                item {
+                                    Box(
+                                        modifier = Modifier.fillParentMaxSize(),
+                                        contentAlignment = Alignment.Center
+                                    ) { CircularProgressIndicator() }
+                                }
+                            }
+
+                            append is LoadState.Loading -> {
+                                item {
+                                    Box(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        contentAlignment = Alignment.Center
+                                    ) { CircularProgressIndicator() }
+                                }
+                            }
+
+                            refresh is LoadState.Error -> {
+                                item { Text(text = "Error: ${(refresh as LoadState.Error).error.message}") }
+                            }
+
+                            append is LoadState.Error -> {
+                                item { Text(text = "Error: ${(append as LoadState.Error).error.message}") }
+                            }
                         }
-                    }
-
-                    refresh is LoadState.Error -> {
-                        item { Text(text = "Error: ${(refresh as LoadState.Error).error.message}") }
-                    }
-
-                    append is LoadState.Error -> {
-                        item { Text(text = "Error: ${(append as LoadState.Error).error.message}") }
                     }
                 }
             }
@@ -178,6 +198,83 @@ fun FeedScreen(
         onEmojiSelected = onEmojiSelected
     )
 }
+
+@Composable
+fun EmptyStateExpired(
+    modifier: Modifier = Modifier
+) {
+    Spacer(Modifier.height(80.dp))
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 80.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            imageVector = Icons.Filled.Image,
+            contentDescription = "인증 없음",
+            modifier = Modifier.size(120.dp),
+            contentScale = ContentScale.Fit
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Text(
+            text = "이 날 인증한 친구가 없어요..",
+            style = SixpackTheme.typography.t2Bold,
+            color = SixpackTheme.colors.gray900,
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Text(
+            text = "친구들과 함께 러닝 기록을 인증해보세요!",
+            style = SixpackTheme.typography.b2Regular,
+            color = SixpackTheme.colors.gray700,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+fun EmptyStateCertifiable(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 80.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            imageVector = Icons.Filled.Image, // TODO: 여기에 실제 그래픽 리소스(Painter) 삽입
+            contentDescription = "인증 대기",
+            modifier = Modifier.size(120.dp),
+            contentScale = ContentScale.Fit
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Text(
+            text = "정말 조용하네요..!",
+            style = SixpackTheme.typography.t2Bold,
+            color = SixpackTheme.colors.gray900,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Text(
+            text = "지금 첫 러닝을 인증해보세요!",
+            style = SixpackTheme.typography.b2Regular,
+            color = SixpackTheme.colors.gray700,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
 
 @Preview(showBackground = true)
 @Composable
@@ -257,4 +354,63 @@ fun FeedScreenPreview() {
     }
 }
 
+
+@Preview
+@Composable
+private fun FeedScreenEmptyExpiredPreview() {
+    val dummyPagingDataFlow = flowOf(PagingData.empty<PostResource>())
+
+    val dummyPagingItems = dummyPagingDataFlow.collectAsLazyPagingItems()
+    DoRunPreviewWrapper {
+        FeedScreen(
+            state = FeedUiState(feedDateState = FeedDateUiState.NoPostsAndExpired),
+            feedPagingItems = dummyPagingItems,
+            onTopBarGroupIconClick = {},
+            onTopBarAlarmIconClick = {},
+            onDateSelected = {},
+            onVisibleWeeksChanged = {},
+            onCertifiedUsersClick = {},
+            onPostUserProfileClick = { _, _ -> },
+            onPostMenuClick = {},
+            onPostMapImageClick = {},
+            onPostReactionClick = { _, _ -> },
+            onPostReactionLongClick = { _, _ -> },
+            onPostAddReactionClick = {},
+            onBottomSheetDismiss = {},
+            onBottomSheetUserProfileClick = {},
+            onEmojiSelected = { _, _ -> },
+            onWeekDisplayed = {}
+        )
+    }
+}
+
+
+@Preview
+@Composable
+private fun FeedScreenEmptyCertifiablePreview() {
+    val dummyPagingDataFlow = flowOf(PagingData.empty<PostResource>())
+
+    val dummyPagingItems = dummyPagingDataFlow.collectAsLazyPagingItems()
+    DoRunPreviewWrapper {
+        FeedScreen(
+            state = FeedUiState(feedDateState = FeedDateUiState.NoPostsAndCertifiable),
+            feedPagingItems = dummyPagingItems,
+            onTopBarGroupIconClick = {},
+            onTopBarAlarmIconClick = {},
+            onDateSelected = {},
+            onVisibleWeeksChanged = {},
+            onCertifiedUsersClick = {},
+            onPostUserProfileClick = { _, _ -> },
+            onPostMenuClick = {},
+            onPostMapImageClick = {},
+            onPostReactionClick = { _, _ -> },
+            onPostReactionLongClick = { _, _ -> },
+            onPostAddReactionClick = {},
+            onBottomSheetDismiss = {},
+            onBottomSheetUserProfileClick = {},
+            onEmojiSelected = { _, _ -> },
+            onWeekDisplayed = {}
+        )
+    }
+}
 
