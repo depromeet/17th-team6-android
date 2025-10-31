@@ -40,10 +40,11 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
  */
 @Composable
 fun PostReactionRow(
+    feedId: Long,
     reactions: List<PostReaction>,
-    onReactionChipClick: (Emoji) -> Unit,
-    onReactionChipLongClick: (Emoji) -> Unit,
-    onAddReactionClick: () -> Unit,
+    onReactionChipClick: (Long, Emoji) -> Unit,
+    onReactionChipLongClick: (List<PostReaction>, Emoji) -> Unit,
+    onAddReactionClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -58,17 +59,17 @@ fun PostReactionRow(
                     count = reaction.count,
                     iconRes = reaction.emoji.iconRes,
                     isReacted = reaction.isReacted,
-                    onClick = { onReactionChipClick(reaction.emoji) },
-                    onLongClick = { onReactionChipLongClick(reaction.emoji) },
+                    onClick = { onReactionChipClick(feedId, reaction.emoji) },
+                    onLongClick = { onReactionChipLongClick(reactions, reaction.emoji) },
                 )
             }
             if (reactions.size > 3) {
                 MoreReactionChip(
                     count = reactions.size - 3,
-                    onClick = { onReactionChipLongClick(Emoji.ALL) },
+                    onClick = { onReactionChipLongClick(reactions, Emoji.ALL) },
                 )
 
-                AddReactionButton(onAddReactionClick = onAddReactionClick)
+                AddReactionButton(feedId ,onAddReactionClick = onAddReactionClick)
             }
         }
     }
@@ -78,12 +79,12 @@ fun PostReactionRow(
  * 이모지 추가 버튼
  */
 @Composable
-private fun AddReactionButton(onAddReactionClick: () -> Unit) {
+private fun AddReactionButton(feedId :Long,onAddReactionClick: (Long) -> Unit) {
     Box(
         modifier =
             Modifier
-                .clip(SixpackTheme.shapes.round16 )
-                .noRippleClickable(onClick = onAddReactionClick)
+                .clip(SixpackTheme.shapes.round16)
+                .noRippleClickable(onClick = { onAddReactionClick(feedId) })
                 .background(color = SixpackTheme.colors.gray50, shape = RoundedCornerShape(30.dp))
                 .padding(vertical = 6.dp, horizontal = 10.dp),
     ) {
@@ -111,18 +112,21 @@ fun ReactionChip(
     Row(
         modifier =
             modifier
-                .clip(SixpackTheme.shapes.round16 )
+                .clip(SixpackTheme.shapes.round16)
                 .combinedClickable(
                     onClick = { onClick() },
                     onLongClick = { onLongClick() },
-                ).background(
+                )
+                .background(
                     color = backgroundColor,
                     shape = RoundedCornerShape(16.dp),
-                ).border(
+                )
+                .border(
                     1.dp,
                     color = borderColor,
                     shape = RoundedCornerShape(16.dp),
-                ).padding(all = 6.dp),
+                )
+                .padding(all = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {
@@ -164,10 +168,10 @@ private fun MoreReactionChip(
                 .background(
                     color = SixpackTheme.colors.gray50,
                     shape = SixpackTheme.shapes.round16,
-                ).padding(all = 6.dp)
-                .clip(SixpackTheme.shapes.round16 )
-                .clickable(onClick = onClick)
-                ,
+                )
+                .padding(all = 6.dp)
+                .clip(SixpackTheme.shapes.round16)
+                .clickable(onClick = onClick),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {
@@ -190,9 +194,10 @@ fun PostReactionRowPreview1() {
     DoRunPreviewWrapper {
         PostReactionRow(
             reactions = listOf(PostReaction(Emoji.HEART, "10", true)),
-            onReactionChipClick = {},
+            feedId = 1,
+            onReactionChipClick = { _, _ -> },
             onAddReactionClick = {},
-            onReactionChipLongClick = {},
+            onReactionChipLongClick = { _, _ -> },
         )
     }
 }
@@ -208,9 +213,9 @@ private fun PostReactionRowPreview3() {
                     PostReaction(Emoji.FIRE, "5", false),
                     PostReaction(Emoji.HEART, "2", false),
                 ),
-            onReactionChipClick = {},
-            onAddReactionClick = {},
-            onReactionChipLongClick = {},
+            feedId = 1,
+            onReactionChipClick = { _, _ -> }, onAddReactionClick = {},
+            onReactionChipLongClick = { _, _ -> },
         )
     }
 }
@@ -228,9 +233,9 @@ private fun PostReactionRowPreview5() {
                     PostReaction(Emoji.FIRE, "5", false),
                     PostReaction(Emoji.HEART, "2", false),
                 ),
-            onReactionChipClick = {},
-            onAddReactionClick = {},
-            onReactionChipLongClick = {},
+            feedId = 1,
+            onReactionChipClick = { _, _ -> }, onAddReactionClick = {},
+            onReactionChipLongClick = { _, _ -> },
         )
     }
 }
@@ -241,9 +246,9 @@ private fun PostReactionRowPreviewEmpty() {
     DoRunPreviewWrapper {
         PostReactionRow(
             reactions = emptyList(),
-            onReactionChipClick = {},
-            onAddReactionClick = {},
-            onReactionChipLongClick = {},
+            feedId = 1,
+            onReactionChipClick = { _, _ -> }, onAddReactionClick = {},
+            onReactionChipLongClick = { _, _ -> },
         )
     }
 }

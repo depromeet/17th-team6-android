@@ -28,12 +28,14 @@ import coil3.request.crossfade
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.model.RunningSummary
+import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 fun PostImageWithRecord(
     postImageUrl: String,
     runningSummary: RunningSummary,
+    onPostImageClick : ()->Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -41,7 +43,8 @@ fun PostImageWithRecord(
             modifier
                 .fillMaxWidth()
                 .aspectRatio(1f)
-                .clip(RoundedCornerShape(12.dp)),
+                .clip(RoundedCornerShape(12.dp))
+                .noRippleClickable(onClick = onPostImageClick),
     ) {
         AsyncImage(
             model =
@@ -197,6 +200,7 @@ fun PostImageWithRecordPreview() {
                 postImageUrl = "",
                 runningSummary = runningSummary,
                 modifier = Modifier.padding(16.dp),
+                onPostImageClick = {}
             )
         }
     }

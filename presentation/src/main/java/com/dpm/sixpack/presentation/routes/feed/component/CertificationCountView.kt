@@ -36,11 +36,12 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 @Composable
 fun CertificationCountView(
     users: List<PostingUserInfo>,
-    isMeCertified: Boolean,
     onViewClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (users.isEmpty()) return
+
+    val isMeCertified = users.any { it.user.isMe }
 
     val text =
         if (isMeCertified) {
@@ -68,7 +69,6 @@ private fun OverlappingProfiles(
     users: List<PostingUserInfo>,
     modifier: Modifier = Modifier,
 ) {
-    // 최대 3명의 프로필만 표시하고, 가장 최근에 인증한 사람이 가장 위에 보이도록 reversed()를 사용
     val visibleUsers = users.take(3).reversed()
 
     Box(modifier = modifier) {
@@ -156,7 +156,6 @@ private fun CertificationCountViewWithMePreview() {
                     PostingUserInfo(UserInfo(name = "User2", profileImageUrl = "")),
                     PostingUserInfo(UserInfo(name = "User2", profileImageUrl = "")),
                 ),
-            isMeCertified = true,
             modifier = Modifier.padding(16.dp),
             onViewClick = {},
         )
@@ -175,7 +174,6 @@ private fun CertificationCountViewWithoutMePreview() {
                     PostingUserInfo(UserInfo(name = "User2", profileImageUrl = "")),
                     PostingUserInfo(UserInfo(name = "User2", profileImageUrl = "")),
                 ),
-            isMeCertified = false,
             modifier = Modifier.padding(16.dp),
             onViewClick = {},
         )

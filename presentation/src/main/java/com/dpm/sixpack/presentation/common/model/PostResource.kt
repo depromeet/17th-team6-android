@@ -8,17 +8,17 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @Immutable
 data class PostResource(
-    val feedId: Long,
-    val user: PostingUserInfo,
-    val postImageUrl: String,
-    val runningInfo: RunningSummary,
-    val reactions: List<PostReaction>,
+    val feedId: Long = 0,
+    val user: PostingUserInfo = PostingUserInfo(),
+    val postImageUrl: String = "",
+    val runningInfo: RunningSummary = RunningSummary(),
+    val reactions: List<PostReaction> = listOf(),
 ) : Parcelable
 
 @Parcelize
 @Immutable
 data class PostingUserInfo(
-    val user: UserInfo,
+    val user: UserInfo= UserInfo(),
     val postingTime: String = "",
 ) : Parcelable
 

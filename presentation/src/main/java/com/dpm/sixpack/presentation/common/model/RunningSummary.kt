@@ -13,14 +13,14 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @Immutable
 data class RunningSummary(
-    val totalDistance: String,
-    val totalTime: String,
-    val averagePace: String,
-    val cadence: String,
-    val recordDateTime: String,
+    val totalDistance: String = "",
+    val totalTime: String = "",
+    val averagePace: String = "",
+    val cadence: String = "",
+    val recordDateTime: String = "",
 ) : Parcelable
 
-fun RunningSessionResult.toRunningSummary(postTime : String): RunningSummary {
+fun RunningSessionResult.toRunningSummary(postTime: String): RunningSummary {
     return RunningSummary(
         totalDistance = formatDistanceToKm(totalDistanceMeter),
         totalTime = formatSecondsToTime(totalDurationSec),

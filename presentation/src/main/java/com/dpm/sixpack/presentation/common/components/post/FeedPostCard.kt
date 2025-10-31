@@ -39,11 +39,12 @@ fun FeedPostCard(
     postDetail: PostResource,
     isMenuExpanded: Boolean,
     modifier: Modifier = Modifier,
+    onPostImageClick: (Long) -> Unit = {},
     onMenuClick: () -> Unit = {},
     onDropDownMenuClick: (PostDropDownActionType) -> Unit = {},
-    onReactionChipClick: (Emoji) -> Unit = {},
-    onReactionChipLongClick: (Emoji) -> Unit = {},
-    onAddReactionClick: () -> Unit = {},
+    onReactionChipClick: (Long, Emoji) -> Unit = { _, _ -> },
+    onReactionChipLongClick: (List<PostReaction>, Emoji) -> Unit = { _, _ -> },
+    onAddReactionClick: (Long) -> Unit = {},
 ) {
     Column(
         modifier =
@@ -51,7 +52,6 @@ fun FeedPostCard(
                 .fillMaxWidth()
                 .background(SixpackTheme.colors.gray0),
     ) {
-        // TODO SB postTime util로 변환한 변수 넣기
         PostUserInfoRow(
             postingUser = postDetail.user,
             isMenuExpanded = isMenuExpanded,
@@ -61,15 +61,16 @@ fun FeedPostCard(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // TODO SB postTime util로 변환한 변수 넣기
         PostImageWithRecord(
             postImageUrl = postDetail.postImageUrl,
             runningSummary = postDetail.runningInfo,
+            onPostImageClick = { onPostImageClick(postDetail.feedId) }
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
         PostReactionRow(
+            feedId = postDetail.feedId,
             reactions = postDetail.reactions,
             onReactionChipClick = onReactionChipClick,
             onReactionChipLongClick = onReactionChipLongClick,
@@ -150,7 +151,7 @@ fun FeedPostCardPreview() {
                             PostReaction(Emoji.HEART, "2", false),
                         ),
                 ),
-            isMenuExpanded ,
+            isMenuExpanded,
             onMenuClick = { isMenuExpanded = !isMenuExpanded }
         )
     }

@@ -9,8 +9,8 @@ import kotlinx.parcelize.Parcelize
 @Immutable
 data class UserInfo(
     val id: Long = -1L,
-    val name: String,
-    val profileImageUrl: String,
+    val name: String = "",
+    val profileImageUrl: String = "",
     val isMe: Boolean = false,
 ) : Parcelable
 

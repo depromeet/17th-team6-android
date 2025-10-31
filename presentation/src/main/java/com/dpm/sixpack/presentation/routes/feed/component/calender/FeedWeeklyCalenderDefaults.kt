@@ -174,7 +174,7 @@ object FeedWeeklyCalendarDefaults {
     @Composable
     fun typography(
         weeklyDateTextStyle: TextStyle = SixpackTheme.typography.b2Medium,
-        dayCellDateTextStyle: TextStyle = SixpackTheme.typography.b2Medium,
+        dayCellDateTextStyle: TextStyle = SixpackTheme.typography.c1Medium,
         dayCountTextStyle: TextStyle = SixpackTheme.typography.c1Medium,
         headerDateTextStyle: TextStyle = SixpackTheme.typography.t2Bold,
     ): WeeklyCalendarTypography =
