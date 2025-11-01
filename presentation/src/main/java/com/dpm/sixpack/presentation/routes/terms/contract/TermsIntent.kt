@@ -1,7 +1,7 @@
 package com.dpm.sixpack.presentation.routes.terms.contract
 
 import com.dpm.sixpack.presentation.common.base.UiIntent
-import com.dpm.sixpack.presentation.routes.signup.ui.component.terms.model.TermType
+import com.dpm.sixpack.presentation.routes.terms.ui.component.model.TermType
 
 sealed interface TermsIntent : UiIntent {
     data class OnTermToggled(

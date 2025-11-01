@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.signup.ui.component.terms.model
+package com.dpm.sixpack.presentation.routes.terms.ui.component.model
 
 import androidx.annotation.StringRes
 import com.dpm.sixpack.presentation.R

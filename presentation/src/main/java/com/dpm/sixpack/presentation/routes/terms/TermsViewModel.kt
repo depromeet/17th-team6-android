@@ -2,7 +2,7 @@ package com.dpm.sixpack.presentation.routes.terms
 
 import androidx.lifecycle.SavedStateHandle
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
-import com.dpm.sixpack.presentation.routes.signup.ui.component.terms.model.TermType
+import com.dpm.sixpack.presentation.routes.terms.ui.component.model.TermType
 import com.dpm.sixpack.presentation.routes.terms.contract.TermsIntent
 import com.dpm.sixpack.presentation.routes.terms.contract.TermsSideEffect
 import com.dpm.sixpack.presentation.routes.terms.contract.TermsState

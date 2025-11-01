@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.signup.ui.component.terms
+package com.dpm.sixpack.presentation.routes.terms.ui.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
-import com.dpm.sixpack.presentation.routes.signup.ui.component.terms.model.TermType
+import com.dpm.sixpack.presentation.routes.terms.ui.component.model.TermType
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable

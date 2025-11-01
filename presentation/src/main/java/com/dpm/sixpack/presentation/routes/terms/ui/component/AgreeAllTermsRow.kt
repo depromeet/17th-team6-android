@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.signup.ui.component.terms
+package com.dpm.sixpack.presentation.routes.terms.ui.component
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer

@@ -2,7 +2,7 @@ package com.dpm.sixpack.presentation.routes.terms.contract
 
 import android.os.Parcelable
 import com.dpm.sixpack.presentation.common.base.UiState
-import com.dpm.sixpack.presentation.routes.signup.ui.component.terms.model.TermType
+import com.dpm.sixpack.presentation.routes.terms.ui.component.model.TermType
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
