@@ -3,6 +3,7 @@ package com.dpm.sixpack.presentation.routes.feed.ui.screen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,21 +16,24 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Image
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -43,7 +47,6 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.bottomsheet.EmojiSelectionBottomSheet
 import com.dpm.sixpack.presentation.common.components.bottomsheet.ReactionUsersBottomSheet
-import com.dpm.sixpack.presentation.common.components.post.FeedPostCard
 import com.dpm.sixpack.presentation.common.components.post.PostDropDownActionType
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.model.Emoji
@@ -52,16 +55,17 @@ import com.dpm.sixpack.presentation.common.model.PostResource
 import com.dpm.sixpack.presentation.common.model.PostingUserInfo
 import com.dpm.sixpack.presentation.common.model.RunningSummary
 import com.dpm.sixpack.presentation.common.model.UserInfo
-import com.dpm.sixpack.presentation.routes.feed.component.CertificationCountView
+import com.dpm.sixpack.presentation.routes.feed.component.FeedFTAButton
 import com.dpm.sixpack.presentation.routes.feed.component.FeedTopBar
-import com.dpm.sixpack.presentation.routes.feed.component.calender.FeedWeeklyCalendar
 import com.dpm.sixpack.presentation.routes.feed.component.dialog.PostDeleteDialog
 import com.dpm.sixpack.presentation.routes.feed.component.dialog.PostReportDialog
 import com.dpm.sixpack.presentation.routes.feed.contract.FeedUiState
 import com.dpm.sixpack.presentation.routes.feed.contract.uistate.FeedCalenderUiState
 import com.dpm.sixpack.presentation.routes.feed.contract.uistate.FeedDateUiState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @Composable
@@ -99,10 +103,59 @@ fun FeedScreen(
     onFTAButtonClick: () -> Unit = {}
 ) {
     val lazyListState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
+    var isRefreshing by remember { mutableStateOf(false) }
+    var pullOffset by remember { mutableStateOf(0f) }
 
     val isScrolled by remember {
         derivedStateOf {
             lazyListState.firstVisibleItemIndex > 0 || lazyListState.firstVisibleItemScrollOffset > 0
+        }
+    }
+
+    val isAtTop by remember {
+        derivedStateOf {
+            lazyListState.firstVisibleItemIndex == 0 && lazyListState.firstVisibleItemScrollOffset == 0
+        }
+    }
+
+    // Initial Load 감지 (첫 로딩)
+    val isInitialLoad by remember {
+        derivedStateOf {
+            feedPagingItems.itemCount == 0 &&
+                feedPagingItems.loadState.refresh is LoadState.Loading &&
+                state.feedDateState == FeedDateUiState.PostsAvailable
+        }
+    }
+
+    // Refresh 감지
+    val isRefreshLoading by remember {
+        derivedStateOf {
+            (isRefreshing || feedPagingItems.loadState.refresh is LoadState.Loading) &&
+                feedPagingItems.itemCount > 0 &&
+                state.feedDateState == FeedDateUiState.PostsAvailable
+        }
+    }
+
+    // Refresh 트리거
+    fun triggerRefresh() {
+        // NoPost 상태에서는 refresh 막기
+        if (state.feedDateState != FeedDateUiState.PostsAvailable) {
+            return
+        }
+
+        if (!isRefreshing && feedPagingItems.loadState.refresh !is LoadState.Loading) {
+            isRefreshing = true
+            scope.launch {
+                feedPagingItems.refresh()
+            }
+        }
+    }
+
+    LaunchedEffect(feedPagingItems.loadState.refresh) {
+        if (isRefreshing && feedPagingItems.loadState.refresh !is LoadState.Loading) {
+            delay(300)
+            isRefreshing = false
         }
     }
 
@@ -128,189 +181,93 @@ fun FeedScreen(
         contentColor = SixpackTheme.colors.gray900,
     ) { paddingValues ->
         Box(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
+                .pointerInput(Unit) {
+                    awaitPointerEventScope {
+                        while (true) {
+                            val event = awaitPointerEvent()
+                            val change = event.changes.firstOrNull()
+
+                            if (change != null) {
+                                val position = change.positionChange()
+
+                                // 맨 위에서 아래로 드래그하는 경우
+                                if (isAtTop && position.y > 0 && !isRefreshing) {
+                                    pullOffset += position.y
+
+                                    // 임계값을 넘으면 refresh
+                                    if (pullOffset > 150f) {
+                                        triggerRefresh()
+                                        pullOffset = 0f
+                                    }
+                                } else {
+                                    pullOffset = 0f
+                                }
+                            }
+                        }
+                    }
+                }
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) {
+                    if (state.selectedPostMenuId != null) {
+                        onPostMenuClick(-1)
+                    }
+                }
         ) {
             LazyColumn(
                 modifier = Modifier
                     .padding(paddingValues)
                     .fillMaxWidth(),
-                state = lazyListState
+                state = lazyListState,
             ) {
-                item {
-                    FeedWeeklyCalendar(
-                        modifier = Modifier
-                            .padding(horizontal = 20.dp)
-                            .padding(top = 16.dp),
-                        feedCalenderUiState = state.calendarState,
-                        onDateSelected = onDateSelected,
-                        onWeekDisplayed = onVisibleWeeksChanged
-                    )
-                }
+                // Refresh Loading Indicator
+                feedRefreshLoadingItem(isRefreshLoading)
 
-                item {
-                    HorizontalDivider(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 24.dp),
-                        thickness = 1.dp,
-                        color = SixpackTheme.colors.gray50
-                    )
-                }
+                // Calendar
+                feedCalendarItem(
+                    calendarState = state.calendarState,
+                    onDateSelected = onDateSelected,
+                    onWeekDisplayed = onVisibleWeeksChanged
+                )
+
+                // Divider
+                feedDividerItem()
 
                 when (state.feedDateState) {
                     FeedDateUiState.NoPostsAndCertifiable -> {
-                        item { EmptyStateCertifiable() }
+                        item(key = "empty_certifiable") { EmptyStateCertifiable() }
                     }
 
                     FeedDateUiState.NoPostsAndExpired -> {
-                        item { EmptyStateExpired() }
+                        item(key = "empty_expired") { EmptyStateExpired() }
                     }
 
                     FeedDateUiState.PostsAvailable -> {
-                        item {
-                            CertificationCountView(
-                                users = state.postingUserInfo,
-                                onViewClick = onCertifiedUsersClick,
-                                modifier = Modifier.padding(horizontal = 20.dp)
-                            )
-                        }
-
-                        item { Spacer(modifier = Modifier.height(32.dp)) }
-
-
-                        items(
-                            count = feedPagingItems.itemCount,
-                            key = { feedPagingItems.peek(it)?.feedId!!.toInt() }
-                        ) { index ->
-                            feedPagingItems[index]?.let { post ->
-                                val isMenuExpanded = (state.selectedPostMenuId != null)
-                                FeedPostCard(
-                                    modifier = Modifier.padding(horizontal = 20.dp),
-                                    postDetail = post,
-                                    isMenuExpanded = isMenuExpanded,
-                                    onMenuClick = { onPostMenuClick(post.feedId) },
-                                    onDropDownMenuClick = { action -> onDropDownMenuClick(post.feedId, action) },
-                                    onPostImageClick = { onPostImageClick(post) },
-                                    onPostUserProfileClick = { userId, isMe -> onPostUserProfileClick(userId, isMe) },
-                                    onReactionChipClick = { emoji, isReacted ->
-                                        onPostReactionClick(
-                                            post,
-                                            emoji,
-                                            isReacted
-                                        )
-                                    },
-                                    onReactionChipLongClick = { emoji, reactions ->
-                                        onPostReactionLongClick(
-                                            post.feedId,
-                                            reactions,
-                                            emoji
-                                        )
-                                    },
-                                    onAddReactionClick = { onPostAddReactionClick(post) }
-                                )
-                            }
-                            Spacer(Modifier.height(40.dp))
-                        }
-
-                        feedPagingItems.loadState.apply {
-                            when {
-                                refresh is LoadState.Loading -> {
-                                    item {
-                                        Box(
-                                            modifier = Modifier.fillParentMaxSize(),
-                                            contentAlignment = Alignment.Center
-                                        ) { CircularProgressIndicator() }
-                                    }
-                                }
-
-                                append is LoadState.Loading -> {
-                                    item {
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(vertical = 16.dp),
-                                            contentAlignment = Alignment.Center
-                                        ) {
-                                            CircularProgressIndicator(
-                                                modifier = Modifier.size(24.dp),
-                                                strokeWidth = 2.dp
-                                            )
-                                        }
-                                    }
-                                }
-
-                                refresh is LoadState.Error -> {
-                                    item {
-                                        Column(
-                                            modifier = Modifier.fillParentMaxSize(),
-                                            verticalArrangement = Arrangement.Center,
-                                            horizontalAlignment = Alignment.CenterHorizontally
-                                        ) {
-                                            Text(
-                                                text = stringResource(
-                                                    id = R.string.feed_load_state_error_message,
-                                                    (refresh as LoadState.Error).error.message ?: ""
-                                                )
-                                            )
-                                            Button(onClick = { feedPagingItems.retry() }) {
-                                                Text(stringResource(id = R.string.feed_load_state_retry_button))
-                                            }
-                                        }
-                                    }
-                                }
-
-                                append is LoadState.Error -> {
-                                    item {
-                                        Column(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(vertical = 16.dp),
-                                            horizontalAlignment = Alignment.CenterHorizontally
-                                        ) {
-                                            Text(
-                                                text = stringResource(
-                                                    id = R.string.feed_load_state_error_message,
-                                                    (append as LoadState.Error).error.message ?: ""
-                                                )
-                                            )
-                                            Button(onClick = { feedPagingItems.retry() }) {
-                                                Text(stringResource(id = R.string.feed_load_state_retry_button))
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        feedContentItems(
+                            isInitialLoad = isInitialLoad,
+                            postingUserInfo = state.postingUserInfo,
+                            feedPagingItems = feedPagingItems,
+                            selectedPostMenuId = state.selectedPostMenuId,
+                            onCertifiedUsersClick = onCertifiedUsersClick,
+                            onPostMenuClick = onPostMenuClick,
+                            onDropDownMenuClick = onDropDownMenuClick,
+                            onPostImageClick = onPostImageClick,
+                            onPostUserProfileClick = onPostUserProfileClick,
+                            onReactionClick = onPostReactionClick,
+                            onReactionLongClick = onPostReactionLongClick,
+                            onAddReactionClick = onPostAddReactionClick
+                        )
                     }
-
                 }
             }
-
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(
-                        bottom = 16.dp,
-                        end = 20.dp
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Box(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .background(SixpackTheme.colors.blue600)
-                        .clickable(enabled = state.feedDateState != FeedDateUiState.NoPostsAndExpired) {  onFTAButtonClick() }
-                        .padding(14.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Image(
-                        imageVector = ImageVector.vectorResource(R.drawable.ic_plus),
-                        contentDescription = stringResource(id = R.string.feed_floating_action_button_description),
-                        modifier = Modifier.size(24.dp),
-                    )
-                }
-            }
+            FeedFTAButton(
+                enabled = state.feedDateState != FeedDateUiState.NoPostsAndExpired,
+                onFTAButtonClick = onFTAButtonClick,
+                modifier = Modifier.align(Alignment.BottomEnd)
+            )
         }
     }
     ReactionUsersBottomSheet(
@@ -345,7 +302,7 @@ fun FeedScreen(
 }
 
 @Composable
-fun EmptyStateExpired(
+private fun EmptyStateExpired(
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -356,7 +313,7 @@ fun EmptyStateExpired(
         verticalArrangement = Arrangement.Center
     ) {
         Image(
-            imageVector = Icons.Filled.Image,
+            imageVector = ImageVector.vectorResource(R.drawable.img_feed_empty_expired),
             contentDescription = stringResource(id = R.string.feed_empty_state_no_certification_description),
             modifier = Modifier.size(120.dp),
             contentScale = ContentScale.Fit
@@ -383,7 +340,7 @@ fun EmptyStateExpired(
 }
 
 @Composable
-fun EmptyStateCertifiable(
+private fun EmptyStateCertifiable(
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -394,7 +351,7 @@ fun EmptyStateCertifiable(
         verticalArrangement = Arrangement.Center
     ) {
         Image(
-            imageVector = Icons.Filled.Image, // TODO: 여기에 실제 그래픽 리소스(Painter) 삽입
+            imageVector = ImageVector.vectorResource(R.drawable.img_feed_empty_certifiable),
             contentDescription = stringResource(id = R.string.feed_empty_state_waiting_certification_description),
             modifier = Modifier.size(120.dp),
             contentScale = ContentScale.Fit

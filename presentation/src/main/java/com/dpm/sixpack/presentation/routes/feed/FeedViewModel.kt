@@ -80,24 +80,6 @@ class FeedViewModel @Inject constructor(
             }
             .cachedIn(viewModelScope)
 
-    // TODO DateSelected에 포함
-//    val feedDateState: StateFlow<FeedDateUiState> =
-//        combine(selectedDateFlow, postCountsFlow) { selectedDate, postCounts ->
-//            val today = LocalDate.now()
-//            val canCertify = selectedDate.isEqual(today)
-//            val postCount = postCounts[selectedDate] ?: 0
-//
-//            when {
-//                postCount > 0 -> FeedDateUiState.PostsAvailable
-//                postCount == 0 && canCertify -> FeedDateUiState.NoPostsAndCertifiable
-//                else -> FeedDateUiState.NoPostsAndExpired
-//            }
-//        }.stateIn(
-//            scope = viewModelScope,
-//            started = kotlinx.coroutines.flow.SharingStarted.WhileSubscribed(5000L),
-//            initialValue = FeedDateUiState.NoPostsAndCertifiable
-//        )
-
     override fun onIntent(intent: FeedIntent) {
         when (intent) {
             // TopBar
@@ -219,7 +201,9 @@ class FeedViewModel @Inject constructor(
     }
 
     private fun handlePostMenuClick(feedId: Long) = intent {
-        reduce { state.copy(selectedPostMenuId = feedId) }
+        reduce {
+            state.copy(selectedPostMenuId = if (feedId == -1L) null else feedId)
+        }
     }
 
     private fun handlePostImageClick(post: PostResource) = intent {
