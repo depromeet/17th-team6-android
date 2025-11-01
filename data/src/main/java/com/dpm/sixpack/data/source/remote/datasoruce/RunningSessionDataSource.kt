@@ -76,7 +76,7 @@ class RunningSessionDataSource @Inject constructor(
         // Bitmap을 임시 파일로 압축하여 저장 (JPEG, 품질 90)
         try {
             FileOutputStream(tempFile).use { outputStream ->
-                image.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
+                image.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
             }
         } catch (e: Exception) {
             tempFile.delete() // 에러 발생 시 파일 삭제

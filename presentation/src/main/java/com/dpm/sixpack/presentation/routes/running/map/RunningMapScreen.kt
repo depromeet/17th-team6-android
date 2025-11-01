@@ -1,6 +1,7 @@
 package com.dpm.sixpack.presentation.routes.running.map
 
 import android.graphics.Bitmap
+import android.graphics.Matrix
 import android.view.Gravity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.AnchoredDraggableState
@@ -43,6 +44,7 @@ import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.common.util.PermissionHandler
 import com.dpm.sixpack.presentation.routes.freind.sampleFriendList
 import com.dpm.sixpack.presentation.routes.running.map.MapConstants.DEFAULT_ZOOM
+import com.dpm.sixpack.presentation.routes.running.map.MapConstants.FINAL_RESOLUTION
 import com.dpm.sixpack.presentation.routes.running.map.MapConstants.SNAPSHOT_PADDING
 import com.dpm.sixpack.presentation.routes.running.map.component.DraggableFriendBottomSheet
 import com.dpm.sixpack.presentation.routes.running.map.component.LocationTrackingButton
@@ -441,19 +443,46 @@ private suspend fun NaverMap.awaitSnapshot(): Bitmap =
             // 원본 비트맵 (직사각형)
             if (continuation.isActive) {
                 try {
-                    // 짧은 쪽 길이를 기준으로 정사각형 크기(size) 계산
                     val width = originalBitmap.width
                     val height = originalBitmap.height
-                    val size = minOf(width, height)
+                    val cropSize = minOf(width, height)
+                    val x = (width - cropSize) / 2
+                    val y = (height - cropSize) / 2
 
-                    // 중앙을 기준으로 자르기 위한 시작점(x, y) 계산
-                    val x = (width - size) / 2
-                    val y = (height - size) / 2
+                    // 해상도 제한(스케일링) 준비
+                    // 원본의 정사각형 크기(cropSize)를 최종 해상도(FINAL_RESOLUTION)로 줄이기 위한 비율
+                    val scale = FINAL_RESOLUTION.toFloat() / cropSize.toFloat()
+                    val matrix = Matrix()
+                    matrix.postScale(scale, scale)
 
-                    // 원본 비트맵에서 (x, y) 위치에서 size x size 크기로 새 비트맵 생성
-                    val squareBitmap = Bitmap.createBitmap(originalBitmap, x, y, size, size)
+                    // 최적화된 Config 설정
+                    // ARGB_8888 (32비트) 대신 RGB_565 (16비트) 사용
+                    val config = Bitmap.Config.RGB_565
 
-                    continuation.resume(squareBitmap)
+                    // (크롭 + 스케일링 + Config 변경)을 한 번에 실행
+                    // createBitmap 오버로드를 사용하여 메모리 효율적으로 처리
+                    val optimizedBitmap =
+                        Bitmap.createBitmap(
+                            originalBitmap,
+                            x,
+                            y,
+                            cropSize,
+                            cropSize,
+                            matrix,
+                            true,
+                        )
+
+                    // createBitmap이 config를 무시할 경우(일부 기기), 수동으로 config 변경
+                    val finalBitmap =
+                        if (optimizedBitmap.config != config) {
+                            val copiedBitmap = optimizedBitmap.copy(config, false)
+                            optimizedBitmap.recycle()
+                            copiedBitmap
+                        } else {
+                            optimizedBitmap
+                        }
+
+                    continuation.resume(finalBitmap)
                 } catch (e: Exception) {
                     if (continuation.isActive) {
                         continuation.cancel(CancellationException("비트맵 자르기 실패: ${e.message}"))
