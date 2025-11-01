@@ -17,3 +17,24 @@ fun formatPace(paceInSeconds: Int): String {
 
     return String.format("%d'%02d\"", minutes, seconds)
 }
+
+fun formatPhoneNumber(input: String): String {
+    val digitsOnly = input.filter { it.isDigit() }
+
+    return when {
+        digitsOnly.length <= 3 -> digitsOnly
+        digitsOnly.length <= 7 -> {
+            // 010-1234 형식
+            "${digitsOnly.substring(0, 3)}-${digitsOnly.substring(3)}"
+        }
+        digitsOnly.length <= 10 -> {
+            // 010-123-4567 형식 (10자리)
+            "${digitsOnly.substring(0, 3)}-${digitsOnly.substring(3, 6)}-${digitsOnly.substring(6)}"
+        }
+        else -> {
+            // 010-1234-5678 형식 (11자리)
+            val trimmed = digitsOnly.take(11)
+            "${trimmed.substring(0, 3)}-${trimmed.substring(3, 7)}-${trimmed.substring(7)}"
+        }
+    }
+}

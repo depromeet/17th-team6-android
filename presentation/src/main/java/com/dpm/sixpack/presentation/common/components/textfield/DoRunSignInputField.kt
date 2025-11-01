@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
@@ -55,6 +56,7 @@ fun DoRunSignInputField(
     style: String = "default",
     keyboardType: KeyboardType = KeyboardType.Text,
     singleLine: Boolean = true,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: @Composable (() -> Unit)? = null,
     bottomHelper: @Composable (() -> Unit)? = null,
 ) {
@@ -104,6 +106,7 @@ fun DoRunSignInputField(
                     keyboardType = keyboardType,
                 ),
             singleLine = singleLine,
+            visualTransformation = visualTransformation,
             cursorBrush = SolidColor(SixpackTheme.colors.blue600),
             interactionSource = interactionSource,
             decorationBox = { innerTextField ->

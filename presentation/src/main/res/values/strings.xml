@@ -5,6 +5,7 @@
     <string name="common_session_count">%d회차</string>
     <string name="common_session_total_count">/ 총 %d회</string>
     <string name="common_next">다음</string>
+    <string name="common_ok">확인</string>
     <string name="common_complete">완료</string>
     <string name="common_cancel">닫기</string>
     <string name="common_find_account">계정찾기</string>
@@ -47,11 +48,12 @@
     <string name="signin_title_phone_input">휴대폰 번호를\n입력해주세요.</string>
     <string name="signin_title_verification_input">인증번호 6자리를\n입력해주세요.</string>
     <string name="signin_label_phone_number">휴대폰 번호</string>
-    <string name="signin_placeholder_phone_number">010-0000-0000</string>
+    <string name="signin_placeholder_phone_number">휴대폰 번호(-없이 숫자만 입력)</string>
+    <string name="signin_send_verification_code">인증문자 받기</string>
     <string name="signin_label_verification_code">인증번호</string>
     <string name="signin_placeholder_verification_code">000000</string>
     <string name="signin_find_account">휴대폰 번호가 변경되었나요? 계정찾기</string>
-    <string name="signin_error_invalid_phone_number">올바른 전화번호를 입력해주세요.</string>
+    <string name="signin_error_invalid_phone_number">올바른 휴대폰 번호를 입력해주세요.</string>
     <string name="signin_success_code_sent">인증번호가 발송되었습니다.</string>
     <string name="signin_error_code_send_failed">인증번호 발송에 실패했습니다.</string>
     <string name="signin_error_code_length">6자리 인증번호를 입력해주세요.</string>
@@ -69,9 +71,10 @@
     <string name="signup_title_terms_agreement_action">동의하고 계속하기</string>
     <string name="signup_label_phone_number">휴대폰 번호</string>
     <string name="signup_placeholder_phone_number">휴대폰 번호(-없이 숫자만 입력)</string>
+    <string name="signup_send_verification_code">인증문자 받기</string>
     <string name="signup_label_verification_code">인증번호</string>
     <string name="signup_placeholder_verification_code">인증번호 6자리</string>
-    <string name="signup_error_invalid_phone_number">올바른 전화번호를 입력해주세요.</string>
+    <string name="signup_error_invalid_phone_number">올바른 휴대폰 번호를 입력해주세요.</string>
     <string name="signup_success_code_sent">인증번호가 발송되었습니다.</string>
     <string name="signup_error_code_send_failed">인증번호 발송에 실패했습니다.</string>
     <string name="signup_error_code_length">6자리 인증번호를 입력해주세요.</string>

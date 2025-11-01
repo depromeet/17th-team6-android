@@ -46,10 +46,10 @@ class SignInViewModel @Inject constructor(
 
     private fun handlePhoneNumberChanged(phoneNumber: String) =
         intent {
-            val filteredNumber = phoneNumber.filter { it.isDigit() }.take(11)
+            val digitsOnly = phoneNumber.filter { it.isDigit() }.take(11)
             reduce {
                 state.copy(
-                    phoneNumber = filteredNumber,
+                    phoneNumber = digitsOnly,
                     errorMessage = null,
                 )
             }

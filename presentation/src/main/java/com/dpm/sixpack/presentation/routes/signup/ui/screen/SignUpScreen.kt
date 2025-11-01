@@ -6,6 +6,8 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,17 +18,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
@@ -34,6 +38,7 @@ import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.components.textfield.DoRunSignInputField
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
+import com.dpm.sixpack.presentation.common.util.format.PhoneNumberVisualTransformation
 import com.dpm.sixpack.presentation.routes.signup.contract.SignUpIntent
 import com.dpm.sixpack.presentation.routes.signup.contract.SignUpState
 import com.dpm.sixpack.presentation.routes.signup.contract.SignUpStep
@@ -147,8 +152,8 @@ fun SignUpScreen(
                 text =
                     stringResource(
                         when (state.step) {
-                            SignUpStep.PHONE_INPUT -> R.string.common_next
-                            SignUpStep.VERIFICATION_INPUT -> R.string.common_next
+                            SignUpStep.PHONE_INPUT -> R.string.signup_send_verification_code
+                            SignUpStep.VERIFICATION_INPUT -> R.string.common_ok
                         },
                     ),
                 onClick = {
@@ -187,14 +192,17 @@ private fun PhoneNumberInput(
         enabled = enabled,
         keyboardType = KeyboardType.Number,
         singleLine = true,
+        visualTransformation = PhoneNumberVisualTransformation(),
         trailingIcon = {
             if (phoneNumber.isNotBlank()) {
-                IconButton(onClick = onClickClear) {
-                    Image(
-                        painter = painterResource(R.drawable.ic_input_clear),
-                        contentDescription = "phone number clear button",
-                    )
-                }
+                Image(
+                    modifier = Modifier
+                        .sizeIn(minWidth = 24.dp, minHeight = 24.dp)
+                        .clip(SixpackTheme.shapes.full)
+                        .clickable(onClick = onClickClear),
+                    painter = painterResource(R.drawable.ic_input_clear),
+                    contentDescription = "phone number clear button",
+                )
             }
         },
     )
@@ -227,24 +235,22 @@ private fun VerificationCodeInput(
                         style = SixpackTheme.typography.b2Regular,
                         color = SixpackTheme.colors.red,
                     )
-                    TextButton(
-                        onClick = onResendClick,
-                        shape = SixpackTheme.shapes.round8,
-                        modifier =
-                            Modifier
-                                .height(32.dp)
-                                .padding(end = 12.dp),
-                        colors =
-                            ButtonDefaults.textButtonColors(
-                                containerColor = SixpackTheme.colors.blue200,
+                    Text(
+                        text = stringResource(R.string.signup_button_resend),
+                        modifier = Modifier
+                            .background(
+                                color = SixpackTheme.colors.blue200,
+                                shape = SixpackTheme.shapes.round8
+                            )
+                            .clip(SixpackTheme.shapes.round8)
+                            .padding(horizontal = 10.dp, vertical = 8.dp)
+                            .clickable(
+                                onClick = onResendClick
                             ),
-                    ) {
-                        Text(
-                            text = stringResource(R.string.signup_button_resend),
-                            style = SixpackTheme.typography.c1Bold,
-                            color = SixpackTheme.colors.blue600,
-                        )
-                    }
+                        textAlign = TextAlign.Center,
+                        style = SixpackTheme.typography.c1Bold,
+                        color = SixpackTheme.colors.blue600,
+                    )
                 }
             },
         )

@@ -2,7 +2,6 @@ package com.dpm.sixpack.presentation.routes.onboarding.ui.component.pager
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
@@ -12,7 +11,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.routes.onboarding.ui.component.pager.item.OnboardingPagerIndicator
 import com.dpm.sixpack.presentation.routes.onboarding.ui.component.pager.item.OnboardingPagerItem
 import com.dpm.sixpack.presentation.routes.onboarding.ui.model.OnboardingPage

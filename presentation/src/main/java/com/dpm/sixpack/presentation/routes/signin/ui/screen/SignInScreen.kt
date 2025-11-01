@@ -21,6 +21,7 @@ import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.components.textfield.DoRunSignInputField
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
+import com.dpm.sixpack.presentation.common.util.format.PhoneNumberVisualTransformation
 import com.dpm.sixpack.presentation.routes.signin.contract.SignInIntent
 import com.dpm.sixpack.presentation.routes.signin.contract.SignInState
 import com.dpm.sixpack.presentation.routes.signin.contract.SignInStep
@@ -165,6 +166,7 @@ private fun PhoneNumberInput(
         enabled = enabled,
         keyboardType = KeyboardType.Number,
         singleLine = true,
+        visualTransformation = PhoneNumberVisualTransformation(),
     )
 }
 
