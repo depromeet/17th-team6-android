@@ -1,19 +1,18 @@
 package com.dpm.sixpack.presentation.routes.signin.ui.screen
 
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
+import com.dpm.sixpack.presentation.common.components.auth.AuthClickableTextLink
 import com.dpm.sixpack.presentation.common.components.auth.AuthScreen
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.model.PhoneAuthStep
 import com.dpm.sixpack.presentation.routes.signin.contract.SignInIntent
 import com.dpm.sixpack.presentation.routes.signin.contract.SignInState
-import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 fun SignInScreen(
@@ -41,24 +40,23 @@ fun SignInScreen(
         phoneNumber = state.phoneNumber,
         onPhoneNumberChanged = { onIntent(SignInIntent.OnPhoneNumberChanged(it)) },
         phoneEnabled = !state.isLoading && state.step == PhoneAuthStep.PHONE_INPUT,
+        modifier = modifier,
         verificationCode = state.verificationCode,
         onVerificationCodeChanged = { onIntent(SignInIntent.OnVerificationCodeChanged(it)) },
         verificationEnabled = !state.isLoading && state.remainingTimeInSeconds > 0,
         additionalContentAfterPhone =
             if (state.step == PhoneAuthStep.PHONE_INPUT) {
                 {
-                    Text(
-                        text = stringResource(R.string.signin_find_account),
-                        modifier = Modifier.fillMaxWidth(),
-                        style = SixpackTheme.typography.b2Regular,
-                        color = SixpackTheme.colors.gray600,
-                        textAlign = TextAlign.Center
+                    AuthClickableTextLink(
+                        normalText = "",
+                        linkText = stringResource(R.string.signin_find_account),
+                        onLinkClick = { /* TODO: 계정 찾기 기능 구현 */ },
+                        modifier = Modifier.padding(bottom = 12.dp),
                     )
                 }
             } else {
                 null
             },
-        modifier = modifier,
     )
 }
 

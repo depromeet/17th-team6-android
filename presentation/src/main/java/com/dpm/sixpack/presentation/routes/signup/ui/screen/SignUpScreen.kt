@@ -37,13 +37,13 @@ fun SignUpScreen(
         phoneNumber = state.phoneNumber,
         onPhoneNumberChanged = { onIntent(SignUpIntent.OnPhoneNumberChanged(it)) },
         phoneEnabled = !state.isLoading && state.step == PhoneAuthStep.PHONE_INPUT,
-        onPhoneClearClick = { onIntent(SignUpIntent.OnPhoneNumberChanged("")) },
+        modifier = modifier,
         verificationCode = state.verificationCode,
         onVerificationCodeChanged = { onIntent(SignUpIntent.OnVerificationCodeChanged(it)) },
         verificationEnabled = !state.isLoading && state.remainingTimeInSeconds > 0,
         remainingTime = state.formattedRemainingTime,
+        onPhoneClearClick = { onIntent(SignUpIntent.OnPhoneNumberChanged("")) },
         onResendClick = { onIntent(SignUpIntent.OnResendCodeClick) },
-        modifier = modifier,
     )
 }
 

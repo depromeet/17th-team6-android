@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -48,17 +47,17 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 fun AuthScreen(
     title: String,
     step: PhoneAuthStep,
-    isButtonEnabled: Boolean,
-    phoneNumber: String,
-    phoneEnabled: Boolean,
     onButtonClick: () -> Unit,
+    isButtonEnabled: Boolean,
     onBackClick: () -> Unit,
+    phoneNumber: String,
     onPhoneNumberChanged: (String) -> Unit,
+    phoneEnabled: Boolean,
     modifier: Modifier = Modifier,
     verificationCode: String = "",
+    onVerificationCodeChanged: (String) -> Unit = {},
     verificationEnabled: Boolean = false,
     remainingTime: String = "",
-    onVerificationCodeChanged: (String) -> Unit = {},
     onPhoneClearClick: (() -> Unit)? = null,
     onResendClick: (() -> Unit)? = null,
     additionalContentAfterPhone: (@Composable () -> Unit)? = null,
@@ -122,8 +121,6 @@ fun AuthScreen(
                         enabled = phoneEnabled,
                         onClickClear = onPhoneClearClick,
                     )
-
-
                 }
             }
 
@@ -134,12 +131,13 @@ fun AuthScreen(
 
                 // Bottom Button
                 DoRunDefaultButton(
-                    text = stringResource(
-                        when (step) {
-                            PhoneAuthStep.PHONE_INPUT -> R.string.signup_send_verification_code
-                            PhoneAuthStep.VERIFICATION_INPUT -> R.string.common_ok
-                        },
-                    ),
+                    text =
+                        stringResource(
+                            when (step) {
+                                PhoneAuthStep.PHONE_INPUT -> R.string.signup_send_verification_code
+                                PhoneAuthStep.VERIFICATION_INPUT -> R.string.common_ok
+                            },
+                        ),
                     onClick = onButtonClick,
                     enabled = isButtonEnabled,
                     modifier =
@@ -148,7 +146,7 @@ fun AuthScreen(
                             .consumeWindowInsets(paddingValues)
                             .imePadding()
                             .padding(horizontal = SixPackDimen.defaultSideMargin)
-                            .padding(bottom = 12.dp),
+                            .padding(top = 8.dp, bottom = 12.dp),
                 )
             }
         }

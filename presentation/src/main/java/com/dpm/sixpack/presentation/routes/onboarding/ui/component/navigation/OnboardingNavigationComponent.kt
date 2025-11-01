@@ -3,21 +3,15 @@ package com.dpm.sixpack.presentation.routes.onboarding.ui.component.navigation
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.LinkAnnotation
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
+import com.dpm.sixpack.presentation.common.components.auth.AuthClickableTextLink
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.theme.SixPackDimen
 
@@ -41,25 +35,13 @@ fun OnboardingNavigationComponent(
             modifier = Modifier.fillMaxWidth(),
         )
 
-        Text(
-            text =
-                buildAnnotatedString {
-                    val already = stringResource(R.string.onboarding_already_have_account) + " "
-                    val signin = stringResource(R.string.onboarding_signin)
-
-                    append(already)
-
-                    pushLink(LinkAnnotation.Clickable(tag = "login") { onClickSignIn() })
-                    withStyle(SpanStyle(textDecoration = TextDecoration.Underline)) {
-                        append(signin)
-                    }
-                    pop()
-                },
-            textAlign = TextAlign.Center,
+        AuthClickableTextLink(
+            normalText = stringResource(R.string.onboarding_already_have_account),
+            linkText = stringResource(R.string.onboarding_signin),
+            onLinkClick = onClickSignIn,
             modifier =
                 Modifier
                     .padding(top = 12.dp)
-                    .fillMaxWidth()
                     .padding(horizontal = SixPackDimen.defaultSideMargin)
                     .padding(vertical = 4.dp),
         )
