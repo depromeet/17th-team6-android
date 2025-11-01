@@ -64,12 +64,13 @@ fun PostReactionRow(
                 )
             }
             if (reactions.size > 3) {
+                val firstEmoji = reactions[0].emoji
                 MoreReactionChip(
                     count = reactions.size - 3,
-                    onClick = { onReactionChipLongClick(reactions, Emoji.ALL) },
+                    onClick = { onReactionChipLongClick(reactions, firstEmoji) },
                 )
 
-                AddReactionButton(feedId ,onAddReactionClick = onAddReactionClick)
+                AddReactionButton(feedId, onAddReactionClick = onAddReactionClick)
             }
         }
     }
@@ -79,7 +80,7 @@ fun PostReactionRow(
  * 이모지 추가 버튼
  */
 @Composable
-private fun AddReactionButton(feedId :Long,onAddReactionClick: (Long) -> Unit) {
+private fun AddReactionButton(feedId: Long, onAddReactionClick: (Long) -> Unit) {
     Box(
         modifier =
             Modifier

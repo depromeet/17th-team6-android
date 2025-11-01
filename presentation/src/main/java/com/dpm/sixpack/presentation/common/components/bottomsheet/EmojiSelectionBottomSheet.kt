@@ -29,7 +29,7 @@ fun EmojiSelectionBottomSheet(
     onEmojiSelected: (Long, Emoji) -> Unit = { _, _ -> },
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
 ) {
-    val emojis = Emoji.entries.filter { it != Emoji.ALL }
+    val emojis = Emoji.entries
 
     DoRunBottomSheetSlot(
         isBottomSheetVisible = isBottomSheetVisible,

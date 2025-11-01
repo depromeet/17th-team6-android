@@ -3,7 +3,6 @@ package com.dpm.sixpack.presentation.common.components.bottomsheet
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -25,7 +23,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -108,10 +105,7 @@ fun ReactionUsersBottomSheet(
                     val selectedEmoji = reactionDetails.selectedEmoji
 
                     val usersToShow =
-                        when (selectedEmoji) {
-                            Emoji.ALL -> reactionDetails.allUsersSortedByTime
-                            else -> reactionDetails.reactions.find { it.emoji == selectedEmoji }?.users ?: emptyList()
-                        }
+                        reactionDetails.reactions.find { it.emoji == selectedEmoji }?.users ?: emptyList()
 
                     LazyColumn(modifier = Modifier.fillMaxWidth()) {
                         items(usersToShow, key = { it.user.id }) { user ->
@@ -151,78 +145,24 @@ private fun ReactionHeaderSuccess(
 
     Spacer(modifier = Modifier.height(16.dp))
 
-    val emojiTabs = listOf(Emoji.ALL) + reactionDetails.reactions.map { it.emoji }
-
+    val emojiTabs = reactionDetails.reactions.map { it.emoji }
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(emojiTabs, key = { it.type }) { emoji ->
             val selected = reactionDetails.selectedEmoji == emoji
+            val reaction = reactionDetails.reactions.find { it.emoji == emoji }
 
-            if (emoji == Emoji.ALL) {
-                AllTab(
-                    selected = selected,
-                    onClick = { onTabClick(Emoji.ALL) },
-                )
-            } else {
-                val reaction = reactionDetails.reactions.find { it.emoji == emoji }
-                ReactionChip(
-                    iconRes = emoji.iconRes,
-                    count = reaction?.count ?: "0",
-                    isReacted = selected,
-                    onClick = { onTabClick(emoji) },
-                )
-            }
+            ReactionChip(
+                iconRes = emoji.iconRes,
+                count = reaction?.count ?: "0",
+                isReacted = selected,
+                onClick = { onTabClick(emoji) },
+            )
         }
     }
     Spacer(modifier = Modifier.height(16.dp))
-}
-
-
-@Composable
-private fun AllTab(
-    selected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
-    ) {
-        Row(
-            modifier =
-                modifier
-                    .background(
-                        color = if (selected) SixpackTheme.colors.blue600 else SixpackTheme.colors.gray50,
-                        shape = RoundedCornerShape(16.dp),
-                    )
-                    .padding(horizontal = 6.dp)
-                    .clip(shape = RoundedCornerShape(16.dp))
-                    .clickable(onClick = onClick),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-        ) {
-            Text(
-                text = stringResource(id = R.string.feed_reaction_bottom_sheet_all_tab),
-                style = SixpackTheme.typography.b2Medium,
-                color = if (selected) SixpackTheme.colors.gray0 else SixpackTheme.colors.gray500,
-                textAlign = TextAlign.Center,
-                modifier =
-                    Modifier
-                        .padding(vertical = 6.dp)
-                        .widthIn(min = 40.dp),
-            )
-        }
-
-        Spacer(modifier = Modifier.width(12.dp))
-
-        VerticalDivider(
-            modifier = Modifier.height(8.dp),
-            thickness = 1.dp,
-            color = SixpackTheme.colors.gray100,
-        )
-    }
 }
 
 @Composable
@@ -367,7 +307,7 @@ private fun ReactingUserRowShimmer() {
                 .size(52.dp)
                 .background(SixpackTheme.colors.gray100, CircleShape)
         )
-        // 이름 스켈레톤
+
         Box(
             modifier = Modifier
                 .width(120.dp)
@@ -393,7 +333,7 @@ fun ReactionUsersBottomSheetPreview() {
         }
         val dummyUsersFire = (11..15).map {
             ReactingUserInfo(
-                user = UserInfo(id = it.toLong(), name = "불꽃유저 ${it-10}", profileImageUrl = "", isMe = false),
+                user = UserInfo(id = it.toLong(), name = "불꽃유저 ${it - 10}", profileImageUrl = "", isMe = false),
                 reactedAt = "$it 분 전",
                 emoji = Emoji.FIRE
             )

@@ -19,6 +19,6 @@ sealed interface ReactionDetailsUiState : Parcelable {
 
         val allUsersSortedByTime: List<ReactingUserInfo>,
 
-        val selectedEmoji: Emoji = Emoji.ALL,
+        val selectedEmoji: Emoji ,
     ) : ReactionDetailsUiState
 }
