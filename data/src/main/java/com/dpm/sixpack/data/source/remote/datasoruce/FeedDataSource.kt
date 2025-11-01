@@ -24,7 +24,7 @@ class FeedDataSource @Inject constructor(
     )
 
     suspend fun postReaction(
-        selfieId: Int,
+        selfieId: Long,
         emojiType: String
     ): BaseResponse<ReactionResultDto> = feedService.postReaction(
         selfieId = selfieId,

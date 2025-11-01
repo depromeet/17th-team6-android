@@ -42,7 +42,7 @@ class FeedRepositoryImpl @Inject constructor(
 
 
     override suspend fun postReaction(
-        selfieId: Int,
+        selfieId: Long,
         emojiType: String
     ): DoRunResult<ReactionResult> =
         withContext(Dispatchers.IO) {

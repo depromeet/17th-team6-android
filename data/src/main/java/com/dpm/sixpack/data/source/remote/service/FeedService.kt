@@ -22,7 +22,7 @@ interface FeedService {
 
     @POST("/api/selfie/{selfieId}/reaction")
     suspend fun postReaction(
-        @Path("selfieId") selfieId: Int,
+        @Path("selfieId") selfieId: Long,
         @Body body: ReactionRequestDto
     ): BaseResponse<ReactionResultDto>
 

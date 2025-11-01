@@ -18,7 +18,7 @@ interface FeedRepository {
     ): Flow<PagingData<FeedListItem>>
 
     suspend fun postReaction(
-        selfieId: Int,
+        selfieId: Long,
         emojiType: String
     ): DoRunResult<ReactionResult>
 

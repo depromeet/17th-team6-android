@@ -13,14 +13,21 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class FeedUiState(
+    // Post
+    val feedDateState : FeedDateUiState = FeedDateUiState.NoPostsAndExpired,
     val selectedFeedId : Long = -1,
     val selectedPostMenuId : Long? = null,
+    // Calender
     val calendarState: FeedCalenderUiState = FeedCalenderUiState(),
-    val bottomSheetState: FeedBottomSheetState = FeedBottomSheetState(),
+    //Dialog
     val dialogState : FeedDialogState = FeedDialogState(),
+    // BottomSheet
+    val bottomSheetState: FeedBottomSheetState = FeedBottomSheetState(),
     val reactionDetailsUiState: ReactionDetailsUiState = ReactionDetailsUiState.Loading,
+    // Certification User
     val postingUserInfo: List<PostingUserInfo> = listOf(),
+    // Optimistic Update
     val optimisticPosts: Map<Long, PostResource> = emptyMap(),
-    val feedDateState : FeedDateUiState = FeedDateUiState.NoPostsAndExpired
+    val postForEmojiSelection: PostResource? = null
 ) : UiState,
     Parcelable

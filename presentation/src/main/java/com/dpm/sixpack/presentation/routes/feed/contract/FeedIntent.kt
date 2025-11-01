@@ -4,6 +4,7 @@ import com.dpm.sixpack.presentation.common.base.UiIntent
 import com.dpm.sixpack.presentation.common.components.post.PostDropDownActionType
 import com.dpm.sixpack.presentation.common.model.Emoji
 import com.dpm.sixpack.presentation.common.model.PostReaction
+import com.dpm.sixpack.presentation.common.model.PostResource
 import java.time.LocalDate
 
 sealed interface FeedIntent : UiIntent {
@@ -18,20 +19,21 @@ sealed interface FeedIntent : UiIntent {
     // Certified Users
     data object OnCertifiedUsersClick : FeedIntent
 
+    // User 프로필 클릭
+    data class OnUserProfileClick(val userId: Long, val isMe: Boolean) : FeedIntent
+
     // Post Card
-    data class OnPostUserProfileClick(val userId: Long) : FeedIntent
     data class OnPostMenuClick(val feedId: Long) : FeedIntent
-    data class OnPostImageClick(val feedId: Long) : FeedIntent
-    data class OnPostReactionClick(val feedId: Long, val emoji: Emoji) : FeedIntent
-    data class OnPostReactionLongClick(val feedId: Long, val emoji: Emoji, val reactions: List<PostReaction>) : FeedIntent
-    data class OnPostAddReactionClick(val feedId: Long) : FeedIntent
+    data class OnPostImageClick(val post: PostResource) : FeedIntent // 👈 (결정 4)
+    data class OnPostReactionClick(val post: PostResource, val emoji: Emoji, val isReacted: Boolean) : FeedIntent // 👈 (결정 4)
+    data class OnPostReactionLongClick(val feedId: Long, val reactions: List<PostReaction>, val selectedEmoji: Emoji) : FeedIntent
+    data class OnPostAddReactionClick(val post: PostResource) : FeedIntent
     data class OnDropDownMenuClick(val feedId: Long, val action: PostDropDownActionType) : FeedIntent
 
     // BottomSheet
     data object OnBottomSheetDismiss : FeedIntent
-    data class OnBottomSheetUserProfileClick(val userId: Long) : FeedIntent
-    data class OnEmojiSelected(val feedId: Long, val emoji: Emoji) : FeedIntent
-
+    data class OnUserReactionSheetTabClick(val selectedEmoji: Emoji) : FeedIntent
+    data class OnEmojiSheetEmojiSelected(val emoji: Emoji) : FeedIntent
     // Dialog
     data object OnDialogDismiss : FeedIntent
     data object OnDialogConfirmClick : FeedIntent
