@@ -4,7 +4,9 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -90,59 +92,33 @@ fun SignUpScreen(
                 Spacer(modifier = Modifier.height(32.dp))
 
                 // Input Fields
-                when (state.step) {
-                    SignUpStep.PHONE_INPUT -> {
-                        PhoneNumberInput(
-                            phoneNumber = state.phoneNumber,
-                            onPhoneNumberChanged = { onIntent(SignUpIntent.OnPhoneNumberChanged(it)) },
-                            onClickClear = { onIntent(SignUpIntent.OnPhoneNumberChanged("")) },
-                            enabled = !state.isLoading,
+                Column {
+                    AnimatedVisibility(
+                        visible = state.step == SignUpStep.VERIFICATION_INPUT,
+                        enter = slideInVertically (initialOffsetY = { -it }) + fadeIn(),
+                        exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
+                    ) {
+                        VerificationCodeInput(
+                            verificationCode = state.verificationCode,
+                            onVerificationCodeChanged = {
+                                onIntent(
+                                    SignUpIntent.OnVerificationCodeChanged(it),
+                                )
+                            },
+                            remainingTime = state.formattedRemainingTime,
+                            enabled = !state.isLoading && state.remainingTimeInSeconds > 0,
+                            onResendClick = {
+                                onIntent(SignUpIntent.OnResendCodeClick)
+                            },
+                            modifier = Modifier.padding(bottom = 24.dp)
                         )
                     }
 
-                    SignUpStep.VERIFICATION_INPUT -> {
-                        // Verification Code Input
-                        AnimatedVisibility(
-                            visible = true,
-                            enter = slideInHorizontally(initialOffsetX = { it }) + fadeIn(),
-                            exit = slideOutHorizontally(targetOffsetX = { it }) + fadeOut(),
-                        ) {
-                            Column {
-                                VerificationCodeInput(
-                                    verificationCode = state.verificationCode,
-                                    onVerificationCodeChanged = {
-                                        onIntent(
-                                            SignUpIntent.OnVerificationCodeChanged(it),
-                                        )
-                                    },
-                                    remainingTime = state.formattedRemainingTime,
-                                    enabled = !state.isLoading && state.remainingTimeInSeconds > 0,
-                                    onResendClick = {
-                                        onIntent(SignUpIntent.OnResendCodeClick)
-                                    },
-                                )
-
-                                Spacer(modifier = Modifier.height(24.dp))
-
-                                // Phone Number (Disabled State)
-                                DoRunSignInputField(
-                                    value = state.phoneNumber,
-                                    onValueChange = {},
-                                    label = stringResource(R.string.signup_label_phone_number),
-                                    enabled = false,
-                                )
-                            }
-                        }
-                    }
-                }
-
-                // Error Message
-                if (state.errorMessage != null) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = state.errorMessage,
-                        style = SixpackTheme.typography.c1Regular,
-                        color = SixpackTheme.colors.red,
+                    PhoneNumberInput(
+                        phoneNumber = state.phoneNumber,
+                        onPhoneNumberChanged = { onIntent(SignUpIntent.OnPhoneNumberChanged(it)) },
+                        onClickClear = { onIntent(SignUpIntent.OnPhoneNumberChanged("")) },
+                        enabled = !state.isLoading,
                     )
                 }
             }
