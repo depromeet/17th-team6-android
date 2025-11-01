@@ -14,7 +14,7 @@ data class PostReaction(
     val emoji: Emoji,
     val count: String,
     val isReacted: Boolean = false,
-    val users : List<ReactingUserInfo> = emptyList()
+    val users: List<ReactingUserInfo> = emptyList()
 ) : Parcelable
 
 @Immutable
@@ -41,11 +41,11 @@ enum class Emoji(
         @DrawableRes
         get() =
             when (this) {
-                SURPRISE -> R.drawable.ill_endurance // 적절한 아이콘 리소스로 변경 필요
-                HEART -> R.drawable.ill_endurance
-                THUMBS_UP -> R.drawable.ill_endurance // 적절한 아이콘 리소스로 변경 필요
-                CONGRATS -> R.drawable.ill_endurance // 적절한 아이콘 리소스로 변경 필요
-                FIRE -> R.drawable.ill_endurance
+                SURPRISE -> R.drawable.ic_reaction_surprise // 적절한 아이콘 리소스로 변경 필요
+                HEART -> R.drawable.ic_reaction_heart
+                THUMBS_UP -> R.drawable.ic_reaction_thumbs_up // 적절한 아이콘 리소스로 변경 필요
+                CONGRATS -> R.drawable.ic_reaction_congrats // 적절한 아이콘 리소스로 변경 필요
+                FIRE -> R.drawable.ic_reaction_fire
             }
 
     companion object {
