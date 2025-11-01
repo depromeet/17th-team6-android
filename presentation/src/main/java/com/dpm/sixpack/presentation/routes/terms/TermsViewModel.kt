@@ -2,10 +2,10 @@ package com.dpm.sixpack.presentation.routes.terms
 
 import androidx.lifecycle.SavedStateHandle
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
-import com.dpm.sixpack.presentation.routes.terms.ui.component.model.TermType
 import com.dpm.sixpack.presentation.routes.terms.contract.TermsIntent
 import com.dpm.sixpack.presentation.routes.terms.contract.TermsSideEffect
 import com.dpm.sixpack.presentation.routes.terms.contract.TermsState
+import com.dpm.sixpack.presentation.routes.terms.ui.component.model.TermType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.Syntax

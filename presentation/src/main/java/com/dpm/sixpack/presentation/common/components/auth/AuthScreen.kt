@@ -1,5 +1,10 @@
 package com.dpm.sixpack.presentation.common.components.auth
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -26,7 +31,24 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
  * @param onButtonClick 하단 버튼 클릭 시 실행될 콜백
  * @param isButtonEnabled 하단 버튼의 활성화 여부
  * @param onBackClick 뒤로가기 버튼 클릭 시 실행될 콜백
- * @param content 화면 본문 영역에 표시될 컴포저블 내용
+ * @param phoneNumber 전화번호 입력 값
+ * @param onPhoneNumberChanged 전화번호 변경 콜백
+ * @param phoneLabel 전화번호 입력 필드 라벨
+ * @param phonePlaceholder 전화번호 입력 필드 플레이스홀더
+ * @param phoneEnabled 전화번호 입력 필드 활성화 여부
+ * @param showPhoneClearButton 전화번호 지우기 버튼 표시 여부
+ * @param onPhoneClearClick 전화번호 지우기 버튼 클릭 콜백
+ * @param showVerificationInput 인증번호 입력 필드 표시 여부 (애니메이션 적용)
+ * @param verificationCode 인증번호 입력 값
+ * @param onVerificationCodeChanged 인증번호 변경 콜백
+ * @param verificationLabel 인증번호 입력 필드 라벨
+ * @param verificationPlaceholder 인증번호 입력 필드 플레이스홀더
+ * @param verificationEnabled 인증번호 입력 필드 활성화 여부
+ * @param showResendButton 재발송 버튼 표시 여부
+ * @param remainingTime 남은 시간 문자열
+ * @param onResendClick 재발송 버튼 클릭 콜백
+ * @param errorMessage 에러 메시지
+ * @param additionalContentAfterPhone 전화번호 입력 필드 아래에 추가될 컨텐츠 (예: "계정 찾기" 링크)
  */
 @Composable
 fun AuthScreen(
@@ -35,8 +57,25 @@ fun AuthScreen(
     onButtonClick: () -> Unit,
     isButtonEnabled: Boolean,
     onBackClick: () -> Unit,
+    phoneNumber: String,
+    onPhoneNumberChanged: (String) -> Unit,
+    phoneLabel: String,
+    phonePlaceholder: String,
+    phoneEnabled: Boolean,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit,
+    showPhoneClearButton: Boolean = false,
+    onPhoneClearClick: (() -> Unit)? = null,
+    showVerificationInput: Boolean = false,
+    verificationCode: String = "",
+    onVerificationCodeChanged: (String) -> Unit = {},
+    verificationLabel: String? = null,
+    verificationPlaceholder: String = "",
+    verificationEnabled: Boolean = false,
+    showResendButton: Boolean = false,
+    remainingTime: String? = null,
+    onResendClick: (() -> Unit)? = null,
+    errorMessage: String? = null,
+    additionalContentAfterPhone: (@Composable () -> Unit)? = null,
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -70,8 +109,51 @@ fun AuthScreen(
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // Content
-                content()
+                // Content - SignUp 기준 구조: VerificationInput (위) + PhoneInput (아래)
+                Column {
+                    // Verification Code Input (AnimatedVisibility)
+                    AnimatedVisibility(
+                        visible = showVerificationInput,
+                        enter = slideInVertically(initialOffsetY = { -it }) + fadeIn(),
+                        exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
+                    ) {
+                        AuthVerificationCodeInput(
+                            verificationCode = verificationCode,
+                            onVerificationCodeChanged = onVerificationCodeChanged,
+                            label = verificationLabel,
+                            placeholder = verificationPlaceholder,
+                            enabled = verificationEnabled,
+                            showResendButton = showResendButton,
+                            remainingTime = remainingTime,
+                            onResendClick = onResendClick,
+                            modifier = Modifier.padding(bottom = 24.dp),
+                        )
+                    }
+
+                    // Phone Number Input
+                    AuthPhoneNumberInput(
+                        phoneNumber = phoneNumber,
+                        onPhoneNumberChanged = onPhoneNumberChanged,
+                        label = phoneLabel,
+                        placeholder = phonePlaceholder,
+                        enabled = phoneEnabled,
+                        showClearButton = showPhoneClearButton,
+                        onClickClear = onPhoneClearClick,
+                    )
+
+                    // Additional Content After Phone (예: "계정 찾기" 링크)
+                    additionalContentAfterPhone?.invoke()
+
+                    // Error Message
+                    if (errorMessage != null) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = errorMessage,
+                            style = SixpackTheme.typography.c1Regular,
+                            color = SixpackTheme.colors.red,
+                        )
+                    }
+                }
             }
 
             // Bottom Button

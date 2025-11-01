@@ -47,7 +47,7 @@ fun AuthPhoneNumberInput(
         singleLine = true,
         visualTransformation = PhoneNumberVisualTransformation(),
         trailingIcon = {
-            if (showClearButton && phoneNumber.isNotBlank() && onClickClear != null) {
+            if (phoneNumber.isNotBlank() && onClickClear != null && enabled) {
                 Image(
                     modifier =
                         Modifier

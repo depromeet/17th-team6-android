@@ -1,21 +1,11 @@
 package com.dpm.sixpack.presentation.routes.signup.ui.screen
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
-import com.dpm.sixpack.presentation.common.components.auth.AuthPhoneNumberInput
 import com.dpm.sixpack.presentation.common.components.auth.AuthScreen
-import com.dpm.sixpack.presentation.common.components.auth.AuthVerificationCodeInput
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.routes.signup.contract.SignUpIntent
 import com.dpm.sixpack.presentation.routes.signup.contract.SignUpState
@@ -50,41 +40,23 @@ fun SignUpScreen(
         },
         isButtonEnabled = state.isNextButtonEnabled,
         onBackClick = { onIntent(SignUpIntent.OnBackButtonClick) },
+        phoneNumber = state.phoneNumber,
+        onPhoneNumberChanged = { onIntent(SignUpIntent.OnPhoneNumberChanged(it)) },
+        phoneLabel = stringResource(R.string.signup_label_phone_number),
+        phonePlaceholder = stringResource(R.string.signup_placeholder_phone_number),
+        phoneEnabled = !state.isLoading && state.step == SignUpStep.PHONE_INPUT,
+        showPhoneClearButton = true,
+        onPhoneClearClick = { onIntent(SignUpIntent.OnPhoneNumberChanged("")) },
+        showVerificationInput = state.step == SignUpStep.VERIFICATION_INPUT,
+        verificationCode = state.verificationCode,
+        onVerificationCodeChanged = { onIntent(SignUpIntent.OnVerificationCodeChanged(it)) },
+        verificationPlaceholder = stringResource(R.string.signup_placeholder_verification_code),
+        verificationEnabled = !state.isLoading && state.remainingTimeInSeconds > 0,
+        showResendButton = true,
+        remainingTime = state.formattedRemainingTime,
+        onResendClick = { onIntent(SignUpIntent.OnResendCodeClick) },
         modifier = modifier,
-    ) {
-        Column {
-            AnimatedVisibility(
-                visible = state.step == SignUpStep.VERIFICATION_INPUT,
-                enter = slideInVertically(initialOffsetY = { -it }) + fadeIn(),
-                exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
-            ) {
-                AuthVerificationCodeInput(
-                    verificationCode = state.verificationCode,
-                    onVerificationCodeChanged = {
-                        onIntent(SignUpIntent.OnVerificationCodeChanged(it))
-                    },
-                    placeholder = stringResource(R.string.signup_placeholder_verification_code),
-                    enabled = !state.isLoading && state.remainingTimeInSeconds > 0,
-                    showResendButton = true,
-                    remainingTime = state.formattedRemainingTime,
-                    onResendClick = {
-                        onIntent(SignUpIntent.OnResendCodeClick)
-                    },
-                    modifier = Modifier.padding(bottom = 24.dp),
-                )
-            }
-
-            AuthPhoneNumberInput(
-                phoneNumber = state.phoneNumber,
-                onPhoneNumberChanged = { onIntent(SignUpIntent.OnPhoneNumberChanged(it)) },
-                label = stringResource(R.string.signup_label_phone_number),
-                placeholder = stringResource(R.string.signup_placeholder_phone_number),
-                enabled = !state.isLoading && state.step == SignUpStep.PHONE_INPUT,
-                showClearButton = true,
-                onClickClear = { onIntent(SignUpIntent.OnPhoneNumberChanged("")) },
-            )
-        }
-    }
+    )
 }
 
 @Preview

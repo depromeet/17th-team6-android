@@ -9,9 +9,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
-import com.dpm.sixpack.presentation.common.components.auth.AuthPhoneNumberInput
 import com.dpm.sixpack.presentation.common.components.auth.AuthScreen
-import com.dpm.sixpack.presentation.common.components.auth.AuthVerificationCodeInput
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.routes.signin.contract.SignInIntent
 import com.dpm.sixpack.presentation.routes.signin.contract.SignInState
@@ -41,63 +39,38 @@ fun SignInScreen(
         },
         isButtonEnabled = state.isNextButtonEnabled,
         onBackClick = { onIntent(SignInIntent.OnBackButtonClick) },
+        phoneNumber = state.phoneNumber,
+        onPhoneNumberChanged = { onIntent(SignInIntent.OnPhoneNumberChanged(it)) },
+        phoneLabel = stringResource(R.string.signin_label_phone_number),
+        phonePlaceholder =
+            if (state.step == SignInStep.PHONE_INPUT) {
+                stringResource(R.string.signin_placeholder_phone_number)
+            } else {
+                ""
+            },
+        phoneEnabled = !state.isLoading && state.step == SignInStep.PHONE_INPUT,
+        showVerificationInput = state.step == SignInStep.VERIFICATION_INPUT,
+        verificationCode = state.verificationCode,
+        onVerificationCodeChanged = { onIntent(SignInIntent.OnVerificationCodeChanged(it)) },
+        verificationLabel = stringResource(R.string.signin_label_verification_code),
+        verificationPlaceholder = stringResource(R.string.signin_placeholder_verification_code),
+        verificationEnabled = !state.isLoading && state.remainingTimeInSeconds > 0,
+        errorMessage = state.errorMessage,
+        additionalContentAfterPhone =
+            if (state.step == SignInStep.PHONE_INPUT) {
+                {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = stringResource(R.string.signin_find_account),
+                        style = SixpackTheme.typography.b2Regular,
+                        color = SixpackTheme.colors.gray600,
+                    )
+                }
+            } else {
+                null
+            },
         modifier = modifier,
-    ) {
-        when (state.step) {
-            SignInStep.PHONE_INPUT -> {
-                AuthPhoneNumberInput(
-                    phoneNumber = state.phoneNumber,
-                    onPhoneNumberChanged = { onIntent(SignInIntent.OnPhoneNumberChanged(it)) },
-                    label = stringResource(R.string.signin_label_phone_number),
-                    placeholder = stringResource(R.string.signin_placeholder_phone_number),
-                    enabled = !state.isLoading,
-                    showClearButton = false,
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Find Account Link
-                Text(
-                    text = stringResource(R.string.signin_find_account),
-                    style = SixpackTheme.typography.b2Regular,
-                    color = SixpackTheme.colors.gray600,
-                )
-            }
-            SignInStep.VERIFICATION_INPUT -> {
-                // Phone Number (Disabled State)
-                AuthPhoneNumberInput(
-                    phoneNumber = state.phoneNumber,
-                    onPhoneNumberChanged = {},
-                    label = stringResource(R.string.signin_label_phone_number),
-                    placeholder = "",
-                    enabled = false,
-                    showClearButton = false,
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Verification Code Input
-                AuthVerificationCodeInput(
-                    verificationCode = state.verificationCode,
-                    onVerificationCodeChanged = { onIntent(SignInIntent.OnVerificationCodeChanged(it)) },
-                    label = stringResource(R.string.signin_label_verification_code),
-                    placeholder = stringResource(R.string.signin_placeholder_verification_code),
-                    enabled = !state.isLoading && state.remainingTimeInSeconds > 0,
-                    showResendButton = false,
-                )
-            }
-        }
-
-        // Error Message
-        if (state.errorMessage != null) {
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = state.errorMessage,
-                style = SixpackTheme.typography.c1Regular,
-                color = SixpackTheme.colors.red,
-            )
-        }
-    }
+    )
 }
 
 @Preview

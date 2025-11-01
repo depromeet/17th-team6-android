@@ -19,9 +19,9 @@ import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
-import com.dpm.sixpack.presentation.routes.terms.ui.component.TermsAgreementComponent
 import com.dpm.sixpack.presentation.routes.terms.contract.TermsIntent
 import com.dpm.sixpack.presentation.routes.terms.contract.TermsState
+import com.dpm.sixpack.presentation.routes.terms.ui.component.TermsAgreementComponent
 import com.dpm.sixpack.presentation.theme.SixPackDimen
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
