@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import com.dpm.sixpack.data.source.local.datastore.api.UserPreferenceDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -31,6 +32,16 @@ class UserPreferenceDataSourceImpl
                 preferences[ONBOARDING_COMPLETE] ?: false
             }
 
+        override val accessToken: Flow<String?> =
+            dataStore.data.map { preferences ->
+                preferences[ACCESS_TOKEN]
+            }
+
+        override val refreshToken: Flow<String?> =
+            dataStore.data.map { preferences ->
+                preferences[REFRESH_TOKEN]
+            }
+
         override suspend fun updateOnboardingComplete(isComplete: Boolean) {
             dataStore.edit { preferences ->
                 preferences[ONBOARDING_COMPLETE] = isComplete
@@ -55,9 +66,30 @@ class UserPreferenceDataSourceImpl
             }
         }
 
+        override suspend fun updateAccessToken(token: String) {
+            dataStore.edit { preferences ->
+                preferences[ACCESS_TOKEN] = token
+            }
+        }
+
+        override suspend fun updateRefreshToken(token: String) {
+            dataStore.edit { preferences ->
+                preferences[REFRESH_TOKEN] = token
+            }
+        }
+
+        override suspend fun clearTokens() {
+            dataStore.edit { preferences ->
+                preferences.remove(ACCESS_TOKEN)
+                preferences.remove(REFRESH_TOKEN)
+            }
+        }
+
         companion object {
             val USER_ID = longPreferencesKey("USER_ID")
             val SESSION_ID = longPreferencesKey("SESSION_ID")
             val ONBOARDING_COMPLETE = booleanPreferencesKey("ONBOARDING_COMPLETE")
+            val ACCESS_TOKEN = stringPreferencesKey("ACCESS_TOKEN")
+            val REFRESH_TOKEN = stringPreferencesKey("REFRESH_TOKEN")
         }
     }

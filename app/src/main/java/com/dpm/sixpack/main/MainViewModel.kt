@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dpm.sixpack.domain.usecase.GetOnboardingStatusUseCase
 import com.dpm.sixpack.presentation.destinations.MainRoute
+import com.dpm.sixpack.presentation.destinations.OnboardingRoute
 import com.dpm.sixpack.presentation.destinations.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -20,7 +21,7 @@ class MainViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
-    private val _startDestination = MutableStateFlow<Route>(MainRoute.Running)
+    private val _startDestination = MutableStateFlow<Route>(OnboardingRoute)
     val startDestination: StateFlow<Route> = _startDestination.asStateFlow()
 
     init {

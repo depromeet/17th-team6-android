@@ -36,7 +36,7 @@ fun ProfileCreationComponent(
     onImagePickerClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    isProfileNameValid: Boolean
+    isProfileNameValid: Boolean,
 ) {
     Column(
         modifier = modifier,
@@ -94,7 +94,7 @@ fun ProfileCreationComponent(
             onNameChanged = onNameChanged,
             enabled = enabled,
             modifier = Modifier.fillMaxWidth(),
-            isProfileNameValid = isProfileNameValid
+            isProfileNameValid = isProfileNameValid,
         )
     }
 }
@@ -117,16 +117,15 @@ private fun ProfileNameInput(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_check_s),
                     contentDescription = "Info",
-                    tint = color
+                    tint = color,
                 )
                 Spacer(Modifier.width(4.dp))
                 Text(
                     style = SixpackTheme.typography.c1Medium,
                     text = stringResource(R.string.signup_helper_text_profile_name),
-                    color = color
+                    color = color,
                 )
             }
-
         },
         enabled = enabled,
         keyboardType = KeyboardType.Text,

@@ -7,6 +7,10 @@ interface UserPreferenceRepository {
 
     suspend fun getIsOnboardingComplete(): Boolean
 
+    suspend fun getAccessToken(): String?
+
+    suspend fun getRefreshToken(): String?
+
     suspend fun updateUserId(userId: Long)
 
     suspend fun updateSessionId(sessionId: Long)
@@ -14,4 +18,10 @@ interface UserPreferenceRepository {
     suspend fun updateOnboardingComplete(isComplete: Boolean)
 
     suspend fun clearSessionId()
+
+    suspend fun updateAccessToken(token: String)
+
+    suspend fun updateRefreshToken(token: String)
+
+    suspend fun clearTokens()
 }

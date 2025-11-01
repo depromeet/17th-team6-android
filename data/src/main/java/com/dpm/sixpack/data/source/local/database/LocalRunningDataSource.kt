@@ -43,9 +43,9 @@ class LocalRunningDataSource
             runningDao.insertLocationPoint(locationPoint)
         }
 
-    /*
-     * 코스 거리 업데이트
-     */
+        /*
+         * 코스 거리 업데이트
+         */
         suspend fun updateCourseDistance(
             courseId: Long,
             distance: Double,

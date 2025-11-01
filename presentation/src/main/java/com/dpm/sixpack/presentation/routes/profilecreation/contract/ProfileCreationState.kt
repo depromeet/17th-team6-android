@@ -6,6 +6,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ProfileCreationState(
+    val phoneNumber: String = "",
     val profileName: String = "",
     val profileImageUri: String? = null,
     val isLoading: Boolean = false,

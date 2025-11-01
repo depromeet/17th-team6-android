@@ -6,12 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.dpm.sixpack.SixPackAppState
-import com.dpm.sixpack.presentation.destinations.OnboardingRoute
-import com.dpm.sixpack.presentation.routes.onboarding.OnboardingRoute
-import com.dpm.sixpack.presentation.routes.running.navigation.addRunningSessionNavGraph
 import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.addProfileCreationNavGraph
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.navigateProfileCreation
+import com.dpm.sixpack.presentation.routes.running.navigation.addRunningSessionNavGraph
 import com.dpm.sixpack.presentation.routes.sessionreport.navigation.addSessionReportNavGraph
 import com.dpm.sixpack.presentation.routes.signin.navigation.addSignInNavGraph
 import com.dpm.sixpack.presentation.routes.signin.navigation.navigateSignIn

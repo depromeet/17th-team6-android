@@ -119,7 +119,7 @@ fun DoRunSignInputField(
                             text = placeholder,
                             style = SixpackTheme.typography.b2Regular,
                             color = SixpackTheme.colors.gray300,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
                         )
                     }
                     Row(

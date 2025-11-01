@@ -1,12 +1,13 @@
 package com.dpm.sixpack.presentation.routes.profilecreation
 
 import androidx.lifecycle.SavedStateHandle
+import com.dpm.sixpack.domain.usecase.ConvertUriToFileUseCase
+import com.dpm.sixpack.domain.usecase.SignUpUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.routes.profilecreation.contract.ProfileCreationIntent
 import com.dpm.sixpack.presentation.routes.profilecreation.contract.ProfileCreationSideEffect
 import com.dpm.sixpack.presentation.routes.profilecreation.contract.ProfileCreationState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.Syntax
 import org.orbitmvi.orbit.viewmodel.container
@@ -18,10 +19,13 @@ private typealias ProfileCreationSyntax = Syntax<ProfileCreationState, ProfileCr
 @HiltViewModel
 class ProfileCreationViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    // TODO: Inject use cases
-    // private val completeSignUpUseCase: CompleteSignUpUseCase,
+    private val signUpUseCase: SignUpUseCase,
+    private val convertUriToFileUseCase: ConvertUriToFileUseCase,
 ) : BaseViewModel<ProfileCreationState, ProfileCreationIntent, ProfileCreationSideEffect>() {
-    override val initialState: ProfileCreationState = ProfileCreationState()
+    private val phoneNumber: String =
+        savedStateHandle.get<String>("phoneNumber") ?: ""
+
+    override val initialState: ProfileCreationState = ProfileCreationState(phoneNumber = phoneNumber)
 
     override val container: Container<ProfileCreationState, ProfileCreationSideEffect> =
         container(initialState = initialState, savedStateHandle = savedStateHandle)
@@ -72,27 +76,40 @@ class ProfileCreationViewModel @Inject constructor(
 
             reduce { state.copy(isLoading = true) }
 
-            try {
-                // TODO: Replace with actual API call
-                // val result = completeSignUpUseCase(
-                //     profileName = state.profileName,
-                //     profileImageUri = state.profileImageUri
-                // )
-                delay(1000) // Simulate API call
-
-                reduce { state.copy(isLoading = false) }
-
-                postSideEffect(ProfileCreationSideEffect.NavigateToHome)
-                Timber.d("Profile creation completed successfully")
-            } catch (e: Exception) {
-                Timber.e(e, "Failed to complete profile creation")
-                reduce {
-                    state.copy(
-                        isLoading = false,
-                        errorMessage = "Failed to create profile",
-                    )
-                }
+            // Convert profileImageUri to File if exists
+            var profileImageFile: java.io.File? = null
+            state.profileImageUri?.let { uriString ->
+                val fileResult = convertUriToFileUseCase(uriString)
+                fileResult
+                    .onSuccess { file ->
+                        profileImageFile = file
+                    }.onError { exception ->
+                        Timber.w("Failed to convert image URI to file: ${exception.message}")
+                        // Continue with null profileImage
+                    }
             }
+
+            val result =
+                signUpUseCase(
+                    nickname = state.profileName,
+                    phoneNumber = state.phoneNumber,
+                    profileImage = profileImageFile,
+                )
+
+            result
+                .onSuccess { signUpResult ->
+                    reduce { state.copy(isLoading = false) }
+                    postSideEffect(ProfileCreationSideEffect.NavigateToHome)
+                    Timber.d("Profile creation completed successfully: ${signUpResult.user.nickname}")
+                }.onError { exception ->
+                    Timber.e("Failed to complete profile creation: ${exception.message}")
+                    reduce {
+                        state.copy(
+                            isLoading = false,
+                            errorMessage = exception.message ?: "Failed to create profile",
+                        )
+                    }
+                }
         }
 
     private fun handleBackButtonClick() =
