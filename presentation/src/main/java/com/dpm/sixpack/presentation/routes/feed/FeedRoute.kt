@@ -52,7 +52,7 @@ fun FeedRoute(
         // Certified Users
         onCertifiedUsersClick = { viewModel.onIntent(FeedIntent.OnCertifiedUsersClick) },
 
-        // FeedPostCard의 시그니처 변경이 필요합니다. (아래 7번 항목 참고)
+        // FeedPostCard
         onPostUserProfileClick = { userId, isMe -> viewModel.onIntent(FeedIntent.OnUserProfileClick(userId, isMe)) },
         onPostMenuClick = { feedId -> viewModel.onIntent(FeedIntent.OnPostMenuClick(feedId)) },
         onPostImageClick = { post -> viewModel.onIntent(FeedIntent.OnPostImageClick(post)) },
@@ -61,7 +61,7 @@ fun FeedRoute(
         onPostAddReactionClick = { post -> viewModel.onIntent(FeedIntent.OnPostAddReactionClick(post)) },
         onDropDownMenuClick = { feedId, action -> viewModel.onIntent(FeedIntent.OnDropDownMenuClick(feedId, action)) },
 
-        // BottomSheet (결정 5, 7 반영)
+        // BottomSheet
         onBottomSheetDismiss = { viewModel.onIntent(FeedIntent.OnBottomSheetDismiss) },
         onUserReactionSheetUserProfileClick = { userId, isMe -> viewModel.onIntent(FeedIntent.OnUserProfileClick(userId, isMe)) },
         onUserReactionSheetTabClick = { emoji -> viewModel.onIntent(FeedIntent.OnUserReactionSheetTabClick(emoji)) },
