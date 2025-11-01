@@ -42,6 +42,8 @@ class SignUpViewModel @Inject constructor(
             is SignUpIntent.OnVerifyCodeClick -> handleVerifyCode()
             is SignUpIntent.OnResendCodeClick -> handleResendCode()
             is SignUpIntent.OnBackButtonClick -> handleBackButtonClick()
+            is SignUpIntent.OnFindAccountClick -> handleOnFindAccountClick()
+            is SignUpIntent.OnDismissRegisteredDialog -> handleDismissRegisteredDialog()
         }
     }
 
@@ -120,16 +122,19 @@ class SignUpViewModel @Inject constructor(
 
             result
                 .onSuccess { verificationResult ->
-                    reduce { state.copy(isLoading = false) }
-
                     if (verificationResult.isExistingUser) {
-                        // User already registered, navigate to sign in
-                        postSideEffect(
-                            SignUpSideEffect.ShowAlreadyRegisteredUserDialog(state.phoneNumber),
-                        )
+                        // User already registered, show dialog
+                        reduce {
+                            state.copy(
+                                isLoading = false,
+                                showRegisteredDialog = true,
+                                registeredPhoneNumber = state.phoneNumber,
+                            )
+                        }
                         Timber.d("User already registered: ${state.phoneNumber}")
                     } else {
                         // New user, proceed to profile creation
+                        reduce { state.copy(isLoading = false) }
                         postSideEffect(SignUpSideEffect.NavigateToProfileCreation)
                         Timber.d("Phone number verified successfully, moving to profile creation")
                     }
@@ -207,6 +212,21 @@ class SignUpViewModel @Inject constructor(
         timerJob?.cancel()
         timerJob = null
     }
+
+    private fun handleOnFindAccountClick() =
+        intent {
+            postSideEffect(SignUpSideEffect.NavigateToFindAccount)
+        }
+
+    private fun handleDismissRegisteredDialog() =
+        intent {
+            reduce {
+                state.copy(
+                    showRegisteredDialog = false,
+                    registeredPhoneNumber = "",
+                )
+            }
+        }
 
     override fun onCleared() {
         super.onCleared()

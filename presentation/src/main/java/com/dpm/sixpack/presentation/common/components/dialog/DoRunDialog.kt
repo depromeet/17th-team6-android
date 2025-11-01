@@ -35,7 +35,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 @Composable
 fun CommonDialog(
     title: String,
-    description: String,
+    description: String = "",
     onDismiss: () -> Unit,
     primaryButtonText: String,
     primaryButtonOnClick: () -> Unit,
@@ -58,7 +58,8 @@ fun CommonDialog(
                     .background(
                         color = SixpackTheme.colors.gray0,
                         shape = RoundedCornerShape(16.dp),
-                    ).padding(20.dp),
+                    )
+                    .padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             // Title
@@ -68,14 +69,15 @@ fun CommonDialog(
                 color = SixpackTheme.colors.gray900,
             )
 
-            Spacer(modifier = Modifier.height(4.dp))
-
-            // Description
-            Text(
-                text = description,
-                style = SixpackTheme.typography.b2Regular,
-                color = SixpackTheme.colors.gray700,
-            )
+            if (description.isBlank().not()) {
+                Spacer(modifier = Modifier.height(4.dp))
+                // Description
+                Text(
+                    text = description,
+                    style = SixpackTheme.typography.b2Regular,
+                    color = SixpackTheme.colors.gray700,
+                )
+            }
 
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -151,7 +153,7 @@ private fun CommonDialogTwoButtonPreview() {
     DoRunPreviewWrapper {
         CommonDialog(
             title = "다이얼로그 제목",
-            description = "다이얼로그 설명 텍스트가 여러 줄로 표시될 수 있습니다.",
+            description = "",
             onDismiss = {},
             primaryButtonText = "확인",
             primaryButtonOnClick = {},

@@ -18,4 +18,10 @@ sealed interface SignInIntent : UiIntent {
     data object OnResendCodeClick : SignInIntent
 
     data object OnBackButtonClick : SignInIntent
+
+    data object OnDismissUnregisteredDialog : SignInIntent
+
+    data class OnSignUpClick(
+        val phoneNumber: String
+    ) : SignInIntent
 }

@@ -7,6 +7,8 @@ sealed interface SignUpSideEffect : SideEffect {
 
     data object NavigateBack : SignUpSideEffect
 
+    data object NavigateToFindAccount : SignUpSideEffect
+
     data object ShowInvalidPhoneNumberError : SignUpSideEffect
 
     data object ShowCodeSentSuccess : SignUpSideEffect
@@ -18,8 +20,4 @@ sealed interface SignUpSideEffect : SideEffect {
     data object ShowCodeMismatchError : SignUpSideEffect
 
     data object ShowCodeExpiredError : SignUpSideEffect
-
-    data class ShowAlreadyRegisteredUserDialog(
-        val phoneNumber: String,
-    ) : SignUpSideEffect
 }

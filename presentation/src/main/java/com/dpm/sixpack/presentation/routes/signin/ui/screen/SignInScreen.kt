@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.auth.AuthClickableTextLink
 import com.dpm.sixpack.presentation.common.components.auth.AuthScreen
+import com.dpm.sixpack.presentation.common.components.dialog.CommonDialog
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.model.PhoneAuthStep
 import com.dpm.sixpack.presentation.routes.signin.contract.SignInIntent
@@ -61,6 +62,24 @@ fun SignInScreen(
                 null
             },
     )
+
+    if (state.showUnregisteredDialog) {
+        CommonDialog(
+            title = stringResource(R.string.signin_unregistered_user_title),
+            description = stringResource(R.string.signin_unregistered_user_message),
+            onDismiss = {
+                onIntent(SignInIntent.OnDismissUnregisteredDialog)
+            },
+            primaryButtonText = stringResource(R.string.singin_signup_action),
+            primaryButtonOnClick = {
+                onIntent(SignInIntent.OnSignUpClick(state.phoneNumber))
+            },
+            secondaryButtonText = stringResource(R.string.common_cancel),
+            secondaryButtonOnClick = {
+                onIntent(SignInIntent.OnDismissUnregisteredDialog)
+            },
+        )
+    }
 }
 
 @Preview

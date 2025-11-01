@@ -2,6 +2,8 @@ package com.dpm.sixpack.presentation.routes.signin
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.dpm.sixpack.domain.usecase.SendSmsCodeUseCase
+import com.dpm.sixpack.domain.usecase.VerifySmsCodeUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.common.model.PhoneAuthStep
 import com.dpm.sixpack.presentation.routes.signin.contract.SignInIntent
@@ -22,9 +24,8 @@ private typealias SignInSyntax = Syntax<SignInState, SignInSideEffect>
 @HiltViewModel
 class SignInViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    // TODO: Inject use cases
-    // private val sendVerificationCodeUseCase: SendVerificationCodeUseCase,
-    // private val verifyPhoneNumberUseCase: VerifyPhoneNumberUseCase,
+    private val sendSmsCodeUseCase: SendSmsCodeUseCase,
+    private val verifySmsCodeUseCase: VerifySmsCodeUseCase,
 ) : BaseViewModel<SignInState, SignInIntent, SignInSideEffect>() {
     override val initialState: SignInState = SignInState()
 
@@ -41,6 +42,8 @@ class SignInViewModel @Inject constructor(
             is SignInIntent.OnVerifyCodeClick -> handleVerifyCode()
             is SignInIntent.OnResendCodeClick -> handleResendCode()
             is SignInIntent.OnBackButtonClick -> handleBackButtonClick()
+            is SignInIntent.OnSignUpClick -> handleSignUpClick(intent.phoneNumber)
+            is SignInIntent.OnDismissUnregisteredDialog -> handleDismissUnregisteredDialog()
         }
     }
 
@@ -126,10 +129,13 @@ class SignInViewModel @Inject constructor(
                 // TODO: This should be determined by API response
                 val isRegistered = false // Placeholder
                 if (!isRegistered) {
-                    reduce { state.copy(isLoading = false) }
-                    postSideEffect(
-                        SignInSideEffect.ShowUnregisteredUserDialog(state.phoneNumber),
-                    )
+                    reduce {
+                        state.copy(
+                            isLoading = false,
+                            showUnregisteredDialog = true,
+                            unregisteredPhoneNumber = state.phoneNumber,
+                        )
+                    }
                 } else {
                     reduce { state.copy(isLoading = false) }
                     postSideEffect(SignInSideEffect.NavigateToHome)
@@ -168,6 +174,7 @@ class SignInViewModel @Inject constructor(
                 PhoneAuthStep.PHONE_INPUT -> {
                     postSideEffect(SignInSideEffect.NavigateBack)
                 }
+
                 PhoneAuthStep.VERIFICATION_INPUT -> {
                     stopTimer()
                     reduce {
@@ -208,6 +215,22 @@ class SignInViewModel @Inject constructor(
         timerJob?.cancel()
         timerJob = null
     }
+
+    private fun handleSignUpClick(phoneNumber: String) {
+        intent {
+            postSideEffect(SignInSideEffect.NavigateToSignUp(phoneNumber))
+        }
+    }
+
+    private fun handleDismissUnregisteredDialog() =
+        intent {
+            reduce {
+                state.copy(
+                    showUnregisteredDialog = false,
+                    unregisteredPhoneNumber = "",
+                )
+            }
+        }
 
     override fun onCleared() {
         super.onCleared()

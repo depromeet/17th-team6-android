@@ -2,9 +2,6 @@ package com.dpm.sixpack.presentation.routes.signin
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -12,6 +9,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.dialog.CommonDialog
 import com.dpm.sixpack.presentation.common.util.context.showToastByResId
+import com.dpm.sixpack.presentation.routes.signin.contract.SignInIntent
 import com.dpm.sixpack.presentation.routes.signin.contract.SignInSideEffect
 import com.dpm.sixpack.presentation.routes.signin.ui.screen.SignInScreen
 import org.orbitmvi.orbit.compose.collectAsState
@@ -27,13 +25,12 @@ fun SignInRoute(
 ) {
     val context = LocalContext.current
     val screenState by viewModel.collectAsState()
-    var showUnregisteredDialog by remember { mutableStateOf(false) }
-    var unregisteredPhoneNumber by remember { mutableStateOf("") }
 
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
             is SignInSideEffect.NavigateToHome -> onNavigateToHome()
             is SignInSideEffect.NavigateBack -> onNavigateBack()
+            is SignInSideEffect.NavigateToSignUp -> onNavigateToSignUp(sideEffect.phoneNumber)
             is SignInSideEffect.ShowInvalidPhoneNumberError -> {
                 context.showToastByResId(R.string.signin_error_invalid_phone_number)
             }
@@ -52,33 +49,7 @@ fun SignInRoute(
             is SignInSideEffect.ShowCodeExpiredError -> {
                 context.showToastByResId(R.string.signin_error_code_expired)
             }
-            is SignInSideEffect.ShowUnregisteredUserDialog -> {
-                unregisteredPhoneNumber = sideEffect.phoneNumber
-                showUnregisteredDialog = true
-            }
-            is SignInSideEffect.ShowRegisteredUserDialog -> {
-                // This shouldn't happen in sign in flow
-                context.showToastByResId(R.string.signin_error_already_registered)
-            }
         }
-    }
-
-    if (showUnregisteredDialog) {
-        CommonDialog(
-            title = stringResource(R.string.signin_unregistered_user_title),
-            description = stringResource(R.string.signin_unregistered_user_message),
-            onDismiss = {
-                showUnregisteredDialog = false
-            },
-            primaryButtonText = stringResource(R.string.singin_signup_action),
-            primaryButtonOnClick = {
-                onNavigateToSignUp(unregisteredPhoneNumber)
-            },
-            secondaryButtonText = stringResource(R.string.common_cancel),
-            secondaryButtonOnClick = {
-                showUnregisteredDialog = false
-            },
-        )
     }
 
     SignInScreen(

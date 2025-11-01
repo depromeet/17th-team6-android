@@ -25,12 +25,3 @@ fun Context.showToastByResId(messageResId: Int) {
     Toast.makeText(this, this.getString(messageResId), Toast.LENGTH_SHORT).show()
 }
 
-/**
- * Opens the specified URL in an external browser.
- *
- * @param url The URL to open
- */
-fun Context.openUrlInBrowser(url: String) {
-    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-    startActivity(intent)
-}

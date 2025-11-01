@@ -18,4 +18,8 @@ sealed interface SignUpIntent : UiIntent {
     data object OnResendCodeClick : SignUpIntent
 
     data object OnBackButtonClick : SignUpIntent
+
+    data object OnFindAccountClick : SignUpIntent
+
+    data object OnDismissRegisteredDialog : SignUpIntent
 }

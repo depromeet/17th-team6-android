@@ -6,6 +6,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.auth.AuthScreen
+import com.dpm.sixpack.presentation.common.components.dialog.CommonDialog
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.model.PhoneAuthStep
 import com.dpm.sixpack.presentation.routes.signup.contract.SignUpIntent
@@ -45,6 +46,23 @@ fun SignUpScreen(
         onPhoneClearClick = { onIntent(SignUpIntent.OnPhoneNumberChanged("")) },
         onResendClick = { onIntent(SignUpIntent.OnResendCodeClick) },
     )
+
+    if (state.showRegisteredDialog) {
+        CommonDialog(
+            title = stringResource(R.string.signup_already_registered_user_message),
+            onDismiss = {
+                onIntent(SignUpIntent.OnDismissRegisteredDialog)
+            },
+            primaryButtonText = stringResource(R.string.common_find_account),
+            primaryButtonOnClick = {
+                onIntent(SignUpIntent.OnFindAccountClick)
+            },
+            secondaryButtonText = stringResource(R.string.common_cancel),
+            secondaryButtonOnClick = {
+                onIntent(SignUpIntent.OnDismissRegisteredDialog)
+            },
+        )
+    }
 }
 
 @Preview

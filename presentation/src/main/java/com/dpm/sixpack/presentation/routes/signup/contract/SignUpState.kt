@@ -13,6 +13,8 @@ data class SignUpState(
     val remainingTimeInSeconds: Int = 180, // 3 minutes
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
+    val showRegisteredDialog: Boolean = false,
+    val registeredPhoneNumber: String = "",
 ) : UiState,
     Parcelable {
     val isPhoneNumberValid: Boolean
