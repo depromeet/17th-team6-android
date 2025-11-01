@@ -67,7 +67,7 @@ fun OnboardingPagerComponent(
             modifier = Modifier.fillMaxWidth(),
         ) { page ->
             OnboardingPagerItem(
-                modifier = Modifier.padding(bottom = 40.dp),
+                modifier = Modifier,
                 page = pages[page % logicalPageCount],
             )
         }
