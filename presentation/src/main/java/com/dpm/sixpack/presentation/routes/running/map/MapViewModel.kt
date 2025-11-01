@@ -3,7 +3,6 @@ package com.dpm.sixpack.presentation.routes.running.map
 import android.Manifest
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.net.Uri
 import androidx.annotation.RequiresPermission
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -140,18 +139,18 @@ class MapViewModel @Inject constructor(
         intent {
             val curState = state.mapViewState
             if (curState is MapViewState.Running) {
-                val allRunningPaths: List<LatLng> = curState.pathColorState.paths.flatten()
+                val pathColorState = curState.pathColorState
 
-                if (allRunningPaths.isNotEmpty()) {
+                if (pathColorState.paths.isNotEmpty()) {
                     val bounds =
                         LatLngBounds
                             .Builder()
-                            .include(allRunningPaths)
+                            .include(pathColorState.paths.flatten())
                             .build()
 
                     reduce {
                         state.copy(
-                            mapViewState = MapViewState.Finishing(bounds),
+                            mapViewState = MapViewState.Finishing(pathColorState, bounds),
                         )
                     }
                 } else {

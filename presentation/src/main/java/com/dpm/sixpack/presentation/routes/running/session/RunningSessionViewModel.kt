@@ -42,7 +42,7 @@ class RunningSessionViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     @ApplicationContext private val context: Context,
     private val startRunningUseCase: StartRunningUseCase,
-    private val fusedLocationProviderClient: FusedLocationProviderClient,
+    fusedLocationProviderClient: FusedLocationProviderClient,
 ) : BaseViewModel<RunningSessionUiState, RunningSessionIntent, RunningSessionSideEffect>() {
     // FIXME: 프리런칭 시뮬레이션용
     val mockLocationClient = MockLocationClient(fusedLocationProviderClient, viewModelScope)
@@ -247,15 +247,14 @@ class RunningSessionViewModel @Inject constructor(
 //                    }.onError {
 //                        Timber.d("session finish failed: ${it.message}")
 //                    }
+                mockLocationClient.stop()
+                sendCommandToService(context, RunningActions.STOP)
 
                 reduce {
                     RunningSessionUiState.Initial
                 }
 
                 postSideEffect(RunningSessionSideEffect.SessionFinish)
-
-                mockLocationClient.stop()
-                sendCommandToService(context, RunningActions.STOP)
             }
         }
 

@@ -5,7 +5,9 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
+import android.telecom.VideoProfile.isPaused
 import androidx.core.app.NotificationCompat
+import androidx.core.app.ServiceCompat.stopForeground
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.dpm.sixpack.core.util.TimeUtil
@@ -106,12 +108,30 @@ class RunningService : LifecycleService() {
         if (isPaused) {
             isPaused = false
             runningDataUseCase.resume()
+
+            // 5분 동기화 타이머를 다시 시작합니다.
+            startSyncTimer()
         }
     }
 
     private fun pauseService() {
         isPaused = true
         runningDataUseCase.pause()
+
+        syncTimerJob?.cancel()
+        syncTimerJob = null
+
+        // 일시정지 시점에 1회 동기화를 즉시 실행합니다.
+        if (isServiceRunning) {
+            lifecycleScope.launch {
+                syncRunningDataUseCase(true)
+                    .onSuccess {
+                        Timber.d("RunningService: Sync on pause successful.")
+                    }.onError { e ->
+                        Timber.w(e.message, "Sync on pause failed.")
+                    }
+            }
+        }
     }
 
     private fun stopService() {
@@ -164,18 +184,17 @@ class RunningService : LifecycleService() {
                     delay(SYNC_INTERVAL_MS)
 
                     // 서비스가 실행 중일 때만 (일시정지 여부와 관계없이) 동기화
-                    if (isServiceRunning) {
-                        Timber.d("5-minute sync timer. Attempting to sync segments...")
+                    if (isServiceRunning && !isPaused) {
+                        Timber.d("RunningService: 5-minute sync timer. Attempting to sync segments...")
                         // 3. 동기화 UseCase 호출
-                        when (val result = syncRunningDataUseCase(isPaused)) {
-                            is DoRunResult.Success -> {
-                                Timber.d("5-minute sync successful.")
+                        syncRunningDataUseCase(false)
+                            .onSuccess {
+                                Timber.d("RunningService: Sync on pause successful.")
+                            }.onError { e ->
+                                Timber.w(e.message, "Sync on pause failed.")
                             }
-
-                            is DoRunResult.Failure -> {
-                                Timber.w(result.exception, "5-minute sync failed.")
-                            }
-                        }
+                    } else {
+                        Timber.d("RunningService: 5-minute sync timer. Skipped (isPaused=$isPaused)")
                     }
                 }
             }

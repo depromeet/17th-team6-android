@@ -2,6 +2,7 @@ package com.dpm.sixpack.presentation.routes.running.session
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.constraintlayout.compose.ConstrainScope
 import androidx.constraintlayout.compose.ConstrainedLayoutReference
@@ -41,10 +42,13 @@ fun ConstraintLayoutScope.RunningSessionScreen(
         // 뒤로가기 못하게
     }
 
+    LaunchedEffect(Unit) {
+        sessionViewModel.onIntent(RunningSessionIntent.SessionStart)
+    }
+
     when (sessionState) {
         is RunningSessionUiState.Initial -> {
             setFullScreenLoading(true)
-            sessionViewModel.onIntent(RunningSessionIntent.SessionStart)
         }
 
         is RunningSessionUiState.Ready -> {

@@ -67,7 +67,7 @@ class RunningSessionDataSource @Inject constructor(
         image: Bitmap,
         partName: String,
     ): Pair<File, MultipartBody.Part> {
-        val extension = "jpeg"
+        val extension = "jpg"
         val mimeType = "image/jpeg"
 
         // 캐시 디렉터리에 임시 파일 생성

@@ -18,6 +18,10 @@ sealed interface MapViewState : Parcelable {
     @Parcelize
     data object Loading : MapViewState
 
+    sealed interface HasPathColorState : MapViewState {
+        val pathColorState: PathColorState
+    }
+
     @Parcelize
     data class Friend(
         val friendState: FriendUiState = FriendUiState(),
@@ -25,11 +29,12 @@ sealed interface MapViewState : Parcelable {
 
     @Parcelize
     data class Running(
-        val pathColorState: PathColorState = PathColorState(),
-    ) : MapViewState
+        override val pathColorState: PathColorState = PathColorState(),
+    ) : HasPathColorState
 
     @Parcelize
     data class Finishing(
+        override val pathColorState: PathColorState = PathColorState(),
         val latLngBounds: LatLngBounds,
-    ) : MapViewState
+    ) : HasPathColorState
 }

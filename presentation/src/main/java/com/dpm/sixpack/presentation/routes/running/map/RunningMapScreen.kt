@@ -22,12 +22,11 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asAndroidBitmap
-import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.platform.LocalContext
@@ -43,6 +42,8 @@ import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.common.util.PermissionHandler
 import com.dpm.sixpack.presentation.routes.freind.sampleFriendList
+import com.dpm.sixpack.presentation.routes.running.map.MapConstants.DEFAULT_ZOOM
+import com.dpm.sixpack.presentation.routes.running.map.MapConstants.SNAPSHOT_PADDING
 import com.dpm.sixpack.presentation.routes.running.map.component.DraggableFriendBottomSheet
 import com.dpm.sixpack.presentation.routes.running.map.component.LocationTrackingButton
 import com.dpm.sixpack.presentation.routes.running.map.component.SheetDragState
@@ -52,20 +53,29 @@ import com.dpm.sixpack.presentation.routes.running.map.contract.MapUiState
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapViewState
 import com.dpm.sixpack.presentation.routes.running.session.RunningSessionScreen
 import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationSource
+import com.naver.maps.map.NaverMap
 import com.naver.maps.map.compose.CameraPositionState
 import com.naver.maps.map.compose.CameraUpdateReason
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
 import com.naver.maps.map.compose.LocationTrackingMode
+import com.naver.maps.map.compose.MapEffect
 import com.naver.maps.map.compose.MapProperties
 import com.naver.maps.map.compose.MapType
 import com.naver.maps.map.compose.MapUiSettings
 import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.PathOverlay
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.filterNot
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 import timber.log.Timber
+import kotlin.coroutines.cancellation.CancellationException
+import kotlin.coroutines.resume
 import kotlin.math.roundToInt
 
 private val sheetPeekHeight = 84.dp
@@ -91,7 +101,7 @@ internal fun RunningMapScreen(
             }
 
             is MapSideEffect.SetCameraPosition -> {
-                cameraPositionState.move(CameraUpdate.scrollTo(sideEffect.latLng))
+                cameraPositionState.position = CameraPosition(sideEffect.latLng, DEFAULT_ZOOM)
             }
 
             MapSideEffect.NavigateToReport -> {
@@ -136,6 +146,10 @@ private fun RunningMapScreenContent(
     val density = LocalDensity.current
     val sheetPeekHeightPx = with(density) { sheetPeekHeight.toPx() }
     val startButtonHeightPx = with(density) { startButtonHeightDp.toPx() }
+
+    var naverMapInstance by remember {
+        mutableStateOf<NaverMap?>(null)
+    }
 
     val draggableState =
         remember {
@@ -211,7 +225,7 @@ private fun RunningMapScreenContent(
                     MapProperties(
                         minZoom = MapConstants.MIN_ZOOM_LEVEL,
                         maxZoom = MapConstants.MAX_ZOOM_LEVEL,
-                        locationTrackingMode = LocationTrackingMode.Follow,
+                        locationTrackingMode = LocationTrackingMode.NoFollow,
                         isNightModeEnabled = isSystemInDarkTheme(),
                         mapType = MapType.Basic,
                     ),
@@ -225,13 +239,22 @@ private fun RunningMapScreenContent(
                         isCompassEnabled = false,
                         logoGravity = Gravity.START,
                     ),
-                locationSource = locationSource,
+                locationSource =
+                    if (mapState.mapViewState is MapViewState.Finishing) null else locationSource,
                 onLocationChange = { location ->
                     onMapIntent(MapIntent.UpdateUserLocation(LatLng(location)))
                 },
-                contentPadding = PaddingValues(bottom = (boxHeight * 0.10).dp),
+                contentPadding =
+                    PaddingValues(
+                        bottom =
+                            if (mapState.mapViewState is MapViewState.Finishing) 0.dp else (boxHeight * 0.10).dp,
+                    ),
             ) {
-                (mapState.mapViewState as? MapViewState.Running)?.pathColorState?.let { mapUiState ->
+                MapEffect(Unit) { map ->
+                    naverMapInstance = map
+                }
+
+                (mapState.mapViewState as? MapViewState.HasPathColorState)?.pathColorState?.let { mapUiState ->
                     mapUiState.paths.forEachIndexed { pathIndex, currentPath ->
                         if (currentPath.size > 1) {
                             val currentPathColors = mapUiState.paceColors[pathIndex]
@@ -264,11 +287,37 @@ private fun RunningMapScreenContent(
                     setFullScreenLoading(true)
 
                     LaunchedEffect(Unit) {
+                        // 1. 캡처 전에 naverMapInstance가 준비되었는지 확인
+                        val mapInstance = naverMapInstance
+                        if (mapInstance == null) {
+                            Timber.e("NaverMap 객체가 null이라 캡처에 실패했습니다.")
+                            // TODO: 캡처 실패 처리 (예: onMapIntent(MapIntent.SessionFinish(null)))
+                            return@LaunchedEffect
+                        }
+
                         val bounds = mapState.mapViewState.latLngBounds
-                        cameraPositionState.move(CameraUpdate.fitBounds(bounds, 50))
 
-                        val bitmap = graphicsLayer.graphicLayerToBitmap()
+                        // 2. 카메라 이동
+                        cameraPositionState.move(CameraUpdate.fitBounds(bounds, SNAPSHOT_PADDING))
 
+                        // 3. (핵심) 카메라가 멈출 때까지 대기
+                        snapshotFlow { cameraPositionState.isMoving }
+                            .filterNot { isMoving -> isMoving } // isMoving이 false가 될 때까지
+                            .first() // false가 되면 통과
+
+                        // 타일 로딩을 위한 아주 짧은 추가 대기
+                        delay(200)
+
+                        // 맵 객체로 직접 캡처 (awaitSnapshot 헬퍼 함수 사용)
+                        val bitmap =
+                            try {
+                                mapInstance.awaitSnapshot()
+                            } catch (e: Exception) {
+                                Timber.e(e, "맵 스냅샷 캡처 중 오류 발생")
+                                null
+                            }
+
+                        // 결과 처리
                         if (bitmap != null) {
                             onMapIntent(MapIntent.SessionFinish(bitmap))
                         } else {
@@ -384,19 +433,35 @@ private fun RunningStartButton(
 }
 
 /**
- * GraphicsLayer의 내용을 캡처하여 Android Bitmap으로 변환하는 suspend 확장 함수
- * @return 캡처된 Bitmap. 오류 발생 시 null 반환
+ * NaverMap.takeSnapshot(callback)을 suspend 함수로 변환하는 헬퍼 함수
  */
-private suspend fun GraphicsLayer.graphicLayerToBitmap(): Bitmap? =
-    try {
-        Timber.tag("GraphicsCapture").d("GraphicsLayer 캡처를 시작합니다...")
+private suspend fun NaverMap.awaitSnapshot(): Bitmap =
+    suspendCancellableCoroutine { continuation ->
+        takeSnapshot { originalBitmap ->
+            // 원본 비트맵 (직사각형)
+            if (continuation.isActive) {
+                try {
+                    // 짧은 쪽 길이를 기준으로 정사각형 크기(size) 계산
+                    val width = originalBitmap.width
+                    val height = originalBitmap.height
+                    val size = minOf(width, height)
 
-        val imageBitmap = this.toImageBitmap()
+                    // 중앙을 기준으로 자르기 위한 시작점(x, y) 계산
+                    val x = (width - size) / 2
+                    val y = (height - size) / 2
 
-        Timber.tag("GraphicsCapture").d("GraphicsLayer 캡처 성공!")
+                    // 원본 비트맵에서 (x, y) 위치에서 size x size 크기로 새 비트맵 생성
+                    val squareBitmap = Bitmap.createBitmap(originalBitmap, x, y, size, size)
 
-        imageBitmap.asAndroidBitmap()
-    } catch (e: Exception) {
-        Timber.tag("GraphicsCapture").e(e, "GraphicsLayer 캡처 중 오류 발생")
-        null // 오류 발생 시 null 반환
+                    continuation.resume(squareBitmap)
+                } catch (e: Exception) {
+                    if (continuation.isActive) {
+                        continuation.cancel(CancellationException("비트맵 자르기 실패: ${e.message}"))
+                    }
+                }
+            } else if (continuation.isActive) {
+                // 원본 비트맵 자체가 null인 경우
+                continuation.cancel(CancellationException("맵 스냅샷 비트맵이 null입니다."))
+            }
+        }
     }

@@ -178,11 +178,11 @@ class RunningSessionRepositoryImpl @Inject constructor(
     ): DoRunResult<RunningSessionResult> =
         withContext(Dispatchers.IO) {
             try {
-                Timber.d("Finishing run: Syncing final segments...")
-                val segmentSyncResult = syncSegmentData(sessionId, false)
-                if (segmentSyncResult is DoRunResult.Failure) {
-                    Timber.w("Failed to sync final segment before finishing.")
-                }
+//                Timber.d("Finishing run: Syncing final segments...")
+//                val segmentSyncResult = syncSegmentData(sessionId, false)
+//                if (segmentSyncResult is DoRunResult.Failure) {
+//                    Timber.w("Failed to sync final segment before finishing.")
+//                }
 
                 // DTO 생성 로직 (예외 발생 가능)
                 val finishRequestDto = getFinishRequestDto()
