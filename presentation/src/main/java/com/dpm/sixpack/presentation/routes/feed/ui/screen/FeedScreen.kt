@@ -68,21 +68,27 @@ fun FeedScreen(
     state: FeedUiState,
     feedPagingItems: LazyPagingItems<PostResource>,
     modifier: Modifier = Modifier,
+    // Calendar
+    onDateSelected: (LocalDate) -> Unit = {},
+    onVisibleWeeksChanged: (LocalDate) -> Unit = {},
+    // TopBar
     onTopBarGroupIconClick: () -> Unit = {},
     onTopBarAlarmIconClick: () -> Unit = {},
-    onDateSelected: (LocalDate) -> Unit = {},
+    // Certified Users
     onCertifiedUsersClick: () -> Unit = {},
+    // Post
     onPostUserProfileClick: (Long) -> Unit = {},
     onPostMenuClick: (Long) -> Unit = {},
     onPostImageClick: (Long) -> Unit = {},
+    onDropDownMenuClick: (PostDropDownActionType) -> Unit = {},
     onPostReactionClick: (Long, Emoji) -> Unit = { _, _ -> },
     onPostReactionLongClick: (List<PostReaction>, Emoji) -> Unit = { _, _ -> },
     onPostAddReactionClick: (Long) -> Unit = {},
+    // BottomSheet
+    onEmojiSelected: (Long, Emoji) -> Unit = { _, _ -> },
     onBottomSheetDismiss: () -> Unit = {},
     onBottomSheetUserProfileClick: (Long) -> Unit = {},
-    onEmojiSelected: (Long, Emoji) -> Unit = { _, _ -> },
-    onVisibleWeeksChanged: (LocalDate) -> Unit = {},
-    onDropDownMenuClick: (PostDropDownActionType) -> Unit = {},
+    // Dialog
     onDialogDismiss: () -> Unit = {},
     onDialogConfirmClick: () -> Unit = {},
     onFTAButtonClick: () -> Unit = {}
