@@ -118,7 +118,7 @@ fun SignUpScreen(
                         phoneNumber = state.phoneNumber,
                         onPhoneNumberChanged = { onIntent(SignUpIntent.OnPhoneNumberChanged(it)) },
                         onClickClear = { onIntent(SignUpIntent.OnPhoneNumberChanged("")) },
-                        enabled = !state.isLoading,
+                        enabled = !state.isLoading && state.step == SignUpStep.PHONE_INPUT,
                     )
                 }
             }
