@@ -17,7 +17,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
-import com.dpm.sixpack.presentation.routes.running.session.contract.RunningSessionIntent
 import com.dpm.sixpack.presentation.routes.running.session.contract.RunningSessionUiState
 import com.dpm.sixpack.presentation.routes.running.session.contract.state.RecordState
 import com.dpm.sixpack.presentation.theme.SixpackTheme

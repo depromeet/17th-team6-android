@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun OnboardingPagerComponent(
     modifier: Modifier = Modifier,
-    pages: List<OnboardingPage> = OnboardingPage.entries.toList()
+    pages: List<OnboardingPage> = OnboardingPage.entries.toList(),
 ) {
     val realPageCount = Int.MAX_VALUE
     val logicalPageCount by remember(pages) {
@@ -39,10 +39,11 @@ fun OnboardingPagerComponent(
         }
     }
 
-    val pagerState = rememberPagerState(
-        initialPage = initialPage,
-        pageCount = { realPageCount }
-    )
+    val pagerState =
+        rememberPagerState(
+            initialPage = initialPage,
+            pageCount = { realPageCount },
+        )
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -52,7 +53,9 @@ fun OnboardingPagerComponent(
             coroutineScope.launch {
                 pagerState.animateScrollToPage(
                     page = (pagerState.currentPage + 1) % pagerState.pageCount,
-                    animationSpec = androidx.compose.animation.core.tween(700)
+                    animationSpec =
+                        androidx.compose.animation.core
+                            .tween(700),
                 )
             }
         }
@@ -61,16 +64,16 @@ fun OnboardingPagerComponent(
     Column(modifier = modifier.fillMaxWidth()) {
         HorizontalPager(
             state = pagerState,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) { page ->
             OnboardingPagerItem(
                 modifier = Modifier.padding(bottom = 40.dp),
-                page = pages[page % logicalPageCount]
+                page = pages[page % logicalPageCount],
             )
         }
         OnboardingPagerIndicator(
             size = logicalPageCount,
-            currentPage = pagerState.currentPage % logicalPageCount
+            currentPage = pagerState.currentPage % logicalPageCount,
         )
     }
 }

@@ -2,7 +2,6 @@ package com.dpm.sixpack.data.source.local.database.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.dpm.sixpack.domain.model.RealtimeRunningData
 
 @Entity(tableName = "running_track_point")
 data class RunningTrackPointEntity(

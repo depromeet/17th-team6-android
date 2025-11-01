@@ -4,7 +4,6 @@ import android.os.Parcelable
 import com.dpm.sixpack.presentation.routes.freind.contract.FriendUiState
 import com.dpm.sixpack.presentation.routes.running.RunningRouteUiState
 import com.dpm.sixpack.presentation.routes.running.map.contract.state.PathColorState
-import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import kotlinx.parcelize.Parcelize
 

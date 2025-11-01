@@ -1,7 +1,6 @@
 package com.dpm.sixpack.presentation.routes.running.map.contract
 
 import android.graphics.Bitmap
-import android.net.Uri
 import com.dpm.sixpack.presentation.routes.running.RunningRouteIntent
 import com.dpm.sixpack.presentation.routes.running.session.contract.state.PathState
 import com.naver.maps.geometry.LatLng

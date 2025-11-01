@@ -1,7 +1,6 @@
 package com.dpm.sixpack.data.source.remote.dto.response
 
 import android.annotation.SuppressLint
-import com.dpm.sixpack.domain.usecase.SaveRealtimeRunningDataResult
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

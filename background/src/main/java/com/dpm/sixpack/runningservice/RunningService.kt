@@ -14,7 +14,6 @@ import com.dpm.sixpack.core.util.TimeUtil
 import com.dpm.sixpack.domain.model.RealtimeRunningData
 import com.dpm.sixpack.domain.usecase.CollectAndSaveRunningDataUseCase
 import com.dpm.sixpack.domain.usecase.SyncRunningDataUseCase
-import com.dpm.sixpack.domain.util.DoRunResult
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

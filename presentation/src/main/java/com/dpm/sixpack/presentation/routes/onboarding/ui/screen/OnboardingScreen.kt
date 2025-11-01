@@ -17,23 +17,24 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 fun OnboardingScreen(
     modifier: Modifier = Modifier,
     onClickSignUp: () -> Unit = {},
-    onClickSignIn: () -> Unit = {}
+    onClickSignIn: () -> Unit = {},
 ) {
     Scaffold(
         modifier = modifier,
         bottomBar = {
             OnboardingNavigationComponent(
                 onClickSignUp = onClickSignUp,
-                onClickSignIn = onClickSignIn
+                onClickSignIn = onClickSignIn,
             )
         },
-        containerColor = SixpackTheme.colors.gray0
+        containerColor = SixpackTheme.colors.gray0,
     ) { paddingValues ->
         Box(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-            contentAlignment = BiasAlignment(horizontalBias = 0.5f, verticalBias = 0.1f)
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
+            contentAlignment = BiasAlignment(horizontalBias = 0.5f, verticalBias = 0.1f),
         ) {
             OnboardingPagerComponent()
         }
@@ -47,4 +48,3 @@ private fun OnboardingScreenPreview() {
         OnboardingScreen()
     }
 }
-
