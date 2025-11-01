@@ -5,10 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.dpm.sixpack.domain.usecase.SendSmsCodeUseCase
 import com.dpm.sixpack.domain.usecase.VerifySmsCodeUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
+import com.dpm.sixpack.presentation.common.model.PhoneAuthStep
 import com.dpm.sixpack.presentation.routes.signup.contract.SignUpIntent
 import com.dpm.sixpack.presentation.routes.signup.contract.SignUpSideEffect
 import com.dpm.sixpack.presentation.routes.signup.contract.SignUpState
-import com.dpm.sixpack.presentation.routes.signup.contract.SignUpStep
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -80,7 +80,7 @@ class SignUpViewModel @Inject constructor(
                 .onSuccess {
                     reduce {
                         state.copy(
-                            step = SignUpStep.VERIFICATION_INPUT,
+                            step = PhoneAuthStep.VERIFICATION_INPUT,
                             isLoading = false,
                             remainingTimeInSeconds = 180,
                         )
@@ -163,15 +163,15 @@ class SignUpViewModel @Inject constructor(
     private fun handleBackButtonClick() =
         intent {
             when (state.step) {
-                SignUpStep.PHONE_INPUT -> {
+                PhoneAuthStep.PHONE_INPUT -> {
                     postSideEffect(SignUpSideEffect.NavigateBack)
                 }
 
-                SignUpStep.VERIFICATION_INPUT -> {
+                PhoneAuthStep.VERIFICATION_INPUT -> {
                     stopTimer()
                     reduce {
                         state.copy(
-                            step = SignUpStep.PHONE_INPUT,
+                            step = PhoneAuthStep.PHONE_INPUT,
                             verificationCode = "",
                             remainingTimeInSeconds = 180,
                             errorMessage = null,

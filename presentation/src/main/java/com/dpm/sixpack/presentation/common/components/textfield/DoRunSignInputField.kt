@@ -34,7 +34,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
  *
  * @param value 입력값
  * @param onValueChange 입력값 변경 콜백
- * @param label 라벨 텍스트
+ * @param topLabel 라벨 텍스트
  * @param placeholder 플레이스홀더 텍스트 (선택사항)
  * @param enabled 입력 활성화 여부
  * @param isError 에러 상태 여부
@@ -49,7 +49,7 @@ fun DoRunSignInputField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    label: String? = null,
+    topLabel: String? = null,
     placeholder: String? = null,
     enabled: Boolean = true,
     isError: Boolean = false,
@@ -62,9 +62,9 @@ fun DoRunSignInputField(
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         // Label
-        if (label != null) {
+        if (topLabel != null) {
             Text(
-                text = label,
+                text = topLabel,
                 style = SixpackTheme.typography.b2Regular,
                 color = SixpackTheme.colors.gray700,
             )
@@ -153,7 +153,7 @@ private fun CommonInputFieldPreview() {
             DoRunSignInputField(
                 value = "",
                 onValueChange = {},
-                label = "라벨 텍스트",
+                topLabel = "라벨 텍스트",
                 placeholder = "플레이스홀더",
             )
 
@@ -162,7 +162,7 @@ private fun CommonInputFieldPreview() {
             DoRunSignInputField(
                 value = "입력된 텍스트",
                 onValueChange = {},
-                label = "라벨 텍스트",
+                topLabel = "라벨 텍스트",
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -170,7 +170,7 @@ private fun CommonInputFieldPreview() {
             DoRunSignInputField(
                 value = "",
                 onValueChange = {},
-                label = "라벨 텍스트",
+                topLabel = "라벨 텍스트",
                 isError = true,
             )
         }

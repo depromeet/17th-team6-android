@@ -3,10 +3,10 @@ package com.dpm.sixpack.presentation.routes.signin
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
+import com.dpm.sixpack.presentation.common.model.PhoneAuthStep
 import com.dpm.sixpack.presentation.routes.signin.contract.SignInIntent
 import com.dpm.sixpack.presentation.routes.signin.contract.SignInSideEffect
 import com.dpm.sixpack.presentation.routes.signin.contract.SignInState
-import com.dpm.sixpack.presentation.routes.signin.contract.SignInStep
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -82,7 +82,7 @@ class SignInViewModel @Inject constructor(
 
                 reduce {
                     state.copy(
-                        step = SignInStep.VERIFICATION_INPUT,
+                        step = PhoneAuthStep.VERIFICATION_INPUT,
                         isLoading = false,
                         remainingTimeInSeconds = 180,
                     )
@@ -165,14 +165,14 @@ class SignInViewModel @Inject constructor(
     private fun handleBackButtonClick() =
         intent {
             when (state.step) {
-                SignInStep.PHONE_INPUT -> {
+                PhoneAuthStep.PHONE_INPUT -> {
                     postSideEffect(SignInSideEffect.NavigateBack)
                 }
-                SignInStep.VERIFICATION_INPUT -> {
+                PhoneAuthStep.VERIFICATION_INPUT -> {
                     stopTimer()
                     reduce {
                         state.copy(
-                            step = SignInStep.PHONE_INPUT,
+                            step = PhoneAuthStep.PHONE_INPUT,
                             verificationCode = "",
                             remainingTimeInSeconds = 180,
                             errorMessage = null,

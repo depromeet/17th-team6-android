@@ -7,9 +7,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.auth.AuthScreen
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
+import com.dpm.sixpack.presentation.common.model.PhoneAuthStep
 import com.dpm.sixpack.presentation.routes.signup.contract.SignUpIntent
 import com.dpm.sixpack.presentation.routes.signup.contract.SignUpState
-import com.dpm.sixpack.presentation.routes.signup.contract.SignUpStep
 
 @Composable
 fun SignUpScreen(
@@ -21,38 +21,26 @@ fun SignUpScreen(
         title =
             stringResource(
                 when (state.step) {
-                    SignUpStep.PHONE_INPUT -> R.string.signup_title_phone_input
-                    SignUpStep.VERIFICATION_INPUT -> R.string.signup_title_verification_input
+                    PhoneAuthStep.PHONE_INPUT -> R.string.signup_title_phone_input
+                    PhoneAuthStep.VERIFICATION_INPUT -> R.string.signup_title_verification_input
                 },
             ),
-        buttonText =
-            stringResource(
-                when (state.step) {
-                    SignUpStep.PHONE_INPUT -> R.string.signup_send_verification_code
-                    SignUpStep.VERIFICATION_INPUT -> R.string.common_ok
-                },
-            ),
+        step = state.step,
         onButtonClick = {
             when (state.step) {
-                SignUpStep.PHONE_INPUT -> onIntent(SignUpIntent.OnSendVerificationCodeClick)
-                SignUpStep.VERIFICATION_INPUT -> onIntent(SignUpIntent.OnVerifyCodeClick)
+                PhoneAuthStep.PHONE_INPUT -> onIntent(SignUpIntent.OnSendVerificationCodeClick)
+                PhoneAuthStep.VERIFICATION_INPUT -> onIntent(SignUpIntent.OnVerifyCodeClick)
             }
         },
         isButtonEnabled = state.isNextButtonEnabled,
         onBackClick = { onIntent(SignUpIntent.OnBackButtonClick) },
         phoneNumber = state.phoneNumber,
         onPhoneNumberChanged = { onIntent(SignUpIntent.OnPhoneNumberChanged(it)) },
-        phoneLabel = stringResource(R.string.signup_label_phone_number),
-        phonePlaceholder = stringResource(R.string.signup_placeholder_phone_number),
-        phoneEnabled = !state.isLoading && state.step == SignUpStep.PHONE_INPUT,
-        showPhoneClearButton = true,
+        phoneEnabled = !state.isLoading && state.step == PhoneAuthStep.PHONE_INPUT,
         onPhoneClearClick = { onIntent(SignUpIntent.OnPhoneNumberChanged("")) },
-        showVerificationInput = state.step == SignUpStep.VERIFICATION_INPUT,
         verificationCode = state.verificationCode,
         onVerificationCodeChanged = { onIntent(SignUpIntent.OnVerificationCodeChanged(it)) },
-        verificationPlaceholder = stringResource(R.string.signup_placeholder_verification_code),
         verificationEnabled = !state.isLoading && state.remainingTimeInSeconds > 0,
-        showResendButton = true,
         remainingTime = state.formattedRemainingTime,
         onResendClick = { onIntent(SignUpIntent.OnResendCodeClick) },
         modifier = modifier,
@@ -66,7 +54,7 @@ private fun SignUpScreenPhoneInputPreview() {
         SignUpScreen(
             state =
                 SignUpState(
-                    step = SignUpStep.PHONE_INPUT,
+                    step = PhoneAuthStep.PHONE_INPUT,
                     phoneNumber = "01012345678",
                 ),
             onIntent = {},
@@ -81,7 +69,7 @@ private fun SignUpScreenVerificationInputPreview() {
         SignUpScreen(
             state =
                 SignUpState(
-                    step = SignUpStep.VERIFICATION_INPUT,
+                    step = PhoneAuthStep.VERIFICATION_INPUT,
                     phoneNumber = "01012345678",
                     verificationCode = "123456",
                     remainingTimeInSeconds = 150,

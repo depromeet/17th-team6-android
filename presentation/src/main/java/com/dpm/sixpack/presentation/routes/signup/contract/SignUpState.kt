@@ -2,11 +2,12 @@ package com.dpm.sixpack.presentation.routes.signup.contract
 
 import android.os.Parcelable
 import com.dpm.sixpack.presentation.common.base.UiState
+import com.dpm.sixpack.presentation.common.model.PhoneAuthStep
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class SignUpState(
-    val step: SignUpStep = SignUpStep.PHONE_INPUT,
+    val step: PhoneAuthStep = PhoneAuthStep.PHONE_INPUT,
     val phoneNumber: String = "",
     val verificationCode: String = "",
     val remainingTimeInSeconds: Int = 180, // 3 minutes
@@ -23,8 +24,8 @@ data class SignUpState(
     val isNextButtonEnabled: Boolean
         get() =
             when (step) {
-                SignUpStep.PHONE_INPUT -> isPhoneNumberValid && !isLoading
-                SignUpStep.VERIFICATION_INPUT -> isVerificationCodeValid && !isLoading
+                PhoneAuthStep.PHONE_INPUT -> isPhoneNumberValid && !isLoading
+                PhoneAuthStep.VERIFICATION_INPUT -> isVerificationCodeValid && !isLoading
             }
 
     val formattedRemainingTime: String
@@ -33,9 +34,4 @@ data class SignUpState(
             val seconds = remainingTimeInSeconds % 60
             return String.format("%d:%02d", minutes, seconds)
         }
-}
-
-enum class SignUpStep {
-    PHONE_INPUT,
-    VERIFICATION_INPUT,
 }

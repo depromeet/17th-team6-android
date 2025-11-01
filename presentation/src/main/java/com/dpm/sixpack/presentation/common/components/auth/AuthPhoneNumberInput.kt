@@ -22,24 +22,20 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
  * @param label 입력 필드의 라벨 텍스트
  * @param placeholder 플레이스홀더 텍스트
  * @param enabled 입력 필드의 활성화 여부
- * @param showClearButton 지우기 버튼 표시 여부 (기본값: true)
  * @param onClickClear 지우기 버튼 클릭 시 실행될 콜백 (기본값: null, showClearButton이 true일 때 필수)
  */
 @Composable
 fun AuthPhoneNumberInput(
     phoneNumber: String,
     onPhoneNumberChanged: (String) -> Unit,
-    label: String,
     placeholder: String,
     enabled: Boolean,
     modifier: Modifier = Modifier,
-    showClearButton: Boolean = true,
     onClickClear: (() -> Unit)? = null,
 ) {
     DoRunSignInputField(
         value = phoneNumber,
         onValueChange = onPhoneNumberChanged,
-        label = label,
         placeholder = placeholder,
         modifier = modifier,
         enabled = enabled,

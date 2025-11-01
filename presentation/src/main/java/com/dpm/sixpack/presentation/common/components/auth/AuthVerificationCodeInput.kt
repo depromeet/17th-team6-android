@@ -24,7 +24,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
  *
  * @param verificationCode 현재 입력된 인증번호
  * @param onVerificationCodeChanged 인증번호 변경 시 실행될 콜백
- * @param label 입력 필드의 라벨 텍스트 (기본값: null, 없으면 라벨 표시 안 함)
+ * @param topLabel 입력 필드의 라벨 텍스트 (기본값: null, 없으면 라벨 표시 안 함)
  * @param placeholder 플레이스홀더 텍스트
  * @param enabled 입력 필드의 활성화 여부
  * @param showResendButton 재발송 버튼 표시 여부 (기본값: false)
@@ -38,8 +38,8 @@ fun AuthVerificationCodeInput(
     placeholder: String,
     enabled: Boolean,
     modifier: Modifier = Modifier,
-    label: String? = null,
-    showResendButton: Boolean = false,
+    topLabel: String? = null,
+    showResendButton: Boolean = true,
     remainingTime: String? = null,
     onResendClick: (() -> Unit)? = null,
 ) {
@@ -47,7 +47,7 @@ fun AuthVerificationCodeInput(
         DoRunSignInputField(
             value = verificationCode,
             onValueChange = onVerificationCodeChanged,
-            label = label,
+            topLabel = topLabel,
             placeholder = placeholder,
             enabled = enabled,
             keyboardType = KeyboardType.Number,
