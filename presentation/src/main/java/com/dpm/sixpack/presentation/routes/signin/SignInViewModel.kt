@@ -14,12 +14,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
-import org.orbitmvi.orbit.syntax.Syntax
 import org.orbitmvi.orbit.viewmodel.container
 import timber.log.Timber
 import javax.inject.Inject
-
-private typealias SignInSyntax = Syntax<SignInState, SignInSideEffect>
 
 @HiltViewModel
 class SignInViewModel @Inject constructor(
@@ -78,32 +75,29 @@ class SignInViewModel @Inject constructor(
 
             reduce { state.copy(isLoading = true) }
 
-            try {
-                // TODO: Replace with actual API call
-                // val result = sendVerificationCodeUseCase(state.phoneNumber)
-                delay(1000) // Simulate API call
+            sendSmsCodeUseCase(state.phoneNumber)
+                .onSuccess {
+                    reduce {
+                        state.copy(
+                            step = PhoneAuthStep.VERIFICATION_INPUT,
+                            isLoading = false,
+                            remainingTimeInSeconds = 180,
+                        )
+                    }
 
-                reduce {
-                    state.copy(
-                        step = PhoneAuthStep.VERIFICATION_INPUT,
-                        isLoading = false,
-                        remainingTimeInSeconds = 180,
-                    )
+                    startTimer()
+                    postSideEffect(SignInSideEffect.ShowCodeSentSuccess)
+                    Timber.d("Verification code sent to ${state.phoneNumber}")
+                }.onError { exception ->
+                    Timber.e("Failed to send verification code: ${exception.message}")
+                    reduce {
+                        state.copy(
+                            isLoading = false,
+                            errorMessage = exception.message,
+                        )
+                    }
+                    postSideEffect(SignInSideEffect.ShowCodeSendFailedError)
                 }
-
-                startTimer()
-                postSideEffect(SignInSideEffect.ShowCodeSentSuccess)
-                Timber.d("Verification code sent to ${state.phoneNumber}")
-            } catch (e: Exception) {
-                Timber.e(e, "Failed to send verification code")
-                reduce {
-                    state.copy(
-                        isLoading = false,
-                        errorMessage = null,
-                    )
-                }
-                postSideEffect(SignInSideEffect.ShowCodeSendFailedError)
-            }
         }
 
     private fun handleVerifyCode() =
@@ -115,42 +109,42 @@ class SignInViewModel @Inject constructor(
 
             reduce { state.copy(isLoading = true) }
 
-            try {
-                // TODO: Replace with actual API call
-                // val result = verifyPhoneNumberUseCase(
-                //     phoneNumber = state.phoneNumber,
-                //     verificationCode = state.verificationCode
-                // )
-                delay(1000) // Simulate API call
+            val result =
+                verifySmsCodeUseCase(
+                    phoneNumber = state.phoneNumber,
+                    verificationCode = state.verificationCode,
+                )
 
-                stopTimer()
+            stopTimer()
 
-                // Check user registration status
-                // TODO: This should be determined by API response
-                val isRegistered = false // Placeholder
-                if (!isRegistered) {
+            result
+                .onSuccess { verificationResult ->
+                    if (verificationResult.isExistingUser) {
+                        // Existing user, proceed to login
+                        reduce { state.copy(isLoading = false) }
+                        postSideEffect(SignInSideEffect.NavigateToHome)
+                        Timber.d("Sign in verified, navigating to home")
+                    } else {
+                        // User not registered, show dialog
+                        reduce {
+                            state.copy(
+                                isLoading = false,
+                                showUnregisteredDialog = true,
+                                unregisteredPhoneNumber = state.phoneNumber,
+                            )
+                        }
+                        Timber.d("User not registered: ${state.phoneNumber}")
+                    }
+                }.onError { exception ->
+                    Timber.e("Failed to verify phone number: ${exception.message}")
                     reduce {
                         state.copy(
                             isLoading = false,
-                            showUnregisteredDialog = true,
-                            unregisteredPhoneNumber = state.phoneNumber,
+                            errorMessage = exception.message,
                         )
                     }
-                } else {
-                    reduce { state.copy(isLoading = false) }
-                    postSideEffect(SignInSideEffect.NavigateToHome)
-                    Timber.d("Sign in verified, navigating to home")
+                    postSideEffect(SignInSideEffect.ShowCodeMismatchError)
                 }
-            } catch (e: Exception) {
-                Timber.e(e, "Failed to verify phone number")
-                reduce {
-                    state.copy(
-                        isLoading = false,
-                        errorMessage = null,
-                    )
-                }
-                postSideEffect(SignInSideEffect.ShowCodeMismatchError)
-            }
         }
 
     private fun handleResendCode() =

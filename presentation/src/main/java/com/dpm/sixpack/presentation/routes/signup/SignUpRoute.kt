@@ -21,7 +21,6 @@ fun SignUpRoute(
     modifier: Modifier = Modifier,
     viewModel: SignUpViewModel = hiltViewModel(),
     onNavigateToProfileCreation: () -> Unit,
-    onNavigateToSignIn: (phoneNumber: String) -> Unit,
     onNavigateBack: () -> Unit,
 ) {
     val context = LocalContext.current

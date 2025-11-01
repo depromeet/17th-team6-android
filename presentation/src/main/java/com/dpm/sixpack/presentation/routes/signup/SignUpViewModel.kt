@@ -19,8 +19,6 @@ import org.orbitmvi.orbit.viewmodel.container
 import timber.log.Timber
 import javax.inject.Inject
 
-private typealias SignUpSyntax = Syntax<SignUpState, SignUpSideEffect>
-
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
