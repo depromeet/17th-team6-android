@@ -52,7 +52,7 @@ private const val INITIAL_PAGE_INDEX = Int.MAX_VALUE / 2
 
 private const val DAYS_IN_WEEK = 7
 
-private const val HEADER_DATE_PATTERN = "M'월' W'주차'"
+private const val HEADER_DATE_PATTERN = "M'월'"
 
 @Immutable
 private data class WeeklyCalendarDay(
@@ -188,9 +188,16 @@ private fun WeeklyCalendarHeader(
     val displayDateForMonth = currentDisplayWeekViewStartDate.getDisplayMonth(selectedDate)
 
     val displayFormatter = remember { DateTimeFormatter.ofPattern(HEADER_DATE_PATTERN, Locale.getDefault()) }
+
+    // 주차 계산 (월의 첫 주는 1주차)
+    val weekOfMonth = remember(displayDateForMonth) {
+        val weekFields = WeekFields.of(DayOfWeek.SUNDAY, 7)
+        displayDateForMonth.get(weekFields.weekOfMonth())
+    }
+
     val displayText =
-        remember(displayDateForMonth) {
-            displayDateForMonth.format(displayFormatter)
+        remember(displayDateForMonth, weekOfMonth) {
+            "${displayDateForMonth.format(displayFormatter)} ${weekOfMonth}주차"
         }
 
     Row(
