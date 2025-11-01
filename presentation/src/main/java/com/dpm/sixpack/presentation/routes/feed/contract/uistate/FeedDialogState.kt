@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class FeedDialogState(
-    val actionType: PostDropDownActionType = PostDropDownActionType.EDIT,
-    val isDeleteVisible : Boolean = false,
-    val isReportVisible : Boolean= false
+    val actionType: PostDropDownActionType? = PostDropDownActionType.IDLE,
+    val deleteFeedId : Long? = null,
+    val reportFeedId : Long?=  null
 ): Parcelable

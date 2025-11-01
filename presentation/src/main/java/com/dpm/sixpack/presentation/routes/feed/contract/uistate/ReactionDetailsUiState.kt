@@ -4,7 +4,6 @@ import android.os.Parcelable
 import androidx.compose.runtime.Immutable
 import com.dpm.sixpack.presentation.common.model.Emoji
 import com.dpm.sixpack.presentation.common.model.PostReaction
-import com.dpm.sixpack.presentation.common.model.ReactingUserInfo
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -17,8 +16,9 @@ sealed interface ReactionDetailsUiState : Parcelable {
     data class Success(
         val reactions: List<PostReaction>,
 
-        val allUsersSortedByTime: List<ReactingUserInfo>,
-
-        val selectedEmoji: Emoji ,
-    ) : ReactionDetailsUiState
+        val selectedEmoji: Emoji,
+    ) : ReactionDetailsUiState {
+        val totalSize: Int
+            get() = reactions.sumOf { it.count.toInt() }
+    }
 }

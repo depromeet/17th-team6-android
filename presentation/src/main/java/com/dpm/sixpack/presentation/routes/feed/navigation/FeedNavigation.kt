@@ -9,9 +9,10 @@ fun NavGraphBuilder.addFeedNavGraph(
     onNavigateToGroup: () -> Unit,
     onNavigateToAlarm: () -> Unit,
     onNavigateToCertifiedUserList: () -> Unit,
-    onNavigateToUserProfile: (Int) -> Unit,
+    onNavigateToUserProfile: (Long) -> Unit,
     onNavigateToMyPage: () -> Unit,
-    onNavigateToPostDetail: (Int) -> Unit,
+    onNavigateToPostDetail: (Long) -> Unit,
+    navigateToUpload: () -> Unit,
 ) {
     composable<MainRoute.Feed> {
         FeedRoute(
@@ -21,6 +22,7 @@ fun NavGraphBuilder.addFeedNavGraph(
             onNavigateToUserProfile = onNavigateToUserProfile,
             onNavigateToMyPage = onNavigateToMyPage,
             onNavigateToPostDetail = onNavigateToPostDetail,
+            navigateToPostUpload = navigateToUpload,
         )
     }
 }

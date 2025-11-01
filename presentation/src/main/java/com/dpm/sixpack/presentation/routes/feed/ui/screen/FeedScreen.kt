@@ -190,7 +190,7 @@ fun FeedScreen(
                         key = { feedPagingItems.peek(it)?.feedId!!.toInt() }
                     ) { index ->
                         feedPagingItems[index]?.let { post ->
-                            val isMenuExpanded = (state.selectedFeedId == post.feedId)
+                            val isMenuExpanded = (state.selectedPostMenuId != null)
                             FeedPostCard(
                                 modifier = Modifier.padding(horizontal = 20.dp),
                                 postDetail = post,
@@ -296,7 +296,7 @@ fun FeedScreen(
         onEmojiSelected = onEmojiSelected
     )
 
-    if (state.dialogState.isDeleteVisible) {
+    if (state.dialogState.deleteFeedId != null) {
         PostDeleteDialog(
             onDismissRequest = onDialogDismiss,
             onCancelClick = onDialogDismiss,
@@ -304,7 +304,7 @@ fun FeedScreen(
         )
     }
 
-    if (state.dialogState.isReportVisible) {
+    if (state.dialogState.reportFeedId != null) {
         PostReportDialog(
             onDismissRequest = onDialogDismiss,
             onCancelClick = onDialogDismiss,

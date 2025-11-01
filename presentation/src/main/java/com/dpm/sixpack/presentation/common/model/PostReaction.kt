@@ -22,19 +22,19 @@ data class PostReaction(
 data class ReactingUserInfo(
     val user: UserInfo,
     val reactedAt: String,
-    val emoji: Emoji = Emoji.ALL
+    val emoji: Emoji
 ) : Parcelable
 
+//TODO 슬랙보고 string 바꾸기
 @Parcelize
 enum class Emoji(
     val type: String,
 ) : Parcelable {
-    SURPRISE("surprise"),
-    HEART("heart"),
-    THUMBS_UP("thumbs_up"),
-    CONGRATS("congrats"),
-    FIRE("fire"),
-    ALL("all"),
+    SURPRISE("SURPRISE"),
+    HEART("HEART"),
+    THUMBS_UP("THUMBS_UP"),
+    CONGRATS("CONGRATS"),
+    FIRE("FIRE"),
     ;
 
     val iconRes: Int
@@ -46,11 +46,10 @@ enum class Emoji(
                 THUMBS_UP -> R.drawable.ill_endurance // 적절한 아이콘 리소스로 변경 필요
                 CONGRATS -> R.drawable.ill_endurance // 적절한 아이콘 리소스로 변경 필요
                 FIRE -> R.drawable.ill_endurance
-                ALL -> R.drawable.ic_add_reaction
             }
 
     companion object {
-        fun from(type: String?): Emoji = entries.find { it.name.equals(type, ignoreCase = true) } ?: ALL
+        fun from(type: String?): Emoji = entries.find { it.name.equals(type, ignoreCase = true) } ?: HEART
     }
 }
 

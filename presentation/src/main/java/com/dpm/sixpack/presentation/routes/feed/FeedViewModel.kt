@@ -85,7 +85,7 @@ class FeedViewModel @Inject constructor(
             is FeedIntent.OnPostUserProfileClick -> { /* TODO: Navigate to User Profile or My Page */
             }
 
-            is FeedIntent.OnPostMenuClick -> intent { postSideEffect(FeedSideEffect.ShowMenuBalloon(intent.feedId.toInt())) }
+            is FeedIntent.OnPostMenuClick -> {}
             is FeedIntent.OnPostImageClick -> { /* TODO: Navigate to Post Detail */
             }
 

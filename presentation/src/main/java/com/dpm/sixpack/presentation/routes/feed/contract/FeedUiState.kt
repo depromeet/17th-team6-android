@@ -14,6 +14,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class FeedUiState(
     val selectedFeedId : Long = -1,
+    val selectedPostMenuId : Long? = null,
     val calendarState: FeedCalenderUiState = FeedCalenderUiState(),
     val bottomSheetState: FeedBottomSheetState = FeedBottomSheetState(),
     val dialogState : FeedDialogState = FeedDialogState(),

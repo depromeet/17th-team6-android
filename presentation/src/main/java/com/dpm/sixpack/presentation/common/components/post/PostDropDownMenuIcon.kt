@@ -32,6 +32,7 @@ import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 enum class PostDropDownActionType {
+    IDLE,
     EDIT,
     DELETE,
     SAVE_IMAGE,

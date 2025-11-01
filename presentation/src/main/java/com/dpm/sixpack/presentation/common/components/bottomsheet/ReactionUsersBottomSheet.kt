@@ -135,7 +135,7 @@ private fun ReactionHeaderSuccess(
         )
         Spacer(modifier = Modifier.width(4.dp))
         Text(
-            text = " ${reactionDetails.allUsersSortedByTime.size}",
+            text = " ${reactionDetails.totalSize}",
             style = SixpackTheme.typography.t1Bold,
             color = SixpackTheme.colors.gray500,
             textAlign = TextAlign.Center,
@@ -343,10 +343,8 @@ fun ReactionUsersBottomSheetPreview() {
             PostReaction(Emoji.FIRE, "5", false, dummyUsersFire)
         )
 
-        val allUsersSorted = dummyReactions.flatMap { it.users }
         val dummyReactionDetails = ReactionDetailsUiState.Success(
             reactions = dummyReactions,
-            allUsersSortedByTime = allUsersSorted,
             selectedEmoji = selectedEmoji
         )
 
