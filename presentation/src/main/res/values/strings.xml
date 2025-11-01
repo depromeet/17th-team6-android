@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">sixpack</string>
+    <string name="app_name">DoRunDoRun</string>
 
     <!-- region Common -->
     <string name="common_session_count">%d회차</string>

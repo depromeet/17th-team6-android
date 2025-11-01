@@ -1,7 +1,6 @@
 package com.dpm.sixpack.convention
 
 import com.android.build.api.dsl.ApplicationExtension
-import com.android.build.gradle.LibraryExtension
 import com.dpm.sixpack.convention.extensions.configureComposeAndroid
 import com.dpm.sixpack.convention.extensions.configureKotlinAndroid
 import com.dpm.sixpack.convention.extensions.getLibrary
@@ -12,11 +11,20 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
+import java.io.FileInputStream
+import java.util.Properties
 
 /* For app module */
 class AndroidApplicationPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
+            // Load keystore properties from local.properties
+            val localProperties = Properties()
+            val localPropertiesFile = rootProject.file("local.properties")
+            if (localPropertiesFile.exists()) {
+                localProperties.load(FileInputStream(localPropertiesFile))
+            }
+
             pluginManager.run {
                 apply(libs.getPlugin("android-application").get().pluginId)
                 apply(libs.getPlugin("kotlin-android").get().pluginId)
@@ -35,12 +43,33 @@ class AndroidApplicationPlugin : Plugin<Project> {
                     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                 }
 
+                // Configure signing for release builds
+                signingConfigs {
+                    create("release") {
+                        storeFile = localProperties.getProperty("KEYSTORE_FILE")?.let { rootProject.file(it) }
+                        storePassword = localProperties.getProperty("KEYSTORE_PASSWORD")
+                        keyAlias = localProperties.getProperty("KEY_ALIAS")
+                        keyPassword = localProperties.getProperty("KEY_PASSWORD")
+                    }
+                }
+
                 buildFeatures {
                     buildConfig = true
                 }
 
                 configureKotlinAndroid(this)
                 configureComposeAndroid(this)
+
+                // Additional release configuration
+                buildTypes {
+                    getByName("debug") {
+                        applicationIdSuffix = ".dev"
+                    }
+                    getByName("release") {
+                        signingConfig = signingConfigs.getByName("release")
+                        // TODO 난독화 설정, proguard-rule 설정
+                    }
+                }
             }
 
             dependencies {
