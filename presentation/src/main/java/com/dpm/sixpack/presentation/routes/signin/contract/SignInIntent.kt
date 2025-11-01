@@ -24,4 +24,6 @@ sealed interface SignInIntent : UiIntent {
     data class OnSignUpClick(
         val phoneNumber: String
     ) : SignInIntent
+
+    data object OnFindAccountClick : SignInIntent
 }

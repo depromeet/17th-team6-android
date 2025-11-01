@@ -54,7 +54,7 @@ fun SignInScreen(
                     AuthClickableTextLink(
                         normalText = stringResource(R.string.signin_find_account_question),
                         linkText = stringResource(R.string.signin_find_account_action),
-                        onLinkClick = { /* TODO: 계정 찾기 기능 구현 */ },
+                        onLinkClick = { onIntent(SignInIntent.OnFindAccountClick) },
                         modifier = Modifier.padding(bottom = 12.dp),
                     )
                 }

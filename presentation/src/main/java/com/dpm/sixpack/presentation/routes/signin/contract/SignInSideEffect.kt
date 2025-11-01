@@ -7,6 +7,8 @@ sealed interface SignInSideEffect : SideEffect {
 
     data object NavigateBack : SignInSideEffect
 
+    data object NavigateToFindAccount : SignInSideEffect
+
     data class NavigateToSignUp(
         val phoneNumber: String,
     ) : SignInSideEffect

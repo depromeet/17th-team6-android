@@ -38,8 +38,9 @@ class SignInViewModel @Inject constructor(
             is SignInIntent.OnSendVerificationCodeClick -> handleSendVerificationCode()
             is SignInIntent.OnVerifyCodeClick -> handleVerifyCode()
             is SignInIntent.OnResendCodeClick -> handleResendCode()
-            is SignInIntent.OnBackButtonClick -> handleBackButtonClick()
-            is SignInIntent.OnSignUpClick -> handleSignUpClick(intent.phoneNumber)
+            is SignInIntent.OnBackButtonClick -> handleBackButton()
+            is SignInIntent.OnSignUpClick -> handleSignUp(intent.phoneNumber)
+            is SignInIntent.OnFindAccountClick -> handleFindAccount()
             is SignInIntent.OnDismissUnregisteredDialog -> handleDismissUnregisteredDialog()
         }
     }
@@ -162,7 +163,7 @@ class SignInViewModel @Inject constructor(
             handleSendVerificationCode()
         }
 
-    private fun handleBackButtonClick() =
+    private fun handleBackButton() =
         intent {
             when (state.step) {
                 PhoneAuthStep.PHONE_INPUT -> {
@@ -210,7 +211,13 @@ class SignInViewModel @Inject constructor(
         timerJob = null
     }
 
-    private fun handleSignUpClick(phoneNumber: String) {
+    private fun handleFindAccount() {
+        intent {
+            postSideEffect(SignInSideEffect.NavigateToFindAccount)
+        }
+    }
+
+    private fun handleSignUp(phoneNumber: String) {
         intent {
             postSideEffect(SignInSideEffect.NavigateToSignUp(phoneNumber))
         }

@@ -4,12 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dpm.sixpack.presentation.R
-import com.dpm.sixpack.presentation.common.components.dialog.CommonDialog
+import com.dpm.sixpack.presentation.common.util.context.openUrlInBrowser
 import com.dpm.sixpack.presentation.common.util.context.showToastByResId
-import com.dpm.sixpack.presentation.routes.signin.contract.SignInIntent
 import com.dpm.sixpack.presentation.routes.signin.contract.SignInSideEffect
 import com.dpm.sixpack.presentation.routes.signin.ui.screen.SignInScreen
 import org.orbitmvi.orbit.compose.collectAsState
@@ -31,6 +29,9 @@ fun SignInRoute(
             is SignInSideEffect.NavigateToHome -> onNavigateToHome()
             is SignInSideEffect.NavigateBack -> onNavigateBack()
             is SignInSideEffect.NavigateToSignUp -> onNavigateToSignUp(sideEffect.phoneNumber)
+            is SignInSideEffect.NavigateToFindAccount ->{
+                context.openUrlInBrowser("") // TODO SR-N 채우기
+            }
             is SignInSideEffect.ShowInvalidPhoneNumberError -> {
                 context.showToastByResId(R.string.signin_error_invalid_phone_number)
             }

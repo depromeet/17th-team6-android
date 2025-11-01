@@ -50,22 +50,9 @@ internal fun MainNavHost(
                 onNavigateToBack = navigator::popBackStack,
             )
 
-            addSignInNavGraph(
-                onNavigateToHome = {
-                    // TODO SR-N: Home 화면으로 이동 또는 메인 탭 네비게이션으로 이동
-                },
-                onNavigateToSignUp = { phoneNumber ->
-                    navigator.navController.navigateSignUp()
-                },
-                onNavigateBack = navigator::popBackStack,
-            )
-
             addSignUpNavGraph(
                 onNavigateToProfileCreation = {
                     navigator.navController.navigateProfileCreation()
-                },
-                onNavigateToSignIn = { phoneNumber ->
-                    // TODO SR-N 계정찾기 화면으로 이동
                 },
                 onNavigateToBack = navigator::popBackStack,
             )
@@ -75,6 +62,16 @@ internal fun MainNavHost(
                     // TODO SR-N: Home 화면으로 이동 또는 메인 탭 네비게이션으로 이동
                 },
                 onNavigateToBack = navigator::popBackStack,
+            )
+
+            addSignInNavGraph(
+                onNavigateToHome = {
+                    // TODO SR-N: Home 화면으로 이동 또는 메인 탭 네비게이션으로 이동
+                },
+                onNavigateToSignUp = { phoneNumber ->
+                    navigator.navController.navigateSignUp()
+                },
+                onNavigateBack = navigator::popBackStack,
             )
 
             addRunningSessionNavGraph(
