@@ -22,11 +22,10 @@ import com.dpm.sixpack.presentation.common.model.Emoji
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EmojiSelectionBottomSheet(
-    selectedFeedId: Long,
     isBottomSheetVisible: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
-    onEmojiSelected: (Long, Emoji) -> Unit = { _, _ -> },
+    onEmojiSelected: (Emoji) -> Unit,
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
 ) {
     val emojis = Emoji.entries
@@ -52,7 +51,7 @@ fun EmojiSelectionBottomSheet(
                         Modifier
                             .size(48.dp)
                             .clickable {
-                                onEmojiSelected(selectedFeedId, emoji)
+                                onEmojiSelected(emoji)
                                 onDismissRequest()
                             },
                 )
@@ -67,19 +66,19 @@ private fun EmojiSelectionBottomSheetPreview() {
     DoRunPreviewWrapper {
         Column {
             EmojiSelectionBottomSheet(
-                selectedFeedId = 0,
                 isBottomSheetVisible = true,
                 onDismissRequest = {},
+                onEmojiSelected = {}
             )
             EmojiSelectionBottomSheet(
                 isBottomSheetVisible = true,
                 onDismissRequest = {},
-                selectedFeedId = 0,
+                onEmojiSelected = {}
             )
             EmojiSelectionBottomSheet(
                 isBottomSheetVisible = true,
                 onDismissRequest = {},
-                selectedFeedId = 0,
+                onEmojiSelected = {}
             )
         }
     }

@@ -63,7 +63,7 @@ fun ReactionUsersBottomSheet(
     isBottomSheetVisible: Boolean,
     onDismissRequest: () -> Unit,
     reactionDetails: ReactionDetailsUiState,
-    onUserProfileClick: (Long) -> Unit,
+    onUserProfileClick: (Long, Boolean) -> Unit,
     onTabSelected: (Emoji) -> Unit,
     modifier: Modifier = Modifier,
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
@@ -168,7 +168,7 @@ private fun ReactionHeaderSuccess(
 @Composable
 private fun ReactingUserRow(
     reactingUser: ReactingUserInfo,
-    onUserProfileClick: (Long) -> Unit,
+    onUserProfileClick: (Long, Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -183,7 +183,7 @@ private fun ReactingUserRow(
             userImageUrl = reactingUser.user.profileImageUrl,
             userName = reactingUser.user.name,
             isMyReaction = reactingUser.user.isMe,
-            onUserProfileClick = { onUserProfileClick(reactingUser.user.id) },
+            onUserProfileClick = { onUserProfileClick(reactingUser.user.id, reactingUser.user.isMe) },
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -352,7 +352,7 @@ fun ReactionUsersBottomSheetPreview() {
             isBottomSheetVisible = true,
             onDismissRequest = {},
             reactionDetails = dummyReactionDetails,
-            onUserProfileClick = {},
+            onUserProfileClick = {_,_ -> },
             onTabSelected = { newEmoji ->
                 selectedEmoji = newEmoji
             }
@@ -369,7 +369,7 @@ fun ReactionUsersBottomSheetLoadingPreview() {
             isBottomSheetVisible = true,
             onDismissRequest = {},
             reactionDetails = ReactionDetailsUiState.Loading,
-            onUserProfileClick = {},
+            onUserProfileClick = {_,_ -> },
             onTabSelected = {}
         )
     }

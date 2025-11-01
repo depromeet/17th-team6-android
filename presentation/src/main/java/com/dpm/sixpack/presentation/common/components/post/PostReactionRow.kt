@@ -42,9 +42,9 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 fun PostReactionRow(
     feedId: Long,
     reactions: List<PostReaction>,
-    onReactionChipClick: (Long, Emoji) -> Unit,
-    onReactionChipLongClick: (List<PostReaction>, Emoji) -> Unit,
-    onAddReactionClick: (Long) -> Unit,
+    onReactionChipClick: (Emoji, Boolean) -> Unit,
+    onReactionChipLongClick: (Emoji, List<PostReaction>) -> Unit,
+    onAddReactionClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -59,15 +59,15 @@ fun PostReactionRow(
                     count = reaction.count,
                     iconRes = reaction.emoji.iconRes,
                     isReacted = reaction.isReacted,
-                    onClick = { onReactionChipClick(feedId, reaction.emoji) },
-                    onLongClick = { onReactionChipLongClick(reactions, reaction.emoji) },
+                    onClick = { onReactionChipClick(reaction.emoji, !reaction.isReacted) },
+                    onLongClick = { onReactionChipLongClick(reaction.emoji, reactions) },
                 )
             }
             if (reactions.size > 3) {
                 val firstEmoji = reactions[0].emoji
                 MoreReactionChip(
                     count = reactions.size - 3,
-                    onClick = { onReactionChipLongClick(reactions, firstEmoji) },
+                    onClick = { onReactionChipLongClick(firstEmoji, reactions) },
                 )
 
                 AddReactionButton(feedId, onAddReactionClick = onAddReactionClick)
@@ -80,12 +80,12 @@ fun PostReactionRow(
  * 이모지 추가 버튼
  */
 @Composable
-private fun AddReactionButton(feedId: Long, onAddReactionClick: (Long) -> Unit) {
+private fun AddReactionButton(feedId: Long, onAddReactionClick: () -> Unit) {
     Box(
         modifier =
             Modifier
                 .clip(SixpackTheme.shapes.round16)
-                .noRippleClickable(onClick = { onAddReactionClick(feedId) })
+                .noRippleClickable(onClick = { onAddReactionClick() })
                 .background(color = SixpackTheme.colors.gray50, shape = RoundedCornerShape(30.dp))
                 .padding(vertical = 6.dp, horizontal = 10.dp),
     ) {

@@ -39,13 +39,13 @@ fun FeedPostCard(
     postDetail: PostResource,
     isMenuExpanded: Boolean,
     modifier: Modifier = Modifier,
-    onPostUserProfileClick: (Long) -> Unit = {},
-    onPostImageClick: (Long) -> Unit = {},
+    onPostUserProfileClick: (Long, Boolean) -> Unit = { _, _ -> },
+    onPostImageClick: () -> Unit = {},
     onMenuClick: () -> Unit = {},
     onDropDownMenuClick: (PostDropDownActionType) -> Unit = {},
-    onReactionChipClick: (Long, Emoji) -> Unit = { _, _ -> },
-    onReactionChipLongClick: (List<PostReaction>, Emoji) -> Unit = { _, _ -> },
-    onAddReactionClick: (Long) -> Unit = {},
+    onReactionChipClick: (Emoji, Boolean) -> Unit = { _, _ -> },
+    onReactionChipLongClick: (Emoji, List<PostReaction>) -> Unit = { _, _ -> },
+    onAddReactionClick: () -> Unit = {},
 ) {
     Column(
         modifier =
@@ -58,15 +58,14 @@ fun FeedPostCard(
             isMenuExpanded = isMenuExpanded,
             onMenuClick = onMenuClick,
             onDropDownMenuClick = onDropDownMenuClick,
-            onPostUserProfileClick = { onPostUserProfileClick(postDetail.user.user.id) } // userId를 통해 서버통신
-        )
+            onPostUserProfileClick = { onPostUserProfileClick(postDetail.user.user.id, postDetail.user.user.isMe) }        )
 
         Spacer(modifier = Modifier.height(12.dp))
 
         PostImageWithRecord(
             postImageUrl = postDetail.postImageUrl,
             runningSummary = postDetail.runningInfo,
-            onPostImageClick = { onPostImageClick(postDetail.feedId) }
+            onPostImageClick = onPostImageClick
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -99,8 +98,8 @@ private fun PostUserInfoRow(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         PostUserInfo(
-            userImageUrl = postingUser.user.name,
-            userName = postingUser.user.profileImageUrl,
+            userName = postingUser.user.name,
+            userImageUrl = postingUser.user.profileImageUrl,
             postingTime = postingUser.postingTime,
             isMyPost = postingUser.user.isMe,
             onPostUserProfileClick = onPostUserProfileClick

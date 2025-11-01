@@ -56,6 +56,7 @@ import com.dpm.sixpack.presentation.routes.feed.component.FeedTopBar
 import com.dpm.sixpack.presentation.routes.feed.component.calender.FeedWeeklyCalendar
 import com.dpm.sixpack.presentation.routes.feed.component.dialog.PostDeleteDialog
 import com.dpm.sixpack.presentation.routes.feed.component.dialog.PostReportDialog
+import com.dpm.sixpack.presentation.routes.feed.contract.FeedIntent
 import com.dpm.sixpack.presentation.routes.feed.contract.FeedUiState
 import com.dpm.sixpack.presentation.routes.feed.contract.uistate.FeedCalenderUiState
 import com.dpm.sixpack.presentation.routes.feed.contract.uistate.FeedDateUiState
@@ -68,29 +69,33 @@ fun FeedScreen(
     state: FeedUiState,
     feedPagingItems: LazyPagingItems<PostResource>,
     modifier: Modifier = Modifier,
+    onTopBarGroupIconClick: () -> Unit = {},
+    onTopBarAlarmIconClick: () -> Unit = {},
     // Calendar
     onDateSelected: (LocalDate) -> Unit = {},
     onVisibleWeeksChanged: (LocalDate) -> Unit = {},
-    // TopBar
-    onTopBarGroupIconClick: () -> Unit = {},
-    onTopBarAlarmIconClick: () -> Unit = {},
     // Certified Users
     onCertifiedUsersClick: () -> Unit = {},
     // Post
-    onPostUserProfileClick: (Long) -> Unit = {},
+    onPostUserProfileClick: (Long, Boolean) -> Unit = { _, _ -> },
     onPostMenuClick: (Long) -> Unit = {},
-    onPostImageClick: (Long) -> Unit = {},
-    onDropDownMenuClick: (PostDropDownActionType) -> Unit = {},
-    onPostReactionClick: (Long, Emoji) -> Unit = { _, _ -> },
-    onPostReactionLongClick: (List<PostReaction>, Emoji) -> Unit = { _, _ -> },
-    onPostAddReactionClick: (Long) -> Unit = {},
+    onPostImageClick: (PostResource) -> Unit = {},
+    onPostReactionClick: (PostResource, Emoji, Boolean) -> Unit = { _, _, _ -> },
+    onPostReactionLongClick: (Long, List<PostReaction>, Emoji) -> Unit = { _, _, _ -> },
+    onPostAddReactionClick: (PostResource) -> Unit = {},
+    onDropDownMenuClick: (Long, PostDropDownActionType) -> Unit = { _, _ -> },
+
     // BottomSheet
-    onEmojiSelected: (Long, Emoji) -> Unit = { _, _ -> },
     onBottomSheetDismiss: () -> Unit = {},
-    onBottomSheetUserProfileClick: (Long) -> Unit = {},
+    onUserReactionSheetUserProfileClick: (Long, Boolean) -> Unit = { _, _ -> },
+    onUserReactionSheetTabClick: (Emoji) -> Unit = {},
+    onEmojiSelected: (Emoji) -> Unit = {},
+
     // Dialog
     onDialogDismiss: () -> Unit = {},
     onDialogConfirmClick: () -> Unit = {},
+
+    // FAB
     onFTAButtonClick: () -> Unit = {}
 ) {
     val lazyListState = rememberLazyListState()
@@ -196,12 +201,24 @@ fun FeedScreen(
                                 postDetail = post,
                                 isMenuExpanded = isMenuExpanded,
                                 onMenuClick = { onPostMenuClick(post.feedId) },
-                                onDropDownMenuClick = onDropDownMenuClick,
-                                onPostImageClick = onPostImageClick,
-                                onPostUserProfileClick = onPostUserProfileClick,
-                                onReactionChipClick = onPostReactionClick,
-                                onReactionChipLongClick = onPostReactionLongClick,
-                                onAddReactionClick = { onPostAddReactionClick(post.feedId) }
+                                onDropDownMenuClick = { action -> onDropDownMenuClick(post.feedId, action) },
+                                onPostImageClick = { onPostImageClick(post) },
+                                onPostUserProfileClick = { userId, isMe -> onPostUserProfileClick(userId, isMe) },
+                                onReactionChipClick = { emoji, isReacted ->
+                                    onPostReactionClick(
+                                        post,
+                                        emoji,
+                                        isReacted
+                                    )
+                                },
+                                onReactionChipLongClick = { emoji, reactions ->
+                                    onPostReactionLongClick(
+                                        post.feedId,
+                                        reactions,
+                                        emoji
+                                    )
+                                },
+                                onAddReactionClick = { onPostAddReactionClick(post) }
                             )
                         }
                         Spacer(Modifier.height(40.dp))
@@ -285,12 +302,11 @@ fun FeedScreen(
         isBottomSheetVisible = state.bottomSheetState.reactionUsers,
         onDismissRequest = onBottomSheetDismiss,
         reactionDetails = state.reactionDetailsUiState,
-        onUserProfileClick = { userId -> onBottomSheetUserProfileClick(userId) },
-        onTabSelected = {}
+        onUserProfileClick = onUserReactionSheetUserProfileClick,
+        onTabSelected = onUserReactionSheetTabClick
     )
 
     EmojiSelectionBottomSheet(
-        selectedFeedId = state.selectedFeedId,
         isBottomSheetVisible = state.bottomSheetState.emojiSelection,
         onDismissRequest = onBottomSheetDismiss,
         onEmojiSelected = onEmojiSelected

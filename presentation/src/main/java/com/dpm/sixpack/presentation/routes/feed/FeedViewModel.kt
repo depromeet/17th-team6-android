@@ -323,7 +323,6 @@ class FeedViewModel @Inject constructor(
         // (결정 5)
         val postToUpdate = state.postForEmojiSelection ?: return@intent
 
-        // 1. 낙관적 업데이트
         val newPost = postToUpdate.updateReaction(emoji, isReacted = true)
         reduce {
             state.copy(
