@@ -11,9 +11,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
@@ -21,10 +23,14 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -81,16 +87,34 @@ fun FeedScreen(
     onDialogConfirmClick: () -> Unit = {},
     onFTAButtonClick: () -> Unit = {}
 ) {
+    val lazyListState = rememberLazyListState()
+
+    val isScrolled by remember {
+        derivedStateOf {
+            lazyListState.firstVisibleItemIndex > 0 || lazyListState.firstVisibleItemScrollOffset > 0
+        }
+    }
+
     Scaffold(
         modifier = modifier
             .fillMaxSize(),
         topBar = {
-            FeedTopBar(
-                onGroupIconClick = onTopBarGroupIconClick,
-                onAlarmIconClick = onTopBarAlarmIconClick,
-            )
+            Column(modifier = Modifier.fillMaxWidth()) {
+                FeedTopBar(
+                    onGroupIconClick = onTopBarGroupIconClick,
+                    onAlarmIconClick = onTopBarAlarmIconClick,
+                )
+
+                if (isScrolled) {
+                    HorizontalDivider(
+                        thickness = 1.dp,
+                        color = SixpackTheme.colors.gray100
+                    )
+                }
+            }
         },
         containerColor = SixpackTheme.colors.gray0,
+        contentColor = SixpackTheme.colors.gray900,
         floatingActionButton = {
             FloatingActionButton(
                 onClick = onFTAButtonClick,
@@ -100,7 +124,7 @@ fun FeedScreen(
             ) {
                 Image(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_plus),
-                    contentDescription = null,
+                    contentDescription = stringResource(id = R.string.feed_floating_action_button_description),
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -111,6 +135,7 @@ fun FeedScreen(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxWidth(),
+            state = lazyListState
         ) {
             item {
                 FeedWeeklyCalendar(
@@ -190,27 +215,66 @@ fun FeedScreen(
                             append is LoadState.Loading -> {
                                 item {
                                     Box(
-                                        modifier = Modifier.fillMaxWidth(),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 16.dp),
                                         contentAlignment = Alignment.Center
-                                    ) { CircularProgressIndicator() }
+                                    ) {
+                                        CircularProgressIndicator(
+                                            modifier = Modifier.size(24.dp),
+                                            strokeWidth = 2.dp
+                                        )
+                                    }
                                 }
                             }
 
                             refresh is LoadState.Error -> {
-                                item { Text(text = "Error: ${(refresh as LoadState.Error).error.message}") }
+                                item {
+                                    Column(
+                                        modifier = Modifier.fillParentMaxSize(),
+                                        verticalArrangement = Arrangement.Center,
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        Text(
+                                            text = stringResource(
+                                                id = R.string.feed_load_state_error_message,
+                                                (refresh as LoadState.Error).error.message ?: ""
+                                            )
+                                        )
+                                        Button(onClick = { feedPagingItems.retry() }) {
+                                            Text(stringResource(id = R.string.feed_load_state_retry_button))
+                                        }
+                                    }
+                                }
                             }
 
                             append is LoadState.Error -> {
-                                item { Text(text = "Error: ${(append as LoadState.Error).error.message}") }
+                                item {
+                                    Column(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 16.dp),
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        Text(
+                                            text = stringResource(
+                                                id = R.string.feed_load_state_error_message,
+                                                (append as LoadState.Error).error.message ?: ""
+                                            )
+                                        )
+                                        Button(onClick = { feedPagingItems.retry() }) {
+                                            Text(stringResource(id = R.string.feed_load_state_retry_button))
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                 }
+
             }
         }
-
     }
-
     ReactionUsersBottomSheet(
         isBottomSheetVisible = state.bottomSheetState.reactionUsers,
         onDismissRequest = onBottomSheetDismiss,
@@ -247,8 +311,6 @@ fun FeedScreen(
 fun EmptyStateExpired(
     modifier: Modifier = Modifier
 ) {
-    Spacer(Modifier.height(80.dp))
-
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -258,7 +320,7 @@ fun EmptyStateExpired(
     ) {
         Image(
             imageVector = Icons.Filled.Image,
-            contentDescription = "인증 없음",
+            contentDescription = stringResource(id = R.string.feed_empty_state_no_certification_description),
             modifier = Modifier.size(120.dp),
             contentScale = ContentScale.Fit
         )
@@ -266,7 +328,7 @@ fun EmptyStateExpired(
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = "이 날 인증한 친구가 없어요..",
+            text = stringResource(id = R.string.feed_empty_state_no_certification_title),
             style = SixpackTheme.typography.t2Bold,
             color = SixpackTheme.colors.gray900,
             textAlign = TextAlign.Center
@@ -275,7 +337,7 @@ fun EmptyStateExpired(
         Spacer(modifier = Modifier.height(4.dp))
 
         Text(
-            text = "친구들과 함께 러닝 기록을 인증해보세요!",
+            text = stringResource(id = R.string.feed_empty_state_no_certification_subtitle),
             style = SixpackTheme.typography.b2Regular,
             color = SixpackTheme.colors.gray700,
             textAlign = TextAlign.Center
@@ -296,14 +358,14 @@ fun EmptyStateCertifiable(
     ) {
         Image(
             imageVector = Icons.Filled.Image, // TODO: 여기에 실제 그래픽 리소스(Painter) 삽입
-            contentDescription = "인증 대기",
+            contentDescription = stringResource(id = R.string.feed_empty_state_waiting_certification_description),
             modifier = Modifier.size(120.dp),
             contentScale = ContentScale.Fit
         )
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = "정말 조용하네요..!",
+            text = stringResource(id = R.string.feed_empty_state_waiting_certification_title),
             style = SixpackTheme.typography.t2Bold,
             color = SixpackTheme.colors.gray900,
             textAlign = TextAlign.Center
@@ -311,7 +373,7 @@ fun EmptyStateCertifiable(
         Spacer(modifier = Modifier.height(4.dp))
 
         Text(
-            text = "지금 첫 러닝을 인증해보세요!",
+            text = stringResource(id = R.string.feed_empty_state_waiting_certification_subtitle),
             style = SixpackTheme.typography.b2Regular,
             color = SixpackTheme.colors.gray700,
             textAlign = TextAlign.Center
@@ -323,7 +385,7 @@ fun EmptyStateCertifiable(
 @Preview(showBackground = true)
 @Composable
 fun FeedScreenPreview() {
-    val dummyPosts = listOf<PostResource>(
+    val dummyPosts = listOf(
         PostResource(
             feedId = 1L,
             postImageUrl = "",
@@ -346,19 +408,14 @@ fun FeedScreenPreview() {
     )
 
 
-    // 1-2. 더미 리스트를 PagingData로 감싸고 Flow로 만듦
     val dummyPagingDataFlow = flowOf(PagingData.from(dummyPosts))
 
-    // 1-3. Flow를 LazyPagingItems로 수집 (Composable 내부에서 수행)
     val dummyPagingItems = dummyPagingDataFlow.collectAsLazyPagingItems()
 
-    // --- 2. 프리뷰용 UiState 생성 ---
     val dummyState = FeedUiState(
-        // 캘린더는 기본값 사용
         calendarState = FeedCalenderUiState(
             postCounts = mapOf(LocalDate.now() to 2, LocalDate.now().minusDays(1) to 5)
         ),
-        // 상단 인증 유저 목록
         postingUserInfo = listOf(
             PostingUserInfo(
                 user = UserInfo(id = 1L, name = "김육팩", profileImageUrl = "", isMe = true),
@@ -369,10 +426,9 @@ fun FeedScreenPreview() {
                 postingTime = ""
             )
         ),
-        // 1번 피드의 메뉴가 열려있도록 설정
+        feedDateState = FeedDateUiState.PostsAvailable
     )
 
-    // --- 3. 프리뷰 래퍼 및 화면 렌더링 ---
     DoRunPreviewWrapper {
         FeedScreen(
             state = dummyState,
@@ -410,4 +466,3 @@ private fun FeedScreenEmptyCertifiablePreview() {
         )
     }
 }
-
