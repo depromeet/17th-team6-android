@@ -44,12 +44,15 @@ fun SignInScreen(
         verificationCode = state.verificationCode,
         onVerificationCodeChanged = { onIntent(SignInIntent.OnVerificationCodeChanged(it)) },
         verificationEnabled = !state.isLoading && state.remainingTimeInSeconds > 0,
+        remainingTime = state.formattedRemainingTime,
+        onPhoneClearClick = { onIntent(SignInIntent.OnPhoneNumberChanged("")) },
+        onResendClick = { onIntent(SignInIntent.OnResendCodeClick) },
         additionalContentAfterPhone =
             if (state.step == PhoneAuthStep.PHONE_INPUT) {
                 {
                     AuthClickableTextLink(
-                        normalText = "",
-                        linkText = stringResource(R.string.signin_find_account),
+                        normalText = stringResource(R.string.signin_find_account_question),
+                        linkText = stringResource(R.string.signin_find_account_action),
                         onLinkClick = { /* TODO: 계정 찾기 기능 구현 */ },
                         modifier = Modifier.padding(bottom = 12.dp),
                     )

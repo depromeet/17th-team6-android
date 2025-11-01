@@ -70,7 +70,7 @@ fun SignInRoute(
             onDismiss = {
                 showUnregisteredDialog = false
             },
-            primaryButtonText = stringResource(R.string.onboarding_sign_up),
+            primaryButtonText = stringResource(R.string.singin_signup_action),
             primaryButtonOnClick = {
                 onNavigateToSignUp(unregisteredPhoneNumber)
             },
