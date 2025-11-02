@@ -18,19 +18,21 @@ fun DoRunDefaultAsyncImage(
     modifier: Modifier = Modifier,
     contentScale: ContentScale = ContentScale.Crop,
     placeholder: Painter = ColorPainter(SixpackTheme.colors.gray200),
-    error: Painter = ColorPainter(SixpackTheme.colors.gray500)
+    error: Painter = ColorPainter(SixpackTheme.colors.gray500),
 ) {
     val data = model.ifEmpty { null }
 
     AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(data)
-            .crossfade(true)
-            .build(),
+        model =
+            ImageRequest
+                .Builder(LocalContext.current)
+                .data(data)
+                .crossfade(true)
+                .build(),
         contentDescription = contentDescription,
         modifier = modifier,
         placeholder = placeholder,
         error = error,
-        contentScale = contentScale
+        contentScale = contentScale,
     )
 }
