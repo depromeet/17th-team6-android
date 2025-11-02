@@ -65,7 +65,6 @@ fun PostDropDownMenuIcon(
 
         DropdownMenu(
             expanded = isMenuExpanded,
-
             onDismissRequest = { onMenuClick(!isMenuExpanded) },
             offset = DpOffset(x = 0.dp, y = (-1).dp),
             shape = SixpackTheme.shapes.round12,
@@ -106,7 +105,7 @@ private fun MyPostMenuItems(
             onMenuClick()
             onDropDownMenuClick(PostDropDownActionType.EDIT)
         },
-        modifier = Modifier.clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
+        modifier = Modifier.clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)),
     )
 
     HorizontalDivider(
@@ -135,7 +134,7 @@ private fun MyPostMenuItems(
             onMenuClick()
             onDropDownMenuClick(PostDropDownActionType.SAVE_IMAGE)
         },
-        modifier = Modifier.clip(RoundedCornerShape(bottomEnd = 12.dp, bottomStart = 12.dp))
+        modifier = Modifier.clip(RoundedCornerShape(bottomEnd = 12.dp, bottomStart = 12.dp)),
     )
 }
 
@@ -154,7 +153,7 @@ private fun FriendPostMenuItems(
             onMenuClick()
             onDropDownMenuClick(PostDropDownActionType.REPORT)
         },
-        modifier = Modifier.clip(RoundedCornerShape(12.dp))
+        modifier = Modifier.clip(RoundedCornerShape(12.dp)),
     )
 }
 
@@ -169,8 +168,7 @@ private fun CustomDropdownMenuItem(
             modifier
                 .noRippleClickable(
                     onClick = onClick,
-                )
-                .padding(horizontal = 12.dp),
+                ).padding(horizontal = 12.dp),
     ) {
         Text(
             text = text,

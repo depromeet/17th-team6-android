@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
+import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,6 +43,7 @@ fun DoRunBottomSheetSlot(
             onDismissRequest = onDismissRequest,
             sheetState = sheetState,
             dragHandle = dragHandle,
+            scrimColor = SixpackTheme.colors.gray900.copy(alpha = 0.4f),
             shape = DoRunBottomSheetDefaults.BOTTOM_SHEET_SHAPE,
             containerColor = DoRunBottomSheetDefaults.containerColor(),
         ) {

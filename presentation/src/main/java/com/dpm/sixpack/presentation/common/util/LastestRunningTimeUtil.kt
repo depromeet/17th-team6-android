@@ -58,8 +58,8 @@ internal fun convertTimeDiffToString(
 }
 
 // TODO 승규형 이거 UTC 로 비교해야 잘된데! 바꾼거 확인부탁!
-fun String.toTimeAgoString(context: Context): String? {
-    val postInstant = runCatching { Instant.parse(this) }.getOrNull() ?: return null
+fun String.toTimeAgoString(context: Context): String {
+    val postInstant = runCatching { Instant.parse(this) }.getOrNull() ?: return ""
 
     val nowInstant = Instant.now()
 

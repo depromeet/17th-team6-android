@@ -91,7 +91,7 @@ private fun RunningSummaryOverlay(
         ) {
             SummaryItem(
                 title = stringResource(id = R.string.feed_post_image_record_distance),
-                record = "${totalDistance}km",
+                record = totalDistance,
                 recordTextStyle = SixpackTheme.typography.h1Bold,
                 modifier = Modifier.weight(1f),
             )
@@ -115,7 +115,7 @@ private fun RunningSummaryOverlay(
             )
             SummaryItem(
                 title = stringResource(id = R.string.feed_post_image_record_cadence),
-                record = "${cadence}spm",
+                record = "$cadence spm",
                 recordTextStyle = SixpackTheme.typography.t1Bold,
                 modifier = Modifier.weight(1f),
             )

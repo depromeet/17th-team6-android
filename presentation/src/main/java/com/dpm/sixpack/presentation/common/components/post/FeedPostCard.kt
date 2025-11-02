@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
@@ -22,6 +23,7 @@ import com.dpm.sixpack.presentation.common.model.PostResource
 import com.dpm.sixpack.presentation.common.model.PostingUserInfo
 import com.dpm.sixpack.presentation.common.model.RunningSummary
 import com.dpm.sixpack.presentation.common.model.UserInfo
+import com.dpm.sixpack.presentation.common.util.toTimeAgoString
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 /**
@@ -94,6 +96,7 @@ private fun PostUserInfoRow(
     onDropDownMenuClick: (PostDropDownActionType) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -101,7 +104,7 @@ private fun PostUserInfoRow(
         PostUserInfo(
             userName = postingUser.user.name,
             userImageUrl = postingUser.user.profileImageUrl,
-            postingTime = postingUser.postingTime,
+            postingTime = postingUser.postingTime.toTimeAgoString(context),
             isMyPost = postingUser.user.isMe,
             onPostUserProfileClick = onPostUserProfileClick,
         )

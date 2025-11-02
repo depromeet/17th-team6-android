@@ -63,7 +63,6 @@ import com.dpm.sixpack.presentation.routes.feed.contract.uistate.FeedDateUiState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -185,50 +184,50 @@ fun FeedScreen(
                 },
             ) {
                 Box(modifier = Modifier.fillMaxSize()) {
-                LazyColumn(
-                    modifier =
-                        Modifier
-                            .padding(paddingValues)
-                            .fillMaxWidth(),
-                    state = lazyListState,
-                ) {
-                    // Calendar
-                    feedCalendarItem(
-                        calendarState = state.calendarState,
-                        onDateSelected = onDateSelected,
-                        onWeekDisplayed = onVisibleWeeksChanged,
-                    )
+                    LazyColumn(
+                        modifier =
+                            Modifier
+                                .padding(paddingValues)
+                                .fillMaxWidth(),
+                        state = lazyListState,
+                    ) {
+                        // Calendar
+                        feedCalendarItem(
+                            calendarState = state.calendarState,
+                            onDateSelected = onDateSelected,
+                            onWeekDisplayed = onVisibleWeeksChanged,
+                        )
 
-                    // Divider
-                    feedDividerItem()
+                        // Divider
+                        feedDividerItem()
 
-                    when (state.feedDateState) {
-                        FeedDateUiState.NoPostsAndCertifiable -> {
-                            item(key = "empty_certifiable") { EmptyStateCertifiable() }
-                        }
+                        when (state.feedDateState) {
+                            FeedDateUiState.NoPostsAndCertifiable -> {
+                                item(key = "empty_certifiable") { EmptyStateCertifiable() }
+                            }
 
-                        FeedDateUiState.NoPostsAndExpired -> {
-                            item(key = "empty_expired") { EmptyStateExpired() }
-                        }
+                            FeedDateUiState.NoPostsAndExpired -> {
+                                item(key = "empty_expired") { EmptyStateExpired() }
+                            }
 
-                        FeedDateUiState.PostsAvailable -> {
-                            feedContentItems(
-                                isInitialLoad = isInitialLoad,
-                                postingUserInfo = state.postingUserInfo,
-                                feedPagingItems = feedPagingItems,
-                                selectedPostMenuId = state.selectedPostMenuId,
-                                onCertifiedUsersClick = onCertifiedUsersClick,
-                                onPostMenuClick = onPostMenuClick,
-                                onDropDownMenuClick = onDropDownMenuClick,
-                                onPostImageClick = onPostImageClick,
-                                onPostUserProfileClick = onPostUserProfileClick,
-                                onReactionClick = onPostReactionClick,
-                                onReactionLongClick = onPostReactionLongClick,
-                                onAddReactionClick = onPostAddReactionClick,
-                            )
+                            FeedDateUiState.PostsAvailable -> {
+                                feedContentItems(
+                                    isInitialLoad = isInitialLoad,
+                                    postingUserInfo = state.postingUserInfo,
+                                    feedPagingItems = feedPagingItems,
+                                    selectedPostMenuId = state.selectedPostMenuId,
+                                    onCertifiedUsersClick = onCertifiedUsersClick,
+                                    onPostMenuClick = onPostMenuClick,
+                                    onDropDownMenuClick = onDropDownMenuClick,
+                                    onPostImageClick = onPostImageClick,
+                                    onPostUserProfileClick = onPostUserProfileClick,
+                                    onReactionClick = onPostReactionClick,
+                                    onReactionLongClick = onPostReactionLongClick,
+                                    onAddReactionClick = onPostAddReactionClick,
+                                )
+                            }
                         }
                     }
-                }
 
                     FeedFTAButton(
                         enabled = state.feedDateState != FeedDateUiState.NoPostsAndExpired,
