@@ -18,10 +18,6 @@ sealed interface FeedIntent : UiIntent {
         val date: LocalDate,
     ) : FeedIntent
 
-    data class OnVisibleWeeksChanged(
-        val startDate: LocalDate,
-    ) : FeedIntent
-
     // Certified Users
     data object OnCertifiedUsersClick : FeedIntent
 
@@ -38,13 +34,13 @@ sealed interface FeedIntent : UiIntent {
 
     data class OnPostImageClick(
         val post: PostResource,
-    ) : FeedIntent // 👈 (결정 4)
+    ) : FeedIntent
 
     data class OnPostReactionClick(
         val post: PostResource,
         val emoji: Emoji,
         val isReacted: Boolean,
-    ) : FeedIntent // 👈 (결정 4)
+    ) : FeedIntent
 
     data class OnPostReactionLongClick(
         val feedId: Long,
@@ -79,4 +75,10 @@ sealed interface FeedIntent : UiIntent {
 
     // FloatingActionButton
     data object OnFloatingActionButtonClick : FeedIntent
+
+    sealed interface Observed : FeedIntent {
+        data class VisibleWeeksChanged(
+            val startDate: LocalDate,
+        ) : Observed
+    }
 }

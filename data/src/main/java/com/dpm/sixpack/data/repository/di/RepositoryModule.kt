@@ -17,16 +17,16 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
-    @Binds
-    @Singleton
+     @Binds
+     @Singleton
     abstract fun bindRunningRepository(runningRepository: RunningRepositoryImpl): RunningRepository
 
-    @Binds
-    @Singleton
+     @Binds
+     @Singleton
     abstract fun bindsRunningSessionRepository(repositoryImpl: RunningSessionRepositoryImpl): RunningSessionRepository
 
-    @Binds
-    @Singleton
+     @Binds
+     @Singleton
     abstract fun bindsUserPreferenceRepository(repositoryImpl: UserPreferenceRepositoryImpl): UserPreferenceRepository
 
     @Binds

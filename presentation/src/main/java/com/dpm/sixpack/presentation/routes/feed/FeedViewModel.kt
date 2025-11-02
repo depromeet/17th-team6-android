@@ -61,9 +61,6 @@ class FeedViewModel @Inject constructor(
 
     private val pagingFlowCache = ConcurrentHashMap<LocalDate, Flow<PagingData<PostResource>>>()
     private val reactionDebounceJobs = ConcurrentHashMap<Long, Job>()
-
-    private val selectedDateFlow = container.stateFlow.map { it.calendarState.selectedDate }.distinctUntilChanged()
-    private val postCountsFlow = container.stateFlow.map { it.calendarState.postCounts }.distinctUntilChanged()
     private val optimisticPostsFlow = container.stateFlow.map { it.optimisticPosts }.distinctUntilChanged()
 
     val feedPagingData: Flow<PagingData<PostResource>> =
@@ -87,7 +84,6 @@ class FeedViewModel @Inject constructor(
 
             // Calendar
             is FeedIntent.OnDateSelected -> handleDateSelected(intent.date)
-            is FeedIntent.OnVisibleWeeksChanged -> handleVisibleWeeksChanged(intent.startDate)
 
             // Certified Users
             FeedIntent.OnCertifiedUsersClick -> handleCertifiedUsersClick()
@@ -123,6 +119,9 @@ class FeedViewModel @Inject constructor(
 
             // FAB
             FeedIntent.OnFloatingActionButtonClick -> handleFloatingActionButtonClick()
+
+            // UI Observations (시스템 관찰 이벤트)
+            is FeedIntent.Observed.VisibleWeeksChanged -> handleVisibleWeeksChanged(intent.startDate)
         }
     }
 

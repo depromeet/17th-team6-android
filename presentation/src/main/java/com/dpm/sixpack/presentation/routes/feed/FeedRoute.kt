@@ -48,7 +48,7 @@ fun FeedRoute(
         onTopBarAlarmIconClick = { viewModel.onIntent(FeedIntent.OnTopBarAlarmIconClick) },
         // Calendar
         onDateSelected = { date -> viewModel.onIntent(FeedIntent.OnDateSelected(date)) },
-        onVisibleWeeksChanged = { startDate -> viewModel.onIntent(FeedIntent.OnVisibleWeeksChanged(startDate)) },
+        onVisibleWeeksChanged = { startDate -> viewModel.onIntent(FeedIntent.Observed.VisibleWeeksChanged(startDate)) },
         // Certified Users
         onCertifiedUsersClick = { viewModel.onIntent(FeedIntent.OnCertifiedUsersClick) },
         // FeedPostCard
