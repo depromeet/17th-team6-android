@@ -74,14 +74,12 @@ fun ProfileCreationComponent(
                         .align(Alignment.BottomEnd)
                         .size(30.dp)
                         .clip(CircleShape)
-                        .background(SixpackTheme.colors.gray600)
                         .clickable(enabled = enabled) { onImagePickerClick() },
                 contentAlignment = Alignment.Center,
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_camera),
-                    contentDescription = "Edit profile picture",
-                    modifier = Modifier.size(18.dp),
+                    contentDescription = "Edit profile picture"
                 )
             }
         }
