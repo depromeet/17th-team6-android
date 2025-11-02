@@ -1,7 +1,6 @@
 package com.dpm.sixpack.presentation.routes.signup.ui.component.profile
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
@@ -90,6 +90,7 @@ fun ProfileCreationComponent(
         ProfileNameInput(
             profileName = profileName,
             onNameChanged = onNameChanged,
+            onClickClear = { onNameChanged("") },
             enabled = enabled,
             modifier = Modifier.fillMaxWidth(),
             isProfileNameValid = isProfileNameValid,
@@ -101,6 +102,7 @@ fun ProfileCreationComponent(
 private fun ProfileNameInput(
     profileName: String,
     onNameChanged: (String) -> Unit,
+    onClickClear: () -> Unit,
     enabled: Boolean,
     isProfileNameValid: Boolean,
     modifier: Modifier = Modifier,
@@ -110,6 +112,19 @@ private fun ProfileNameInput(
         value = profileName,
         onValueChange = onNameChanged,
         placeholder = stringResource(R.string.signup_placeholder_profile_name),
+        trailingIcon = {
+            if (profileName.isNotBlank()) {
+                Image(
+                    modifier =
+                        Modifier
+                            .sizeIn(minWidth = 24.dp, minHeight = 24.dp)
+                            .clip(SixpackTheme.shapes.full)
+                            .clickable(onClick = onClickClear),
+                    painter = painterResource(R.drawable.ic_input_clear),
+                    contentDescription = "clear profile name button",
+                )
+            }
+        },
         bottomHelper = {
             Row {
                 Icon(
