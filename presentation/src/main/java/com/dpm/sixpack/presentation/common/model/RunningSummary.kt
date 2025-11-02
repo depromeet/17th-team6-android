@@ -7,7 +7,6 @@ import com.dpm.sixpack.presentation.common.util.format.formatPace
 import com.dpm.sixpack.presentation.common.util.format.formatSecondsToTime
 import com.dpm.sixpack.presentation.common.util.format.toKoreanFeedTimeStringOrNull
 import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
-import com.dpm.sixpack.presentation.common.util.formatPaceToString
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -20,12 +19,11 @@ data class RunningSummary(
     val recordDateTime: String = "",
 ) : Parcelable
 
-fun RunningSessionResult.toRunningSummary(postTime: String): RunningSummary {
-    return RunningSummary(
+fun RunningSessionResult.toRunningSummary(postTime: String): RunningSummary =
+    RunningSummary(
         totalDistance = formatDistanceToKm(totalDistanceMeter),
         totalTime = formatSecondsToTime(totalDurationSec),
         averagePace = formatPace(avgPace),
         cadence = avgCadence.toString(),
-        recordDateTime = postTime.toKoreanFeedTimeStringOrNull() ?: "날짜를 알 수 없음"
+        recordDateTime = postTime.toKoreanFeedTimeStringOrNull() ?: "날짜를 알 수 없음",
     )
-}

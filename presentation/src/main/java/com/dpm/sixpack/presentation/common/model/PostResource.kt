@@ -18,21 +18,19 @@ data class PostResource(
 @Parcelize
 @Immutable
 data class PostingUserInfo(
-    val user: UserInfo= UserInfo(),
+    val user: UserInfo = UserInfo(),
     val postingTime: String = "",
 ) : Parcelable
 
-fun FeedListItem.PostItem.toPostResource(): PostResource {
-    return PostResource(
+fun FeedListItem.PostItem.toPostResource(): PostResource =
+    PostResource(
         feedId = feed.feedId,
-        user = PostingUserInfo(
-            user = feed.user.toUserInfo(),
-            postingTime = feed.selfieTime
-        ),
+        user =
+            PostingUserInfo(
+                user = feed.user.toUserInfo(),
+                postingTime = feed.selfieTime,
+            ),
         postImageUrl = feed.imageUrl,
         runningInfo = feed.runningSessionResult.toRunningSummary(feed.selfieTime),
-        reactions = feed.reactions.map { it.toPostReaction() }
+        reactions = feed.reactions.map { it.toPostReaction() },
     )
-}
-
-

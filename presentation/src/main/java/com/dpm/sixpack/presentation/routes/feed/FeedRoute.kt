@@ -7,7 +7,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.dpm.sixpack.presentation.common.model.PostResource
 import com.dpm.sixpack.presentation.routes.feed.contract.FeedIntent
 import com.dpm.sixpack.presentation.routes.feed.contract.FeedSideEffect
-import com.dpm.sixpack.presentation.routes.feed.ui.screen.FeedScreen
+import com.dpm.sixpack.presentation.routes.feed.ui.FeedScreen
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -51,26 +51,40 @@ fun FeedRoute(
         onVisibleWeeksChanged = { startDate -> viewModel.onIntent(FeedIntent.OnVisibleWeeksChanged(startDate)) },
         // Certified Users
         onCertifiedUsersClick = { viewModel.onIntent(FeedIntent.OnCertifiedUsersClick) },
-
         // FeedPostCard
         onPostUserProfileClick = { userId, isMe -> viewModel.onIntent(FeedIntent.OnUserProfileClick(userId, isMe)) },
         onPostMenuClick = { feedId -> viewModel.onIntent(FeedIntent.OnPostMenuClick(feedId)) },
         onPostImageClick = { post -> viewModel.onIntent(FeedIntent.OnPostImageClick(post)) },
-        onPostReactionClick = { post, emoji, isReacted -> viewModel.onIntent(FeedIntent.OnPostReactionClick(post, emoji, isReacted)) },
-        onPostReactionLongClick = { feedId, reactions, emoji -> viewModel.onIntent(FeedIntent.OnPostReactionLongClick(feedId, reactions, emoji)) },
+        onPostReactionClick = {
+            post,
+            emoji,
+            isReacted,
+            ->
+            viewModel.onIntent(FeedIntent.OnPostReactionClick(post, emoji, isReacted))
+        },
+        onPostReactionLongClick = {
+            feedId,
+            reactions,
+            emoji,
+            ->
+            viewModel.onIntent(FeedIntent.OnPostReactionLongClick(feedId, reactions, emoji))
+        },
         onPostAddReactionClick = { post -> viewModel.onIntent(FeedIntent.OnPostAddReactionClick(post)) },
         onDropDownMenuClick = { feedId, action -> viewModel.onIntent(FeedIntent.OnDropDownMenuClick(feedId, action)) },
-
         // BottomSheet
         onBottomSheetDismiss = { viewModel.onIntent(FeedIntent.OnBottomSheetDismiss) },
-        onUserReactionSheetUserProfileClick = { userId, isMe -> viewModel.onIntent(FeedIntent.OnUserProfileClick(userId, isMe)) },
+        onUserReactionSheetUserProfileClick = {
+            userId,
+            isMe,
+            ->
+            viewModel.onIntent(FeedIntent.OnUserProfileClick(userId, isMe))
+        },
         onUserReactionSheetTabClick = { emoji -> viewModel.onIntent(FeedIntent.OnUserReactionSheetTabClick(emoji)) },
         onEmojiSelected = { emoji -> viewModel.onIntent(FeedIntent.OnEmojiSheetEmojiSelected(emoji)) },
-
         // Dialog
         onDialogDismiss = { viewModel.onIntent(FeedIntent.OnDialogDismiss) },
         onDialogConfirmClick = { viewModel.onIntent(FeedIntent.OnDialogConfirmClick) },
-
         // FAB
-        onFTAButtonClick = { viewModel.onIntent(FeedIntent.OnFloatingActionButtonClick) }
-    )}
+        onFTAButtonClick = { viewModel.onIntent(FeedIntent.OnFloatingActionButtonClick) },
+    )
+}

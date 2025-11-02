@@ -36,7 +36,7 @@ enum class PostDropDownActionType {
     EDIT,
     DELETE,
     SAVE_IMAGE,
-    REPORT
+    REPORT,
 }
 
 @Composable
@@ -48,7 +48,7 @@ fun PostDropDownMenuIcon(
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier.wrapContentSize(Alignment.TopEnd)
+        modifier = modifier.wrapContentSize(Alignment.TopEnd),
     ) {
         IconButton(
             onClick = { onMenuClick(!isMenuExpanded) },
@@ -64,31 +64,29 @@ fun PostDropDownMenuIcon(
         DropdownMenu(
             expanded = isMenuExpanded,
             onDismissRequest = { onMenuClick(!isMenuExpanded) },
-
             offset = DpOffset(x = 0.dp, y = (-1).dp),
             shape = SixpackTheme.shapes.round12,
             containerColor = SixpackTheme.colors.gray0,
             shadowElevation = 8.dp,
-
-            properties = PopupProperties(
-                usePlatformDefaultWidth = false
-            )
+            properties =
+                PopupProperties(
+                    usePlatformDefaultWidth = false,
+                ),
         ) {
             if (isMyPost) {
                 MyPostMenuItems(
                     onMenuClick = { onMenuClick(!isMenuExpanded) },
-                    onDropDownMenuClick = onDropDownMenuClick
+                    onDropDownMenuClick = onDropDownMenuClick,
                 )
             } else {
                 FriendPostMenuItems(
                     onMenuClick = { onMenuClick(!isMenuExpanded) },
-                    onDropDownMenuClick = onDropDownMenuClick
+                    onDropDownMenuClick = onDropDownMenuClick,
                 )
             }
         }
     }
 }
-
 
 /**
  * 내 게시물에 표시될 메뉴 아이템 목록
@@ -104,13 +102,13 @@ private fun MyPostMenuItems(
         onClick = {
             onMenuClick()
             onDropDownMenuClick(PostDropDownActionType.EDIT)
-        }
+        },
     )
 
     HorizontalDivider(
         thickness = 1.dp,
         modifier = Modifier.padding(vertical = 4.dp),
-        color = SixpackTheme.colors.gray50
+        color = SixpackTheme.colors.gray50,
     )
 
     CustomDropdownMenuItem(
@@ -118,13 +116,13 @@ private fun MyPostMenuItems(
         onClick = {
             onMenuClick()
             onDropDownMenuClick(PostDropDownActionType.DELETE)
-        }
+        },
     )
 
     HorizontalDivider(
         thickness = 1.dp,
         modifier = Modifier.padding(vertical = 4.dp),
-        color = SixpackTheme.colors.gray50
+        color = SixpackTheme.colors.gray50,
     )
 
     CustomDropdownMenuItem(
@@ -132,7 +130,7 @@ private fun MyPostMenuItems(
         onClick = {
             onMenuClick()
             onDropDownMenuClick(PostDropDownActionType.SAVE_IMAGE)
-        }
+        },
     )
 }
 
@@ -150,7 +148,7 @@ private fun FriendPostMenuItems(
         onClick = {
             onMenuClick()
             onDropDownMenuClick(PostDropDownActionType.REPORT)
-        }
+        },
     )
 }
 
@@ -158,25 +156,23 @@ private fun FriendPostMenuItems(
 private fun CustomDropdownMenuItem(
     text: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier
-            .noRippleClickable(
-                onClick = onClick,
-            )
-            .padding(horizontal = 12.dp),
+        modifier =
+            modifier
+                .noRippleClickable(
+                    onClick = onClick,
+                ).padding(horizontal = 12.dp),
     ) {
         Text(
             text = text,
             color = SixpackTheme.colors.gray900,
             style = SixpackTheme.typography.b2Regular,
-            modifier = Modifier.widthIn(min = 120.dp)
-
+            modifier = Modifier.widthIn(min = 120.dp),
         )
     }
 }
-
 
 @Preview
 @Composable
@@ -188,7 +184,7 @@ fun MyPostDropDownMenuPreview() {
                 true,
                 isMenuExpanded = isMenuExpanded,
                 onMenuClick = { isMenuExpanded = !isMenuExpanded },
-                onDropDownMenuClick = {}
+                onDropDownMenuClick = {},
             )
         }
     }
@@ -204,7 +200,7 @@ fun FriendPostDropDownMenuPreview() {
                 false,
                 isMenuExpanded = isMenuExpanded,
                 onMenuClick = { isMenuExpanded = !isMenuExpanded },
-                onDropDownMenuClick = {}
+                onDropDownMenuClick = {},
             )
         }
     }

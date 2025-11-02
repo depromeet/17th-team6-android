@@ -100,8 +100,7 @@ fun FeedWeeklyCalendar(
             .map { pageIndex ->
                 val weeksOffset = pageIndex - INITIAL_PAGE_INDEX
                 firstDayOfInitialPagerWeek.plusWeeks(weeksOffset.toLong())
-            }
-            .distinctUntilChanged()
+            }.distinctUntilChanged()
             .collect { currentWeekStartDate ->
                 onWeekDisplayed(currentWeekStartDate)
             }
@@ -190,10 +189,11 @@ private fun WeeklyCalendarHeader(
     val displayFormatter = remember { DateTimeFormatter.ofPattern(HEADER_DATE_PATTERN, Locale.getDefault()) }
 
     // 주차 계산 (월의 첫 주는 1주차)
-    val weekOfMonth = remember(displayDateForMonth) {
-        val weekFields = WeekFields.of(DayOfWeek.SUNDAY, 7)
-        displayDateForMonth.get(weekFields.weekOfMonth())
-    }
+    val weekOfMonth =
+        remember(displayDateForMonth) {
+            val weekFields = WeekFields.of(DayOfWeek.SUNDAY, 7)
+            displayDateForMonth.get(weekFields.weekOfMonth())
+        }
 
     val displayText =
         remember(displayDateForMonth, weekOfMonth) {
@@ -329,7 +329,7 @@ private fun DayCell(
                 text = if (dayData.isToday) "오늘" else dayData.date.dayOfMonth.toString(),
                 color = dateTextColor,
                 style = typography.dayCellDateTextStyle,
-                modifier = Modifier.padding(bottom = 5.dp,top =3.dp)
+                modifier = Modifier.padding(bottom = 5.dp, top = 3.dp),
             )
         }
 
@@ -357,9 +357,7 @@ private fun DayCell(
  * DayCell과 동일한 레이아웃 구조를 가집니다.
  */
 @Composable
-private fun DayCellShimmer(
-    modifier: Modifier = Modifier,
-) {
+private fun DayCellShimmer(modifier: Modifier = Modifier) {
     val shimmerColor = SixpackTheme.colors.gray100 // 스켈레톤 배경색
 
     Column(
@@ -368,10 +366,11 @@ private fun DayCellShimmer(
         verticalArrangement = Arrangement.Center,
     ) {
         Box(
-            modifier = Modifier
-                .width(40.dp) // "요일" 텍스트와 비슷한 너비
-                .height(21.dp) // 텍스트 높이
-                .background(shimmerColor, RoundedCornerShape(8.dp))
+            modifier =
+                Modifier
+                    .width(40.dp) // "요일" 텍스트와 비슷한 너비
+                    .height(21.dp) // 텍스트 높이
+                    .background(shimmerColor, RoundedCornerShape(8.dp)),
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -387,10 +386,11 @@ private fun DayCellShimmer(
         Spacer(modifier = Modifier.height(4.dp))
 
         Box(
-            modifier = Modifier
-                .width(40.dp) // "n개" 텍스트와 비슷한 너비
-                .height(18.dp) // 텍스트 높이
-                .background(shimmerColor, RoundedCornerShape(8.dp))
+            modifier =
+                Modifier
+                    .width(40.dp) // "n개" 텍스트와 비슷한 너비
+                    .height(18.dp) // 텍스트 높이
+                    .background(shimmerColor, RoundedCornerShape(8.dp)),
         )
     }
 }
@@ -504,7 +504,7 @@ fun WeeklyCalendarShimmerPreview() {
                         today = today,
                         selectedDate = selectedDate,
                         postCounts = postCounts,
-                        isLoading = true
+                        isLoading = true,
                     ),
                 onDateSelected = {
                 },

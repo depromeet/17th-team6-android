@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.feed.ui.screen
+package com.dpm.sixpack.presentation.routes.feed.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,7 +14,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,15 +48,16 @@ internal fun LazyListScope.feedRefreshLoadingItem(isRefreshLoading: Boolean) {
     if (isRefreshLoading) {
         item(key = "refresh_loading") {
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                contentAlignment = Alignment.Center,
             ) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(20.dp),
                     strokeWidth = 2.dp,
-                    color = SixpackTheme.colors.blue600
+                    color = SixpackTheme.colors.blue600,
                 )
             }
         }
@@ -70,16 +70,17 @@ internal fun LazyListScope.feedRefreshLoadingItem(isRefreshLoading: Boolean) {
 internal fun LazyListScope.feedCalendarItem(
     calendarState: FeedCalenderUiState,
     onDateSelected: (LocalDate) -> Unit,
-    onWeekDisplayed: (LocalDate) -> Unit
+    onWeekDisplayed: (LocalDate) -> Unit,
 ) {
     item(key = "calendar") {
         FeedWeeklyCalendar(
-            modifier = Modifier
-                .padding(horizontal = 20.dp)
-                .padding(top = 16.dp),
+            modifier =
+                Modifier
+                    .padding(horizontal = 20.dp)
+                    .padding(top = 16.dp),
             feedCalenderUiState = calendarState,
             onDateSelected = onDateSelected,
-            onWeekDisplayed = onWeekDisplayed
+            onWeekDisplayed = onWeekDisplayed,
         )
     }
 }
@@ -90,11 +91,12 @@ internal fun LazyListScope.feedCalendarItem(
 internal fun LazyListScope.feedDividerItem() {
     item(key = "divider") {
         HorizontalDivider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 24.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 24.dp),
             thickness = 1.dp,
-            color = SixpackTheme.colors.gray50
+            color = SixpackTheme.colors.gray50,
         )
     }
 }
@@ -105,10 +107,10 @@ internal fun LazyListScope.feedDividerItem() {
 internal fun LazyListScope.feedInitialLoadingItems() {
     items(
         count = 3,
-        key = { index -> "shimmer_$index" }
+        key = { index -> "shimmer_$index" },
     ) {
         FeedPostCardShimmer(
-            modifier = Modifier.padding(horizontal = 20.dp)
+            modifier = Modifier.padding(horizontal = 20.dp),
         )
         Spacer(Modifier.height(40.dp))
     }
@@ -119,13 +121,13 @@ internal fun LazyListScope.feedInitialLoadingItems() {
  */
 internal fun LazyListScope.feedCertificationCountItem(
     postingUserInfo: List<PostingUserInfo>,
-    onCertifiedUsersClick: () -> Unit
+    onCertifiedUsersClick: () -> Unit,
 ) {
     item(key = "certification_count") {
         CertificationCountView(
             users = postingUserInfo,
             onViewClick = onCertifiedUsersClick,
-            modifier = Modifier.padding(horizontal = 20.dp)
+            modifier = Modifier.padding(horizontal = 20.dp),
         )
     }
 }
@@ -142,18 +144,19 @@ internal fun LazyListScope.feedPostItems(
     onPostUserProfileClick: (Long, Boolean) -> Unit,
     onReactionClick: (PostResource, Emoji, Boolean) -> Unit,
     onReactionLongClick: (Long, List<PostReaction>, Emoji) -> Unit,
-    onAddReactionClick: (PostResource) -> Unit
+    onAddReactionClick: (PostResource) -> Unit,
 ) {
     items(
         count = feedPagingItems.itemCount,
         key = { index ->
             feedPagingItems.peek(index)?.feedId ?: index.toLong()
-        }
+        },
     ) { index ->
         feedPagingItems[index]?.let { post ->
-            val isMenuExpanded = remember(selectedPostMenuId, post.feedId) {
-                selectedPostMenuId != null && selectedPostMenuId == post.feedId
-            }
+            val isMenuExpanded =
+                remember(selectedPostMenuId, post.feedId) {
+                    selectedPostMenuId != null && selectedPostMenuId == post.feedId
+                }
 
             FeedPostCard(
                 modifier = Modifier.padding(horizontal = 20.dp),
@@ -171,7 +174,7 @@ internal fun LazyListScope.feedPostItems(
                 onReactionChipLongClick = { emoji, reactions ->
                     onReactionLongClick(post.feedId, reactions, emoji)
                 },
-                onAddReactionClick = { onAddReactionClick(post) }
+                onAddReactionClick = { onAddReactionClick(post) },
             )
         }
         Spacer(Modifier.height(40.dp))
@@ -181,23 +184,22 @@ internal fun LazyListScope.feedPostItems(
 /**
  * LoadState 처리 - Append Loading, Error
  */
-internal fun LazyListScope.feedLoadStateItems(
-    feedPagingItems: LazyPagingItems<PostResource>
-) {
+internal fun LazyListScope.feedLoadStateItems(feedPagingItems: LazyPagingItems<PostResource>) {
     when {
         // Append Loading - 하단 로딩
         feedPagingItems.loadState.append is LoadState.Loading -> {
             item(key = "append_loading") {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(56.dp),
+                    contentAlignment = Alignment.Center,
                 ) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(20.dp),
                         strokeWidth = 2.dp,
-                        color = SixpackTheme.colors.blue600
+                        color = SixpackTheme.colors.blue600,
                     )
                 }
             }
@@ -207,16 +209,17 @@ internal fun LazyListScope.feedLoadStateItems(
         feedPagingItems.loadState.append is LoadState.Error -> {
             item(key = "append_error") {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(56.dp),
+                    contentAlignment = Alignment.Center,
                 ) {
                     Text(
                         text = stringResource(id = R.string.feed_load_state_retry_button),
                         style = SixpackTheme.typography.b2Regular,
                         color = SixpackTheme.colors.blue600,
-                        modifier = Modifier.clickable { feedPagingItems.retry() }
+                        modifier = Modifier.clickable { feedPagingItems.retry() },
                     )
                 }
             }
@@ -226,21 +229,23 @@ internal fun LazyListScope.feedLoadStateItems(
         feedPagingItems.loadState.refresh is LoadState.Error && feedPagingItems.itemCount == 0 -> {
             item(key = "refresh_error") {
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 80.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 80.dp),
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
-                        text = stringResource(
-                            id = R.string.feed_load_state_error_message,
-                            (feedPagingItems.loadState.refresh as LoadState.Error).error.message
-                                ?: ""
-                        ),
+                        text =
+                            stringResource(
+                                id = R.string.feed_load_state_error_message,
+                                (feedPagingItems.loadState.refresh as LoadState.Error).error.message
+                                    ?: "",
+                            ),
                         style = SixpackTheme.typography.b1Regular,
                         color = SixpackTheme.colors.gray700,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -269,7 +274,7 @@ internal fun LazyListScope.feedContentItems(
     onPostUserProfileClick: (Long, Boolean) -> Unit,
     onReactionClick: (PostResource, Emoji, Boolean) -> Unit,
     onReactionLongClick: (Long, List<PostReaction>, Emoji) -> Unit,
-    onAddReactionClick: (PostResource) -> Unit
+    onAddReactionClick: (PostResource) -> Unit,
 ) {
     if (isInitialLoad) {
         feedInitialLoadingItems()
@@ -290,7 +295,7 @@ internal fun LazyListScope.feedContentItems(
             onPostUserProfileClick = onPostUserProfileClick,
             onReactionClick = onReactionClick,
             onReactionLongClick = onReactionLongClick,
-            onAddReactionClick = onAddReactionClick
+            onAddReactionClick = onAddReactionClick,
         )
 
         // LoadState 처리

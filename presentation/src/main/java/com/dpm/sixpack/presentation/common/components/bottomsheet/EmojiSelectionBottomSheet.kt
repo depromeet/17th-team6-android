@@ -68,17 +68,17 @@ private fun EmojiSelectionBottomSheetPreview() {
             EmojiSelectionBottomSheet(
                 isBottomSheetVisible = true,
                 onDismissRequest = {},
-                onEmojiSelected = {}
+                onEmojiSelected = {},
             )
             EmojiSelectionBottomSheet(
                 isBottomSheetVisible = true,
                 onDismissRequest = {},
-                onEmojiSelected = {}
+                onEmojiSelected = {},
             )
             EmojiSelectionBottomSheet(
                 isBottomSheetVisible = true,
                 onDismissRequest = {},
-                onEmojiSelected = {}
+                onEmojiSelected = {},
             )
         }
     }

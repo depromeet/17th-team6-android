@@ -35,7 +35,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 fun PostImageWithRecord(
     postImageUrl: String,
     runningSummary: RunningSummary,
-    onPostImageClick : ()->Unit,
+    onPostImageClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -200,7 +200,7 @@ fun PostImageWithRecordPreview() {
                 postImageUrl = "",
                 runningSummary = runningSummary,
                 modifier = Modifier.padding(16.dp),
-                onPostImageClick = {}
+                onPostImageClick = {},
             )
         }
     }

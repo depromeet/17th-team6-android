@@ -25,26 +25,26 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
  * FeedPostCard의 Shimmer 로딩 UI
  */
 @Composable
-fun FeedPostCardShimmer(
-    modifier: Modifier = Modifier
-) {
+fun FeedPostCardShimmer(modifier: Modifier = Modifier) {
     val shimmerColor = SixpackTheme.colors.gray100
 
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(SixpackTheme.colors.gray0)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(SixpackTheme.colors.gray0),
     ) {
         // User Info Row
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             // Profile Image
             Box(
-                modifier = Modifier
-                    .size(36.dp)
-                    .background(shimmerColor, CircleShape)
+                modifier =
+                    Modifier
+                        .size(36.dp)
+                        .background(shimmerColor, CircleShape),
             )
 
             Spacer(modifier = Modifier.width(8.dp))
@@ -52,20 +52,22 @@ fun FeedPostCardShimmer(
             Column {
                 // Username
                 Box(
-                    modifier = Modifier
-                        .width(100.dp)
-                        .height(14.dp)
-                        .background(shimmerColor, RoundedCornerShape(4.dp))
+                    modifier =
+                        Modifier
+                            .width(100.dp)
+                            .height(14.dp)
+                            .background(shimmerColor, RoundedCornerShape(4.dp)),
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
 
                 // Time
                 Box(
-                    modifier = Modifier
-                        .width(60.dp)
-                        .height(12.dp)
-                        .background(shimmerColor, RoundedCornerShape(4.dp))
+                    modifier =
+                        Modifier
+                            .width(60.dp)
+                            .height(12.dp)
+                            .background(shimmerColor, RoundedCornerShape(4.dp)),
                 )
             }
         }
@@ -74,10 +76,11 @@ fun FeedPostCardShimmer(
 
         // Post Image with Record
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f)
-                .background(shimmerColor, RoundedCornerShape(12.dp))
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f)
+                    .background(shimmerColor, RoundedCornerShape(12.dp)),
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -85,14 +88,15 @@ fun FeedPostCardShimmer(
         // Reaction Row
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             repeat(3) {
                 Box(
-                    modifier = Modifier
-                        .width(50.dp)
-                        .height(28.dp)
-                        .background(shimmerColor, RoundedCornerShape(14.dp))
+                    modifier =
+                        Modifier
+                            .width(50.dp)
+                            .height(28.dp)
+                            .background(shimmerColor, RoundedCornerShape(14.dp)),
                 )
             }
         }
@@ -105,7 +109,7 @@ fun FeedPostCardShimmerPreview() {
     DoRunPreviewWrapper {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(40.dp)
+            verticalArrangement = Arrangement.spacedBy(40.dp),
         ) {
             FeedPostCardShimmer(modifier = Modifier.fillMaxWidth())
             FeedPostCardShimmer(modifier = Modifier.fillMaxWidth())

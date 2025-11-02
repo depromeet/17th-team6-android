@@ -39,7 +39,7 @@ fun PostUserInfo(
     userName: String,
     postingTime: String,
     isMyPost: Boolean,
-    onPostUserProfileClick : () -> Unit,
+    onPostUserProfileClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -115,7 +115,7 @@ fun PostUserInfoRowMyPostPreview() {
             userName = "비락식혜",
             postingTime = "36분 전",
             isMyPost = true,
-            onPostUserProfileClick = {}
+            onPostUserProfileClick = {},
         )
     }
 }
@@ -129,7 +129,7 @@ fun PostUserInfoRowOthersPostPreview() {
             userName = "다른 사용자",
             postingTime = "1시간 전",
             isMyPost = false,
-            onPostUserProfileClick = {}
+            onPostUserProfileClick = {},
         )
     }
 }

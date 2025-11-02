@@ -2,8 +2,6 @@ package com.dpm.sixpack.presentation.routes.feed.contract.uistate
 
 import android.os.Parcelable
 import androidx.compose.runtime.Immutable
-import com.dpm.sixpack.presentation.common.util.format.toYyyyMmDdString
-import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
 

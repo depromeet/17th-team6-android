@@ -86,7 +86,7 @@ fun ReactionUsersBottomSheet(
                 is ReactionDetailsUiState.Success -> {
                     ReactionHeaderSuccess(
                         reactionDetails = reactionDetails,
-                        onTabClick = onTabSelected
+                        onTabClick = onTabSelected,
                     )
                 }
             }
@@ -111,7 +111,7 @@ fun ReactionUsersBottomSheet(
                         items(usersToShow, key = { it.user.id }) { user ->
                             ReactingUserRow(
                                 reactingUser = user,
-                                onUserProfileClick = onUserProfileClick
+                                onUserProfileClick = onUserProfileClick,
                             )
                         }
                     }
@@ -121,11 +121,10 @@ fun ReactionUsersBottomSheet(
     )
 }
 
-
 @Composable
 private fun ReactionHeaderSuccess(
     reactionDetails: ReactionDetailsUiState.Success,
-    onTabClick: (Emoji) -> Unit
+    onTabClick: (Emoji) -> Unit,
 ) {
     Row(modifier = Modifier.fillMaxWidth()) {
         Text(
@@ -264,15 +263,15 @@ private fun ReactionUserInfo(
     }
 }
 
-
 @Composable
 private fun ReactionHeaderShimmer() {
     Column {
         Box(
-            modifier = Modifier
-                .width(100.dp)
-                .height(24.dp)
-                .background(SixpackTheme.colors.gray100, RoundedCornerShape(4.dp))
+            modifier =
+                Modifier
+                    .width(100.dp)
+                    .height(24.dp)
+                    .background(SixpackTheme.colors.gray100, RoundedCornerShape(4.dp)),
         )
         Spacer(modifier = Modifier.height(16.dp))
         LazyRow(
@@ -281,10 +280,11 @@ private fun ReactionHeaderShimmer() {
         ) {
             items(4) {
                 Box(
-                    modifier = Modifier
-                        .width(60.dp)
-                        .height(32.dp)
-                        .background(SixpackTheme.colors.gray100, RoundedCornerShape(16.dp))
+                    modifier =
+                        Modifier
+                            .width(60.dp)
+                            .height(32.dp)
+                            .background(SixpackTheme.colors.gray100, RoundedCornerShape(16.dp)),
                 )
             }
         }
@@ -295,28 +295,30 @@ private fun ReactionHeaderShimmer() {
 @Composable
 private fun ReactingUserRowShimmer() {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 12.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         // 프로필 이미지 스켈레톤
         Box(
-            modifier = Modifier
-                .size(52.dp)
-                .background(SixpackTheme.colors.gray100, CircleShape)
+            modifier =
+                Modifier
+                    .size(52.dp)
+                    .background(SixpackTheme.colors.gray100, CircleShape),
         )
 
         Box(
-            modifier = Modifier
-                .width(120.dp)
-                .height(20.dp)
-                .background(SixpackTheme.colors.gray100, RoundedCornerShape(4.dp))
+            modifier =
+                Modifier
+                    .width(120.dp)
+                    .height(20.dp)
+                    .background(SixpackTheme.colors.gray100, RoundedCornerShape(4.dp)),
         )
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(name = "Success State")
@@ -324,38 +326,42 @@ private fun ReactingUserRowShimmer() {
 fun ReactionUsersBottomSheetPreview() {
     DoRunPreviewWrapper {
         var selectedEmoji by remember { mutableStateOf(Emoji.HEART) }
-        val dummyUsersHeart = (1..10).map {
-            ReactingUserInfo(
-                user = UserInfo(id = it.toLong(), name = "하트유저 $it", profileImageUrl = "", isMe = false),
-                reactedAt = "${it}분전",
-                emoji = Emoji.CONGRATS
+        val dummyUsersHeart =
+            (1..10).map {
+                ReactingUserInfo(
+                    user = UserInfo(id = it.toLong(), name = "하트유저 $it", profileImageUrl = "", isMe = false),
+                    reactedAt = "${it}분전",
+                    emoji = Emoji.CONGRATS,
+                )
+            }
+        val dummyUsersFire =
+            (11..15).map {
+                ReactingUserInfo(
+                    user = UserInfo(id = it.toLong(), name = "불꽃유저 ${it - 10}", profileImageUrl = "", isMe = false),
+                    reactedAt = "$it 분 전",
+                    emoji = Emoji.FIRE,
+                )
+            }
+        val dummyReactions =
+            listOf(
+                PostReaction(Emoji.HEART, "10", true, dummyUsersHeart),
+                PostReaction(Emoji.FIRE, "5", false, dummyUsersFire),
             )
-        }
-        val dummyUsersFire = (11..15).map {
-            ReactingUserInfo(
-                user = UserInfo(id = it.toLong(), name = "불꽃유저 ${it - 10}", profileImageUrl = "", isMe = false),
-                reactedAt = "$it 분 전",
-                emoji = Emoji.FIRE
-            )
-        }
-        val dummyReactions = listOf(
-            PostReaction(Emoji.HEART, "10", true, dummyUsersHeart),
-            PostReaction(Emoji.FIRE, "5", false, dummyUsersFire)
-        )
 
-        val dummyReactionDetails = ReactionDetailsUiState.Success(
-            reactions = dummyReactions,
-            selectedEmoji = selectedEmoji
-        )
+        val dummyReactionDetails =
+            ReactionDetailsUiState.Success(
+                reactions = dummyReactions,
+                selectedEmoji = selectedEmoji,
+            )
 
         ReactionUsersBottomSheet(
             isBottomSheetVisible = true,
             onDismissRequest = {},
             reactionDetails = dummyReactionDetails,
-            onUserProfileClick = {_,_ -> },
+            onUserProfileClick = { _, _ -> },
             onTabSelected = { newEmoji ->
                 selectedEmoji = newEmoji
-            }
+            },
         )
     }
 }
@@ -369,8 +375,8 @@ fun ReactionUsersBottomSheetLoadingPreview() {
             isBottomSheetVisible = true,
             onDismissRequest = {},
             reactionDetails = ReactionDetailsUiState.Loading,
-            onUserProfileClick = {_,_ -> },
-            onTabSelected = {}
+            onUserProfileClick = { _, _ -> },
+            onTabSelected = {},
         )
     }
 }

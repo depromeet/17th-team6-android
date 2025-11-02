@@ -16,7 +16,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
-import com.dpm.sixpack.presentation.routes.feed.contract.uistate.FeedDateUiState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
@@ -24,24 +23,25 @@ fun FeedFTAButton(
     enabled: Boolean,
     onFTAButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
-    ) {
+) {
     Box(
-        modifier = modifier
-            .padding(
-                bottom = 16.dp,
-                end = 20.dp
-            ),
-        contentAlignment = Alignment.Center
+        modifier =
+            modifier
+                .padding(
+                    bottom = 16.dp,
+                    end = 20.dp,
+                ),
+        contentAlignment = Alignment.Center,
     ) {
         Box(
-            modifier = Modifier
-                .clip(CircleShape)
-                .background(
-                    SixpackTheme.colors.blue600
-                )
-                .clickable(enabled = enabled) { onFTAButtonClick() }
-                .padding(14.dp),
-            contentAlignment = Alignment.Center
+            modifier =
+                Modifier
+                    .clip(CircleShape)
+                    .background(
+                        SixpackTheme.colors.blue600,
+                    ).clickable(enabled = enabled) { onFTAButtonClick() }
+                    .padding(14.dp),
+            contentAlignment = Alignment.Center,
         ) {
             Image(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_plus),

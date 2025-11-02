@@ -22,13 +22,14 @@ fun formatPace(paceInSeconds: Long): String {
     return String.format("%d'%02d\"", minutes, seconds)
 }
 
-
 private val KOREAN_FEED_TIME_FORMATTER =
     DateTimeFormatter.ofPattern("yyyy.MM.dd·a h:mm", Locale.KOREAN)
 private val ASIA_ZONE_ID = ZoneId.of("Asia/Seoul")
+
 fun String.toKoreanFeedTimeStringOrNull(): String? {
     return runCatching {
-        Instant.parse(this)
+        Instant
+            .parse(this)
             .atZone(ASIA_ZONE_ID)
             .format(KOREAN_FEED_TIME_FORMATTER)
     }.getOrNull() // 4. 파싱/변환 실패 시 null 반환

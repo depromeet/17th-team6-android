@@ -6,5 +6,5 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class FeedBottomSheetState(
     val emojiSelection: Boolean = false,
-    val reactionUsers: Boolean = false
+    val reactionUsers: Boolean = false,
 ) : Parcelable

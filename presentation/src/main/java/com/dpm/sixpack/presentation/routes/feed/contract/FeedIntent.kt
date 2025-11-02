@@ -10,32 +10,71 @@ import java.time.LocalDate
 sealed interface FeedIntent : UiIntent {
     // TopBar
     data object OnTopBarGroupIconClick : FeedIntent
+
     data object OnTopBarAlarmIconClick : FeedIntent
 
     // Calendar
-    data class OnDateSelected(val date: LocalDate) : FeedIntent
-    data class OnVisibleWeeksChanged(val startDate: LocalDate) : FeedIntent
+    data class OnDateSelected(
+        val date: LocalDate,
+    ) : FeedIntent
+
+    data class OnVisibleWeeksChanged(
+        val startDate: LocalDate,
+    ) : FeedIntent
 
     // Certified Users
     data object OnCertifiedUsersClick : FeedIntent
 
     // User 프로필 클릭
-    data class OnUserProfileClick(val userId: Long, val isMe: Boolean) : FeedIntent
+    data class OnUserProfileClick(
+        val userId: Long,
+        val isMe: Boolean,
+    ) : FeedIntent
 
     // Post Card
-    data class OnPostMenuClick(val feedId: Long) : FeedIntent
-    data class OnPostImageClick(val post: PostResource) : FeedIntent // 👈 (결정 4)
-    data class OnPostReactionClick(val post: PostResource, val emoji: Emoji, val isReacted: Boolean) : FeedIntent // 👈 (결정 4)
-    data class OnPostReactionLongClick(val feedId: Long, val reactions: List<PostReaction>, val selectedEmoji: Emoji) : FeedIntent
-    data class OnPostAddReactionClick(val post: PostResource) : FeedIntent
-    data class OnDropDownMenuClick(val feedId: Long, val action: PostDropDownActionType) : FeedIntent
+    data class OnPostMenuClick(
+        val feedId: Long,
+    ) : FeedIntent
+
+    data class OnPostImageClick(
+        val post: PostResource,
+    ) : FeedIntent // 👈 (결정 4)
+
+    data class OnPostReactionClick(
+        val post: PostResource,
+        val emoji: Emoji,
+        val isReacted: Boolean,
+    ) : FeedIntent // 👈 (결정 4)
+
+    data class OnPostReactionLongClick(
+        val feedId: Long,
+        val reactions: List<PostReaction>,
+        val selectedEmoji: Emoji,
+    ) : FeedIntent
+
+    data class OnPostAddReactionClick(
+        val post: PostResource,
+    ) : FeedIntent
+
+    data class OnDropDownMenuClick(
+        val feedId: Long,
+        val action: PostDropDownActionType,
+    ) : FeedIntent
 
     // BottomSheet
     data object OnBottomSheetDismiss : FeedIntent
-    data class OnUserReactionSheetTabClick(val selectedEmoji: Emoji) : FeedIntent
-    data class OnEmojiSheetEmojiSelected(val emoji: Emoji) : FeedIntent
+
+    data class OnUserReactionSheetTabClick(
+        val selectedEmoji: Emoji,
+    ) : FeedIntent
+
+    data class OnEmojiSheetEmojiSelected(
+        val emoji: Emoji,
+    ) : FeedIntent
+
     // Dialog
     data object OnDialogDismiss : FeedIntent
+
     data object OnDialogConfirmClick : FeedIntent
 
     // FloatingActionButton

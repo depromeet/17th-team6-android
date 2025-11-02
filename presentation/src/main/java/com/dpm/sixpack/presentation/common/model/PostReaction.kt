@@ -14,7 +14,7 @@ data class PostReaction(
     val emoji: Emoji,
     val count: String,
     val isReacted: Boolean = false,
-    val users: List<ReactingUserInfo> = emptyList()
+    val users: List<ReactingUserInfo> = emptyList(),
 ) : Parcelable
 
 @Immutable
@@ -22,10 +22,10 @@ data class PostReaction(
 data class ReactingUserInfo(
     val user: UserInfo,
     val reactedAt: String,
-    val emoji: Emoji
+    val emoji: Emoji,
 ) : Parcelable
 
-//TODO 슬랙보고 string 바꾸기
+// TODO 슬랙보고 string 바꾸기
 @Parcelize
 enum class Emoji(
     val type: String,
@@ -60,15 +60,13 @@ fun Reaction.toPostReaction(): PostReaction {
         emoji = emoji,
         count = this.totalCount.toString(),
         isReacted = this.isReacted,
-        users = this.users.map { it.toReactingUserInfo(emoji) }
+        users = this.users.map { it.toReactingUserInfo(emoji) },
     )
 }
 
-
-fun ReactingUser.toReactingUserInfo(emoji: Emoji): ReactingUserInfo {
-    return ReactingUserInfo(
+fun ReactingUser.toReactingUserInfo(emoji: Emoji): ReactingUserInfo =
+    ReactingUserInfo(
         user = user.toUserInfo(),
         reactedAt = this.reactedAt,
-        emoji = emoji
+        emoji = emoji,
     )
-}

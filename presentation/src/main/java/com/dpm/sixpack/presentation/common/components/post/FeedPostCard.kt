@@ -58,14 +58,15 @@ fun FeedPostCard(
             isMenuExpanded = isMenuExpanded,
             onMenuClick = onMenuClick,
             onDropDownMenuClick = onDropDownMenuClick,
-            onPostUserProfileClick = { onPostUserProfileClick(postDetail.user.user.id, postDetail.user.user.isMe) }        )
+            onPostUserProfileClick = { onPostUserProfileClick(postDetail.user.user.id, postDetail.user.user.isMe) },
+        )
 
         Spacer(modifier = Modifier.height(12.dp))
 
         PostImageWithRecord(
             postImageUrl = postDetail.postImageUrl,
             runningSummary = postDetail.runningInfo,
-            onPostImageClick = onPostImageClick
+            onPostImageClick = onPostImageClick,
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -102,17 +103,16 @@ private fun PostUserInfoRow(
             userImageUrl = postingUser.user.profileImageUrl,
             postingTime = postingUser.postingTime,
             isMyPost = postingUser.user.isMe,
-            onPostUserProfileClick = onPostUserProfileClick
+            onPostUserProfileClick = onPostUserProfileClick,
         )
 
         Spacer(modifier = Modifier.weight(1f))
-
 
         PostDropDownMenuIcon(
             isMyPost = postingUser.user.isMe,
             isMenuExpanded = isMenuExpanded,
             onMenuClick = { isMenuExpanded -> onMenuClick() },
-            onDropDownMenuClick = onDropDownMenuClick
+            onDropDownMenuClick = onDropDownMenuClick,
         )
     }
 }
@@ -130,11 +130,12 @@ fun FeedPostCardPreview() {
                     postImageUrl = "",
                     user =
                         PostingUserInfo(
-                            user = UserInfo(
-                                name = "비락식혜",
-                                profileImageUrl = "",
-                                isMe = true,
-                            ),
+                            user =
+                                UserInfo(
+                                    name = "비락식혜",
+                                    profileImageUrl = "",
+                                    isMe = true,
+                                ),
                             postingTime = "36분 전",
                         ),
                     runningInfo =
@@ -153,7 +154,7 @@ fun FeedPostCardPreview() {
                         ),
                 ),
             isMenuExpanded,
-            onMenuClick = { isMenuExpanded = !isMenuExpanded }
+            onMenuClick = { isMenuExpanded = !isMenuExpanded },
         )
     }
 }
@@ -171,11 +172,12 @@ fun FeedFreindPostCardPreview() {
                     postImageUrl = "",
                     user =
                         PostingUserInfo(
-                            user = UserInfo(
-                                name = "비락식혜",
-                                profileImageUrl = "",
-                                isMe = false,
-                            ),
+                            user =
+                                UserInfo(
+                                    name = "비락식혜",
+                                    profileImageUrl = "",
+                                    isMe = false,
+                                ),
                             postingTime = "36분 전",
                         ),
                     runningInfo =
@@ -194,7 +196,7 @@ fun FeedFreindPostCardPreview() {
                         ),
                 ),
             isMenuExpanded,
-            onMenuClick = { isMenuExpanded = !isMenuExpanded }
+            onMenuClick = { isMenuExpanded = !isMenuExpanded },
         )
     }
 }

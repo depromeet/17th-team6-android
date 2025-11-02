@@ -14,9 +14,10 @@ data class UserInfo(
     val isMe: Boolean = false,
 ) : Parcelable
 
-fun User.toUserInfo() = UserInfo(
-    id = userId,
-    name = nickName,
-    profileImageUrl = profileImgUrl,
-    isMe = isMe
-)
+fun User.toUserInfo() =
+    UserInfo(
+        id = userId,
+        name = nickName,
+        profileImageUrl = profileImgUrl,
+        isMe = isMe,
+    )

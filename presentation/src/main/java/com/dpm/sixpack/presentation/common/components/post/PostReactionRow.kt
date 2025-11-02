@@ -80,7 +80,10 @@ fun PostReactionRow(
  * 이모지 추가 버튼
  */
 @Composable
-private fun AddReactionButton(feedId: Long, onAddReactionClick: () -> Unit) {
+private fun AddReactionButton(
+    feedId: Long,
+    onAddReactionClick: () -> Unit,
+) {
     Box(
         modifier =
             Modifier
@@ -117,17 +120,14 @@ fun ReactionChip(
                 .combinedClickable(
                     onClick = { onClick() },
                     onLongClick = { onLongClick() },
-                )
-                .background(
+                ).background(
                     color = backgroundColor,
                     shape = RoundedCornerShape(16.dp),
-                )
-                .border(
+                ).border(
                     1.dp,
                     color = borderColor,
                     shape = RoundedCornerShape(16.dp),
-                )
-                .padding(all = 6.dp),
+                ).padding(all = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {
@@ -169,8 +169,7 @@ private fun MoreReactionChip(
                 .background(
                     color = SixpackTheme.colors.gray50,
                     shape = SixpackTheme.shapes.round16,
-                )
-                .padding(all = 6.dp)
+                ).padding(all = 6.dp)
                 .clip(SixpackTheme.shapes.round16)
                 .clickable(onClick = onClick),
         verticalAlignment = Alignment.CenterVertically,
@@ -215,7 +214,8 @@ private fun PostReactionRowPreview3() {
                     PostReaction(Emoji.HEART, "2", false),
                 ),
             feedId = 1,
-            onReactionChipClick = { _, _ -> }, onAddReactionClick = {},
+            onReactionChipClick = { _, _ -> },
+            onAddReactionClick = {},
             onReactionChipLongClick = { _, _ -> },
         )
     }
@@ -235,7 +235,8 @@ private fun PostReactionRowPreview5() {
                     PostReaction(Emoji.HEART, "2", false),
                 ),
             feedId = 1,
-            onReactionChipClick = { _, _ -> }, onAddReactionClick = {},
+            onReactionChipClick = { _, _ -> },
+            onAddReactionClick = {},
             onReactionChipLongClick = { _, _ -> },
         )
     }
@@ -248,7 +249,8 @@ private fun PostReactionRowPreviewEmpty() {
         PostReactionRow(
             reactions = emptyList(),
             feedId = 1,
-            onReactionChipClick = { _, _ -> }, onAddReactionClick = {},
+            onReactionChipClick = { _, _ -> },
+            onAddReactionClick = {},
             onReactionChipLongClick = { _, _ -> },
         )
     }

@@ -15,7 +15,6 @@ sealed interface ReactionDetailsUiState : Parcelable {
     @Parcelize
     data class Success(
         val reactions: List<PostReaction>,
-
         val selectedEmoji: Emoji,
     ) : ReactionDetailsUiState {
         val totalSize: Int
