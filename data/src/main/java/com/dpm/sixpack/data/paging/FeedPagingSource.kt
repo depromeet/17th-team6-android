@@ -13,22 +13,23 @@ class FeedPagingSource(
     private val feedDataSource: FeedDataSource,
     private val type: FeedType,
     private val currentDate: String?,
-    private val userId: Long?
+    private val userId: Long?,
 ) : PagingSource<Int, FeedListItem>() {
-
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, FeedListItem> {
         val pageNum = params.key ?: FEED_STARTING_PAGE_INDEX
 
         return try {
-            val response = feedDataSource.getFeeds(
-                currentDate = currentDate,
-                userId = userId,
-                page = pageNum,
-                size = params.loadSize
-            )
+            val response =
+                feedDataSource.getFeeds(
+                    currentDate = currentDate,
+                    userId = userId,
+                    page = pageNum,
+                    size = params.loadSize,
+                )
 
-            val feedPage = response.data?.toDomain()
-                ?: return LoadResult.Error(Exception("데이터 변환에 실패했습니다"))
+            val feedPage =
+                response.data?.toDomain()
+                    ?: return LoadResult.Error(Exception("데이터 변환에 실패했습니다"))
 
             val feedContent = feedPage.contents
             val meta = feedPage.meta
@@ -48,9 +49,8 @@ class FeedPagingSource(
             LoadResult.Page(
                 data = finalItemList,
                 prevKey = prevKey,
-                nextKey = nextKey
+                nextKey = nextKey,
             )
-
         } catch (e: IOException) {
             LoadResult.Error(e)
         } catch (e: Exception) {
@@ -58,10 +58,9 @@ class FeedPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, FeedListItem>): Int? {
-        return state.anchorPosition?.let { anchorPosition ->
+    override fun getRefreshKey(state: PagingState<Int, FeedListItem>): Int? =
+        state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
         }
-    }
 }

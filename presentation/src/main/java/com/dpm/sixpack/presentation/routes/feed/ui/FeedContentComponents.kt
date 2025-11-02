@@ -41,9 +41,6 @@ import java.time.LocalDate
  * Recomposition 최소화를 위해 LazyListScope 확장으로 구현
  */
 
-/**
- * Refresh Loading Indicator - 사용자가 새로고침할 때 표시
- */
 internal fun LazyListScope.feedRefreshLoadingItem(isRefreshLoading: Boolean) {
     if (isRefreshLoading) {
         item(key = "refresh_loading") {

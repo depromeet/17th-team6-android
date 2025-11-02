@@ -26,6 +26,5 @@ object ServiceModule {
 
     @Provides
     @Singleton
-    fun provideFeedService(retrofit: Retrofit): FeedService =
-        retrofit.create(FeedService::class.java)
+    fun provideFeedService(retrofit: Retrofit): FeedService = retrofit.create(FeedService::class.java)
 }

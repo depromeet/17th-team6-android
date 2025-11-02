@@ -21,18 +21,17 @@ internal object NetworkModule {
         okHttpCallFactory: dagger.Lazy<okhttp3.Call.Factory>,
         @ApplicationContext application: Context,
     ): ImageLoader =
-        ImageLoader.Builder(application)
+        ImageLoader
+            .Builder(application)
             .components {
                 add(
                     OkHttpNetworkFetcherFactory(
-                        callFactory = { okHttpCallFactory.get() }
-                    )
+                        callFactory = { okHttpCallFactory.get() },
+                    ),
                 )
             }.apply {
                 if (BuildConfig.DEBUG) {
                     logger(DebugLogger())
                 }
-            }
-            .build()
+            }.build()
 }
-

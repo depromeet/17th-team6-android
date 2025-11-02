@@ -11,39 +11,39 @@ import kotlinx.coroutines.flow.Flow
 
 interface FeedRepository {
     fun getFeedPagingStream(
-        pageSize : Int,
-        initialLoadSize : Int,
-        feedType : FeedType,
+        pageSize: Int,
+        initialLoadSize: Int,
+        feedType: FeedType,
         currentDate: String?,
-        userId: Long?
+        userId: Long?,
     ): Flow<PagingData<FeedListItem>>
 
     suspend fun postReaction(
         selfieId: Long,
-        emojiType: String
+        emojiType: String,
     ): DoRunResult<ReactionResult>
 
-    suspend fun deleteFeed(
-        feedId: Long
-    ): DoRunResult<Unit>
+    suspend fun deleteFeed(feedId: Long): DoRunResult<Unit>
 
-    suspend fun getCertifiedUsers(
-        date: String
-    ): DoRunResult<List<CertifiedUser>>
+    suspend fun getCertifiedUsers(date: String): DoRunResult<List<CertifiedUser>>
 
     suspend fun getSelfieCalendar(
         startDate: String,
-        endDate: String
+        endDate: String,
     ): DoRunResult<SelfieCounts>
 }
 
 sealed interface FeedListItem {
-    data class UserSummaryItem(val summary: UserSummary) : FeedListItem
+    data class UserSummaryItem(
+        val summary: UserSummary,
+    ) : FeedListItem
 
-    data class PostItem(val feed: Feed) : FeedListItem
+    data class PostItem(
+        val feed: Feed,
+    ) : FeedListItem
 }
 
 enum class FeedType {
     MAIN_FEED,
-    USER_PAGE_FEED
+    USER_PAGE_FEED,
 }

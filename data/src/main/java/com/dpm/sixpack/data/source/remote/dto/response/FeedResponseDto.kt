@@ -94,24 +94,26 @@ data class FeedDto(
         Feed(
             feedId = feedId,
             date = date,
-            user = User(
-                nickName = userName,
-                profileImgUrl = profileImageUrl,
-                isMe = isMe
-            ),
+            user =
+                User(
+                    nickName = userName,
+                    profileImgUrl = profileImageUrl,
+                    isMe = isMe,
+                ),
             selfieTime = selfieTime,
-            runningSessionResult = RunningSessionResult(
-                totalDistanceMeter = totalDistance,
-                totalDurationSec = totalRunTime,
-                avgPace = averagePace,
-                avgCadence = cadence,
-            ),
+            runningSessionResult =
+                RunningSessionResult(
+                    totalDistanceMeter = totalDistance,
+                    totalDurationSec = totalRunTime,
+                    avgPace = averagePace,
+                    avgCadence = cadence,
+                ),
             imageUrl = imageUrl,
             reactions = reactions.map { it.toDomain() },
         )
 }
 
-//TODO 서버값으로 바꾸기
+// TODO 서버값으로 바꾸기
 @Serializable
 data class ReactionDto(
     @SerialName("emojiType")
@@ -121,7 +123,7 @@ data class ReactionDto(
     @SerialName("users")
     val users: List<ReactingUserDto>,
     @SerialName("isReacted")
-     val isReacted: Boolean = false,
+    val isReacted: Boolean = false,
 ) {
     fun toDomain(): Reaction =
         Reaction(
@@ -151,11 +153,10 @@ data class ReactingUserDto(
                 userId = userId,
                 nickName = nickname,
                 profileImgUrl = profileImageUrl,
-                isMe = isMe
+                isMe = isMe,
             ),
             reactedAt = reactedAt,
-
-            )
+        )
 }
 
 @Serializable

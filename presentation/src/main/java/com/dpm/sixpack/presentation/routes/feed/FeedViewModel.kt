@@ -14,8 +14,8 @@ import com.dpm.sixpack.presentation.common.components.post.PostDropDownActionTyp
 import com.dpm.sixpack.presentation.common.model.Emoji
 import com.dpm.sixpack.presentation.common.model.PostReaction
 import com.dpm.sixpack.presentation.common.model.PostResource
-import com.dpm.sixpack.presentation.common.model.toPostingUserInfo
 import com.dpm.sixpack.presentation.common.model.toPostResource
+import com.dpm.sixpack.presentation.common.model.toPostingUserInfo
 import com.dpm.sixpack.presentation.common.util.format.toYyyyMmDdString
 import com.dpm.sixpack.presentation.routes.feed.contract.FeedIntent
 import com.dpm.sixpack.presentation.routes.feed.contract.FeedSideEffect
@@ -64,7 +64,11 @@ class FeedViewModel @Inject constructor(
     private val pagingFlowCache = ConcurrentHashMap<LocalDate, Flow<PagingData<PostResource>>>()
     private val reactionDebounceJobs = ConcurrentHashMap<Long, Job>()
     private val optimisticPostsFlow = container.stateFlow.map { it.optimisticPosts }.distinctUntilChanged()
-    private val optimisticDeletedFeedIdsFlow = container.stateFlow.map { it.optimisticDeletedFeedIds }.distinctUntilChanged()
+    private val optimisticDeletedFeedIdsFlow =
+        container.stateFlow
+            .map {
+                it.optimisticDeletedFeedIds
+            }.distinctUntilChanged()
 
     val feedPagingData: Flow<PagingData<PostResource>> =
         container.stateFlow
@@ -152,13 +156,11 @@ class FeedViewModel @Inject constructor(
                     pagingData.map { postResource ->
                         optimisticPosts[postResource.feedId] ?: postResource
                     }
-                }
-                .combine(optimisticDeletedFeedIdsFlow) { pagingData, deletedFeedIds ->
+                }.combine(optimisticDeletedFeedIdsFlow) { pagingData, deletedFeedIds ->
                     pagingData.filter { postResource ->
                         postResource.feedId !in deletedFeedIds
                     }
-                }
-                .cachedIn(viewModelScope)
+                }.cachedIn(viewModelScope)
         }
 
     // TopBar Intent
@@ -196,15 +198,15 @@ class FeedViewModel @Inject constructor(
     private fun loadCertifiedUsers(date: String) =
         intent {
             viewModelScope.launch {
-                feedRepository.getCertifiedUsers(date)
+                feedRepository
+                    .getCertifiedUsers(date)
                     .onSuccess { certifiedUsers ->
                         reduce {
                             state.copy(
                                 postingUserInfo = certifiedUsers.map { it.toPostingUserInfo() },
                             )
                         }
-                    }
-                    .onError { error ->
+                    }.onError { error ->
                         // Handle error silently or log it
                     }
             }
@@ -440,11 +442,11 @@ class FeedViewModel @Inject constructor(
             }
 
             viewModelScope.launch {
-                feedRepository.deleteFeed(feedId)
+                feedRepository
+                    .deleteFeed(feedId)
                     .onSuccess {
                         postSideEffect(FeedSideEffect.ShowToast("게시물이 삭제되었습니다."))
-                    }
-                    .onError { exception ->
+                    }.onError { exception ->
                         reduce {
                             state.copy(
                                 optimisticDeletedFeedIds = state.optimisticDeletedFeedIds - feedId,

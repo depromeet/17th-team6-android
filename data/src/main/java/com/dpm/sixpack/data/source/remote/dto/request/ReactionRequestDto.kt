@@ -8,5 +8,5 @@ data class ReactionRequestDto(
     @SerialName("feedId")
     val feedId: Long,
     @SerialName("emojiType")
-    val emojiType: String
+    val emojiType: String,
 )

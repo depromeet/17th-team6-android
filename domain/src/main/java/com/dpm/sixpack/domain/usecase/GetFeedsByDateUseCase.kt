@@ -11,7 +11,7 @@ import javax.inject.Inject
     해당 날짜의 인증 피드를 pageSize만큼 반환합니다..
  */
 class GetFeedsByDateUseCase @Inject constructor(
-    private val feedRepository: FeedRepository
+    private val feedRepository: FeedRepository,
 ) {
     operator fun invoke(currentDate: String): Flow<PagingData<FeedListItem>> =
         feedRepository.getFeedPagingStream(
@@ -19,7 +19,6 @@ class GetFeedsByDateUseCase @Inject constructor(
             initialLoadSize = 20,
             feedType = FeedType.MAIN_FEED,
             currentDate = currentDate,
-            userId = null
+            userId = null,
         )
 }
-

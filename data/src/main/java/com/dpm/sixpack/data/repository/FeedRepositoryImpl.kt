@@ -26,25 +26,24 @@ class FeedRepositoryImpl @Inject constructor(
         initialLoadSize: Int,
         feedType: FeedType,
         currentDate: String?,
-        userId: Long?
-    ): Flow<PagingData<FeedListItem>> {
-        return Pager(
-            config = PagingConfig(
-                pageSize = 10, // 2. 성능 튜닝 섹션에서 권장한 값
-                initialLoadSize = 20,
-                prefetchDistance = 5,
-                enablePlaceholders = false
-            ),
+        userId: Long?,
+    ): Flow<PagingData<FeedListItem>> =
+        Pager(
+            config =
+                PagingConfig(
+                    pageSize = 10, // 2. 성능 튜닝 섹션에서 권장한 값
+                    initialLoadSize = 20,
+                    prefetchDistance = 5,
+                    enablePlaceholders = false,
+                ),
             pagingSourceFactory = {
                 FeedPagingSource(feedDataSource, feedType, currentDate, userId)
-            }
+            },
         ).flow
-    }
-
 
     override suspend fun postReaction(
         selfieId: Long,
-        emojiType: String
+        emojiType: String,
     ): DoRunResult<ReactionResult> =
         withContext(Dispatchers.IO) {
             try {
@@ -78,7 +77,10 @@ class FeedRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun getSelfieCalendar(startDate: String, endDate: String): DoRunResult<SelfieCounts> =
+    override suspend fun getSelfieCalendar(
+        startDate: String,
+        endDate: String,
+    ): DoRunResult<SelfieCounts> =
         withContext(Dispatchers.IO) {
             try {
                 val response =

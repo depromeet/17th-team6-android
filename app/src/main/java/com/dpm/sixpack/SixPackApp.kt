@@ -11,7 +11,9 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltAndroidApp
-class SixPackApp : Application(), SingletonImageLoader.Factory {
+class SixPackApp :
+    Application(),
+    SingletonImageLoader.Factory {
     @Inject
     lateinit var initializers: AppInitializer
 
@@ -26,7 +28,6 @@ class SixPackApp : Application(), SingletonImageLoader.Factory {
         setDarkMode()
         initTimber()
     }
-
 
     private fun setDarkMode() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)

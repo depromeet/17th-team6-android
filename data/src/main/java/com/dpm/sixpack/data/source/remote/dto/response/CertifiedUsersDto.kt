@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CertifiedUsersDto(
     @SerialName("users")
-    val users: List<CertifiedUserDto>
+    val users: List<CertifiedUserDto>,
 ) {
     fun toDomain(): List<CertifiedUser> = users.map { it.toDomain() }
 }
@@ -24,16 +24,17 @@ data class CertifiedUserDto(
     @SerialName("postingTime")
     val postingTime: String,
     @SerialName("isMe")
-    val isMe: Boolean
+    val isMe: Boolean,
 ) {
     fun toDomain(): CertifiedUser =
         CertifiedUser(
-            user = User(
-                userId = userId,
-                nickName = userName,
-                profileImgUrl = userImageUrl,
-                isMe = isMe
-            ),
+            user =
+                User(
+                    userId = userId,
+                    nickName = userName,
+                    profileImgUrl = userImageUrl,
+                    isMe = isMe,
+                ),
             postingTime = postingTime,
         )
 }

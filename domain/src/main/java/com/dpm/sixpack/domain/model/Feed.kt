@@ -29,6 +29,7 @@ data class ReactingUser(
     val user: User,
     val reactedAt: String, // 이모티콘 남긴 시간
 )
+
 data class FeedPage(
     val contents: FeedContent,
     val meta: Meta,
@@ -49,5 +50,3 @@ data class Meta(
     val hasNext: Boolean, // 다음 페이지가 있는지 여부
     val hasPrevious: Boolean, // 이전 페이지가 있는지 여부
 )
-
-

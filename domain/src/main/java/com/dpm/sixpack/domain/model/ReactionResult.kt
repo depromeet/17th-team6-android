@@ -4,5 +4,5 @@ data class ReactionResult(
     val selfieId: Int,
     val emojiType: String,
     val action: String, // "ADDED" or "REMOVED"
-    val totalReactionCount: Int
+    val totalReactionCount: Int,
 )

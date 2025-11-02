@@ -81,7 +81,7 @@ class MainNavigator(
 
         when (tab) {
             MainNavTab.RUNNING -> {
-              navController.navigateRunningSession(navOptions)
+                navController.navigateRunningSession(navOptions)
             }
 
             MainNavTab.FEED -> {

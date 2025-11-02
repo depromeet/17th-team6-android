@@ -11,7 +11,7 @@ import javax.inject.Inject
     특정 유저의 피드를 pageSize 만큼 반환합니다.
  */
 class GetUserFeedsUseCase @Inject constructor(
-    private val feedRepository: FeedRepository
+    private val feedRepository: FeedRepository,
 ) {
     operator fun invoke(userId: Long): Flow<PagingData<FeedListItem>> =
         feedRepository.getFeedPagingStream(
@@ -19,6 +19,6 @@ class GetUserFeedsUseCase @Inject constructor(
             initialLoadSize = 20,
             feedType = FeedType.USER_PAGE_FEED,
             currentDate = null,
-            userId = userId
+            userId = userId,
         )
 }

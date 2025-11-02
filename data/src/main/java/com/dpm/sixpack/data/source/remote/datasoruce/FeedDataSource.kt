@@ -17,40 +17,42 @@ class FeedDataSource @Inject constructor(
         userId: Long?,
         page: Int,
         size: Int,
-    ): BaseResponse<FeedPageDto> = feedService.getFeeds(
-        currentDate = currentDate,
-        userId = userId,
-        page = page,
-        size = size,
-    )
+    ): BaseResponse<FeedPageDto> =
+        feedService.getFeeds(
+            currentDate = currentDate,
+            userId = userId,
+            page = page,
+            size = size,
+        )
 
     suspend fun postReaction(
         feedId: Long,
-        emojiType: String
-    ): BaseResponse<ReactionResultDto> = feedService.postReaction(
-        body = ReactionRequestDto(
-            feedId = feedId,
-            emojiType = emojiType
+        emojiType: String,
+    ): BaseResponse<ReactionResultDto> =
+        feedService.postReaction(
+            body =
+                ReactionRequestDto(
+                    feedId = feedId,
+                    emojiType = emojiType,
+                ),
         )
-    )
 
-    suspend fun deleteFeed(
-        feedId: Long
-    ): BaseResponse<Unit> = feedService.deleteFeed(
-        feedId = feedId
-    )
+    suspend fun deleteFeed(feedId: Long): BaseResponse<Unit> =
+        feedService.deleteFeed(
+            feedId = feedId,
+        )
 
-    suspend fun getCertifiedUsers(
-        date: String
-    ): BaseResponse<CertifiedUsersDto> = feedService.getCertifiedUsers(
-        date = date
-    )
+    suspend fun getCertifiedUsers(date: String): BaseResponse<CertifiedUsersDto> =
+        feedService.getCertifiedUsers(
+            date = date,
+        )
 
     suspend fun getSelfieWeek(
         startDate: String,
-        endDate: String
-    ): BaseResponse<SelfieCountsDto> = feedService.getSelfieWeek(
-        startDate = startDate,
-        endDate = endDate
-    )
+        endDate: String,
+    ): BaseResponse<SelfieCountsDto> =
+        feedService.getSelfieWeek(
+            startDate = startDate,
+            endDate = endDate,
+        )
 }

@@ -119,17 +119,14 @@ fun ReactionChip(
                 .combinedClickable(
                     onClick = { onClick() },
                     onLongClick = { onLongClick() },
-                )
-                .background(
+                ).background(
                     color = backgroundColor,
                     shape = RoundedCornerShape(16.dp),
-                )
-                .border(
+                ).border(
                     1.dp,
                     color = borderColor,
                     shape = RoundedCornerShape(16.dp),
-                )
-                .padding(all = 6.dp),
+                ).padding(all = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {
@@ -171,8 +168,7 @@ private fun MoreReactionChip(
                 .background(
                     color = SixpackTheme.colors.gray50,
                     shape = SixpackTheme.shapes.round16,
-                )
-                .padding(all = 6.dp)
+                ).padding(all = 6.dp)
                 .clip(SixpackTheme.shapes.round16)
                 .clickable(onClick = onClick),
         verticalAlignment = Alignment.CenterVertically,

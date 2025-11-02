@@ -10,7 +10,6 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -35,25 +34,25 @@ interface FeedService {
     // 4. 인증피드 삭제
     @DELETE("/api/selfie/feeds/{feedId}")
     suspend fun deleteFeed(
-        @Path("feedId") feedId: Long
+        @Path("feedId") feedId: Long,
     ): BaseResponse<Unit>
 
     // 5. 친구 인증 반응 남기기 (추가/취소)
     @POST("/api/selfie/feeds/reaction")
     suspend fun postReaction(
-        @Body body: ReactionRequestDto
+        @Body body: ReactionRequestDto,
     ): BaseResponse<ReactionResultDto>
 
     // 6. 특정 날짜 인증 유저 목록 조회
     @GET("/api/selfie/users")
     suspend fun getCertifiedUsers(
-        @Query("date") date: String
+        @Query("date") date: String,
     ): BaseResponse<CertifiedUsersDto>
 
     // 7. 주차별 친구들의 인증수 조회 (캘린더용)
     @GET("/api/selfie/week")
     suspend fun getSelfieWeek(
         @Query("startDate") startDate: String,
-        @Query("endDate") endDate: String
+        @Query("endDate") endDate: String,
     ): BaseResponse<SelfieCountsDto>
 }

@@ -13,13 +13,13 @@ data class ReactionResultDto(
     @SerialName("action")
     val action: String,
     @SerialName("totalReactionCount")
-    val totalReactionCount: Int
+    val totalReactionCount: Int,
 ) {
     fun toDomain(): ReactionResult =
         ReactionResult(
             selfieId = selfieId,
             emojiType = emojiType,
             action = action,
-            totalReactionCount = totalReactionCount
+            totalReactionCount = totalReactionCount,
         )
 }

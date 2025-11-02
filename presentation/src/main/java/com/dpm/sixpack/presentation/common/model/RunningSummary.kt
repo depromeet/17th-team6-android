@@ -4,7 +4,6 @@ import android.os.Parcelable
 import androidx.compose.runtime.Immutable
 import com.dpm.sixpack.domain.model.RunningSessionResult
 import com.dpm.sixpack.presentation.common.util.format.formatPace
-import com.dpm.sixpack.presentation.common.util.format.formatSecondsToTime
 import com.dpm.sixpack.presentation.common.util.format.formatSecondsToTimeInFeed
 import com.dpm.sixpack.presentation.common.util.format.toKoreanFeedTimeStringOrNull
 import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
