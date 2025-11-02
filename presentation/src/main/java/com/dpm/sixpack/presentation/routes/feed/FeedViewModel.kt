@@ -14,6 +14,7 @@ import com.dpm.sixpack.presentation.common.components.post.PostDropDownActionTyp
 import com.dpm.sixpack.presentation.common.model.Emoji
 import com.dpm.sixpack.presentation.common.model.PostReaction
 import com.dpm.sixpack.presentation.common.model.PostResource
+import com.dpm.sixpack.presentation.common.model.toPostingUserInfo
 import com.dpm.sixpack.presentation.common.model.toPostResource
 import com.dpm.sixpack.presentation.common.util.format.toYyyyMmDdString
 import com.dpm.sixpack.presentation.routes.feed.contract.FeedIntent
@@ -180,6 +181,7 @@ class FeedViewModel @Inject constructor(
                     feedDateState = feedDateState,
                 )
             }
+            loadCertifiedUsers(date.toYyyyMmDdString())
         }
 
     private fun handleFeedDateState(selectedDate: LocalDate): FeedDateUiState {
@@ -190,6 +192,23 @@ class FeedViewModel @Inject constructor(
             else -> FeedDateUiState.NoPostsAndExpired
         }
     }
+
+    private fun loadCertifiedUsers(date: String) =
+        intent {
+            viewModelScope.launch {
+                feedRepository.getCertifiedUsers(date)
+                    .onSuccess { certifiedUsers ->
+                        reduce {
+                            state.copy(
+                                postingUserInfo = certifiedUsers.map { it.toPostingUserInfo() },
+                            )
+                        }
+                    }
+                    .onError { error ->
+                        // Handle error silently or log it
+                    }
+            }
+        }
 
     private fun handleVisibleWeeksChanged(startDate: LocalDate) {
         onWeekDisplayed(startDate)
