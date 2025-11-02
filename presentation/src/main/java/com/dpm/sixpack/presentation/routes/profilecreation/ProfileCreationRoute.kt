@@ -15,6 +15,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 fun ProfileCreationRoute(
+    phoneNumber: String,
     modifier: Modifier = Modifier,
     viewModel: ProfileCreationViewModel = hiltViewModel(),
     onNavigateToHome: () -> Unit,

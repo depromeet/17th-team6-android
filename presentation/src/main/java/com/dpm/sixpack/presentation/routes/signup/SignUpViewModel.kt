@@ -152,7 +152,7 @@ class SignUpViewModel @Inject constructor(
                         is DoRunException.UserNotRegisteredError -> {
                             // New user, proceed to profile creation
                             reduce { state.copy(isLoading = false) }
-                            postSideEffect(SignUpSideEffect.NavigateToProfileCreation)
+                            postSideEffect(SignUpSideEffect.NavigateToProfileCreation(phoneNumber = state.phoneNumber))
                             Timber.d("Phone number verified successfully, moving to profile creation")
                         }
                         is DoRunException.CodeMismatchError -> {

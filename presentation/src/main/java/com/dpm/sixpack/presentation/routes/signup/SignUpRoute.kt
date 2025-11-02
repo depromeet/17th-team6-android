@@ -17,7 +17,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 fun SignUpRoute(
     modifier: Modifier = Modifier,
     viewModel: SignUpViewModel = hiltViewModel(),
-    onNavigateToProfileCreation: () -> Unit,
+    onNavigateToProfileCreation: (String) -> Unit,
     onNavigateBack: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -25,7 +25,7 @@ fun SignUpRoute(
 
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
-            is SignUpSideEffect.NavigateToProfileCreation -> onNavigateToProfileCreation()
+            is SignUpSideEffect.NavigateToProfileCreation -> onNavigateToProfileCreation(sideEffect.phoneNumber)
             is SignUpSideEffect.NavigateBack -> onNavigateBack()
             is SignUpSideEffect.NavigateToFindAccount -> {
                 context.openUrlInBrowser("") // TODO SR-N 채우기

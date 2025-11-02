@@ -51,10 +51,10 @@ internal fun MainNavHost(
             )
 
             addSignUpNavGraph(
-                onNavigateToProfileCreation = {
-                    navigator.navController.navigateProfileCreation()
+                onNavigateToProfileCreation = { phoneNumber ->
+                    navigator.navController.navigateProfileCreation(phoneNumber = phoneNumber)
                 },
-                onNavigateToBack = navigator::popBackStack,
+                onNavigateBack = navigator::popBackStack,
             )
 
             addProfileCreationNavGraph(
