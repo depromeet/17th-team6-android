@@ -61,9 +61,10 @@ fun ProfileCreationComponent(
                 Image(
                     painter = painterResource(id = R.drawable.ill_profile_placeholder),
                     contentDescription = "Profile placeholder",
-                    modifier = Modifier
-                        .size(97.dp)
-                        .clip(CircleShape)
+                    modifier =
+                        Modifier
+                            .size(97.dp)
+                            .clip(CircleShape),
                 )
             }
 
@@ -79,7 +80,7 @@ fun ProfileCreationComponent(
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_camera),
-                    contentDescription = "Edit profile picture"
+                    contentDescription = "Edit profile picture",
                 )
             }
         }

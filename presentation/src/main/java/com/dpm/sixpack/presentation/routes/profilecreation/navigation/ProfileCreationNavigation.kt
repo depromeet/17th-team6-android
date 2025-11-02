@@ -4,7 +4,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import androidx.navigation.toRoute
 import com.dpm.sixpack.presentation.destinations.ProfileCreationRoute
 import com.dpm.sixpack.presentation.routes.profilecreation.ProfileCreationRoute
 

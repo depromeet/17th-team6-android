@@ -118,11 +118,12 @@ fun AuthScreen(
                         onPhoneNumberChanged = onPhoneNumberChanged,
                         placeholder = stringResource(R.string.signin_placeholder_phone_number),
                         enabled = phoneEnabled,
-                        topLabel = if (step == PhoneAuthStep.PHONE_INPUT) {
-                            null
-                        } else {
-                            stringResource(R.string.signin_label_phone_number)
-                        },
+                        topLabel =
+                            if (step == PhoneAuthStep.PHONE_INPUT) {
+                                null
+                            } else {
+                                stringResource(R.string.signin_label_phone_number)
+                            },
                         onClickClear = onPhoneClearClick,
                     )
                 }

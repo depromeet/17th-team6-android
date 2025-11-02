@@ -96,7 +96,7 @@ internal fun MainNavHost(
                                 inclusive = true
                                 saveState = false
                             }
-                        }
+                        },
                     )
                 },
                 onNavigateBack = navigator::popBackStack,

@@ -3,7 +3,9 @@ package com.dpm.sixpack.presentation.routes.signup.contract
 import com.dpm.sixpack.presentation.common.base.SideEffect
 
 sealed interface SignUpSideEffect : SideEffect {
-    data class NavigateToProfileCreation(val phoneNumber: String) : SignUpSideEffect
+    data class NavigateToProfileCreation(
+        val phoneNumber: String,
+    ) : SignUpSideEffect
 
     data object NavigateBack : SignUpSideEffect
 

@@ -67,7 +67,7 @@ fun CommonDialog(
                 text = title,
                 style = SixpackTheme.typography.t2Bold,
                 color = SixpackTheme.colors.gray900,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
 
             if (description.isBlank().not()) {
