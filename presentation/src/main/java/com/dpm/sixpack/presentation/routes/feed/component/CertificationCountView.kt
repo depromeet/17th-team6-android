@@ -16,17 +16,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
-import coil3.request.crossfade
 import com.dpm.sixpack.presentation.R
+import com.dpm.sixpack.presentation.common.components.DoRunDefaultAsyncImage
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.model.PostingUserInfo
 import com.dpm.sixpack.presentation.common.model.UserInfo
@@ -127,20 +123,13 @@ private fun ProfileImageCircle(
                 .clip(CircleShape)
                 .border(width = 1.dp, color = SixpackTheme.colors.gray0, shape = CircleShape),
     ) {
-        AsyncImage(
-            model =
-                ImageRequest
-                    .Builder(LocalContext.current)
-                    .data(imageUrl)
-                    .crossfade(true)
-                    .build(),
+        DoRunDefaultAsyncImage(
+            model = imageUrl,
             contentDescription = stringResource(id = R.string.feed_post_user_info_profile_image_description),
             modifier =
                 Modifier
                     .matchParentSize()
                     .clip(CircleShape),
-            placeholder = ColorPainter(SixpackTheme.colors.gray200),
-            error = ColorPainter(SixpackTheme.colors.gray200),
             contentScale = ContentScale.Crop,
         )
     }

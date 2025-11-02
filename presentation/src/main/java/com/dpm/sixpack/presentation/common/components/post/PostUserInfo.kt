@@ -25,6 +25,7 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.dpm.sixpack.presentation.R
+import com.dpm.sixpack.presentation.common.components.DoRunDefaultAsyncImage
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.theme.SixpackTheme
@@ -53,21 +54,14 @@ fun PostUserInfo(
                     .size(32.dp)
                     .border(width = 1.dp, color = SixpackTheme.colors.gray100, shape = CircleShape),
         ) {
-            AsyncImage(
-                model =
-                    ImageRequest
-                        .Builder(LocalContext.current)
-                        .data(userImageUrl)
-                        .crossfade(true)
-                        .build(),
+            DoRunDefaultAsyncImage(
+                model = userImageUrl,
                 contentDescription = stringResource(id = R.string.feed_post_user_info_profile_image_description),
                 modifier =
                     Modifier
                         .size(40.dp)
                         .clip(CircleShape)
                         .noRippleClickable(onClick = onPostUserProfileClick),
-                placeholder = ColorPainter(SixpackTheme.colors.gray0),
-                error = ColorPainter(SixpackTheme.colors.gray200),
                 contentScale = ContentScale.Crop,
             )
         }
