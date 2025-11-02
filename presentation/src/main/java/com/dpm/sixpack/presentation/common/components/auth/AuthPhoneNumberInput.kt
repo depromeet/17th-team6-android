@@ -31,11 +31,13 @@ fun AuthPhoneNumberInput(
     placeholder: String,
     enabled: Boolean,
     modifier: Modifier = Modifier,
+    topLabel: String? = null,
     onClickClear: (() -> Unit)? = null,
 ) {
     DoRunSignInputField(
         value = phoneNumber,
         onValueChange = onPhoneNumberChanged,
+        topLabel = topLabel,
         placeholder = placeholder,
         modifier = modifier,
         enabled = enabled,
