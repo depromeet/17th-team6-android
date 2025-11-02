@@ -1,5 +1,6 @@
 package com.dpm.sixpack.data.source.remote.datasoruce
 
+import com.dpm.sixpack.data.source.remote.datasoruce.api.AuthDataSource
 import com.dpm.sixpack.data.source.remote.dto.request.SendSmsRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.SignUpRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.VerifySmsRequestDto
@@ -16,11 +17,11 @@ import retrofit2.Response
 import java.io.File
 import javax.inject.Inject
 
-class AuthDataSource @Inject constructor(
+class AuthDataSourceImpl @Inject constructor(
     private val authService: AuthService,
     private val json: Json,
-) {
-    suspend fun sendSmsCode(phoneNumber: String): Response<BaseResponse<Unit>> {
+) : AuthDataSource {
+    override suspend fun sendSmsCode(phoneNumber: String): Response<BaseResponse<Unit>> {
         val requestDto =
             SendSmsRequestDto(
                 phoneNumber = phoneNumber,
@@ -28,7 +29,7 @@ class AuthDataSource @Inject constructor(
         return authService.sendSmsCode(request = requestDto)
     }
 
-    suspend fun verifySmsCode(
+    override suspend fun verifySmsCode(
         phoneNumber: String,
         verificationCode: String,
     ): Response<BaseResponse<VerifySmsResponseDto>> {
@@ -40,7 +41,7 @@ class AuthDataSource @Inject constructor(
         return authService.verifySmsCode(request = requestDto)
     }
 
-    suspend fun signUp(
+    override suspend fun signUp(
         nickname: String,
         phoneNumber: String,
         profileImage: File?,

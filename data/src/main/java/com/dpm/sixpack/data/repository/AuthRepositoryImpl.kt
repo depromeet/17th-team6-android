@@ -1,6 +1,6 @@
 package com.dpm.sixpack.data.repository
 
-import com.dpm.sixpack.data.source.remote.datasoruce.AuthDataSource
+import com.dpm.sixpack.data.source.remote.datasoruce.api.AuthDataSource
 import com.dpm.sixpack.domain.exception.DoRunException
 import com.dpm.sixpack.domain.model.SignUpResult
 import com.dpm.sixpack.domain.model.SmsVerificationResult

@@ -18,7 +18,6 @@ class UserPreferenceRepositoryImpl @Inject constructor(
 
     override suspend fun getSessionId(): Long? = sessionId.firstOrNull()
 
-
     override suspend fun getAccessToken(): String? = accessToken.firstOrNull()
 
     override suspend fun getRefreshToken(): String? = refreshToken.firstOrNull()
