@@ -85,7 +85,7 @@ fun FeedScreen(
     onPostReactionClick: (PostResource, Emoji, Boolean) -> Unit = { _, _, _ -> },
     onPostReactionLongClick: (Long, List<PostReaction>, Emoji) -> Unit = { _, _, _ -> },
     onPostAddReactionClick: (PostResource) -> Unit = {},
-    onDropDownMenuClick: (Long, PostDropDownActionType) -> Unit = { _, _ -> },
+    onDropDownMenuClick: (PostResource, PostDropDownActionType) -> Unit = { _, _ -> },
     // BottomSheet
     onBottomSheetDismiss: () -> Unit = {},
     onUserReactionSheetUserProfileClick: (Long, Boolean) -> Unit = { _, _ -> },

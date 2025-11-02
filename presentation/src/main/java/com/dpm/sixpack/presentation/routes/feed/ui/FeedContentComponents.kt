@@ -139,7 +139,7 @@ internal fun LazyListScope.feedPostItems(
     feedPagingItems: LazyPagingItems<PostResource>,
     selectedPostMenuId: Long?,
     onPostMenuClick: (Long) -> Unit,
-    onDropDownMenuClick: (Long, PostDropDownActionType) -> Unit,
+    onDropDownMenuClick: (PostResource, PostDropDownActionType) -> Unit,
     onPostImageClick: (PostResource) -> Unit,
     onPostUserProfileClick: (Long, Boolean) -> Unit,
     onReactionClick: (PostResource, Emoji, Boolean) -> Unit,
@@ -163,7 +163,7 @@ internal fun LazyListScope.feedPostItems(
                 postDetail = post,
                 isMenuExpanded = isMenuExpanded,
                 onMenuClick = { onPostMenuClick(post.feedId) },
-                onDropDownMenuClick = { action -> onDropDownMenuClick(post.feedId, action) },
+                onDropDownMenuClick = { action -> onDropDownMenuClick(post, action) },
                 onPostImageClick = { onPostImageClick(post) },
                 onPostUserProfileClick = { userId, isMe ->
                     onPostUserProfileClick(userId, isMe)
@@ -269,7 +269,7 @@ internal fun LazyListScope.feedContentItems(
     selectedPostMenuId: Long?,
     onCertifiedUsersClick: () -> Unit,
     onPostMenuClick: (Long) -> Unit,
-    onDropDownMenuClick: (Long, PostDropDownActionType) -> Unit,
+    onDropDownMenuClick: (PostResource, PostDropDownActionType) -> Unit,
     onPostImageClick: (PostResource) -> Unit,
     onPostUserProfileClick: (Long, Boolean) -> Unit,
     onReactionClick: (PostResource, Emoji, Boolean) -> Unit,

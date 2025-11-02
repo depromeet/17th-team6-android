@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.filter
 import androidx.paging.map
 import com.dpm.sixpack.domain.repository.FeedListItem
 import com.dpm.sixpack.domain.repository.FeedRepository
@@ -62,6 +63,7 @@ class FeedViewModel @Inject constructor(
     private val pagingFlowCache = ConcurrentHashMap<LocalDate, Flow<PagingData<PostResource>>>()
     private val reactionDebounceJobs = ConcurrentHashMap<Long, Job>()
     private val optimisticPostsFlow = container.stateFlow.map { it.optimisticPosts }.distinctUntilChanged()
+    private val optimisticDeletedFeedIdsFlow = container.stateFlow.map { it.optimisticDeletedFeedIds }.distinctUntilChanged()
 
     val feedPagingData: Flow<PagingData<PostResource>> =
         container.stateFlow
@@ -105,7 +107,7 @@ class FeedViewModel @Inject constructor(
             is FeedIntent.OnPostAddReactionClick -> handlePostAddReactionClick(intent.post)
 
             // DropDown Menu
-            is FeedIntent.OnDropDownMenuClick -> handleDropDownMenuClick(intent.feedId, intent.action)
+            is FeedIntent.OnDropDownMenuClick -> handleDropDownMenuClick(intent.post, intent.action)
 
             // BottomSheet
             FeedIntent.OnBottomSheetDismiss -> handleBottomSheetDismiss()
@@ -149,7 +151,13 @@ class FeedViewModel @Inject constructor(
                     pagingData.map { postResource ->
                         optimisticPosts[postResource.feedId] ?: postResource
                     }
-                }.cachedIn(viewModelScope)
+                }
+                .combine(optimisticDeletedFeedIdsFlow) { pagingData, deletedFeedIds ->
+                    pagingData.filter { postResource ->
+                        postResource.feedId !in deletedFeedIds
+                    }
+                }
+                .cachedIn(viewModelScope)
         }
 
     // TopBar Intent
@@ -227,7 +235,6 @@ class FeedViewModel @Inject constructor(
             )
         }
 
-        // 2. Debounce 로직
         reactionDebounceJobs[post.feedId]?.cancel()
         reactionDebounceJobs[post.feedId] =
             viewModelScope.launch {
@@ -238,7 +245,7 @@ class FeedViewModel @Inject constructor(
                     // 4. 롤백
                     reduce {
                         state.copy(
-                            optimisticPosts = state.optimisticPosts + (post.feedId to post), // 원본으로
+                            optimisticPosts = state.optimisticPosts + (post.feedId to post),
                         )
                     }
                     postSideEffect(FeedSideEffect.ShowToast("리액션 업데이트 실패"))
@@ -276,21 +283,47 @@ class FeedViewModel @Inject constructor(
         }
 
     private fun handleDropDownMenuClick(
-        feedId: Long,
+        post: PostResource,
         action: PostDropDownActionType,
     ) = intent {
-        val newDialogState =
-            when (action) {
-                PostDropDownActionType.DELETE -> state.dialogState.copy(deleteFeedId = feedId, actionType = action)
-                PostDropDownActionType.REPORT -> state.dialogState.copy(reportFeedId = feedId, actionType = action)
-                else -> state.dialogState
+        when (action) {
+            PostDropDownActionType.EDIT -> {
+                reduce {
+                    state.copy(selectedPostMenuId = -1L)
+                }
+                postSideEffect(FeedSideEffect.NavigateToPostEdit(post))
             }
 
-        reduce {
-            state.copy(
-                selectedPostMenuId = -1L, // 메뉴 닫기
-                dialogState = newDialogState,
-            )
+            PostDropDownActionType.DELETE -> {
+                val newDialogState = state.dialogState.copy(deleteFeedId = post.feedId, actionType = action)
+                reduce {
+                    state.copy(
+                        selectedPostMenuId = -1L,
+                        dialogState = newDialogState,
+                    )
+                }
+            }
+
+            PostDropDownActionType.REPORT -> {
+                val newDialogState = state.dialogState.copy(reportFeedId = post.feedId, actionType = action)
+                reduce {
+                    state.copy(
+                        selectedPostMenuId = -1L,
+                        dialogState = newDialogState,
+                    )
+                }
+            }
+
+            PostDropDownActionType.SAVE_IMAGE -> {
+                // TODO: 이미지 저장 로직
+                reduce {
+                    state.copy(selectedPostMenuId = -1L)
+                }
+                postSideEffect(FeedSideEffect.ShowToast("이미지 저장 기능은 준비 중입니다."))
+            }
+
+            PostDropDownActionType.IDLE -> {
+            }
         }
     }
 
@@ -329,7 +362,6 @@ class FeedViewModel @Inject constructor(
 
     private fun handleEmojiSheetEmojiSelected(emoji: Emoji) =
         intent {
-            // (결정 5)
             val postToUpdate = state.postForEmojiSelection ?: return@intent
 
             val newPost = postToUpdate.updateReaction(emoji, isReacted = true)
@@ -341,12 +373,10 @@ class FeedViewModel @Inject constructor(
                 )
             }
 
-            // 2. 서버 즉시 전송
             viewModelScope.launch {
                 try {
                     feedRepository.postReaction(postToUpdate.feedId, emoji.type)
                 } catch (e: Exception) {
-                    // 3. 롤백
                     reduce {
                         state.copy(
                             optimisticPosts = state.optimisticPosts + (postToUpdate.feedId to postToUpdate),
@@ -366,7 +396,7 @@ class FeedViewModel @Inject constructor(
         intent {
             val dialogState = state.dialogState
 
-            reduce { state.copy(dialogState = FeedDialogState()) } // 다이얼로그 즉시 닫기
+            reduce { state.copy(dialogState = FeedDialogState()) }
 
             when (dialogState.actionType) {
                 PostDropDownActionType.DELETE -> {
@@ -384,20 +414,30 @@ class FeedViewModel @Inject constructor(
 
     private fun deletePost(feedId: Long) =
         intent {
+            reduce {
+                state.copy(
+                    optimisticDeletedFeedIds = state.optimisticDeletedFeedIds + feedId,
+                )
+            }
+
             viewModelScope.launch {
-                try {
-//                deletePostUseCase(feedId)
-                    postSideEffect(FeedSideEffect.RefreshPagingList)
-                    postSideEffect(FeedSideEffect.ShowToast("게시물이 삭제되었습니다."))
-                } catch (e: Exception) {
-                    postSideEffect(FeedSideEffect.ShowToast("삭제에 실패했습니다."))
-                }
+                feedRepository.deleteFeed(feedId)
+                    .onSuccess {
+                        postSideEffect(FeedSideEffect.ShowToast("게시물이 삭제되었습니다."))
+                    }
+                    .onError { exception ->
+                        reduce {
+                            state.copy(
+                                optimisticDeletedFeedIds = state.optimisticDeletedFeedIds - feedId,
+                            )
+                        }
+                        postSideEffect(FeedSideEffect.ShowToast("삭제에 실패했습니다."))
+                    }
             }
         }
 
     private fun handleFloatingActionButtonClick() =
         intent {
-            // (결정 6)
             val selectedDate = state.calendarState.selectedDate
             postSideEffect(FeedSideEffect.NavigateToPostUpload(selectedDate))
         }

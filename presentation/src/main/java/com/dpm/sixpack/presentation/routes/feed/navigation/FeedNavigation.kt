@@ -20,6 +20,7 @@ fun NavGraphBuilder.addFeedNavGraph(
     navigateToMyPage: () -> Unit = {},
     navigateToPostDetail: (PostResource) -> Unit = {},
     navigateToUpload: () -> Unit = {},
+    navigateToPostEdit: (PostResource) -> Unit = {},
 ) {
     composable<MainRoute.Feed> {
         FeedRoute(
@@ -30,6 +31,7 @@ fun NavGraphBuilder.addFeedNavGraph(
             navigateToMyPage = navigateToMyPage,
             navigateToPostDetail = navigateToPostDetail,
             navigateToPostUpload = navigateToUpload,
+            navigateToPostEdit = navigateToPostEdit,
         )
     }
 }

@@ -14,7 +14,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class FeedUiState(
     // Post
-    val feedDateState: FeedDateUiState = FeedDateUiState.NoPostsAndExpired,
+    val feedDateState: FeedDateUiState = FeedDateUiState.PostsAvailable,
     val selectedFeedId: Long = -1,
     val selectedPostMenuId: Long? = null,
     // Calender
@@ -28,6 +28,7 @@ data class FeedUiState(
     val postingUserInfo: List<PostingUserInfo> = listOf(),
     // Optimistic Update
     val optimisticPosts: Map<Long, PostResource> = emptyMap(),
+    val optimisticDeletedFeedIds: Set<Long> = emptySet(),
     val postForEmojiSelection: PostResource? = null,
 ) : UiState,
     Parcelable

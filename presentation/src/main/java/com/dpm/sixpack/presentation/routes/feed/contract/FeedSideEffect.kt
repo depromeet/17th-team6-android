@@ -25,6 +25,10 @@ sealed interface FeedSideEffect : SideEffect {
         val date: LocalDate,
     ) : FeedSideEffect
 
+    data class NavigateToPostEdit(
+        val post: PostResource,
+    ) : FeedSideEffect
+
     data class ShowToast(
         val message: String,
     ) : FeedSideEffect

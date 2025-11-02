@@ -11,5 +11,5 @@ data class FeedCalenderUiState(
     val isLoading: Boolean = false,
     val today: LocalDate = LocalDate.now(),
     val selectedDate: LocalDate = LocalDate.now(),
-    val postCounts: Map<LocalDate, Int> = emptyMap(),
+    val postCounts: Map<LocalDate, Int> = mapOf(LocalDate.now() to 3),
 ) : Parcelable

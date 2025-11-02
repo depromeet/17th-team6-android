@@ -21,6 +21,7 @@ fun FeedRoute(
     navigateToMyPage: () -> Unit,
     navigateToPostDetail: (PostResource) -> Unit,
     navigateToPostUpload: () -> Unit,
+    navigateToPostEdit: (PostResource) -> Unit,
 ) {
     val state by viewModel.collectAsState()
     val feedPagingItems = viewModel.feedPagingData.collectAsLazyPagingItems()
@@ -34,6 +35,7 @@ fun FeedRoute(
             is FeedSideEffect.NavigateToUserPage -> navigateToUserProfile(sideEffect.userId)
             is FeedSideEffect.NavigateToPostDetail -> navigateToPostDetail(sideEffect.post)
             is FeedSideEffect.NavigateToPostUpload -> navigateToPostUpload()
+            is FeedSideEffect.NavigateToPostEdit -> navigateToPostEdit(sideEffect.post)
             is FeedSideEffect.ShowToast -> {
                 // TODO: Show toast
             }
@@ -70,7 +72,7 @@ fun FeedRoute(
             viewModel.onIntent(FeedIntent.OnPostReactionLongClick(feedId, reactions, emoji))
         },
         onPostAddReactionClick = { post -> viewModel.onIntent(FeedIntent.OnPostAddReactionClick(post)) },
-        onDropDownMenuClick = { feedId, action -> viewModel.onIntent(FeedIntent.OnDropDownMenuClick(feedId, action)) },
+        onDropDownMenuClick = { post, action -> viewModel.onIntent(FeedIntent.OnDropDownMenuClick(post, action)) },
         // BottomSheet
         onBottomSheetDismiss = { viewModel.onIntent(FeedIntent.OnBottomSheetDismiss) },
         onUserReactionSheetUserProfileClick = {

@@ -53,7 +53,7 @@ sealed interface FeedIntent : UiIntent {
     ) : FeedIntent
 
     data class OnDropDownMenuClick(
-        val feedId: Long,
+        val post: PostResource,
         val action: PostDropDownActionType,
     ) : FeedIntent
 
