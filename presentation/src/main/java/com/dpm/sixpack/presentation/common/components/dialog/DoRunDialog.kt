@@ -77,6 +77,7 @@ fun CommonDialog(
                     text = description,
                     style = SixpackTheme.typography.b2Regular,
                     color = SixpackTheme.colors.gray700,
+                    textAlign = TextAlign.Center,
                 )
             }
 
