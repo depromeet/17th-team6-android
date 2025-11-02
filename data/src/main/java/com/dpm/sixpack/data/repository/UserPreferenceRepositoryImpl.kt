@@ -11,7 +11,6 @@ class UserPreferenceRepositoryImpl @Inject constructor(
 ) : UserPreferenceRepository {
     private val userId = userPreferenceDataSource.userId
     private val sessionId = userPreferenceDataSource.sessionId
-    private val isOnboardingComplete = userPreferenceDataSource.isOnboardingComplete
     private val accessToken = userPreferenceDataSource.accessToken
     private val refreshToken = userPreferenceDataSource.refreshToken
 
@@ -19,7 +18,6 @@ class UserPreferenceRepositoryImpl @Inject constructor(
 
     override suspend fun getSessionId(): Long? = sessionId.firstOrNull()
 
-    override suspend fun getIsOnboardingComplete(): Boolean = isOnboardingComplete.first()
 
     override suspend fun getAccessToken(): String? = accessToken.firstOrNull()
 
@@ -31,10 +29,6 @@ class UserPreferenceRepositoryImpl @Inject constructor(
 
     override suspend fun updateSessionId(sessionId: Long) {
         userPreferenceDataSource.updateSessionId(sessionId = sessionId)
-    }
-
-    override suspend fun updateOnboardingComplete(isComplete: Boolean) {
-        userPreferenceDataSource.updateOnboardingComplete(isComplete = isComplete)
     }
 
     override suspend fun clearSessionId() {
