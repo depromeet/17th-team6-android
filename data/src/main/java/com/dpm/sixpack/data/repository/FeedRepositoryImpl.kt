@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import com.dpm.sixpack.data.paging.FeedPagingSource
 import com.dpm.sixpack.data.source.remote.datasoruce.FeedDataSource
 import com.dpm.sixpack.domain.exception.DoRunException
+import com.dpm.sixpack.domain.model.CertifiedUser
 import com.dpm.sixpack.domain.model.ReactionResult
 import com.dpm.sixpack.domain.model.SelfieCounts
 import com.dpm.sixpack.domain.repository.FeedListItem
@@ -56,11 +57,32 @@ class FeedRepositoryImpl @Inject constructor(
             }
         }
 
+    override suspend fun deleteFeed(feedId: Long): DoRunResult<Unit> =
+        withContext(Dispatchers.IO) {
+            try {
+                feedDataSource.deleteFeed(feedId)
+                DoRunResult.Success(Unit)
+            } catch (e: Exception) {
+                DoRunResult.Failure(DoRunException.DataError("피드 삭제에 실패했습니다: ${e.message}"))
+            }
+        }
+
+    override suspend fun getCertifiedUsers(date: String): DoRunResult<List<CertifiedUser>> =
+        withContext(Dispatchers.IO) {
+            try {
+                val response = feedDataSource.getCertifiedUsers(date)
+                val certifiedUsers = response.data?.toDomain() ?: throw DoRunException.DataError("데이터 변환에 실패했습니다")
+                DoRunResult.Success(certifiedUsers)
+            } catch (e: Exception) {
+                DoRunResult.Failure(DoRunException.DataError("인증 유저 목록 조회에 실패했습니다: ${e.message}"))
+            }
+        }
+
     override suspend fun getSelfieCalendar(startDate: String, endDate: String): DoRunResult<SelfieCounts> =
         withContext(Dispatchers.IO) {
             try {
                 val response =
-                    feedDataSource.getSelfieCalendar(startDate, endDate)
+                    feedDataSource.getSelfieWeek(startDate, endDate)
 
                 val selfieCounts = response.data?.toDomain() ?: throw DoRunException.DataError("데이터 변환에 실패했습니다")
                 DoRunResult.Success(selfieCounts)

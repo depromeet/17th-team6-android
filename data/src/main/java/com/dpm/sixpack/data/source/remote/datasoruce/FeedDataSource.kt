@@ -1,6 +1,7 @@
 package com.dpm.sixpack.data.source.remote.datasoruce
 
 import com.dpm.sixpack.data.source.remote.dto.request.ReactionRequestDto
+import com.dpm.sixpack.data.source.remote.dto.response.CertifiedUsersDto
 import com.dpm.sixpack.data.source.remote.dto.response.FeedPageDto
 import com.dpm.sixpack.data.source.remote.dto.response.ReactionResultDto
 import com.dpm.sixpack.data.source.remote.dto.response.SelfieCountsDto
@@ -24,17 +25,31 @@ class FeedDataSource @Inject constructor(
     )
 
     suspend fun postReaction(
-        selfieId: Long,
+        feedId: Long,
         emojiType: String
     ): BaseResponse<ReactionResultDto> = feedService.postReaction(
-        selfieId = selfieId,
-        body = ReactionRequestDto(emojiType = emojiType)
+        body = ReactionRequestDto(
+            feedId = feedId,
+            emojiType = emojiType
+        )
     )
 
-    suspend fun getSelfieCalendar(
+    suspend fun deleteFeed(
+        feedId: Long
+    ): BaseResponse<Unit> = feedService.deleteFeed(
+        feedId = feedId
+    )
+
+    suspend fun getCertifiedUsers(
+        date: String
+    ): BaseResponse<CertifiedUsersDto> = feedService.getCertifiedUsers(
+        date = date
+    )
+
+    suspend fun getSelfieWeek(
         startDate: String,
         endDate: String
-    ): BaseResponse<SelfieCountsDto> = feedService.getSelfieCalendar(
+    ): BaseResponse<SelfieCountsDto> = feedService.getSelfieWeek(
         startDate = startDate,
         endDate = endDate
     )

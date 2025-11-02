@@ -5,6 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ReactionRequestDto(
+    @SerialName("feedId")
+    val feedId: Long,
     @SerialName("emojiType")
     val emojiType: String
 )

@@ -1,6 +1,7 @@
 package com.dpm.sixpack.domain.repository
 
 import androidx.paging.PagingData
+import com.dpm.sixpack.domain.model.CertifiedUser
 import com.dpm.sixpack.domain.model.Feed
 import com.dpm.sixpack.domain.model.ReactionResult
 import com.dpm.sixpack.domain.model.SelfieCounts
@@ -21,6 +22,14 @@ interface FeedRepository {
         selfieId: Long,
         emojiType: String
     ): DoRunResult<ReactionResult>
+
+    suspend fun deleteFeed(
+        feedId: Long
+    ): DoRunResult<Unit>
+
+    suspend fun getCertifiedUsers(
+        date: String
+    ): DoRunResult<List<CertifiedUser>>
 
     suspend fun getSelfieCalendar(
         startDate: String,
