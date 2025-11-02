@@ -22,7 +22,7 @@ interface AuthService {
     @POST("/api/auth/sms/verify")
     suspend fun verifySmsCode(
         @Body request: VerifySmsRequestDto,
-    ): BaseResponse<VerifySmsResponseDto>
+    ): Response<BaseResponse<VerifySmsResponseDto>>
 
     @Multipart
     @POST("/api/auth/signup")

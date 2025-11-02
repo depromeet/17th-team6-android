@@ -33,26 +33,26 @@ fun SignInRoute(
                 context.openUrlInBrowser("") // TODO SR-N 채우기
             }
             is SignInSideEffect.ShowCodeSentSuccess -> {
-                context.showToastByResId(R.string.signin_success_code_sent)
+                context.showToastByResId(R.string.auth_success_code_sent)
             }
             is SignInSideEffect.ShowInvalidPhoneNumberError -> {
-                context.showToastByResId(R.string.signin_error_invalid_phone_number)
+                context.showToastByResId(R.string.auth_error_invalid_phone_number)
             }
             is SignInSideEffect.ShowRateLimitError -> {
-                context.showToastByResId(R.string.signin_error_rate_limit)
+                context.showToastByResId(R.string.auth_error_rate_limit)
             }
             is SignInSideEffect.ShowCodeSendFailedError -> {
-                context.showToastByResId(R.string.signin_error_code_send_failed)
+                context.showToastByResId(R.string.auth_error_code_send_failed)
             }
 
             is SignInSideEffect.ShowInvalidCodeLengthError -> {
                 context.showToastByResId(R.string.signin_error_code_length)
             }
             is SignInSideEffect.ShowCodeMismatchError -> {
-                context.showToastByResId(R.string.signin_error_code_mismatch)
+                context.showToastByResId(R.string.auth_error_code_mismatch)
             }
             is SignInSideEffect.ShowCodeExpiredError -> {
-                context.showToastByResId(R.string.signin_error_code_expired)
+                context.showToastByResId(R.string.auth_error_code_expired)
             }
         }
     }

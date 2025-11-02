@@ -31,7 +31,7 @@ class AuthDataSource @Inject constructor(
     suspend fun verifySmsCode(
         phoneNumber: String,
         verificationCode: String,
-    ): BaseResponse<VerifySmsResponseDto> {
+    ): Response<BaseResponse<VerifySmsResponseDto>> {
         val requestDto =
             VerifySmsRequestDto(
                 phoneNumber = phoneNumber,

@@ -130,22 +130,15 @@ class SignUpViewModel @Inject constructor(
 
             result
                 .onSuccess { verificationResult ->
-                    if (verificationResult.isExistingUser) {
-                        // User already registered, show dialog
-                        reduce {
-                            state.copy(
-                                isLoading = false,
-                                showRegisteredDialog = true,
-                                registeredPhoneNumber = state.phoneNumber,
-                            )
-                        }
-                        Timber.d("User already registered: ${state.phoneNumber}")
-                    } else {
-                        // New user, proceed to profile creation
-                        reduce { state.copy(isLoading = false) }
-                        postSideEffect(SignUpSideEffect.NavigateToProfileCreation)
-                        Timber.d("Phone number verified successfully, moving to profile creation")
+                    // User already registered, show dialog
+                    reduce {
+                        state.copy(
+                            isLoading = false,
+                            showRegisteredDialog = true,
+                            registeredPhoneNumber = state.phoneNumber,
+                        )
                     }
+                    Timber.d("User already registered: ${state.phoneNumber}")
                 }.onError { exception ->
                     Timber.e("Failed to verify phone number: ${exception.message}")
                     reduce {
@@ -154,7 +147,24 @@ class SignUpViewModel @Inject constructor(
                             errorMessage = exception.message,
                         )
                     }
-                    postSideEffect(SignUpSideEffect.ShowCodeMismatchError)
+
+                    when (exception) {
+                        is DoRunException.UserNotRegisteredError -> {
+                            // New user, proceed to profile creation
+                            reduce { state.copy(isLoading = false) }
+                            postSideEffect(SignUpSideEffect.NavigateToProfileCreation)
+                            Timber.d("Phone number verified successfully, moving to profile creation")
+                        }
+                        is DoRunException.CodeMismatchError -> {
+                            postSideEffect(SignUpSideEffect.ShowCodeMismatchError)
+                        }
+                        is DoRunException.CodeExpiredError -> {
+                            postSideEffect(SignUpSideEffect.ShowCodeExpiredError)
+                        }
+                        else -> {
+                            postSideEffect(SignUpSideEffect.ShowCodeMismatchError)
+                        }
+                    }
                 }
         }
 

@@ -131,22 +131,10 @@ class SignInViewModel @Inject constructor(
 
             result
                 .onSuccess { verificationResult ->
-                    if (verificationResult.isExistingUser) {
-                        // Existing user, proceed to login
-                        reduce { state.copy(isLoading = false) }
-                        postSideEffect(SignInSideEffect.NavigateToHome)
-                        Timber.d("Sign in verified, navigating to home")
-                    } else {
-                        // User not registered, show dialog
-                        reduce {
-                            state.copy(
-                                isLoading = false,
-                                showUnregisteredDialog = true,
-                                unregisteredPhoneNumber = state.phoneNumber,
-                            )
-                        }
-                        Timber.d("User not registered: ${state.phoneNumber}")
-                    }
+                    // Existing user, proceed to login
+                    reduce { state.copy(isLoading = false) }
+                    postSideEffect(SignInSideEffect.NavigateToHome)
+                    Timber.d("Sign in verified, navigating to home")
                 }.onError { exception ->
                     Timber.e("Failed to verify phone number: ${exception.message}")
                     reduce {
@@ -155,7 +143,28 @@ class SignInViewModel @Inject constructor(
                             errorMessage = exception.message,
                         )
                     }
-                    postSideEffect(SignInSideEffect.ShowCodeMismatchError)
+
+                    when (exception) {
+                        is DoRunException.UserNotRegisteredError -> {
+                            // User not registered, show dialog
+                            reduce {
+                                state.copy(
+                                    showUnregisteredDialog = true,
+                                    unregisteredPhoneNumber = state.phoneNumber,
+                                )
+                            }
+                            Timber.d("User not registered: ${state.phoneNumber}")
+                        }
+                        is DoRunException.CodeMismatchError -> {
+                            postSideEffect(SignInSideEffect.ShowCodeMismatchError)
+                        }
+                        is DoRunException.CodeExpiredError -> {
+                            postSideEffect(SignInSideEffect.ShowCodeExpiredError)
+                        }
+                        else -> {
+                            postSideEffect(SignInSideEffect.ShowCodeMismatchError)
+                        }
+                    }
                 }
         }
 

@@ -60,23 +60,50 @@ class AuthRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             try {
                 val response = authDataSource.verifySmsCode(phoneNumber, verificationCode)
+                val statusCode = response.code()
 
-                val verificationResult =
-                    response.data?.toSmsVerificationResult()
-                        ?: throw DoRunException.DataError("서버 응답 데이터가 비어 있습니다.")
+                when (statusCode) {
+                    200 -> {
+                        val verificationResult =
+                            response.body()?.data?.toSmsVerificationResult()
+                                ?: throw DoRunException.DataError("서버 응답 데이터가 비어 있습니다.")
 
-                // 기존 회원이면 userId와 token 저장
-                if (verificationResult.isExistingUser) {
-                    verificationResult.user?.let { user ->
-                        userPreferenceRepository.updateUserId(user.id)
+                        // 기존 회원이면 userId와 token 저장
+                        verificationResult.user?.let { user ->
+                            userPreferenceRepository.updateUserId(user.id)
+                        }
+                        verificationResult.token?.let { token ->
+                            userPreferenceRepository.updateAccessToken(token.accessToken)
+                            userPreferenceRepository.updateRefreshToken(token.refreshToken)
+                        }
+
+                        DoRunResult.Success(verificationResult)
                     }
-                    verificationResult.token?.let { token ->
-                        userPreferenceRepository.updateAccessToken(token.accessToken)
-                        userPreferenceRepository.updateRefreshToken(token.refreshToken)
+                    201 -> {
+                        val errorMessage = response.body()?.message ?: "회원가입이 필요합니다."
+                        DoRunResult.Failure(
+                            DoRunException.UserNotRegisteredError(message = errorMessage),
+                        )
+                    }
+                    400 -> {
+                        val errorMessage = response.body()?.message ?: "인증 코드가 일치하지 않습니다."
+                        DoRunResult.Failure(
+                            DoRunException.CodeMismatchError(message = errorMessage),
+                        )
+                    }
+                    410 -> {
+                        val errorMessage = response.body()?.message ?: "인증 시간이 만료되었습니다."
+                        DoRunResult.Failure(
+                            DoRunException.CodeExpiredError(message = errorMessage),
+                        )
+                    }
+                    else -> {
+                        val errorMessage = response.body()?.message ?: "SMS 인증 코드 확인에 실패했습니다."
+                        DoRunResult.Failure(
+                            DoRunException.NetworkError(message = errorMessage),
+                        )
                     }
                 }
-
-                DoRunResult.Success(verificationResult)
             } catch (e: DoRunException) {
                 DoRunResult.Failure(e)
             } catch (e: Exception) {
