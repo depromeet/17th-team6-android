@@ -90,7 +90,7 @@ internal fun MainNavHost(
                     )
                 },
                 onNavigateToSignUp = { phoneNumber ->
-                    navigator.navController.navigateSignUp(
+                    navigator.navController.navigateTerms(
                         navOptions {
                             popUpTo(SignInRoute) {
                                 inclusive = true
