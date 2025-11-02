@@ -27,15 +27,17 @@ class MainViewModel @Inject constructor(
         initializeStartDestination()
     }
 
-    private fun initializeStartDestination() = viewModelScope.launch {
-        // 로그인 여부에 따라 시작 화면 결정
-        val isLoggedIn = checkUserLoggedInUseCase()
-        _startDestination.value = if (isLoggedIn) {
-            MainRoute.Running
-        } else {
-            OnboardingRoute
-        }
+    private fun initializeStartDestination() =
+        viewModelScope.launch {
+            // 로그인 여부에 따라 시작 화면 결정
+            val isLoggedIn = checkUserLoggedInUseCase()
+            _startDestination.value =
+                if (isLoggedIn) {
+                    MainRoute.Running
+                } else {
+                    OnboardingRoute
+                }
 
-        _isLoading.value = false
-    }
+            _isLoading.value = false
+        }
 }

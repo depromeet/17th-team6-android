@@ -5,7 +5,6 @@ import com.dpm.sixpack.domain.exception.DoRunException
 import com.dpm.sixpack.domain.model.SignUpResult
 import com.dpm.sixpack.domain.model.SmsVerificationResult
 import com.dpm.sixpack.domain.repository.AuthRepository
-import com.dpm.sixpack.domain.repository.UserPreferenceRepository
 import com.dpm.sixpack.domain.util.DoRunResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -14,7 +13,6 @@ import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val authDataSource: AuthDataSource,
-    private val userPreferenceRepository: UserPreferenceRepository,
 ) : AuthRepository {
     override suspend fun sendSmsCode(phoneNumber: String): DoRunResult<Unit> =
         withContext(Dispatchers.IO) {
@@ -68,15 +66,6 @@ class AuthRepositoryImpl @Inject constructor(
                             response.body()?.data?.toSmsVerificationResult()
                                 ?: throw DoRunException.DataError("서버 응답 데이터가 비어 있습니다.")
 
-                        // 기존 회원이면 userId와 token 저장
-                        verificationResult.user?.let { user ->
-                            userPreferenceRepository.updateUserId(user.id)
-                        }
-                        verificationResult.token?.let { token ->
-                            userPreferenceRepository.updateAccessToken(token.accessToken)
-                            userPreferenceRepository.updateRefreshToken(token.refreshToken)
-                        }
-
                         DoRunResult.Success(verificationResult)
                     }
                     201 -> {
@@ -128,11 +117,6 @@ class AuthRepositoryImpl @Inject constructor(
                 val signUpResult =
                     response.data?.toSignUpResult()
                         ?: throw DoRunException.DataError("서버 응답 데이터가 비어 있습니다.")
-
-                // 회원가입 성공 시 userId와 token 저장
-                userPreferenceRepository.updateUserId(signUpResult.user.id)
-                userPreferenceRepository.updateAccessToken(signUpResult.token.accessToken)
-                userPreferenceRepository.updateRefreshToken(signUpResult.token.refreshToken)
 
                 DoRunResult.Success(signUpResult)
             } catch (e: DoRunException) {

@@ -18,8 +18,11 @@ class SignUpUseCase @Inject constructor(
     ): DoRunResult<SignUpResult> {
         val result = authRepository.signUp(nickname, phoneNumber, profileImage)
 
-        // 회원가입 성공 시 온보딩 완료 처리
-        result.onSuccess {
+        // 회원가입 성공 시 userId, token 저장 및 온보딩 완료 처리
+        result.onSuccess { signUpResult ->
+            userPreferenceRepository.updateUserId(signUpResult.user.id)
+            userPreferenceRepository.updateAccessToken(signUpResult.token.accessToken)
+            userPreferenceRepository.updateRefreshToken(signUpResult.token.refreshToken)
             userPreferenceRepository.updateOnboardingComplete(true)
         }
 
