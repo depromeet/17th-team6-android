@@ -7,6 +7,7 @@ import com.dpm.sixpack.data.source.remote.dto.response.VerifySmsResponseDto
 import com.dpm.sixpack.data.source.remote.util.base.BaseResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -16,7 +17,7 @@ interface AuthService {
     @POST("/api/auth/sms/send")
     suspend fun sendSmsCode(
         @Body request: SendSmsRequestDto,
-    ): BaseResponse<Unit>
+    ): Response<BaseResponse<Unit>>
 
     @POST("/api/auth/sms/verify")
     suspend fun verifySmsCode(

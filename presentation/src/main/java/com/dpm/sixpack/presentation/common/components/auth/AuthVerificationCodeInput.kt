@@ -77,7 +77,7 @@ fun AuthVerificationCodeInput(
                             disabledTextColor = SixpackTheme.colors.gray500,
                             disabledContainerColor = SixpackTheme.colors.gray200,
                             buttonContentPadding = PaddingValues(horizontal = 10.dp, vertical = 7.dp),
-                            textPadding = PaddingValues(0.dp)
+                            textPadding = PaddingValues(0.dp),
                         )
                     }
                 }

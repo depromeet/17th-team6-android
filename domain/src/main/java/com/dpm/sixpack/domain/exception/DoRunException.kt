@@ -42,6 +42,22 @@ sealed class DoRunException(
     ) : DoRunException(message, cause)
 
     /**
+     * 유효성 검증 에러 (HTTP 400)
+     */
+    data class ValidationError(
+        override val message: String,
+        override val cause: Throwable? = null,
+    ) : DoRunException(message, cause)
+
+    /**
+     * Rate Limit 에러 (HTTP 429)
+     */
+    data class RateLimitError(
+        override val message: String,
+        override val cause: Throwable? = null,
+    ) : DoRunException(message, cause)
+
+    /**
      * 알 수 없는 에러
      */
     data class UnknownError(

@@ -72,16 +72,17 @@ fun DoRunDefaultButton(
                 modifier = Modifier.padding(textPadding),
                 text = text,
                 style = textStyle,
-                color = if (isLoading) {
-                    finalDisabledContainerColor
-                } else {
-                    if (enabled) finalTextColor else finalDisabledTextColor
-                },
+                color =
+                    if (isLoading) {
+                        finalDisabledContainerColor
+                    } else {
+                        if (enabled) finalTextColor else finalDisabledTextColor
+                    },
             )
             if (isLoading) {
                 DoRunLoading(
                     size = loadingSize,
-                    color = finalTextColor
+                    color = finalTextColor,
                 )
             }
         }

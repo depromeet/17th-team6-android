@@ -20,11 +20,28 @@ class AuthRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             try {
                 val response = authDataSource.sendSmsCode(phoneNumber)
+                val statusCode = response.code()
 
-                if (response.data == null) {
-                    DoRunResult.Success(Unit)
-                } else {
-                    DoRunResult.Success(Unit)
+                when {
+                    response.isSuccessful -> DoRunResult.Success(Unit)
+                    statusCode == 400 -> {
+                        val errorMessage = response.body()?.message ?: "잘못된 전화번호 형식입니다."
+                        DoRunResult.Failure(
+                            DoRunException.ValidationError(message = errorMessage),
+                        )
+                    }
+                    statusCode == 429 -> {
+                        val errorMessage = response.body()?.message ?: "너무 많은 요청입니다. 1분에 1회만 요청 가능합니다."
+                        DoRunResult.Failure(
+                            DoRunException.RateLimitError(message = errorMessage),
+                        )
+                    }
+                    else -> {
+                        val errorMessage = response.body()?.message ?: "SMS 인증 코드 발송에 실패했습니다."
+                        DoRunResult.Failure(
+                            DoRunException.UnknownError(message = errorMessage),
+                        )
+                    }
                 }
             } catch (e: Exception) {
                 DoRunResult.Failure(

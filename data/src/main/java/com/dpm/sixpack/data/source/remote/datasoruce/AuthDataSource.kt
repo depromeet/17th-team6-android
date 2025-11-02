@@ -12,6 +12,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.Response
 import java.io.File
 import javax.inject.Inject
 
@@ -19,7 +20,7 @@ class AuthDataSource @Inject constructor(
     private val authService: AuthService,
     private val json: Json,
 ) {
-    suspend fun sendSmsCode(phoneNumber: String): BaseResponse<Unit> {
+    suspend fun sendSmsCode(phoneNumber: String): Response<BaseResponse<Unit>> {
         val requestDto =
             SendSmsRequestDto(
                 phoneNumber = phoneNumber,
