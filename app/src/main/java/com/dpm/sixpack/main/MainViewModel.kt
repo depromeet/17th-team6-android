@@ -2,10 +2,11 @@ package com.dpm.sixpack.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dpm.sixpack.domain.usecase.CheckUserLoggedInUseCase
+import com.dpm.sixpack.presentation.destinations.MainRoute
 import com.dpm.sixpack.presentation.destinations.OnboardingRoute
 import com.dpm.sixpack.presentation.destinations.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,6 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
+    private val checkUserLoggedInUseCase: CheckUserLoggedInUseCase,
 ) : ViewModel() {
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
@@ -22,11 +24,18 @@ class MainViewModel @Inject constructor(
     val startDestination: StateFlow<Route> = _startDestination.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            // TODO SR-N 로그인여부 따라 분기 처리
+        initializeStartDestination()
+    }
 
-            delay(1000L)
-            _isLoading.value = false
+    private fun initializeStartDestination() = viewModelScope.launch {
+        // 로그인 여부에 따라 시작 화면 결정
+        val isLoggedIn = checkUserLoggedInUseCase()
+        _startDestination.value = if (isLoggedIn) {
+            MainRoute.Running
+        } else {
+            OnboardingRoute
         }
+
+        _isLoading.value = false
     }
 }
