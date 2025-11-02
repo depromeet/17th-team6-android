@@ -1,21 +1,18 @@
 package com.dpm.sixpack.presentation.common.components.auth
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
+import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.common.components.textfield.DoRunSignInputField
 import com.dpm.sixpack.presentation.common.util.compose.rememberThrottledClick
 import com.dpm.sixpack.presentation.theme.SixpackTheme
@@ -69,35 +66,18 @@ fun AuthVerificationCodeInput(
                             style = SixpackTheme.typography.b2Regular,
                             color = SixpackTheme.colors.red,
                         )
-                        Text(
+                        DoRunDefaultButton(
                             text = stringResource(R.string.signup_button_resend),
-                            modifier =
-                                Modifier
-                                    .background(
-                                        color =
-                                            if (isResendEnabled) {
-                                                SixpackTheme.colors.blue200
-                                            } else {
-                                                SixpackTheme.colors.gray200
-                                            },
-                                        shape = SixpackTheme.shapes.round8,
-                                    ).clip(SixpackTheme.shapes.round8)
-                                    .padding(horizontal = 10.dp, vertical = 8.dp)
-                                    .then(
-                                        if (isResendEnabled) {
-                                            Modifier.clickable(onClick = throttledResendClick)
-                                        } else {
-                                            Modifier
-                                        },
-                                    ),
-                            textAlign = TextAlign.Center,
-                            style = SixpackTheme.typography.c1Bold,
-                            color =
-                                if (isResendEnabled) {
-                                    SixpackTheme.colors.blue600
-                                } else {
-                                    SixpackTheme.colors.gray500
-                                },
+                            onClick = throttledResendClick,
+                            enabled = isResendEnabled,
+                            textStyle = SixpackTheme.typography.c1Bold,
+                            textColor = SixpackTheme.colors.blue600,
+                            containerShape = SixpackTheme.shapes.round8,
+                            containerColor = SixpackTheme.colors.blue200,
+                            disabledTextColor = SixpackTheme.colors.gray500,
+                            disabledContainerColor = SixpackTheme.colors.gray200,
+                            buttonContentPadding = PaddingValues(horizontal = 10.dp, vertical = 7.dp),
+                            textPadding = PaddingValues(0.dp)
                         )
                     }
                 }

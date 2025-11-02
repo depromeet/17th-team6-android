@@ -10,11 +10,15 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun DoRunLoading(modifier: Modifier = Modifier, size: Dp, color: Color) {
+fun DoRunLoading(
+    modifier: Modifier = Modifier,
+    size: Dp,
+    color: Color,
+) {
     CircularProgressIndicator(
         modifier = modifier.size(size),
         color = color,
         strokeWidth = 4.dp,
-        strokeCap = StrokeCap.Butt
+        strokeCap = StrokeCap.Butt,
     )
 }

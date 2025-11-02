@@ -10,6 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -25,11 +27,14 @@ fun DoRunDefaultButton(
     enabled: Boolean = true,
     isLoading: Boolean = false,
     loadingSize: Dp = 24.dp,
+    textStyle: TextStyle = SixpackTheme.typography.b1Bold,
     textColor: Color = SixpackTheme.colors.gray0,
+    containerShape: Shape = SixpackTheme.shapes.round12,
     containerColor: Color = SixpackTheme.colors.blue600,
     disabledTextColor: Color = SixpackTheme.colors.gray400,
     disabledContainerColor: Color = SixpackTheme.colors.gray100,
-    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
+    buttonContentPadding: PaddingValues = ButtonDefaults.ContentPadding,
+    textPadding: PaddingValues = PaddingValues(vertical = 8.dp),
     style: ButtonStyle = ButtonStyle.PRIMARY,
 ) {
     val (finalTextColor, finalContainerColor, finalDisabledTextColor, finalDisabledContainerColor) =
@@ -53,20 +58,20 @@ fun DoRunDefaultButton(
                 onClick()
             }
         },
-        shape = SixpackTheme.shapes.round12,
+        shape = containerShape,
         enabled = enabled && !isLoading,
         colors =
             ButtonDefaults.buttonColors(
                 containerColor = finalContainerColor,
                 disabledContainerColor = finalDisabledContainerColor,
             ),
-        contentPadding = contentPadding,
+        contentPadding = buttonContentPadding,
     ) {
         Box(contentAlignment = Alignment.Center) {
             Text(
-                modifier = Modifier.padding(vertical = 8.dp),
+                modifier = Modifier.padding(textPadding),
                 text = text,
-                style = SixpackTheme.typography.b1Bold,
+                style = textStyle,
                 color = if (isLoading) {
                     finalDisabledContainerColor
                 } else {
