@@ -20,9 +20,7 @@ fun NavGraphBuilder.addProfileCreationNavGraph(
     onNavigateToBack: () -> Unit,
 ) {
     composable<ProfileCreationRoute> { backStackEntry ->
-        val route = backStackEntry.toRoute<ProfileCreationRoute>()
         ProfileCreationRoute(
-            phoneNumber = route.phoneNumber,
             onNavigateToHome = onNavigateToHome,
             onNavigateBack = onNavigateToBack,
         )
