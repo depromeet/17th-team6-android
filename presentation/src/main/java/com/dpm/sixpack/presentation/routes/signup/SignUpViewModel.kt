@@ -46,10 +46,9 @@ class SignUpViewModel @Inject constructor(
 
     private fun handlePhoneNumberChanged(phoneNumber: String) =
         intent {
-            val digitsOnly = phoneNumber.filter { it.isDigit() }.take(11)
             reduce {
                 state.copy(
-                    phoneNumber = digitsOnly,
+                    phoneNumber = phoneNumber.take(11),
                     errorMessage = null,
                 )
             }
@@ -75,7 +74,6 @@ class SignUpViewModel @Inject constructor(
 
             reduce { state.copy(isLoading = true) }
 
-            delay(3000L)//todo
             sendSmsCodeUseCase(state.phoneNumber)
                 .onSuccess {
                     reduce {

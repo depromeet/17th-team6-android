@@ -47,10 +47,9 @@ class SignInViewModel @Inject constructor(
 
     private fun handlePhoneNumberChanged(phoneNumber: String) =
         intent {
-            val digitsOnly = phoneNumber.filter { it.isDigit() }.take(11)
             reduce {
                 state.copy(
-                    phoneNumber = digitsOnly,
+                    phoneNumber = phoneNumber.take(11),
                     errorMessage = null,
                 )
             }
@@ -82,7 +81,7 @@ class SignInViewModel @Inject constructor(
                         state.copy(
                             step = PhoneAuthStep.VERIFICATION_INPUT,
                             isLoading = false,
-                            remainingTimeInSeconds = 180,
+                            remainingTimeInSeconds = SignInState.RETRY_TIME_IN_SECONDS,
                         )
                     }
 
@@ -155,7 +154,7 @@ class SignInViewModel @Inject constructor(
             reduce {
                 state.copy(
                     verificationCode = "",
-                    remainingTimeInSeconds = 180,
+                    remainingTimeInSeconds = SignInState.RETRY_TIME_IN_SECONDS,
                     errorMessage = null,
                 )
             }
@@ -176,7 +175,7 @@ class SignInViewModel @Inject constructor(
                         state.copy(
                             step = PhoneAuthStep.PHONE_INPUT,
                             verificationCode = "",
-                            remainingTimeInSeconds = 180,
+                            remainingTimeInSeconds = SignInState.RETRY_TIME_IN_SECONDS,
                             errorMessage = null,
                         )
                     }
