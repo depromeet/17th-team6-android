@@ -39,6 +39,9 @@ fun SignUpRoute(
             is SignUpSideEffect.ShowCodeSendFailedError -> {
                 context.showToastByResId(R.string.signup_error_code_send_failed)
             }
+            is SignUpSideEffect.ShowRateLimitError -> {
+                context.showToastByResId(R.string.signup_error_rate_limit)
+            }
             is SignUpSideEffect.ShowInvalidCodeLengthError -> {
                 context.showToastByResId(R.string.signup_error_code_length)
             }

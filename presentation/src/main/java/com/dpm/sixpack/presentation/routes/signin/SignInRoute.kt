@@ -32,15 +32,19 @@ fun SignInRoute(
             is SignInSideEffect.NavigateToFindAccount -> {
                 context.openUrlInBrowser("") // TODO SR-N 채우기
             }
+            is SignInSideEffect.ShowCodeSentSuccess -> {
+                context.showToastByResId(R.string.signin_success_code_sent)
+            }
             is SignInSideEffect.ShowInvalidPhoneNumberError -> {
                 context.showToastByResId(R.string.signin_error_invalid_phone_number)
             }
-            is SignInSideEffect.ShowCodeSentSuccess -> {
-                context.showToastByResId(R.string.signin_success_code_sent)
+            is SignInSideEffect.ShowRateLimitError -> {
+                context.showToastByResId(R.string.signin_error_rate_limit)
             }
             is SignInSideEffect.ShowCodeSendFailedError -> {
                 context.showToastByResId(R.string.signin_error_code_send_failed)
             }
+
             is SignInSideEffect.ShowInvalidCodeLengthError -> {
                 context.showToastByResId(R.string.signin_error_code_length)
             }

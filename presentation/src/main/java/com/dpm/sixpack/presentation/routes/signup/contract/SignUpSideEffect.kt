@@ -15,6 +15,8 @@ sealed interface SignUpSideEffect : SideEffect {
 
     data object ShowCodeSendFailedError : SignUpSideEffect
 
+    data object ShowRateLimitError : SignUpSideEffect
+
     data object ShowInvalidCodeLengthError : SignUpSideEffect
 
     data object ShowCodeMismatchError : SignUpSideEffect

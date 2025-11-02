@@ -2,6 +2,7 @@ package com.dpm.sixpack.presentation.routes.signin
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.dpm.sixpack.domain.exception.DoRunException
 import com.dpm.sixpack.domain.usecase.SendSmsCodeUseCase
 import com.dpm.sixpack.domain.usecase.VerifySmsCodeUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
@@ -96,7 +97,18 @@ class SignInViewModel @Inject constructor(
                             errorMessage = exception.message,
                         )
                     }
-                    postSideEffect(SignInSideEffect.ShowCodeSendFailedError)
+
+                    when (exception) {
+                        is DoRunException.ValidationError -> {
+                            postSideEffect(SignInSideEffect.ShowInvalidPhoneNumberError)
+                        }
+                        is DoRunException.RateLimitError -> {
+                            postSideEffect(SignInSideEffect.ShowRateLimitError)
+                        }
+                        else -> {
+                            postSideEffect(SignInSideEffect.ShowCodeSendFailedError)
+                        }
+                    }
                 }
         }
 

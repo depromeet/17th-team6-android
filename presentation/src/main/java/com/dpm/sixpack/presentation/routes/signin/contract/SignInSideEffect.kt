@@ -19,6 +19,8 @@ sealed interface SignInSideEffect : SideEffect {
 
     data object ShowCodeSendFailedError : SignInSideEffect
 
+    data object ShowRateLimitError : SignInSideEffect
+
     data object ShowInvalidCodeLengthError : SignInSideEffect
 
     data object ShowCodeMismatchError : SignInSideEffect
