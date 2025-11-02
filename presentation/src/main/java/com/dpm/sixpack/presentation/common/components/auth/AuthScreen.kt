@@ -40,6 +40,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
  * @param onVerificationCodeChanged 인증번호 변경 콜백
  * @param verificationEnabled 인증번호 입력 필드 활성화 여부
  * @param remainingTime 남은 시간 문자열
+ * @param isLoading 로딩 상태 여부
  * @param onResendClick 재발송 버튼 클릭 콜백 (10초 쓰로틀 자동 적용)
  * @param additionalContentAfterPhone 전화번호 입력 필드 아래에 추가될 컨텐츠 (예: "계정 찾기" 링크)
  */
@@ -58,6 +59,7 @@ fun AuthScreen(
     onVerificationCodeChanged: (String) -> Unit = {},
     verificationEnabled: Boolean = false,
     remainingTime: String = "",
+    isLoading: Boolean = false,
     onPhoneClearClick: (() -> Unit)? = null,
     onResendClick: (() -> Unit)? = null,
     additionalContentAfterPhone: (@Composable () -> Unit)? = null,
@@ -94,9 +96,7 @@ fun AuthScreen(
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // Content - SignUp 기준 구조: VerificationInput (위) + PhoneInput (아래)
                 Column {
-                    // Verification Code Input (AnimatedVisibility)
                     AnimatedVisibility(
                         visible = step == PhoneAuthStep.VERIFICATION_INPUT,
                         enter = slideInVertically(initialOffsetY = { -it }) + fadeIn(),
@@ -113,7 +113,6 @@ fun AuthScreen(
                         )
                     }
 
-                    // Phone Number Input
                     AuthPhoneNumberInput(
                         phoneNumber = phoneNumber,
                         onPhoneNumberChanged = onPhoneNumberChanged,
@@ -140,6 +139,7 @@ fun AuthScreen(
                         ),
                     onClick = onButtonClick,
                     enabled = isButtonEnabled,
+                    isLoading = isLoading,
                     modifier =
                         Modifier
                             .fillMaxWidth()

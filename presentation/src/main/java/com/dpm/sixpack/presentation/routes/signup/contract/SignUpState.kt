@@ -36,4 +36,8 @@ data class SignUpState(
             val seconds = remainingTimeInSeconds % 60
             return String.format("%d:%02d", minutes, seconds)
         }
+
+    companion object {
+        const val RETRY_TIME_IN_SECONDS = 180
+    }
 }

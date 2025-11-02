@@ -75,13 +75,14 @@ class SignUpViewModel @Inject constructor(
 
             reduce { state.copy(isLoading = true) }
 
+            delay(3000L)//todo
             sendSmsCodeUseCase(state.phoneNumber)
                 .onSuccess {
                     reduce {
                         state.copy(
                             step = PhoneAuthStep.VERIFICATION_INPUT,
                             isLoading = false,
-                            remainingTimeInSeconds = 180,
+                            remainingTimeInSeconds = SignUpState.RETRY_TIME_IN_SECONDS,
                         )
                     }
 
@@ -154,7 +155,7 @@ class SignUpViewModel @Inject constructor(
             reduce {
                 state.copy(
                     verificationCode = "",
-                    remainingTimeInSeconds = 180,
+                    remainingTimeInSeconds = SignUpState.RETRY_TIME_IN_SECONDS,
                     errorMessage = null,
                 )
             }
@@ -175,7 +176,7 @@ class SignUpViewModel @Inject constructor(
                         state.copy(
                             step = PhoneAuthStep.PHONE_INPUT,
                             verificationCode = "",
-                            remainingTimeInSeconds = 180,
+                            remainingTimeInSeconds = SignUpState.RETRY_TIME_IN_SECONDS,
                             errorMessage = null,
                         )
                     }

@@ -1,16 +1,20 @@
 package com.dpm.sixpack.presentation.common.components
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
+import com.dpm.sixpack.presentation.common.components.progressbar.DoRunLoading
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
@@ -19,6 +23,8 @@ fun DoRunDefaultButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    isLoading: Boolean = false,
+    loadingSize: Dp = 24.dp,
     textColor: Color = SixpackTheme.colors.gray0,
     containerColor: Color = SixpackTheme.colors.blue600,
     disabledTextColor: Color = SixpackTheme.colors.gray400,
@@ -30,6 +36,7 @@ fun DoRunDefaultButton(
         when (style) {
             ButtonStyle.PRIMARY ->
                 ButtonColorScheme(textColor, containerColor, disabledTextColor, disabledContainerColor)
+
             ButtonStyle.SECONDARY ->
                 ButtonColorScheme(
                     SixpackTheme.colors.gray900,
@@ -42,10 +49,12 @@ fun DoRunDefaultButton(
     Button(
         modifier = modifier,
         onClick = {
-            onClick()
+            if (!isLoading) {
+                onClick()
+            }
         },
         shape = SixpackTheme.shapes.round12,
-        enabled = enabled,
+        enabled = enabled && !isLoading,
         colors =
             ButtonDefaults.buttonColors(
                 containerColor = finalContainerColor,
@@ -53,12 +62,24 @@ fun DoRunDefaultButton(
             ),
         contentPadding = contentPadding,
     ) {
-        Text(
-            modifier = Modifier.padding(vertical = 8.dp),
-            text = text,
-            style = SixpackTheme.typography.b1Bold,
-            color = if (enabled) finalTextColor else finalDisabledTextColor,
-        )
+        Box(contentAlignment = Alignment.Center) {
+            Text(
+                modifier = Modifier.padding(vertical = 8.dp),
+                text = text,
+                style = SixpackTheme.typography.b1Bold,
+                color = if (isLoading) {
+                    finalDisabledContainerColor
+                } else {
+                    if (enabled) finalTextColor else finalDisabledTextColor
+                },
+            )
+            if (isLoading) {
+                DoRunLoading(
+                    size = loadingSize,
+                    color = finalTextColor
+                )
+            }
+        }
     }
 }
 
@@ -91,6 +112,7 @@ private fun BottomLongButtonDisabledPreview() {
     DoRunPreviewWrapper {
         DoRunDefaultButton(
             onClick = { },
+            isLoading = true,
             text = "이 목표로 다시 러닝",
             enabled = false,
         )

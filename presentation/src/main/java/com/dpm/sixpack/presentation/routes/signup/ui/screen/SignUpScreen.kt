@@ -43,6 +43,7 @@ fun SignUpScreen(
         onVerificationCodeChanged = { onIntent(SignUpIntent.OnVerificationCodeChanged(it)) },
         verificationEnabled = !state.isLoading && state.remainingTimeInSeconds > 0,
         remainingTime = state.formattedRemainingTime,
+        isLoading = state.isLoading,
         onPhoneClearClick = { onIntent(SignUpIntent.OnPhoneNumberChanged("")) },
         onResendClick = { onIntent(SignUpIntent.OnResendCodeClick) },
     )

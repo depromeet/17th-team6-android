@@ -18,7 +18,7 @@ data class SignInState(
 ) : UiState,
     Parcelable {
     val isPhoneNumberValid: Boolean
-        get() = phoneNumber.length >= 10 && phoneNumber.length <= 11
+        get() = phoneNumber.all { it.isDigit() } && phoneNumber.length >= 10 && phoneNumber.length <= 11
 
     val isVerificationCodeValid: Boolean
         get() = verificationCode.length == 6 && verificationCode.all { it.isDigit() }

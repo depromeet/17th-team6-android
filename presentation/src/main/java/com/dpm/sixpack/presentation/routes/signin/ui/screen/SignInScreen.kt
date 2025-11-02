@@ -46,6 +46,7 @@ fun SignInScreen(
         onVerificationCodeChanged = { onIntent(SignInIntent.OnVerificationCodeChanged(it)) },
         verificationEnabled = !state.isLoading && state.remainingTimeInSeconds > 0,
         remainingTime = state.formattedRemainingTime,
+        isLoading = state.isLoading,
         onPhoneClearClick = { onIntent(SignInIntent.OnPhoneNumberChanged("")) },
         onResendClick = { onIntent(SignInIntent.OnResendCodeClick) },
         additionalContentAfterPhone =
