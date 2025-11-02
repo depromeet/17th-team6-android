@@ -58,12 +58,12 @@ fun ProfileCreationComponent(
                     contentScale = ContentScale.Crop,
                 )
             } else {
-                Box(
-                    modifier =
-                        Modifier
-                            .size(97.dp)
-                            .clip(CircleShape)
-                            .background(SixpackTheme.colors.gray200),
+                Image(
+                    painter = painterResource(id = R.drawable.ill_profile_placeholder),
+                    contentDescription = "Profile placeholder",
+                    modifier = Modifier
+                        .size(97.dp)
+                        .clip(CircleShape)
                 )
             }
 
