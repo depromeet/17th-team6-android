@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -19,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -63,6 +65,7 @@ fun PostDropDownMenuIcon(
 
         DropdownMenu(
             expanded = isMenuExpanded,
+
             onDismissRequest = { onMenuClick(!isMenuExpanded) },
             offset = DpOffset(x = 0.dp, y = (-1).dp),
             shape = SixpackTheme.shapes.round12,
@@ -103,6 +106,7 @@ private fun MyPostMenuItems(
             onMenuClick()
             onDropDownMenuClick(PostDropDownActionType.EDIT)
         },
+        modifier = Modifier.clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
     )
 
     HorizontalDivider(
@@ -131,6 +135,7 @@ private fun MyPostMenuItems(
             onMenuClick()
             onDropDownMenuClick(PostDropDownActionType.SAVE_IMAGE)
         },
+        modifier = Modifier.clip(RoundedCornerShape(bottomEnd = 12.dp, bottomStart = 12.dp))
     )
 }
 
@@ -149,6 +154,7 @@ private fun FriendPostMenuItems(
             onMenuClick()
             onDropDownMenuClick(PostDropDownActionType.REPORT)
         },
+        modifier = Modifier.clip(RoundedCornerShape(12.dp))
     )
 }
 
@@ -163,7 +169,8 @@ private fun CustomDropdownMenuItem(
             modifier
                 .noRippleClickable(
                     onClick = onClick,
-                ).padding(horizontal = 12.dp),
+                )
+                .padding(horizontal = 12.dp),
     ) {
         Text(
             text = text,
