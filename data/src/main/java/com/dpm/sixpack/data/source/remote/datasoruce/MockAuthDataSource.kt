@@ -6,6 +6,7 @@ import com.dpm.sixpack.data.source.remote.dto.response.TokenDto
 import com.dpm.sixpack.data.source.remote.dto.response.UserDto
 import com.dpm.sixpack.data.source.remote.dto.response.VerifySmsResponseDto
 import com.dpm.sixpack.data.source.remote.util.base.BaseResponse
+import kotlinx.coroutines.delay
 import retrofit2.Response
 import java.io.File
 import java.time.LocalDateTime
@@ -23,6 +24,7 @@ class MockAuthDataSource @Inject constructor() : AuthDataSource {
             .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
 
     override suspend fun sendSmsCode(phoneNumber: String): Response<BaseResponse<Unit>> {
+        delay(1000L)
         // 200 성공 응답 반환
         return Response.success(
             200,
@@ -39,6 +41,7 @@ class MockAuthDataSource @Inject constructor() : AuthDataSource {
         phoneNumber: String,
         verificationCode: String,
     ): Response<BaseResponse<VerifySmsResponseDto>> {
+        delay(1000L)
         // 200 성공 응답 - 기존 사용자로 모킹
         return Response.success(
             201,
@@ -70,6 +73,7 @@ class MockAuthDataSource @Inject constructor() : AuthDataSource {
         phoneNumber: String,
         profileImage: File?,
     ): BaseResponse<SignUpResponseDto> {
+        delay(1000L)
         // 회원가입 성공 응답
         return BaseResponse(
             status = "200",
