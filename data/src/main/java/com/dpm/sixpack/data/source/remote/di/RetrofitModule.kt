@@ -1,4 +1,4 @@
-package com.dpm.sixpack.data.di
+package com.dpm.sixpack.data.source.remote.di
 
 import com.dpm.sixpack.core.BuildConfig
 import com.dpm.sixpack.core.BuildConfig.DEBUG
