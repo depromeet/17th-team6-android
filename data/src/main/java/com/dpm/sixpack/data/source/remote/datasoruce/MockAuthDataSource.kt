@@ -25,6 +25,7 @@ class MockAuthDataSource @Inject constructor() : AuthDataSource {
     override suspend fun sendSmsCode(phoneNumber: String): Response<BaseResponse<Unit>> {
         // 200 성공 응답 반환
         return Response.success(
+            200,
             BaseResponse(
                 status = "200",
                 message = "인증번호가 발송되었습니다.",
@@ -40,8 +41,9 @@ class MockAuthDataSource @Inject constructor() : AuthDataSource {
     ): Response<BaseResponse<VerifySmsResponseDto>> {
         // 200 성공 응답 - 기존 사용자로 모킹
         return Response.success(
+            201,
             BaseResponse(
-                status = "200",
+                status = "201",
                 message = "인증 성공",
                 timestamp = getCurrentTimestamp(),
                 data =
