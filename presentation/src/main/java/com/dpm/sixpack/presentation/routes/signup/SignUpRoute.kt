@@ -4,13 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dpm.sixpack.presentation.R
-import com.dpm.sixpack.presentation.common.components.dialog.CommonDialog
 import com.dpm.sixpack.presentation.common.util.context.openUrlInBrowser
 import com.dpm.sixpack.presentation.common.util.context.showToastByResId
-import com.dpm.sixpack.presentation.routes.signup.contract.SignUpIntent
 import com.dpm.sixpack.presentation.routes.signup.contract.SignUpSideEffect
 import com.dpm.sixpack.presentation.routes.signup.ui.screen.SignUpScreen
 import org.orbitmvi.orbit.compose.collectAsState

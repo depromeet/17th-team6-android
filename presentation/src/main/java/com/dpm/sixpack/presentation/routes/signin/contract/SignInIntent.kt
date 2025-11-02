@@ -22,7 +22,7 @@ sealed interface SignInIntent : UiIntent {
     data object OnDismissUnregisteredDialog : SignInIntent
 
     data class OnSignUpClick(
-        val phoneNumber: String
+        val phoneNumber: String,
     ) : SignInIntent
 
     data object OnFindAccountClick : SignInIntent

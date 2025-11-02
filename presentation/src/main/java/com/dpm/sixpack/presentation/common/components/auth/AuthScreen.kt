@@ -40,7 +40,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
  * @param onVerificationCodeChanged 인증번호 변경 콜백
  * @param verificationEnabled 인증번호 입력 필드 활성화 여부
  * @param remainingTime 남은 시간 문자열
- * @param onResendClick 재발송 버튼 클릭 콜백
+ * @param onResendClick 재발송 버튼 클릭 콜백 (10초 쓰로틀 자동 적용)
  * @param additionalContentAfterPhone 전화번호 입력 필드 아래에 추가될 컨텐츠 (예: "계정 찾기" 링크)
  */
 @Composable

@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.textfield.DoRunSignInputField
+import com.dpm.sixpack.presentation.common.util.compose.rememberThrottledClick
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 /**
@@ -29,7 +30,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
  * @param enabled 입력 필드의 활성화 여부
  * @param showResendButton 재발송 버튼 표시 여부 (기본값: false)
  * @param remainingTime 남은 시간 문자열 (showResendButton이 true일 때만 표시)
- * @param onResendClick 재발송 버튼 클릭 시 실행될 콜백 (showResendButton이 true일 때 필수)
+ * @param onResendClick 재발송 버튼 클릭 시 실행될 콜백 (showResendButton이 true일 때 필수). 10초 쓰로틀이 자동 적용됩니다.
  */
 @Composable
 fun AuthVerificationCodeInput(
@@ -43,6 +44,11 @@ fun AuthVerificationCodeInput(
     remainingTime: String? = null,
     onResendClick: (() -> Unit)? = null,
 ) {
+    val (throttledResendClick, isResendEnabled) =
+        rememberThrottledClick(
+            throttleTimeMillis = 10_000L,
+            onClick = onResendClick ?: {},
+        )
     Column(modifier = modifier) {
         DoRunSignInputField(
             value = verificationCode,
@@ -68,16 +74,30 @@ fun AuthVerificationCodeInput(
                             modifier =
                                 Modifier
                                     .background(
-                                        color = SixpackTheme.colors.blue200,
+                                        color =
+                                            if (isResendEnabled) {
+                                                SixpackTheme.colors.blue200
+                                            } else {
+                                                SixpackTheme.colors.gray200
+                                            },
                                         shape = SixpackTheme.shapes.round8,
                                     ).clip(SixpackTheme.shapes.round8)
                                     .padding(horizontal = 10.dp, vertical = 8.dp)
-                                    .clickable(
-                                        onClick = onResendClick,
+                                    .then(
+                                        if (isResendEnabled) {
+                                            Modifier.clickable(onClick = throttledResendClick)
+                                        } else {
+                                            Modifier
+                                        },
                                     ),
                             textAlign = TextAlign.Center,
                             style = SixpackTheme.typography.c1Bold,
-                            color = SixpackTheme.colors.blue600,
+                            color =
+                                if (isResendEnabled) {
+                                    SixpackTheme.colors.blue600
+                                } else {
+                                    SixpackTheme.colors.gray500
+                                },
                         )
                     }
                 }

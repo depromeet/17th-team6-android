@@ -29,7 +29,7 @@ fun SignInRoute(
             is SignInSideEffect.NavigateToHome -> onNavigateToHome()
             is SignInSideEffect.NavigateBack -> onNavigateBack()
             is SignInSideEffect.NavigateToSignUp -> onNavigateToSignUp(sideEffect.phoneNumber)
-            is SignInSideEffect.NavigateToFindAccount ->{
+            is SignInSideEffect.NavigateToFindAccount -> {
                 context.openUrlInBrowser("") // TODO SR-N 채우기
             }
             is SignInSideEffect.ShowInvalidPhoneNumberError -> {

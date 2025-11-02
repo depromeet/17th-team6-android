@@ -58,8 +58,7 @@ fun CommonDialog(
                     .background(
                         color = SixpackTheme.colors.gray0,
                         shape = RoundedCornerShape(16.dp),
-                    )
-                    .padding(20.dp),
+                    ).padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             // Title
