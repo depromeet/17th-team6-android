@@ -35,20 +35,20 @@ data class SessionDetailResponseDto(
     @SerialName("mapImage")
     val mapImage: String,
     @SerialName("feed")
-    val feed: FeedDto,
+    val feed: SessionDetailFeedDto,
     @SerialName("segments")
     val segments: List<List<SegmentDataDto>>,
 )
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
-data class FeedDto(
+data class SessionDetailFeedDto(
     @SerialName("id")
     val id: Long,
     @SerialName("mapImage")
     val mapImage: String,
     @SerialName("selfieImage")
-    val selfieImage: String? = null, // JSON에 있지만 null일 수 있으므로 Nullable 처리
+    val selfieImage: String,
     @SerialName("content")
     val content: String,
     @SerialName("createdAt")

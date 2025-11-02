@@ -12,7 +12,7 @@ class FinishRunningSessionUseCase @Inject constructor(
     private val runningSessionRepository: RunningSessionRepository,
     private val userPreferenceRepository: UserPreferenceRepository,
 ) {
-    suspend operator fun invoke(mapImage: Bitmap): DoRunResult<RunningSessionResult> {
+    suspend operator fun invoke(mapImage: Bitmap): DoRunResult<Long> {
         val sessionId =
             userPreferenceRepository.getSessionId()
                 ?: return DoRunResult.Failure(DoRunException.DataError("저장된 세션 ID가 없어 종료할 수 없습니다."))

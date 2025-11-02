@@ -106,7 +106,8 @@ internal fun RunningMapScreen(
                 cameraPositionState.position = CameraPosition(sideEffect.latLng, DEFAULT_ZOOM)
             }
 
-            MapSideEffect.NavigateToReport -> {
+            is MapSideEffect.NavigateToReport -> {
+                val sessionId = sideEffect.sessionId
                 onBottomBarVisibilityChange(true)
                 navigateToReport()
             }
@@ -142,7 +143,6 @@ private fun RunningMapScreenContent(
     onMapIntent: (MapIntent) -> Unit,
     modifier: Modifier,
 ) {
-    val context = LocalContext.current
     val graphicsLayer = rememberGraphicsLayer()
 
     val density = LocalDensity.current
@@ -241,8 +241,7 @@ private fun RunningMapScreenContent(
                         isCompassEnabled = false,
                         logoGravity = Gravity.START,
                     ),
-                locationSource =
-                    if (mapState.mapViewState is MapViewState.Finishing) null else locationSource,
+                locationSource = locationSource,
                 onLocationChange = { location ->
                     onMapIntent(MapIntent.UpdateUserLocation(LatLng(location)))
                 },
@@ -296,6 +295,7 @@ private fun RunningMapScreenContent(
                             // TODO: 캡처 실패 처리 (예: onMapIntent(MapIntent.SessionFinish(null)))
                             return@LaunchedEffect
                         }
+                        mapInstance.locationOverlay.isVisible = false
 
                         val bounds = mapState.mapViewState.latLngBounds
 
@@ -325,6 +325,8 @@ private fun RunningMapScreenContent(
                         } else {
                             Timber.e("캡처된 비트맵이 null입니다.")
                         }
+
+                        mapInstance.locationOverlay.isVisible = true
                     }
                 }
 

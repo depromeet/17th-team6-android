@@ -9,9 +9,7 @@ import com.dpm.sixpack.data.source.remote.dto.request.FinishRunningRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.SaveSegmentDataRequestsDto
 import com.dpm.sixpack.data.source.remote.dto.request.toDto
 import com.dpm.sixpack.data.source.remote.dto.request.toSegmentDataDto
-import com.dpm.sixpack.data.source.remote.dto.response.toRunningSessionResult
 import com.dpm.sixpack.data.source.remote.dto.response.toSyncResult
-import com.dpm.sixpack.data.source.remote.util.base.BaseResponse
 import com.dpm.sixpack.domain.exception.DoRunException
 import com.dpm.sixpack.domain.model.MaxPaceData
 import com.dpm.sixpack.domain.model.RealtimeRunningData
@@ -21,7 +19,6 @@ import com.dpm.sixpack.domain.usecase.SaveRealtimeRunningDataResult
 import com.dpm.sixpack.domain.util.DoRunResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.Json
 import retrofit2.HttpException
 import timber.log.Timber
 import javax.inject.Inject
@@ -33,7 +30,6 @@ class RunningSessionRepositoryImpl @Inject constructor(
     override suspend fun startSession(): DoRunResult<Long> =
         withContext(Dispatchers.IO) {
             try {
-                // 정상적인 2xx 응답 시도
                 val response = runningSessionDataSource.postStartSession()
                 val sessionId =
                     response.data?.sessionId
@@ -41,48 +37,10 @@ class RunningSessionRepositoryImpl @Inject constructor(
 
                 DoRunResult.Success(sessionId)
             } catch (e: HttpException) {
-                // [개선] 400 에러(세션 충돌) 처리를 별도 함수로 분리
-                if (e.code() == 400) {
-                    handleSessionConflict(e)
-                } else {
-                    DoRunResult.Failure(DoRunException.DataError("${e.code()} HTTP 에러: ${e.message}"))
-                }
+                DoRunResult.Failure(DoRunException.DataError("${e.code()} HTTP 에러: ${e.message}"))
             } catch (e: Exception) {
                 DoRunResult.Failure(DoRunException.DataError("네트워크 요청에 실패했습니다: ${e.message}"))
             }
-        }
-
-    /**
-     * startSession의 400 에러(진행 중인 세션)를 파싱하고 처리하는 private 함수
-     */
-    private fun handleSessionConflict(e: HttpException): DoRunResult<Long> =
-        try {
-            val errorBodyString = e.response()?.errorBody()?.string()
-            if (errorBodyString != null) {
-                val errorResponse =
-                    Json.decodeFromString<BaseResponse<Nothing>>(errorBodyString)
-
-                // message에서 sessionId 파싱
-                val regex = Regex("""\[runSessionId: (\d+)]""")
-                val matchResult = regex.find(errorResponse.message)
-                val sessionId =
-                    matchResult
-                        ?.groups
-                        ?.get(1)
-                        ?.value
-                        ?.toLongOrNull()
-
-                if (sessionId != null) {
-                    // 400 에러지만, 진행 중인 세션 ID를 찾았으므로 성공 처리
-                    DoRunResult.Success(sessionId)
-                } else {
-                    DoRunResult.Failure(DoRunException.DataError("400 에러: ${errorResponse.message}"))
-                }
-            } else {
-                DoRunResult.Failure(DoRunException.DataError("400 에러: 응답 본문이 없습니다."))
-            }
-        } catch (parseException: Exception) {
-            DoRunResult.Failure(DoRunException.DataError("400 에러: 응답 본문 파싱 실패: ${parseException.message}"))
         }
 
     override suspend fun saveRealtimeDataOnLocal(
@@ -171,31 +129,26 @@ class RunningSessionRepositoryImpl @Inject constructor(
      * 1. 남은 러닝 데이터 서버 전송
      * 2. 종료 API 호출
      * 3. 로컬 DB 지우기
+     * 4. 종료된 세션 ID 리턴
      */
     override suspend fun finishSession(
         sessionId: Long,
         mapImage: Bitmap,
-    ): DoRunResult<RunningSessionResult> =
+    ): DoRunResult<Long> =
         withContext(Dispatchers.IO) {
             try {
-//                Timber.d("Finishing run: Syncing final segments...")
-//                val segmentSyncResult = syncSegmentData(sessionId, false)
-//                if (segmentSyncResult is DoRunResult.Failure) {
-//                    Timber.w("Failed to sync final segment before finishing.")
-//                }
-
                 // DTO 생성 로직 (예외 발생 가능)
                 val finishRequestDto = getFinishRequestDto()
 
                 // API 호출 (예외 발생 가능)
-                val runningSessionResult = requestFinishApi(sessionId, finishRequestDto, mapImage)
+                val finishedSessionId = requestFinishApi(sessionId, finishRequestDto, mapImage)
 
                 // API 호출 성공 시 로컬 데이터 삭제
                 localRunningDataSource.deleteAllRunningTrackPoints()
                 Timber.d("Successfully finished session. Local data cleared.")
 
                 // 최종 성공 반환
-                DoRunResult.Success(runningSessionResult)
+                DoRunResult.Success(finishedSessionId)
             } catch (e: HttpException) {
                 // (syncSegmentData, requestFinishApi에서 발생한) 서버 에러
                 Timber.w("Server error on finish: ${e.code()} ${e.message}")
@@ -212,12 +165,13 @@ class RunningSessionRepositoryImpl @Inject constructor(
      * 종료 API를 호출하고 응답을 파싱/검증하는 private 함수
      * @throws DoRunException.DataError 서버 응답 데이터가 null일 경우
      * @throws HttpException 서버가 non-2xx 응답을 반환할 경우
+     * @return 종료된 세션 ID
      */
     private suspend fun requestFinishApi(
         sessionId: Long,
         finishRequestDto: FinishRunningRequestDto,
         mapImage: Bitmap,
-    ): RunningSessionResult =
+    ): Long =
         try {
             val finishResponse =
                 runningSessionDataSource.postFinishRunning(
@@ -225,7 +179,7 @@ class RunningSessionRepositoryImpl @Inject constructor(
                     finishRequestDto,
                     mapImage,
                 )
-            finishResponse.data?.toRunningSessionResult()
+            finishResponse.data?.id
                 ?: throw DoRunException.DataError("서버 응답 데이터(finish)가 비어 있습니다.")
         } catch (e: HttpException) {
             // 서버 에러
@@ -237,6 +191,9 @@ class RunningSessionRepositoryImpl @Inject constructor(
             throw DoRunException.DataError("종료 API 요청 실패: ${e.message}")
         }
 
+    /**
+     * 서버에 보낼 종료 데이터를 로컬DB에서 가져오기
+     */
     private suspend fun getFinishRequestDto(): FinishRunningRequestDto {
         val lastTrackPoint =
             localRunningDataSource.getLastRunningTrackPoint()

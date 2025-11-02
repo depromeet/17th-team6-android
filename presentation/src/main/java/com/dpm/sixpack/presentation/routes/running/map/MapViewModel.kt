@@ -147,6 +147,7 @@ class MapViewModel @Inject constructor(
                             .Builder()
                             .include(pathColorState.paths.flatten())
                             .build()
+                            .toSquareBounds()
 
                     reduce {
                         state.copy(
@@ -168,8 +169,8 @@ class MapViewModel @Inject constructor(
     private fun handleSessionFinish(mapImage: Bitmap) =
         intent {
             finishRunningSessionUseCase(mapImage)
-                .onSuccess {
-                    Timber.d("session finish success")
+                .onSuccess { id ->
+                    Timber.d("session finish success, sessionId : $id")
                 }.onError {
                     Timber.d("session finish failed: ${it.message}")
                 }
@@ -180,7 +181,8 @@ class MapViewModel @Inject constructor(
                 )
             }
 
-            postSideEffect(MapSideEffect.NavigateToReport)
+            // TODO SK: 리포트 화면 세션ID 전달
+//            postSideEffect(MapSideEffect.NavigateToReport())
         }
 
     private fun updateRunningMapPath(newPathState: PathState) =
@@ -212,5 +214,27 @@ class MapViewModel @Inject constructor(
             }.addOnFailureListener {
                 Timber.e("Load Location From Client failed: $it")
             }
+    }
+
+    /**
+     * LatLngBounds를 포함하는 가장 작은 '정사각형' LatLngBounds로 변환하는 헬퍼 함수
+     */
+    private fun LatLngBounds.toSquareBounds(): LatLngBounds {
+        // 원본 영역의 위도(높이)와 경도(너비) 차이를 계산
+        val latDistance = this.northLatitude - this.southLatitude
+        val lngDistance = this.eastLongitude - this.westLongitude
+
+        // 더 큰 값을 기준으로 정사각형의 한 변의 길이를 정함
+        val maxDistance = maxOf(latDistance, lngDistance)
+        val halfMaxDistance = maxDistance / 2.0
+
+        // 원본 영역의 중심점
+        val center = this.center
+
+        // 중심점에서 정사각형의 절반 크기만큼 떨어진 새 '정사각형' Bounds 생성
+        return LatLngBounds(
+            LatLng(center.latitude - halfMaxDistance, center.longitude - halfMaxDistance), // SW (남서)
+            LatLng(center.latitude + halfMaxDistance, center.longitude + halfMaxDistance), // NE (북동)
+        )
     }
 }

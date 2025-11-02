@@ -19,6 +19,7 @@ class StartRunningUseCase @Inject constructor(
             }
         } else {
             Timber.d("기존 러닝을 다시 시작합니다.")
+            // TODO sk: 기존 러닝 재시작 하기
             DoRunResult.Success(localSessionId)
         }
     }

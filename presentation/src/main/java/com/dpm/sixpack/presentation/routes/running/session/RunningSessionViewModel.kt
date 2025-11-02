@@ -145,20 +145,26 @@ class RunningSessionViewModel @Inject constructor(
         bindToService()
         intent {
             viewModelScope.launch {
+                // TODO SK: 성공 실패 처리 제대로
                 startRunningUseCase()
                     .onSuccess { sessionId ->
                         Timber.d("session start success: sessionId = $sessionId")
+                        handleReadyState(RunningSessionUiState.Ready())
+
+                        reduce {
+                            RunningSessionUiState.Running()
+                        }
+
+                        startObservingRealtimeData()
                     }.onError {
                         Timber.d("session start failed: ${it.message}")
+
+                        reduce {
+                            RunningSessionUiState.Initial
+                        }
+
+                        postSideEffect(RunningSessionSideEffect.SessionFinish)
                     }
-
-                handleReadyState(RunningSessionUiState.Ready())
-
-                reduce {
-                    RunningSessionUiState.Running()
-                }
-
-                startObservingRealtimeData()
             }
         }
     }
@@ -240,13 +246,6 @@ class RunningSessionViewModel @Inject constructor(
     private fun handleMainRunningStopConfirm() =
         intent {
             if (state is RunningSessionUiState.Pause) {
-                // TODO: Add capture image logic to confirm stop session
-//                finishRunningSessionUseCase()
-//                    .onSuccess {
-//                        Timber.d("session finish success")
-//                    }.onError {
-//                        Timber.d("session finish failed: ${it.message}")
-//                    }
                 mockLocationClient.stop()
                 sendCommandToService(context, RunningActions.STOP)
 
