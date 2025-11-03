@@ -15,10 +15,10 @@ import javax.inject.Inject
 class FcmService : FirebaseMessagingService() {
     @Inject
     @ApplicationScope
-    private lateinit var appScope: CoroutineScope
+    lateinit var appScope: CoroutineScope
 
     @Inject
-    private lateinit var userPreferenceRepository: UserPreferenceRepository
+    lateinit var userPreferenceRepository: UserPreferenceRepository
 
     /**
      * FCM 메시지를 수신할 때마다 호출됩니다.
