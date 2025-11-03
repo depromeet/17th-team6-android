@@ -5,7 +5,10 @@
     <string name="common_session_count">%d회차</string>
     <string name="common_session_total_count">/ 총 %d회</string>
     <string name="common_next">다음</string>
+    <string name="common_ok">확인</string>
     <string name="common_complete">완료</string>
+    <string name="common_cancel">닫기</string>
+    <string name="common_find_account">계정찾기</string>
     <string name="common_recommended_duration">권장 러닝 시간</string>
     <string name="common_recommended_pace">권장 페이스</string>
 
@@ -39,6 +42,65 @@
     <string name="onboarding_permission_term_location">[필수] 위치기반 정보 수집 동의</string>
     <string name="onboarding_permission_term_privacy">[필수] 개인정보 수집/이용 동의</string>
     <string name="onboarding_permission_term_marketing">[선택] 마케팅 정보 수신 동의</string>
+    <!-- endregion-->
+
+    <!-- region Auth Common -->
+    <string name="auth_error_invalid_phone_number">올바른 휴대폰 번호를 입력해주세요.</string>
+    <string name="auth_success_code_sent">인증번호가 발송되었습니다.</string>
+    <string name="auth_error_code_send_failed">인증번호 발송에 실패했습니다.</string>
+    <string name="auth_error_rate_limit">인증번호 전송은 하루 5회까지만 가능해요.</string>
+    <string name="auth_error_code_mismatch">인증번호가 올바르지 않아요.</string>
+    <string name="auth_error_code_expired">인증 시간이 만료되었습니다.</string>
+    <!-- endregion-->
+
+    <!-- region Sign In -->
+    <string name="signin_title_phone_input">휴대폰 번호를\n입력해주세요.</string>
+    <string name="signin_title_verification_input">인증번호 6자리를\n입력해주세요.</string>
+    <string name="signin_label_phone_number">휴대폰 번호</string>
+    <string name="signin_placeholder_phone_number">휴대폰 번호(-없이 숫자만 입력)</string>
+    <string name="signin_send_verification_code">인증문자 받기</string>
+    <string name="signin_label_verification_code">인증번호</string>
+    <string name="signin_find_account_question">휴대폰 번호가 변경되었나요?</string>
+    <string name="signin_find_account_action">계정찾기</string>
+    <string name="singin_signup_action">가입하기</string>
+
+    <string name="signin_error_invalid_phone_number">올바른 휴대폰 번호를 입력해주세요.</string>
+    <string name="signin_success_code_sent">인증번호가 발송되었습니다.</string>
+    <string name="signin_error_code_send_failed">인증번호 발송에 실패했습니다.</string>
+    <string name="signin_error_rate_limit">인증번호 전송은 하루 5회까지만 가능해요.</string>
+    <string name="signin_error_code_length">6자리 인증번호를 입력해주세요.</string>
+    <string name="signin_error_code_mismatch">인증번호가 올바르지 않아요.</string>
+    <string name="signin_error_code_expired">인증 시간이 만료되었습니다.</string>
+    <string name="signin_error_already_registered">이미 가입된 번호에요.\n계정찾기를 진행해주세요!</string>
+    <string name="signin_unregistered_user_title">회원가입이 필요합니다</string>
+    <string name="signin_unregistered_user_message">아직 가입하지 않은 번호에요.\n회원가입을 진행할까요?</string>
+    <!-- endregion-->
+
+    <!-- region Sign Up -->
+    <string name="signup_title_phone_input">환영합니다!\n휴대폰 번호로 가입해주세요.</string>
+    <string name="signup_title_verification_input">인증번호 6자리를 입력해주세요.</string>
+    <string name="signup_title_terms_agreement">회원가입을 위해 아래 약관에 동의해주세요.</string>
+    <string name="signup_title_terms_agreement_action">동의하고 계속하기</string>
+    <string name="signup_label_phone_number">휴대폰 번호</string>
+    <string name="signup_placeholder_phone_number">휴대폰 번호(-없이 숫자만 입력)</string>
+    <string name="signup_send_verification_code">인증문자 받기</string>
+    <string name="signup_label_verification_code">인증번호</string>
+    <string name="signup_placeholder_verification_code">인증번호 6자리</string>
+    <string name="signup_error_invalid_phone_number">올바른 휴대폰 번호를 입력해주세요.</string>
+    <string name="signup_success_code_sent">인증번호가 발송되었습니다.</string>
+    <string name="signup_error_code_send_failed">인증번호 발송에 실패했습니다.</string>
+    <string name="signup_error_rate_limit">인증번호 전송은 하루 5회까지만 가능해요.</string>
+    <string name="signup_error_code_length">6자리 인증번호를 입력해주세요.</string>
+    <string name="signup_error_code_mismatch">인증번호가 올바르지 않아요.</string>
+    <string name="signup_error_code_expired_detailed">인증 시간이 만료되었습니다. 다시 시도해주세요.</string>
+    <string name="signup_error_code_expired">인증 시간이 만료되었습니다.</string>
+    <string name="signup_title_profile_creation">프로필을 생성해주세요.</string>
+    <string name="signup_label_profile_name">닉네임 입력</string>
+    <string name="signup_placeholder_profile_name">이름을 입력해주세요</string>
+    <string name="signup_helper_text_profile_name">닉네임 2-8자</string>
+    <string name="signup_already_registered_user_title">이미 가입된 번호에요</string>
+    <string name="signup_already_registered_user_message">이미 가입된 번호에요.\n계정찾기를 진행해주세요!</string>
+    <string name="signup_button_resend">재전송</string>
     <!-- endregion-->
 
 

@@ -1,0 +1,6 @@
+package com.dpm.sixpack.domain.model
+
+data class AuthToken(
+    val accessToken: String,
+    val refreshToken: String,
+)
