@@ -120,6 +120,7 @@
     <string name="feed_reaction_bottom_sheet_all_tab">모두</string>
     <string name="feed_reaction_bottom_sheet_my_reaction_badge">나</string>
     <string name="feed_reaction_bottom_sheet_user_profile_image_description">User profile image</string>
+    <string name="certified_users_title">인증목록</string>
     <!--endregion -->
 
     <!--region Screen Selection Tab-->
