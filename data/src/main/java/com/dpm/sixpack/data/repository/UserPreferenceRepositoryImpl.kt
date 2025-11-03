@@ -11,12 +11,15 @@ class UserPreferenceRepositoryImpl @Inject constructor(
 ) : UserPreferenceRepository {
     private val userId = userPreferenceDataSource.userId
     private val sessionId = userPreferenceDataSource.sessionId
+    private val fcmDeviceToken = userPreferenceDataSource.fcmDeviceToken
 
     private val isOnboardingComplete = userPreferenceDataSource.isOnboardingComplete
 
     override suspend fun getUserId(): Long = userId.first()
 
     override suspend fun getSessionId(): Long? = sessionId.firstOrNull()
+
+    override suspend fun getFcmDeviceToken(): String? = fcmDeviceToken.firstOrNull()
 
     override suspend fun getIsOnboardingComplete(): Boolean = isOnboardingComplete.first()
 
@@ -26,6 +29,10 @@ class UserPreferenceRepositoryImpl @Inject constructor(
 
     override suspend fun updateSessionId(sessionId: Long) {
         userPreferenceDataSource.updateSessionId(sessionId = sessionId)
+    }
+
+    override suspend fun updateFcmDeviceToken(token: String) {
+        userPreferenceDataSource.updateFcmDeviceToken(token = token)
     }
 
     override suspend fun updateOnboardingComplete(isComplete: Boolean) {

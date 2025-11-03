@@ -42,6 +42,10 @@ kotlinxCoroutinesCore = "1.9.0"
 # Debug
 timber = "5.0.1"
 
+# Firebase
+firebaseBom = "34.5.0"
+firebaseMessaging = "24.1.2"
+
 # Hilt
 hilt = "2.51.1"
 hiltNavigationCompose = "1.2.0"
@@ -76,6 +80,9 @@ orbitCore = "10.0.0"
 orbitTest = "10.0.0"
 orbitViewmodel = "10.0.0"
 
+# Paging
+paging = "3.4.0-alpha04"
+
 # Permission
 accompanistPermissions = "0.37.0"
 
@@ -88,12 +95,15 @@ junitVersion = "1.1.5"
 espressoCore = "3.5.0"
 
 # Others
+annotationExperimental = "1.6.0-alpha01"
+googleService = "4.4.4"
 kotlinxDatetime = "0.7.1"
 
 
 [libraries]
 
 # Androidx
+androidx-annotation-experimental = { module = "androidx.annotation:annotation-experimental", version.ref = "annotationExperimental" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
@@ -140,6 +150,10 @@ hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-comp
 hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
 hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 
+# Firebase
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+google-firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessaging" }
+
 # LocalDB
 androidx-room = { group = "androidx.room", name = "room-runtime", version.ref = "roomVersion" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomVersion" }
@@ -161,6 +175,10 @@ okhttp = { group = "com.squareup.okhttp3", name = "okhttp" }
 okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-kotlin-serialization = { module = "com.squareup.retrofit2:converter-kotlinx-serialization", version.ref = "retrofit" }
+
+#Paging
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
+androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
 
 # Permission
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -194,6 +212,7 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleService" }
 
 # Custom Plugins
 sixpack-android-application = { id = "sixpack.android.application", version = "unspecified" }
@@ -260,6 +279,11 @@ network = [
     "okhttp-logging",
     "retrofit-core",
     "retrofit-kotlin-serialization",
+]
+
+paging = [
+    "androidx-paging-compose",
+    "androidx-paging-runtime"
 ]
 
 # Orbit

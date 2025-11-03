@@ -22,7 +22,9 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RunningSessionRepositoryImpl @Inject constructor(
     private val runningSessionDataSource: RunningSessionDataSource,
     private val localRunningDataSource: LocalRunningDataSource,

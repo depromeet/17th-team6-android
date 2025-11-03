@@ -19,7 +19,9 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.io.FileOutputStream
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RunningSessionDataSource @Inject constructor(
     @ApplicationContext private val context: Context,
     private val runningSessionServiceApi: RunningSessionServiceApi,

@@ -7,6 +7,8 @@ interface UserPreferenceDataSource {
 
     val sessionId: Flow<Long?>
 
+    val fcmDeviceToken: Flow<String?>
+
     val isOnboardingComplete: Flow<Boolean>
 
     suspend fun updateOnboardingComplete(isComplete: Boolean)
@@ -14,6 +16,8 @@ interface UserPreferenceDataSource {
     suspend fun updateUserId(userId: Long)
 
     suspend fun updateSessionId(sessionId: Long)
+
+    suspend fun updateFcmDeviceToken(token: String)
 
     suspend fun clearSessionId()
 }
