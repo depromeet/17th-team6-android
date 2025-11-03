@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.dpm.sixpack.presentation.common.model.FriendUiItem
 import com.dpm.sixpack.presentation.common.util.calculateSecDiff
 import com.dpm.sixpack.presentation.common.util.convertTimeDiffToString
 import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
@@ -35,17 +36,15 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 fun FriendListItem(
-    nickName: String,
-    isMe: Boolean,
-    profileImgUrl: String,
-    lastestRunAt: String,
-    distanceInMeter: Int,
+    friendItem: FriendUiItem,
     modifier: Modifier = Modifier,
     onAwakeClick: () -> Unit = {},
 ) {
-    val secDiff = calculateSecDiff(lastestRunAt)
+    val distance = friendItem.distanceInMeter
+    val lastestRunAt = friendItem.lastestRunAt
+    val secDiff = if (lastestRunAt == null) null else calculateSecDiff(lastestRunAt)
     val isOutdated = secDiff == null || secDiff > 48 * 60 * 60
-    val showInactive = isOutdated && !isMe
+    val showInactive = isOutdated && !friendItem.isMe
 
     Row(
         modifier =
@@ -62,7 +61,7 @@ fun FriendListItem(
                 model =
                     ImageRequest
                         .Builder(LocalContext.current)
-                        .data(profileImgUrl)
+                        .data(friendItem.profileImgUrl)
                         .crossfade(true)
                         .build(),
                 contentDescription = null,
@@ -96,13 +95,13 @@ fun FriendListItem(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 // nickname
                 Text(
-                    text = nickName,
+                    text = friendItem.nickName,
                     color = SixpackTheme.colors.gray900,
                     style = SixpackTheme.typography.t2Bold,
                     fontWeight = FontWeight.Bold,
                 )
                 // '나' 태그
-                if (isMe) {
+                if (friendItem.isMe) {
                     Surface(
                         modifier = Modifier.padding(start = 6.dp),
                         shape = CircleShape,
@@ -128,7 +127,7 @@ fun FriendListItem(
             }
             // 최근 러닝 거리 / 장소
             Text(
-                text = if (!isOutdated) formatDistanceToKm(distanceInMeter) else "최근 러닝 기록이 없어요",
+                text = if (!isOutdated && distance != null) formatDistanceToKm(distance) else "최근 러닝 기록이 없어요",
                 style = SixpackTheme.typography.b2Medium,
                 color = SixpackTheme.colors.gray700,
             )
@@ -149,29 +148,38 @@ private fun FriendListItemPreview() {
     Column {
         // 나
         FriendListItem(
-            nickName = "승규",
-            isMe = true,
-            profileImgUrl = "",
-            lastestRunAt = "2025-10-19T19:57:13Z",
-            distanceInMeter = 5000,
+            FriendUiItem(
+                userId = 1234,
+                nickName = "승규",
+                isMe = true,
+                profileImgUrl = "",
+                lastestRunAt = "2025-10-19T19:57:13Z",
+                distanceInMeter = 5000,
+            ),
         )
 
         // 친구, 활성
         FriendListItem(
-            nickName = "소래",
-            isMe = false,
-            profileImgUrl = "",
-            lastestRunAt = "2025-10-20T09:57:13Z",
-            distanceInMeter = 900,
+            FriendUiItem(
+                userId = 24455,
+                nickName = "소래",
+                isMe = false,
+                profileImgUrl = "",
+                lastestRunAt = "2025-10-20T09:57:13Z",
+                distanceInMeter = 900,
+            ),
         )
 
         // 비활성 상태 (응원하기 버튼 표시)
         FriendListItem(
-            nickName = "승범",
-            isMe = false,
-            profileImgUrl = "",
-            lastestRunAt = "2025-10-16T19:57:13Z",
-            distanceInMeter = 3000,
+            FriendUiItem(
+                userId = 9786,
+                nickName = "승범",
+                isMe = false,
+                profileImgUrl = "",
+                lastestRunAt = "2025-10-16T19:57:13Z",
+                distanceInMeter = 3000,
+            ),
         )
     }
 }

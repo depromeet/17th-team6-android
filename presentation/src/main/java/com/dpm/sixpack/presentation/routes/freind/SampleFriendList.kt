@@ -1,10 +1,10 @@
 package com.dpm.sixpack.presentation.routes.freind
 
-import com.dpm.sixpack.presentation.common.model.FriendItem
+import com.dpm.sixpack.presentation.common.model.FriendUiItem
 
 val sampleFriendList =
     listOf(
-        FriendItem(
+        FriendUiItem(
             userId = 12345,
             nickName = "승규",
             isMe = true,
@@ -14,7 +14,7 @@ val sampleFriendList =
             latitude = 37.5301,
             longitude = 127.12345,
         ),
-        FriendItem(
+        FriendUiItem(
             userId = 12315,
             nickName = "소래",
             isMe = false,
@@ -24,7 +24,7 @@ val sampleFriendList =
             latitude = 37.5301,
             longitude = 127.12345,
         ),
-        FriendItem(
+        FriendUiItem(
             userId = 112415,
             nickName = "소래",
             isMe = false,
@@ -34,7 +34,7 @@ val sampleFriendList =
             latitude = 37.5301,
             longitude = 127.12345,
         ),
-        FriendItem(
+        FriendUiItem(
             userId = 112465715,
             nickName = "소래",
             isMe = false,
@@ -44,7 +44,7 @@ val sampleFriendList =
             latitude = 37.5301,
             longitude = 127.12345,
         ),
-        FriendItem(
+        FriendUiItem(
             userId = 47845445,
             nickName = "소래",
             isMe = false,
@@ -54,7 +54,7 @@ val sampleFriendList =
             latitude = 37.5301,
             longitude = 127.12345,
         ),
-        FriendItem(
+        FriendUiItem(
             userId = 47848,
             nickName = "소래",
             isMe = false,
@@ -64,7 +64,7 @@ val sampleFriendList =
             latitude = 37.5301,
             longitude = 127.12345,
         ),
-        FriendItem(
+        FriendUiItem(
             userId = 164,
             nickName = "소래",
             isMe = false,
@@ -74,7 +74,7 @@ val sampleFriendList =
             latitude = 37.5301,
             longitude = 127.12345,
         ),
-        FriendItem(
+        FriendUiItem(
             userId = 21074,
             nickName = "소래",
             isMe = false,
@@ -84,7 +84,7 @@ val sampleFriendList =
             latitude = 37.5301,
             longitude = 127.12345,
         ),
-        FriendItem(
+        FriendUiItem(
             userId = 2132454,
             nickName = "소래",
             isMe = false,
@@ -94,7 +94,7 @@ val sampleFriendList =
             latitude = 37.5301,
             longitude = 127.12345,
         ),
-        FriendItem(
+        FriendUiItem(
             userId = 217894,
             nickName = "소래",
             isMe = false,

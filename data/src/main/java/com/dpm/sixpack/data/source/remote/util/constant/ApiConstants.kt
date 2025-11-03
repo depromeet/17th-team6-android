@@ -6,4 +6,6 @@ object ApiConstants {
     // 도메인 경로
     const val RUNS = "runs"
     const val SESSIONS = "sessions"
+    const val AUTH = "auth"
+    const val FRIENDS = "friends"
 }

@@ -8,12 +8,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
-import com.dpm.sixpack.presentation.common.model.FriendItem
+import com.dpm.sixpack.presentation.common.model.FriendUiItem
 
 @Composable
 fun FriendsLazyColumn(
     modifier: Modifier = Modifier,
-    friendList: List<FriendItem> = emptyList(),
+    friendList: List<FriendUiItem> = emptyList(),
     onAwakeClick: (Long) -> Unit = {},
 ) {
     LazyColumn(
@@ -26,11 +26,7 @@ fun FriendsLazyColumn(
             key = { friend -> friend.userId }, // 각 친구의 고유 유저 ID를 key로 지정
         ) { friend ->
             FriendListItem(
-                nickName = friend.nickName,
-                isMe = friend.isMe,
-                profileImgUrl = friend.profileImgUrl,
-                lastestRunAt = friend.lastestRunAt,
-                distanceInMeter = friend.distanceInMeter,
+                friendItem = friend,
                 onAwakeClick = {
                     onAwakeClick(friend.userId)
                 },
@@ -46,7 +42,7 @@ private fun FriendsLazyColumnPreview() {
         FriendsLazyColumn(
             friendList =
                 listOf(
-                    FriendItem(
+                    FriendUiItem(
                         userId = 12345,
                         nickName = "승규",
                         isMe = true,
@@ -56,7 +52,7 @@ private fun FriendsLazyColumnPreview() {
                         latitude = 37.5301,
                         longitude = 127.12345,
                     ),
-                    FriendItem(
+                    FriendUiItem(
                         userId = 12315,
                         nickName = "소래",
                         isMe = false,
@@ -66,7 +62,7 @@ private fun FriendsLazyColumnPreview() {
                         latitude = 37.5301,
                         longitude = 127.12345,
                     ),
-                    FriendItem(
+                    FriendUiItem(
                         userId = 112415,
                         nickName = "소래",
                         isMe = false,

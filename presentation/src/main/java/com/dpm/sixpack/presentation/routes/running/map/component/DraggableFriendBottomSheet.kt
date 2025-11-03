@@ -20,14 +20,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.dpm.sixpack.presentation.common.model.FriendItem
+import com.dpm.sixpack.presentation.common.model.FriendUiItem
 import com.dpm.sixpack.presentation.routes.freind.components.FriendsLazyColumn
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 internal fun DraggableFriendBottomSheet(
     draggableState: AnchoredDraggableState<SheetDragState>,
-    friendList: List<FriendItem>,
+    friendList: List<FriendUiItem>,
     sheetHeight: Dp,
     startButtonHeight: Dp,
     modifier: Modifier = Modifier,
