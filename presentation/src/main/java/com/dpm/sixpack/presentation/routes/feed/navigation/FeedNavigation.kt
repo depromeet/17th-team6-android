@@ -11,7 +11,7 @@ import com.dpm.sixpack.presentation.destinations.MainRoute
 import com.dpm.sixpack.presentation.destinations.PostEdit
 import com.dpm.sixpack.presentation.routes.feed.FeedRoute
 import com.dpm.sixpack.presentation.routes.feed.certifiedusers.CertifiedUsersRoute
-import com.dpm.sixpack.presentation.routes.postedit.PostEditRoute
+import com.dpm.sixpack.presentation.routes.feed.postedit.PostEditRoute
 
 fun NavController.navigateToFeed(navOptions: NavOptions? = null) {
     navigate(MainRoute.Feed, navOptions)

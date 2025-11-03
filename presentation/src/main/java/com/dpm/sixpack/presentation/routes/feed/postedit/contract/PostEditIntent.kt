@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.postedit.contract
+package com.dpm.sixpack.presentation.routes.feed.postedit.contract
 
 import android.net.Uri
 import com.dpm.sixpack.presentation.common.base.UiIntent

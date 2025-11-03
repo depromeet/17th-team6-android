@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.postedit.ui
+package com.dpm.sixpack.presentation.routes.feed.postedit.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,7 +25,7 @@ import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopB
 import com.dpm.sixpack.presentation.common.model.PostResource
 import com.dpm.sixpack.presentation.common.model.RunningSummary
 import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
-import com.dpm.sixpack.presentation.routes.postedit.contract.PostEditUiState
+import com.dpm.sixpack.presentation.routes.feed.postedit.contract.PostEditUiState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable

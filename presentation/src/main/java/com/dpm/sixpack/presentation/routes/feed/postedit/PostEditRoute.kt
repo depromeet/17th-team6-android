@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.postedit
+package com.dpm.sixpack.presentation.routes.feed.postedit
 
 import android.content.ContentValues
 import android.content.Context
@@ -19,9 +19,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.dpm.sixpack.core.permission.SixPackPermissions
 import com.dpm.sixpack.presentation.common.util.PermissionHandler
-import com.dpm.sixpack.presentation.routes.postedit.contract.PostEditIntent
-import com.dpm.sixpack.presentation.routes.postedit.contract.PostEditSideEffect
-import com.dpm.sixpack.presentation.routes.postedit.ui.PostEditScreen
+import com.dpm.sixpack.presentation.routes.feed.postedit.contract.PostEditIntent
+import com.dpm.sixpack.presentation.routes.feed.postedit.contract.PostEditSideEffect
+import com.dpm.sixpack.presentation.routes.feed.postedit.ui.PostEditScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
