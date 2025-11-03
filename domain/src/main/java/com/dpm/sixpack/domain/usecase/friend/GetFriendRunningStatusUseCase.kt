@@ -6,5 +6,5 @@ import javax.inject.Inject
 class GetFriendRunningStatusUseCase @Inject constructor(
     private val repository: FriendRepository,
 ) {
-    operator fun invoke(friendId: String) = repository.getFriendsRunningStatusPager()
+    operator fun invoke() = repository.getFriendsRunningStatusPager()
 }

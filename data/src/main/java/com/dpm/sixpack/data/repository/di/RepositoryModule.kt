@@ -1,7 +1,9 @@
 package com.dpm.sixpack.data.repository.di
 
+import com.dpm.sixpack.data.repository.FriendRepositoryImpl
 import com.dpm.sixpack.data.repository.RunningSessionRepositoryImpl
 import com.dpm.sixpack.data.repository.UserPreferenceRepositoryImpl
+import com.dpm.sixpack.domain.repository.FriendRepository
 import com.dpm.sixpack.domain.repository.RunningSessionRepository
 import com.dpm.sixpack.domain.repository.UserPreferenceRepository
 import dagger.Binds
@@ -20,4 +22,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindsUserPreferenceRepository(repositoryImpl: UserPreferenceRepositoryImpl): UserPreferenceRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsFriendRepository(repositoryImpl: FriendRepositoryImpl): FriendRepository
 }

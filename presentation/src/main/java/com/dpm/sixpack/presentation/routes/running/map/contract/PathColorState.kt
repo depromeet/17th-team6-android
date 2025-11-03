@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.running.map.contract.state
+package com.dpm.sixpack.presentation.routes.running.map.contract
 
 import android.os.Parcelable
 import androidx.compose.runtime.Immutable
@@ -18,7 +18,7 @@ data class PathColorState(
      * 새로운 [PathColorState] 객체를 반환합니다.
      * newPathState의 가장 마지막 페이스 값만 계산하여 기존 색상 리스트에 추가합니다.
      *
-     * @param newPathState 새로운 좌표와 페이스가 추가된 최신 [PathState].
+     * @param newPathState 새로운 좌표와 페이스가 추가된 최신 [com.dpm.sixpack.presentation.routes.running.session.contract.state.PathState].
      * @return 색상이 추가된 새로운 [PathColorState].
      */
     fun updatedWith(newPathState: PathState): PathColorState {

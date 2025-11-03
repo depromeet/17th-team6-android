@@ -46,13 +46,13 @@ import com.dpm.sixpack.presentation.routes.freind.sampleFriendList
 import com.dpm.sixpack.presentation.routes.running.map.MapConstants.DEFAULT_ZOOM
 import com.dpm.sixpack.presentation.routes.running.map.MapConstants.FINAL_RESOLUTION
 import com.dpm.sixpack.presentation.routes.running.map.MapConstants.SNAPSHOT_PADDING
-import com.dpm.sixpack.presentation.routes.running.map.component.DraggableFriendBottomSheet
 import com.dpm.sixpack.presentation.routes.running.map.component.LocationTrackingButton
 import com.dpm.sixpack.presentation.routes.running.map.component.SheetDragState
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapIntent
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapSideEffect
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapUiState
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapViewState
+import com.dpm.sixpack.presentation.routes.running.map.friendsheet.DraggableFriendBottomSheet
 import com.dpm.sixpack.presentation.routes.running.session.RunningSessionScreen
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
@@ -348,7 +348,6 @@ private fun RunningMapScreenContent(
                                     }
                                 },
                         draggableState = draggableState,
-                        friendList = sampleFriendList,
                         sheetHeight = sheetMaxHeight,
                         startButtonHeight = startButtonHeightDp,
                     )

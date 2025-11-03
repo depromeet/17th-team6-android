@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.running.map.component
+package com.dpm.sixpack.presentation.routes.running.map.friendsheet
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.AnchoredDraggableState
@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -20,20 +21,34 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.dpm.sixpack.presentation.common.model.FriendUiItem
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.dpm.sixpack.presentation.routes.freind.components.FriendsLazyColumn
+import com.dpm.sixpack.presentation.routes.running.map.component.FriendSheetTitle
+import com.dpm.sixpack.presentation.routes.running.map.component.SheetDragState
+import com.dpm.sixpack.presentation.routes.running.map.friendsheet.contract.FriendSheetIntent
+import com.dpm.sixpack.presentation.routes.running.map.friendsheet.contract.FriendSheetSideEffect
 import com.dpm.sixpack.presentation.theme.SixpackTheme
+import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 internal fun DraggableFriendBottomSheet(
     draggableState: AnchoredDraggableState<SheetDragState>,
-    friendList: List<FriendUiItem>,
     sheetHeight: Dp,
     startButtonHeight: Dp,
     modifier: Modifier = Modifier,
     onFriendIconClick: () -> Unit = {},
+    viewModel: FriendSheetViewModel = hiltViewModel(),
 ) {
-    if (sheetHeight == 0.dp) return
+    val pagingItems = viewModel.friendPagingFlow.collectAsLazyPagingItems()
+
+    viewModel.collectSideEffect { sideEffect ->
+        when (sideEffect) {
+            is FriendSheetSideEffect.UserItemClicked -> {
+                // TODO: sideEffect.userId를 사용해 프로필 화면 등으로 이동
+            }
+        }
+    }
 
     Surface(
         modifier =
@@ -89,7 +104,13 @@ internal fun DraggableFriendBottomSheet(
                         .padding(top = 12.dp)
                         .fillMaxWidth()
                         .weight(1f),
-                friendList = friendList,
+                pagingItems = pagingItems,
+                onAwakeClick = { userId ->
+                    viewModel.onIntent(FriendSheetIntent.AwakeFriend(userId))
+                },
+                onItemClick = { userId ->
+                    viewModel.onIntent(FriendSheetIntent.ClickUser(userId))
+                },
             )
         }
     }
