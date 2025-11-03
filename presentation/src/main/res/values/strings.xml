@@ -220,4 +220,23 @@
     <string name="days_before">%1$d일 전</string>
     <string name="inactive_label_text">zzz</string>
     <!--endregion-->
+
+    <!-- region MyPage -->
+    <string name="mypage_title">마이</string>
+    <string name="mypage_friend_count">친구 %d명</string>
+    <string name="mypage_total_distance">누적 거리</string>
+    <string name="mypage_distance_km">%dkm</string>
+    <string name="mypage_certification_count_label">인증 횟수</string>
+    <string name="mypage_certification_count">%d회</string>
+    <string name="mypage_tab_certification">인증</string>
+    <string name="mypage_tab_record">기록</string>
+    <string name="mypage_certification_empty_title">아직 완료한 인증이 없어요...</string>
+    <string name="mypage_certification_empty_description">러닝을 완료하면 인증할 수 있어요!</string>
+    <string name="mypage_record_empty_title">아직 러닝 기록이 없어요...</string>
+    <string name="mypage_record_empty_description">지금 바로 러닝을 시작해봐요!</string>
+    <string name="mypage_record_distance">%.2fkm</string>
+    <string name="mypage_record_cadence">%d spm</string>
+    <string name="mypage_certification_available">인증 가능</string>
+    <string name="mypage_certification_completed">인증 완료</string>
+    <!-- endregion-->
 </resources>

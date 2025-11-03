@@ -14,6 +14,7 @@ import androidx.navigation.navOptions
 import com.dpm.sixpack.presentation.destinations.MainRoute
 import com.dpm.sixpack.presentation.destinations.Route
 import com.dpm.sixpack.presentation.navigation.MainNavTab
+import com.dpm.sixpack.presentation.routes.mypage.navigation.navigateMyPage
 import com.dpm.sixpack.presentation.routes.running.navigation.navigateRunningSession
 import com.dpm.sixpack.presentation.routes.sessionreport.navigation.navigateSessionReport
 import com.dpm.sixpack.presentation.routes.signup.navigation.navigateSignUp
@@ -94,8 +95,7 @@ class MainNavigator(
             }
 
             MainNavTab.MY_PAGE -> {
-                // TODO
-                Timber.d("Navigate to MyPage Screen")
+                navController.navigateMyPage(navOptions)
             }
         }
     }
