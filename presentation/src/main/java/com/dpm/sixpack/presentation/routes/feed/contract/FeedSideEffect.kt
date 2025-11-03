@@ -9,7 +9,9 @@ sealed interface FeedSideEffect : SideEffect {
 
     data object NavigateToAlarm : FeedSideEffect
 
-    data object NavigateToCertificationFriend : FeedSideEffect
+    data class NavigateToCertificationFriend(
+        val date: String,
+    ) : FeedSideEffect
 
     data object NavigateToMyPage : FeedSideEffect
 

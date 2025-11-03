@@ -4,34 +4,55 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.dpm.sixpack.presentation.common.model.PostResource
+import com.dpm.sixpack.presentation.destinations.CertifiedUsers
 import com.dpm.sixpack.presentation.destinations.MainRoute
 import com.dpm.sixpack.presentation.routes.feed.FeedRoute
+import com.dpm.sixpack.presentation.routes.feed.certifiedusers.CertifiedUsersRoute
 
 fun NavController.navigateToFeed(navOptions: NavOptions? = null) {
     navigate(MainRoute.Feed, navOptions)
 }
 
+fun NavController.navigateToCertifiedUsers(date: String) {
+    navigate(CertifiedUsers(date = date))
+}
+
 fun NavGraphBuilder.addFeedNavGraph(
+    navigateToBack: () -> Unit = {},
     navigateToGroup: () -> Unit = {},
     navigateToAlarm: () -> Unit = {},
-    navigateToCertifiedUserList: () -> Unit = {},
     navigateToUserProfile: (Long) -> Unit = {},
     navigateToMyPage: () -> Unit = {},
     navigateToPostDetail: (PostResource) -> Unit = {},
     navigateToUpload: () -> Unit = {},
     navigateToPostEdit: (PostResource) -> Unit = {},
+    navigateToCertifiedUsers: (String) -> Unit = {},
 ) {
     composable<MainRoute.Feed> {
         FeedRoute(
             navigateToGroup = navigateToGroup,
             navigateToAlarm = navigateToAlarm,
-            navigateToCertifiedUserList = navigateToCertifiedUserList,
+            navigateToCertifiedUserList = { date ->
+                navigateToCertifiedUsers(date)
+            },
             navigateToUserProfile = navigateToUserProfile,
             navigateToMyPage = navigateToMyPage,
             navigateToPostDetail = navigateToPostDetail,
             navigateToPostUpload = navigateToUpload,
             navigateToPostEdit = navigateToPostEdit,
+        )
+    }
+
+    composable<CertifiedUsers> { backStackEntry ->
+        val route = backStackEntry.toRoute<CertifiedUsers>()
+
+        CertifiedUsersRoute(
+            date = route.date,
+            navigateToBack = navigateToBack,
+            navigateToUserProfile = navigateToUserProfile,
+            navigateToMyPage = navigateToMyPage,
         )
     }
 }

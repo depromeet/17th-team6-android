@@ -16,7 +16,7 @@ fun FeedRoute(
     viewModel: FeedViewModel = hiltViewModel(),
     navigateToGroup: () -> Unit,
     navigateToAlarm: () -> Unit,
-    navigateToCertifiedUserList: () -> Unit,
+    navigateToCertifiedUserList: (String) -> Unit,
     navigateToUserProfile: (Long) -> Unit,
     navigateToMyPage: () -> Unit,
     navigateToPostDetail: (PostResource) -> Unit,
@@ -30,7 +30,7 @@ fun FeedRoute(
         when (sideEffect) {
             is FeedSideEffect.NavigateToFriend -> navigateToGroup()
             is FeedSideEffect.NavigateToAlarm -> navigateToAlarm()
-            is FeedSideEffect.NavigateToCertificationFriend -> navigateToCertifiedUserList()
+            is FeedSideEffect.NavigateToCertificationFriend -> navigateToCertifiedUserList(sideEffect.date)
             is FeedSideEffect.NavigateToMyPage -> navigateToMyPage()
             is FeedSideEffect.NavigateToUserPage -> navigateToUserProfile(sideEffect.userId)
             is FeedSideEffect.NavigateToPostDetail -> navigateToPostDetail(sideEffect.post)

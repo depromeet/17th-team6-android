@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import com.dpm.sixpack.SixPackAppState
 import com.dpm.sixpack.presentation.destinations.OnboardingRoute
 import com.dpm.sixpack.presentation.routes.feed.navigation.addFeedNavGraph
+import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToCertifiedUsers
 import com.dpm.sixpack.presentation.routes.onboarding.OnboardingRoute
 import com.dpm.sixpack.presentation.routes.running.navigation.addRunningSessionNavGraph
 import com.dpm.sixpack.presentation.routes.sessionreport.navigation.addSessionReportNavGraph
@@ -21,12 +22,12 @@ internal fun MainNavHost(
     modifier: Modifier = Modifier,
 ) {
     val navigator = appState.navigator
-
+    val navController = navigator.navController
     Box(
         modifier = modifier.fillMaxSize(),
     ) {
         NavHost(
-            navController = navigator.navController,
+            navController = navController,
             startDestination = navigator.startDestination,
         ) {
             composable<OnboardingRoute> {
@@ -47,10 +48,13 @@ internal fun MainNavHost(
             )
 
             addSessionReportNavGraph(
-                onNavigateToBack = navigator::popBackStack,
+                onNavigateToBack = { navigator::popBackStack },
             )
 
-            addFeedNavGraph()
+            addFeedNavGraph(
+                navigateToBack = { navController.popBackStack() },
+                navigateToCertifiedUsers = navController::navigateToCertifiedUsers,
+            )
         }
     }
 }

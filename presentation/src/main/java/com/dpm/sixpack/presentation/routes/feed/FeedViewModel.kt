@@ -218,7 +218,8 @@ class FeedViewModel @Inject constructor(
 
     private fun handleCertifiedUsersClick() =
         intent {
-            postSideEffect(FeedSideEffect.NavigateToCertificationFriend)
+            val selectedDate = state.calendarState.selectedDate
+            postSideEffect(FeedSideEffect.NavigateToCertificationFriend(selectedDate.toYyyyMmDdString()))
         }
 
     private fun handleUserProfileClick(
