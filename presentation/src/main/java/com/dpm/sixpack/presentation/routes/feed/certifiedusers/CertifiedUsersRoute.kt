@@ -16,7 +16,7 @@ fun CertifiedUsersRoute(
     navigateToUserProfile: (Long) -> Unit,
     navigateToMyPage: () -> Unit,
     viewModel: CertifiedUsersViewModel = hiltViewModel(),
-    ) {
+) {
     val state by viewModel.collectAsState()
 
     LaunchedEffect(Unit) {

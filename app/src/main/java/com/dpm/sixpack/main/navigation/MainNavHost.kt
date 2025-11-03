@@ -10,6 +10,7 @@ import com.dpm.sixpack.SixPackAppState
 import com.dpm.sixpack.presentation.destinations.OnboardingRoute
 import com.dpm.sixpack.presentation.routes.feed.navigation.addFeedNavGraph
 import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToCertifiedUsers
+import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToPostEdit
 import com.dpm.sixpack.presentation.routes.onboarding.OnboardingRoute
 import com.dpm.sixpack.presentation.routes.running.navigation.addRunningSessionNavGraph
 import com.dpm.sixpack.presentation.routes.sessionreport.navigation.addSessionReportNavGraph
@@ -54,6 +55,7 @@ internal fun MainNavHost(
             addFeedNavGraph(
                 navigateToBack = { navController.popBackStack() },
                 navigateToCertifiedUsers = navController::navigateToCertifiedUsers,
+                navigateToPostEdit = navController::navigateToPostEdit,
             )
         }
     }

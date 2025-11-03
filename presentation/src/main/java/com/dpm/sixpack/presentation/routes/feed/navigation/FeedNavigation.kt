@@ -8,8 +8,10 @@ import androidx.navigation.toRoute
 import com.dpm.sixpack.presentation.common.model.PostResource
 import com.dpm.sixpack.presentation.destinations.CertifiedUsers
 import com.dpm.sixpack.presentation.destinations.MainRoute
+import com.dpm.sixpack.presentation.destinations.PostEdit
 import com.dpm.sixpack.presentation.routes.feed.FeedRoute
 import com.dpm.sixpack.presentation.routes.feed.certifiedusers.CertifiedUsersRoute
+import com.dpm.sixpack.presentation.routes.postedit.PostEditRoute
 
 fun NavController.navigateToFeed(navOptions: NavOptions? = null) {
     navigate(MainRoute.Feed, navOptions)
@@ -17,6 +19,10 @@ fun NavController.navigateToFeed(navOptions: NavOptions? = null) {
 
 fun NavController.navigateToCertifiedUsers(date: String) {
     navigate(CertifiedUsers(date = date))
+}
+
+fun NavController.navigateToPostEdit(feedId: Long) {
+    navigate(PostEdit(feedId = feedId))
 }
 
 fun NavGraphBuilder.addFeedNavGraph(
@@ -27,7 +33,7 @@ fun NavGraphBuilder.addFeedNavGraph(
     navigateToMyPage: () -> Unit = {},
     navigateToPostDetail: (PostResource) -> Unit = {},
     navigateToUpload: () -> Unit = {},
-    navigateToPostEdit: (PostResource) -> Unit = {},
+    navigateToPostEdit: (Long) -> Unit = {},
     navigateToCertifiedUsers: (String) -> Unit = {},
 ) {
     composable<MainRoute.Feed> {
@@ -53,6 +59,15 @@ fun NavGraphBuilder.addFeedNavGraph(
             navigateToBack = navigateToBack,
             navigateToUserProfile = navigateToUserProfile,
             navigateToMyPage = navigateToMyPage,
+        )
+    }
+
+    composable<PostEdit> { backStackEntry ->
+        val route = backStackEntry.toRoute<PostEdit>()
+
+        PostEditRoute(
+            feedId = route.feedId,
+            onNavigateBack = navigateToBack,
         )
     }
 }

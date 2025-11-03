@@ -28,7 +28,7 @@ sealed interface FeedSideEffect : SideEffect {
     ) : FeedSideEffect
 
     data class NavigateToPostEdit(
-        val post: PostResource,
+        val feedId: Long,
     ) : FeedSideEffect
 
     data class ShowToast(

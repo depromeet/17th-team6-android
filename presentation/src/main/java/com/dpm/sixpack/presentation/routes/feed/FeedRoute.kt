@@ -21,7 +21,7 @@ fun FeedRoute(
     navigateToMyPage: () -> Unit,
     navigateToPostDetail: (PostResource) -> Unit,
     navigateToPostUpload: () -> Unit,
-    navigateToPostEdit: (PostResource) -> Unit,
+    navigateToPostEdit: (Long) -> Unit,
 ) {
     val state by viewModel.collectAsState()
     val feedPagingItems = viewModel.feedPagingData.collectAsLazyPagingItems()
@@ -35,7 +35,7 @@ fun FeedRoute(
             is FeedSideEffect.NavigateToUserPage -> navigateToUserProfile(sideEffect.userId)
             is FeedSideEffect.NavigateToPostDetail -> navigateToPostDetail(sideEffect.post)
             is FeedSideEffect.NavigateToPostUpload -> navigateToPostUpload()
-            is FeedSideEffect.NavigateToPostEdit -> navigateToPostEdit(sideEffect.post)
+            is FeedSideEffect.NavigateToPostEdit -> navigateToPostEdit(sideEffect.feedId)
             is FeedSideEffect.ShowToast -> {
                 // TODO: Show toast
             }

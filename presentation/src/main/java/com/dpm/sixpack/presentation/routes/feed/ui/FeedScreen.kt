@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -151,6 +152,7 @@ fun FeedScreen(
         },
         containerColor = SixpackTheme.colors.gray0,
         contentColor = SixpackTheme.colors.gray900,
+        contentWindowInsets = WindowInsets(0)
     ) { paddingValues ->
         val contentModifier =
             Modifier

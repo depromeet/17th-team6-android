@@ -3,8 +3,11 @@ package com.dpm.sixpack.presentation.destinations
 import kotlinx.serialization.Serializable
 
 sealed interface MainFeedRoute : Route
+
 @Serializable
-data object PostEdit : MainFeedRoute
+data class PostEdit(
+    val feedId: Long,
+) : MainFeedRoute
 
 @Serializable
 data class CertifiedUsers(

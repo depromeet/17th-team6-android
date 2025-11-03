@@ -313,7 +313,7 @@ class FeedViewModel @Inject constructor(
                 reduce {
                     state.copy(selectedPostMenuId = -1L)
                 }
-                postSideEffect(FeedSideEffect.NavigateToPostEdit(post))
+                postSideEffect(FeedSideEffect.NavigateToPostEdit(post.feedId))
             }
 
             PostDropDownActionType.DELETE -> {

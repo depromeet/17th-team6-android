@@ -23,8 +23,6 @@ import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultAsyncImage
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
-import com.dpm.sixpack.presentation.common.model.PostingUserInfo
-import com.dpm.sixpack.presentation.common.model.UserInfo
 import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
@@ -105,8 +103,8 @@ private fun CertifiedUserItemPreview() {
             name = "비락식혜",
             profileImgUrl = "",
             isMe = true,
-        postingTime = "2일 전",
-        onUserClick = {},
+            postingTime = "2일 전",
+            onUserClick = {},
         )
     }
 }
