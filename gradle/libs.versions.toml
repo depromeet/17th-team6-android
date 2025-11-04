@@ -28,9 +28,6 @@ lifecycleService = "2.9.3"
 # Coil
 coil = "3.1.0"
 
-#Paging
-paging = "3.4.0-alpha04"
-
 # Compose
 activityCompose = "1.9.0"
 composeBom = "2024.09.00"
@@ -79,6 +76,9 @@ orbitCompose = "10.0.0"
 orbitCore = "10.0.0"
 orbitTest = "10.0.0"
 orbitViewmodel = "10.0.0"
+
+#Paging
+paging = "3.4.0-alpha04"
 
 # Permission
 accompanistPermissions = "0.37.0"
