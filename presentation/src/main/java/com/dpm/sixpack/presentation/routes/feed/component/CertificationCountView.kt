@@ -16,30 +16,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
-import coil3.request.crossfade
 import com.dpm.sixpack.presentation.R
+import com.dpm.sixpack.presentation.common.components.DoRunDefaultAsyncImage
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
-import com.dpm.sixpack.presentation.common.model.PostingUserUiState
+import com.dpm.sixpack.presentation.common.model.PostingUserInfo
+import com.dpm.sixpack.presentation.common.model.UserInfo
 import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 fun CertificationCountView(
-    users: List<PostingUserUiState>,
-    isMeCertified: Boolean,
+    users: List<PostingUserInfo>,
     onViewClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (users.isEmpty()) return
+
+    val isMeCertified = users.any { it.user.isMe }
 
     val text =
         if (isMeCertified) {
@@ -64,10 +62,9 @@ fun CertificationCountView(
 
 @Composable
 private fun OverlappingProfiles(
-    users: List<PostingUserUiState>,
+    users: List<PostingUserInfo>,
     modifier: Modifier = Modifier,
 ) {
-    // 최대 3명의 프로필만 표시하고, 가장 최근에 인증한 사람이 가장 위에 보이도록 reversed()를 사용
     val visibleUsers = users.take(3).reversed()
 
     Box(modifier = modifier) {
@@ -75,9 +72,9 @@ private fun OverlappingProfiles(
         val overlap = 10.dp
         val offset = profileCircleSize - overlap
 
-        visibleUsers.forEachIndexed { index, user ->
+        visibleUsers.forEachIndexed { index, postingUser ->
             ProfileImageCircle(
-                imageUrl = user.userImageUrl,
+                imageUrl = postingUser.user.profileImageUrl,
                 modifier = Modifier.padding(start = 28.dp + (offset * (visibleUsers.size - 1 - index))),
             )
         }
@@ -126,20 +123,13 @@ private fun ProfileImageCircle(
                 .clip(CircleShape)
                 .border(width = 1.dp, color = SixpackTheme.colors.gray0, shape = CircleShape),
     ) {
-        AsyncImage(
-            model =
-                ImageRequest
-                    .Builder(LocalContext.current)
-                    .data(imageUrl)
-                    .crossfade(true)
-                    .build(),
+        DoRunDefaultAsyncImage(
+            model = imageUrl,
             contentDescription = stringResource(id = R.string.feed_post_user_info_profile_image_description),
             modifier =
                 Modifier
                     .matchParentSize()
                     .clip(CircleShape),
-            placeholder = ColorPainter(SixpackTheme.colors.gray200),
-            error = ColorPainter(SixpackTheme.colors.gray200),
             contentScale = ContentScale.Crop,
         )
     }
@@ -152,10 +142,9 @@ private fun CertificationCountViewWithMePreview() {
         CertificationCountView(
             users =
                 listOf(
-                    PostingUserUiState(userName = "User2", userImageUrl = ""),
-                    PostingUserUiState(userName = "User3", userImageUrl = ""),
+                    PostingUserInfo(UserInfo(name = "User2", profileImageUrl = "")),
+                    PostingUserInfo(UserInfo(name = "User2", profileImageUrl = "")),
                 ),
-            isMeCertified = true,
             modifier = Modifier.padding(16.dp),
             onViewClick = {},
         )
@@ -169,12 +158,11 @@ private fun CertificationCountViewWithoutMePreview() {
         CertificationCountView(
             users =
                 listOf(
-                    PostingUserUiState(userName = "User1", userImageUrl = ""),
-                    PostingUserUiState(userName = "User2", userImageUrl = ""),
-                    PostingUserUiState(userName = "User3", userImageUrl = ""),
-                    PostingUserUiState(userName = "User4", userImageUrl = ""),
+                    PostingUserInfo(UserInfo(name = "User2", profileImageUrl = "")),
+                    PostingUserInfo(UserInfo(name = "User2", profileImageUrl = "")),
+                    PostingUserInfo(UserInfo(name = "User2", profileImageUrl = "")),
+                    PostingUserInfo(UserInfo(name = "User2", profileImageUrl = "")),
                 ),
-            isMeCertified = false,
             modifier = Modifier.padding(16.dp),
             onViewClick = {},
         )

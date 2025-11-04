@@ -1,11 +1,9 @@
 package com.dpm.sixpack.data.source.remote.dto.response
 
-import android.annotation.SuppressLint
 import com.dpm.sixpack.domain.model.RunningSessionResult
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class FinishRunningResponseDto(
     @SerialName("id")
@@ -21,21 +19,21 @@ data class FinishRunningResponseDto(
     @SerialName("roundCount")
     val roundCount: Int,
     @SerialName("totalDistance")
-    val totalDistance: Int,
+    val totalDistance: Long,
     @SerialName("totalDuration")
-    val totalDuration: Int,
+    val totalDuration: Long,
     @SerialName("avgPace")
-    val avgPace: Int,
+    val avgPace: Long,
     @SerialName("avgCadence")
-    val avgCadence: Long,
+    val avgCadence: Int,
     @SerialName("maxCadence")
-    val maxCadence: Long,
+    val maxCadence: Int,
 ) {
     fun toRunningSessionResult() =
         RunningSessionResult(
-            totalDistanceMeter = totalDistance,
+            totalDistanceMeter = totalDistance.toInt(),
             totalDurationSec = totalDuration,
-            avgPace = avgPace,
+            avgPace = avgPace.toInt(),
             avgCadence = avgCadence,
             maxCadence = maxCadence,
         )

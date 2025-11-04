@@ -6,24 +6,24 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.model.Emoji
-import com.dpm.sixpack.presentation.common.model.PostDetailUiState
-import com.dpm.sixpack.presentation.common.model.PostReactionUiState
-import com.dpm.sixpack.presentation.common.model.PostingUserUiState
-import com.dpm.sixpack.presentation.common.model.RunningSummaryUiState
+import com.dpm.sixpack.presentation.common.model.PostReaction
+import com.dpm.sixpack.presentation.common.model.PostResource
+import com.dpm.sixpack.presentation.common.model.PostingUserInfo
+import com.dpm.sixpack.presentation.common.model.RunningSummary
+import com.dpm.sixpack.presentation.common.model.UserInfo
+import com.dpm.sixpack.presentation.common.util.toTimeAgoString
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 /**
@@ -32,19 +32,21 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
  * LazyList에서 재사용 가능하도록 설계되었습니다.
  *
  * @param postDetail 포스트 상세 정보
- * @param currentUserName 현재 사용자 이름 (본인 포스트 표시용)
  * @param onReactionChipClick  반응 클릭 핸들러
  * @param onAddReactionClick 이모지 추가 버튼 클릭 핸들러
  * @param modifier 컴포저블 수정자
  */
 @Composable
 fun FeedPostCard(
-    postDetail: PostDetailUiState,
-    currentUserName: String,
+    postDetail: PostResource,
+    isMenuExpanded: Boolean,
     modifier: Modifier = Modifier,
+    onPostUserProfileClick: (Long, Boolean) -> Unit = { _, _ -> },
+    onPostImageClick: () -> Unit = {},
     onMenuClick: () -> Unit = {},
-    onReactionChipClick: (String) -> Unit = {},
-    onReactionChipLongClick: (String) -> Unit = {},
+    onDropDownMenuClick: (PostDropDownActionType) -> Unit = {},
+    onReactionChipClick: (Emoji, Boolean) -> Unit = { _, _ -> },
+    onReactionChipLongClick: (Emoji, List<PostReaction>) -> Unit = { _, _ -> },
     onAddReactionClick: () -> Unit = {},
 ) {
     Column(
@@ -53,23 +55,26 @@ fun FeedPostCard(
                 .fillMaxWidth()
                 .background(SixpackTheme.colors.gray0),
     ) {
-        // TODO SB postTime util로 변환한 변수 넣기
         PostUserInfoRow(
             postingUser = postDetail.user,
+            isMenuExpanded = isMenuExpanded,
             onMenuClick = onMenuClick,
+            onDropDownMenuClick = onDropDownMenuClick,
+            onPostUserProfileClick = { onPostUserProfileClick(postDetail.user.user.id, postDetail.user.user.isMe) },
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // TODO SB postTime util로 변환한 변수 넣기
         PostImageWithRecord(
             postImageUrl = postDetail.postImageUrl,
             runningSummary = postDetail.runningInfo,
+            onPostImageClick = onPostImageClick,
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
         PostReactionRow(
+            feedId = postDetail.feedId,
             reactions = postDetail.reactions,
             onReactionChipClick = onReactionChipClick,
             onReactionChipLongClick = onReactionChipLongClick,
@@ -84,35 +89,34 @@ fun FeedPostCard(
  */
 @Composable
 private fun PostUserInfoRow(
-    postingUser: PostingUserUiState,
+    postingUser: PostingUserInfo,
+    isMenuExpanded: Boolean,
     onMenuClick: () -> Unit,
+    onPostUserProfileClick: () -> Unit,
+    onDropDownMenuClick: (PostDropDownActionType) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         PostUserInfo(
-            userImageUrl = postingUser.userImageUrl,
-            userName = postingUser.userName,
-            postingTime = postingUser.postingTime,
-            isMyPost = postingUser.isMe,
-            // TODO SB typography 적용
-            // textStyle = SixpackTheme.typography.body2,
+            userName = postingUser.user.name,
+            userImageUrl = postingUser.user.profileImageUrl,
+            postingTime = postingUser.postingTime.toTimeAgoString(context),
+            isMyPost = postingUser.user.isMe,
+            onPostUserProfileClick = onPostUserProfileClick,
         )
 
         Spacer(modifier = Modifier.weight(1f))
 
-        IconButton(
-            onClick = onMenuClick,
-            modifier = Modifier.size(24.dp),
-        ) {
-            Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.ic_meatball_menu),
-                contentDescription = stringResource(id = R.string.feed_post_card_options_menu_description),
-                tint = SixpackTheme.colors.gray600,
-            )
-        }
+        PostDropDownMenuIcon(
+            isMyPost = postingUser.user.isMe,
+            isMenuExpanded = isMenuExpanded,
+            onMenuClick = { isMenuExpanded -> onMenuClick() },
+            onDropDownMenuClick = onDropDownMenuClick,
+        )
     }
 }
 
@@ -120,20 +124,25 @@ private fun PostUserInfoRow(
 @Composable
 fun FeedPostCardPreview() {
     DoRunPreviewWrapper {
+        var isMenuExpanded by remember { (mutableStateOf(true)) }
+
         FeedPostCard(
             postDetail =
-                PostDetailUiState(
+                PostResource(
                     feedId = 1,
                     postImageUrl = "",
                     user =
-                        PostingUserUiState(
-                            userName = "비락식혜",
-                            userImageUrl = "",
+                        PostingUserInfo(
+                            user =
+                                UserInfo(
+                                    name = "비락식혜",
+                                    profileImageUrl = "",
+                                    isMe = true,
+                                ),
                             postingTime = "36분 전",
-                            isMe = true,
                         ),
                     runningInfo =
-                        RunningSummaryUiState(
+                        RunningSummary(
                             totalDistance = "10.09",
                             totalTime = "4440", // 1시간 14분
                             averagePace = "7'30''",
@@ -142,12 +151,55 @@ fun FeedPostCardPreview() {
                         ),
                     reactions =
                         listOf(
-                            PostReactionUiState(Emoji.HEART, "10", true),
-                            PostReactionUiState(Emoji.FIRE, "5", false),
-                            PostReactionUiState(Emoji.SHOOT, "2", false),
+                            PostReaction(Emoji.HEART, "10", true),
+                            PostReaction(Emoji.FIRE, "5", false),
+                            PostReaction(Emoji.HEART, "2", false),
                         ),
                 ),
-            currentUserName = "비락식혜",
+            isMenuExpanded,
+            onMenuClick = { isMenuExpanded = !isMenuExpanded },
+        )
+    }
+}
+
+@Preview
+@Composable
+fun FeedFreindPostCardPreview() {
+    DoRunPreviewWrapper {
+        var isMenuExpanded by remember { (mutableStateOf(true)) }
+
+        FeedPostCard(
+            postDetail =
+                PostResource(
+                    feedId = 1,
+                    postImageUrl = "",
+                    user =
+                        PostingUserInfo(
+                            user =
+                                UserInfo(
+                                    name = "비락식혜",
+                                    profileImageUrl = "",
+                                    isMe = false,
+                                ),
+                            postingTime = "36분 전",
+                        ),
+                    runningInfo =
+                        RunningSummary(
+                            totalDistance = "10.09",
+                            totalTime = "4440", // 1시간 14분
+                            averagePace = "7'30''",
+                            cadence = "144",
+                            recordDateTime = "2023-08-01T00:00:00",
+                        ),
+                    reactions =
+                        listOf(
+                            PostReaction(Emoji.HEART, "10", true),
+                            PostReaction(Emoji.FIRE, "5", false),
+                            PostReaction(Emoji.HEART, "2", false),
+                        ),
+                ),
+            isMenuExpanded,
+            onMenuClick = { isMenuExpanded = !isMenuExpanded },
         )
     }
 }

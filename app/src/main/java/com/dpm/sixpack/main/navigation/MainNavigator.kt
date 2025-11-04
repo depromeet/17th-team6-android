@@ -15,6 +15,7 @@ import com.dpm.sixpack.presentation.destinations.MainRoute
 import com.dpm.sixpack.presentation.destinations.Route
 import com.dpm.sixpack.presentation.navigation.MainNavTab
 import com.dpm.sixpack.presentation.routes.mypage.navigation.navigateMyPage
+import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToFeed
 import com.dpm.sixpack.presentation.routes.running.navigation.navigateRunningSession
 import com.dpm.sixpack.presentation.routes.sessionreport.navigation.navigateSessionReport
 import com.dpm.sixpack.presentation.routes.signup.navigation.navigateSignUp
@@ -86,12 +87,11 @@ class MainNavigator(
 
         when (tab) {
             MainNavTab.RUNNING -> {
-                // TODO
+                navController.navigateRunningSession(navOptions)
             }
 
             MainNavTab.FEED -> {
-                // TODO
-                Timber.d("Navigate to Record Screen")
+                navController.navigateToFeed(navOptions)
             }
 
             MainNavTab.MY_PAGE -> {

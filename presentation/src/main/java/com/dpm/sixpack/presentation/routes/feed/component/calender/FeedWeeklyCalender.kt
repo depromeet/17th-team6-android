@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,11 +17,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -33,6 +36,8 @@ import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrappe
 import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.routes.feed.contract.uistate.FeedCalenderUiState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -47,7 +52,7 @@ private const val INITIAL_PAGE_INDEX = Int.MAX_VALUE / 2
 
 private const val DAYS_IN_WEEK = 7
 
-private const val HEADER_DATE_PATTERN = "M'월' W'주차'"
+private const val HEADER_DATE_PATTERN = "M'월'"
 
 @Immutable
 private data class WeeklyCalendarDay(
@@ -61,14 +66,16 @@ private data class WeeklyCalendarDay(
 fun FeedWeeklyCalendar(
     modifier: Modifier = Modifier,
     feedCalenderUiState: FeedCalenderUiState = FeedCalenderUiState(),
+    onDateSelected: (LocalDate) -> Unit = {},
+    onWeekDisplayed: (LocalDate) -> Unit = {},
     startDayOfWeek: DayOfWeek = DayOfWeek.SUNDAY,
     colors: WeeklyCalendarColors = FeedWeeklyCalendarDefaults.colors(),
     typography: WeeklyCalendarTypography = FeedWeeklyCalendarDefaults.typography(),
-    onDateSelected: (LocalDate) -> Unit = {},
 ) {
     val scope = rememberCoroutineScope()
     val selectedDate = feedCalenderUiState.selectedDate
     val today = feedCalenderUiState.today
+    val isLoading = feedCalenderUiState.isLoading
 
     val pagerState =
         rememberPagerState(
@@ -86,6 +93,17 @@ fun FeedWeeklyCalendar(
             val weeksOffset = pagerState.currentPage - INITIAL_PAGE_INDEX
             firstDayOfInitialPagerWeek.plusWeeks(weeksOffset.toLong())
         }
+    }
+
+    LaunchedEffect(pagerState, firstDayOfInitialPagerWeek) {
+        snapshotFlow { pagerState.currentPage }
+            .map { pageIndex ->
+                val weeksOffset = pageIndex - INITIAL_PAGE_INDEX
+                firstDayOfInitialPagerWeek.plusWeeks(weeksOffset.toLong())
+            }.distinctUntilChanged()
+            .collect { currentWeekStartDate ->
+                onWeekDisplayed(currentWeekStartDate)
+            }
     }
 
     Column(
@@ -143,6 +161,7 @@ fun FeedWeeklyCalendar(
             WeekRow(
                 days = currentPageWeekDays,
                 selectedDate = selectedDate,
+                isLoading = isLoading,
                 onDateClick = onDateSelected,
                 colors = colors,
                 typography = typography,
@@ -168,9 +187,17 @@ private fun WeeklyCalendarHeader(
     val displayDateForMonth = currentDisplayWeekViewStartDate.getDisplayMonth(selectedDate)
 
     val displayFormatter = remember { DateTimeFormatter.ofPattern(HEADER_DATE_PATTERN, Locale.getDefault()) }
-    val displayText =
+
+    // 주차 계산 (월의 첫 주는 1주차)
+    val weekOfMonth =
         remember(displayDateForMonth) {
-            displayDateForMonth.format(displayFormatter)
+            val weekFields = WeekFields.of(DayOfWeek.SUNDAY, 7)
+            displayDateForMonth.get(weekFields.weekOfMonth())
+        }
+
+    val displayText =
+        remember(displayDateForMonth, weekOfMonth) {
+            "${displayDateForMonth.format(displayFormatter)} ${weekOfMonth}주차"
         }
 
     Row(
@@ -222,28 +249,33 @@ private fun WeeklyCalendarHeader(
 private fun WeekRow(
     days: List<WeeklyCalendarDay>,
     selectedDate: LocalDate,
+    isLoading: Boolean,
     onDateClick: (LocalDate) -> Unit,
     colors: WeeklyCalendarColors,
     typography: WeeklyCalendarTypography,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(20.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
         days.forEach { day ->
             val isSelected = day.date == selectedDate
 
             key(day.date) {
-                DayCell(
-                    dayData = day,
-                    isSelected = isSelected,
-                    modifier = Modifier.weight(1f),
-                    onClick = {
-                        onDateClick(day.date)
-                    },
-                    colors = colors,
-                    typography = typography,
-                )
+                if (isLoading) {
+                    DayCellShimmer()
+                } else {
+                    DayCell(
+                        dayData = day,
+                        isSelected = isSelected,
+                        modifier = Modifier.weight(1f),
+                        onClick = {
+                            onDateClick(day.date)
+                        },
+                        colors = colors,
+                        typography = typography,
+                    )
+                }
             }
         }
     }
@@ -289,20 +321,20 @@ private fun DayCell(
         Box(
             modifier =
                 Modifier
-                    .fillMaxWidth()
-                    .background(color = dateBackgroundColor, shape = RoundedCornerShape(12.dp)),
+                    .width(40.dp)
+                    .background(color = dateBackgroundColor, shape = SixpackTheme.shapes.full),
             contentAlignment = Alignment.Center,
         ) {
             Text(
                 text = if (dayData.isToday) "오늘" else dayData.date.dayOfMonth.toString(),
                 color = dateTextColor,
                 style = typography.dayCellDateTextStyle,
+                modifier = Modifier.padding(bottom = 5.dp, top = 3.dp),
             )
         }
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        // 3. 포스트 수 (텍스트만)
         val postCountText =
             if (dayData.postCount > 0) {
                 stringResource(
@@ -316,6 +348,49 @@ private fun DayCell(
             text = postCountText,
             color = postCountTextColor,
             style = typography.dayCountTextStyle,
+        )
+    }
+}
+
+/**
+ * DayCell의 스켈레톤 로딩(Shimmer) UI입니다.
+ * DayCell과 동일한 레이아웃 구조를 가집니다.
+ */
+@Composable
+private fun DayCellShimmer(modifier: Modifier = Modifier) {
+    val shimmerColor = SixpackTheme.colors.gray100 // 스켈레톤 배경색
+
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Box(
+            modifier =
+                Modifier
+                    .width(40.dp) // "요일" 텍스트와 비슷한 너비
+                    .height(21.dp) // 텍스트 높이
+                    .background(shimmerColor, RoundedCornerShape(8.dp)),
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Box(
+            modifier =
+                Modifier
+                    .width(40.dp)
+                    .height(21.dp) // DayCell의 날짜 Box와 비슷한 높이
+                    .background(shimmerColor, RoundedCornerShape(12.dp)),
+        )
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Box(
+            modifier =
+                Modifier
+                    .width(40.dp) // "n개" 텍스트와 비슷한 너비
+                    .height(18.dp) // 텍스트 높이
+                    .background(shimmerColor, RoundedCornerShape(8.dp)),
         )
     }
 }
@@ -379,6 +454,40 @@ fun WeeklyCalendarPreview() {
                     .padding(20.dp),
         ) {
             val today = LocalDate.now()
+            val selectedDate = today
+            val postCounts =
+                mapOf(
+                    today.minusDays(2) to 3,
+                    selectedDate to 1,
+                    today to 5,
+                    today.plusDays(1) to 0,
+                    today.plusDays(2) to 1,
+                )
+
+            FeedWeeklyCalendar(
+                feedCalenderUiState =
+                    FeedCalenderUiState(
+                        today = today,
+                        selectedDate = selectedDate,
+                        postCounts = postCounts,
+                    ),
+                onDateSelected = {
+                },
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, name = "Feed Weekly Calendar shimmer")
+@Composable
+fun WeeklyCalendarShimmerPreview() {
+    DoRunPreviewWrapper {
+        Column(
+            modifier =
+                Modifier
+                    .padding(20.dp),
+        ) {
+            val today = LocalDate.now()
             val selectedDate = today.minusDays(1)
             val postCounts =
                 mapOf(
@@ -395,6 +504,7 @@ fun WeeklyCalendarPreview() {
                         today = today,
                         selectedDate = selectedDate,
                         postCounts = postCounts,
+                        isLoading = true,
                     ),
                 onDateSelected = {
                 },

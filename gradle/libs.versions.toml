@@ -1,6 +1,7 @@
 [versions]
 
 # App Version
+annotationExperimental = "1.6.0-alpha01"
 coreSplashscreen = "1.0.1"
 versionCode = "00001"
 versionName = "0.0.1"
@@ -76,8 +77,8 @@ orbitCore = "10.0.0"
 orbitTest = "10.0.0"
 orbitViewmodel = "10.0.0"
 
-# Paging
-paging = "3.3.5"
+#Paging
+paging = "3.4.0-alpha04"
 
 # Permission
 accompanistPermissions = "0.37.0"
@@ -97,6 +98,7 @@ kotlinxDatetime = "0.7.1"
 [libraries]
 
 # Androidx
+androidx-annotation-experimental = { module = "androidx.annotation:annotation-experimental", version.ref = "annotationExperimental" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
@@ -115,6 +117,10 @@ ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devto
 coil = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
+
+#Paging
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
+androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
 
 # Compose
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
@@ -162,10 +168,6 @@ okhttp = { group = "com.squareup.okhttp3", name = "okhttp" }
 okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-kotlin-serialization = { module = "com.squareup.retrofit2:converter-kotlinx-serialization", version.ref = "retrofit" }
-
-# Paging
-androidx-paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
-androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
 
 # Permission
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -278,4 +280,9 @@ orbit = [
 android-test = [
     "androidx-junit",
     "androidx-espresso-core",
+]
+
+paging = [
+   "androidx-paging-compose",
+    "androidx-paging-runtime"
 ]

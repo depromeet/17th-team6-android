@@ -1,6 +1,7 @@
 package com.dpm.sixpack.data.source.remote.service.di
 
 import com.dpm.sixpack.data.source.remote.service.AuthService
+import com.dpm.sixpack.data.source.remote.service.FeedService
 import com.dpm.sixpack.data.source.remote.service.RunningGoalService
 import com.dpm.sixpack.data.source.remote.service.RunningSessionService
 import dagger.Module
@@ -27,4 +28,8 @@ object ServiceModule {
     @Singleton
     fun provideRunningSessionService(retrofit: Retrofit): RunningSessionService =
         retrofit.create(RunningSessionService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideFeedService(retrofit: Retrofit): FeedService = retrofit.create(FeedService::class.java)
 }

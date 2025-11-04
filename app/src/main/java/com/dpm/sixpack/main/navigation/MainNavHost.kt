@@ -9,6 +9,7 @@ import androidx.navigation.navOptions
 import com.dpm.sixpack.SixPackAppState
 import com.dpm.sixpack.presentation.destinations.SignInRoute
 import com.dpm.sixpack.presentation.routes.mypage.navigation.addMyPageNavGraph
+import com.dpm.sixpack.presentation.routes.feed.navigation.addFeedNavGraph
 import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.addProfileCreationNavGraph
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.navigateProfileCreation
@@ -112,6 +113,8 @@ internal fun MainNavHost(
             addSessionReportNavGraph(
                 onNavigateToBack = navigator::popBackStack,
             )
+
+            addFeedNavGraph()
 
             addMyPageNavGraph(
                 onNavigateToSettings = {
