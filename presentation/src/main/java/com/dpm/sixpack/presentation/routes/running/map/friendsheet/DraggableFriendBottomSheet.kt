@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -23,7 +22,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.dpm.sixpack.presentation.routes.freind.components.FriendsLazyColumn
 import com.dpm.sixpack.presentation.routes.running.map.component.FriendSheetTitle
 import com.dpm.sixpack.presentation.routes.running.map.component.SheetDragState
 import com.dpm.sixpack.presentation.routes.running.map.friendsheet.contract.FriendSheetIntent
@@ -98,7 +96,7 @@ internal fun DraggableFriendBottomSheet(
             )
 
             // 친구 목록
-            FriendsLazyColumn(
+            FriendSheetLazyColumn(
                 modifier =
                     Modifier
                         .padding(top = 12.dp)

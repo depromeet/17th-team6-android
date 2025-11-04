@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.freind.components
+package com.dpm.sixpack.presentation.routes.running.map.friendsheet
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -24,10 +24,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
-import coil3.request.crossfade
 import com.dpm.sixpack.core.util.TimeUtil.isoStringToEpochSeconds
+import com.dpm.sixpack.presentation.common.components.DoRunDefaultAsyncImage
 import com.dpm.sixpack.presentation.common.model.FriendUiItem
 import com.dpm.sixpack.presentation.common.model.LastRunInfoUi
 import com.dpm.sixpack.presentation.common.util.convertTimeDiffToString
@@ -36,7 +34,7 @@ import com.dpm.sixpack.presentation.routes.running.map.component.FriendAwakeButt
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
-fun FriendListItem(
+internal fun FriendSheetListItem(
     friendItem: FriendUiItem,
     modifier: Modifier = Modifier,
     onAwakeClick: () -> Unit = {},
@@ -86,13 +84,8 @@ fun FriendListItem(
         Box(
             modifier = Modifier.size(48.dp),
         ) {
-            AsyncImage(
-                model =
-                    ImageRequest
-                        .Builder(LocalContext.current)
-                        .data(friendItem.profileImgUrl)
-                        .crossfade(true)
-                        .build(),
+            DoRunDefaultAsyncImage(
+                model = friendItem.profileImgUrl,
                 contentDescription = null,
                 modifier =
                     Modifier
@@ -207,7 +200,7 @@ fun FriendListItem(
 private fun FriendListItemPreview() {
     Column {
         // 나
-        FriendListItem(
+        FriendSheetListItem(
             FriendUiItem(
                 userId = 1234,
                 nickName = "승규",
@@ -225,7 +218,7 @@ private fun FriendListItemPreview() {
         )
 
         // 친구, 활성
-        FriendListItem(
+        FriendSheetListItem(
             FriendUiItem(
                 userId = 2445895,
                 nickName = "소래",
@@ -244,7 +237,7 @@ private fun FriendListItemPreview() {
         )
 
         // 친구, 비활성, 깨우기 활성
-        FriendListItem(
+        FriendSheetListItem(
             FriendUiItem(
                 userId = 24455,
                 nickName = "소래",
@@ -263,7 +256,7 @@ private fun FriendListItemPreview() {
         )
 
         // // 친구, 비활성, 깨우기 비활성
-        FriendListItem(
+        FriendSheetListItem(
             FriendUiItem(
                 userId = 9767886,
                 nickName = "승범",
@@ -282,7 +275,7 @@ private fun FriendListItemPreview() {
         )
 
         // // 친구, 비활성, 깨우기 비활성
-        FriendListItem(
+        FriendSheetListItem(
             FriendUiItem(
                 userId = 9213786,
                 nickName = "승범",

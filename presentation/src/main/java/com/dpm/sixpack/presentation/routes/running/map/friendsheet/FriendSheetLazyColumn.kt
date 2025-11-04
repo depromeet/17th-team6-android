@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.freind.components
+package com.dpm.sixpack.presentation.routes.running.map.friendsheet
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +18,7 @@ import androidx.paging.compose.itemKey
 import com.dpm.sixpack.presentation.common.model.FriendUiItem
 
 @Composable
-fun FriendsLazyColumn(
+internal fun FriendSheetLazyColumn(
     modifier: Modifier = Modifier,
     pagingItems: LazyPagingItems<FriendUiItem>,
     onAwakeClick: (Long) -> Unit = {},
@@ -57,7 +57,7 @@ fun FriendsLazyColumn(
                 ) { index ->
                     val friendItem = pagingItems[index]
                     friendItem?.let {
-                        FriendListItem(
+                        FriendSheetListItem(
                             friendItem = it,
                             onAwakeClick = {
                                 onAwakeClick(it.userId)

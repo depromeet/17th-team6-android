@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.freind.components
+package com.dpm.sixpack.presentation.routes.running.map.friendsheet
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding

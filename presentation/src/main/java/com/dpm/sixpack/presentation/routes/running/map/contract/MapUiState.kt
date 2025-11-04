@@ -1,7 +1,7 @@
 package com.dpm.sixpack.presentation.routes.running.map.contract
 
 import android.os.Parcelable
-import com.dpm.sixpack.presentation.routes.freind.contract.FriendUiState
+import com.dpm.sixpack.presentation.routes.friend.contract.FriendUiState
 import com.dpm.sixpack.presentation.routes.running.RunningRouteUiState
 import com.naver.maps.geometry.LatLngBounds
 import kotlinx.parcelize.Parcelize

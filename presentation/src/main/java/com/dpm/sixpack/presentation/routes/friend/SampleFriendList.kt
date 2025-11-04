@@ -1,6 +1,4 @@
-package com.dpm.sixpack.presentation.routes.freind
-
-import com.dpm.sixpack.presentation.common.model.FriendUiItem
+package com.dpm.sixpack.presentation.routes.friend
 
 // val sampleFriendList =
 //    listOf(
