@@ -1,5 +1,9 @@
 package com.dpm.sixpack.presentation.common.util.format
 
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import kotlin.math.abs
 
 fun formatSecondsToTime(totalSeconds: Int): String {
@@ -29,6 +33,13 @@ fun formatSecondsToTimeInFeed(totalSeconds: Long): String {
     } else {
         String.format("%02d:%02d", minutes, remainingSeconds)
     }
+}
+
+fun formatPace(paceInSeconds: Long): String {
+    val minutes = paceInSeconds / 60
+    val seconds = paceInSeconds % 60
+
+    return String.format("%d'%02d\"", minutes, seconds)
 }
 
 private val KOREAN_FEED_TIME_FORMATTER =

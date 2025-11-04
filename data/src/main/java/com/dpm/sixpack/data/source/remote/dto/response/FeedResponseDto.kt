@@ -103,9 +103,9 @@ data class FeedDto(
             selfieTime = selfieTime,
             runningSessionResult =
                 RunningSessionResult(
-                    totalDistanceMeter = totalDistance,
+                    totalDistanceMeter = totalDistance.toInt(),
                     totalDurationSec = totalRunTime,
-                    avgPace = averagePace,
+                    avgPace = averagePace.toInt(),
                     avgCadence = cadence,
                 ),
             imageUrl = imageUrl,

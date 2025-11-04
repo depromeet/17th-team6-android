@@ -131,7 +131,7 @@ fun FriendListItem(
             }
             // 최근 러닝 거리
             Text(
-                text = if (!isOutdated) formatDistanceToKm(distanceInMeter.toLong()) else "최근 러닝 기록이 없어요",
+                text = if (!isOutdated) formatDistanceToKm(distanceInMeter) else "최근 러닝 기록이 없어요",
                 style = MaterialTheme.typography.bodyMedium,
                 color = SixpackTheme.colors.gray700,
             )
