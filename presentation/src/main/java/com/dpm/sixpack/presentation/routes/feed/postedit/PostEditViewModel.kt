@@ -120,11 +120,20 @@ class PostEditViewModel @Inject constructor(
             reduce { state.copy(isLoading = true) }
 
             viewModelScope.launch {
-                // TODO: Implement image upload and post update logic
-
-                reduce { state.copy(isLoading = false) }
-                postSideEffect(PostEditSideEffect.ShowToast("게시물이 수정되었습니다."))
-                postSideEffect(PostEditSideEffect.NavigateBack)
+                feedRepository
+                    .updateSelfie(
+                        feedId = state.originalPost.feedId,
+                        content = "", // TODO: content 추가 필요 시 UiState에 추가
+                        imageUri = selectedImageUri,
+                        deleteSelfieImage = false,
+                    ).onSuccess {
+                        reduce { state.copy(isLoading = false) }
+                        postSideEffect(PostEditSideEffect.ShowToast("게시물이 수정되었습니다."))
+                        postSideEffect(PostEditSideEffect.NavigateBack)
+                    }.onError { error ->
+                        reduce { state.copy(isLoading = false) }
+                        postSideEffect(PostEditSideEffect.ShowError(error.message ?: "게시물 수정에 실패했습니다."))
+                    }
             }
         }
 }
