@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.filter
 import androidx.paging.map
+import com.dpm.sixpack.domain.event.FeedUpdateEvent
 import com.dpm.sixpack.domain.repository.FeedListItem
 import com.dpm.sixpack.domain.repository.FeedRepository
 import com.dpm.sixpack.domain.usecase.GetFeedsByDateUseCase
@@ -61,7 +62,10 @@ class FeedViewModel @Inject constructor(
         container(initialState = initialState, savedStateHandle = savedStateHandle)
 
     // 유저가 인증 가능한지 여부 캐싱
-    private var isCertifiable: Boolean = false
+    private var isCertifiable: Boolean = true
+
+    // 마지막으로 처리한 이벤트의 타임스탬프 (중복 처리 방지)
+    private var lastProcessedTimestamp = 0L
 
     private val pagingFlowCache = ConcurrentHashMap<LocalDate, Flow<PagingData<PostResource>>>()
     private val reactionDebounceJobs = ConcurrentHashMap<Long, Job>()
@@ -87,6 +91,37 @@ class FeedViewModel @Inject constructor(
 
     init {
         loadInitialData()
+        observeFeedUpdateEvents()
+    }
+
+    /**
+     * Repository에서 발생하는 Feed 변경 이벤트를 구독
+     * 수정/업로드 시 자동으로 Paging을 갱신
+     */
+    private fun observeFeedUpdateEvents() {
+        // TODO Room 구현시 싹다 삭제
+        viewModelScope.launch {
+            feedRepository.feedUpdateEvents
+                .collect { event ->
+                    // 이미 처리한 이벤트는 무시 (화면 재진입 시 replay된 이벤트 방지)
+                    if (event.timestamp <= lastProcessedTimestamp) {
+                        return@collect
+                    }
+
+                    lastProcessedTimestamp = event.timestamp
+
+                    intent {
+                        when (event) {
+                            is FeedUpdateEvent.Updated -> {
+                                postSideEffect(FeedSideEffect.RefreshPagingList)
+                            }
+                            is FeedUpdateEvent.Uploaded -> {
+                                postSideEffect(FeedSideEffect.RefreshPagingList)
+                            }
+                        }
+                    }
+                }
+        }
     }
 
     override fun onIntent(intent: FeedIntent) {

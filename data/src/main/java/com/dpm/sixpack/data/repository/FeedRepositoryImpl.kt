@@ -11,6 +11,7 @@ import com.dpm.sixpack.data.paging.FeedPagingSource
 import com.dpm.sixpack.data.source.remote.datasoruce.FeedDataSource
 import com.dpm.sixpack.data.source.remote.dto.request.UpdateSelfieRequestDto
 import com.dpm.sixpack.data.source.remote.util.ContentUriRequestBody
+import com.dpm.sixpack.domain.event.FeedUpdateEvent
 import com.dpm.sixpack.domain.exception.DoRunException
 import com.dpm.sixpack.domain.model.CertifiedUser
 import com.dpm.sixpack.domain.model.ReactionResult
@@ -20,7 +21,11 @@ import com.dpm.sixpack.domain.repository.FeedRepository
 import com.dpm.sixpack.domain.repository.FeedType
 import com.dpm.sixpack.domain.util.DoRunResult
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -31,6 +36,14 @@ class FeedRepositoryImpl @Inject constructor(
     private val feedDataSource: FeedDataSource,
     private val contentResolver: ContentResolver,
 ) : FeedRepository {
+    private val _feedUpdateEvents =
+        MutableSharedFlow<FeedUpdateEvent>(
+            replay = 1,
+            extraBufferCapacity = 1,
+            onBufferOverflow = BufferOverflow.DROP_OLDEST,
+        )
+    override val feedUpdateEvents: SharedFlow<FeedUpdateEvent> = _feedUpdateEvents.asSharedFlow()
+
     override fun getFeedPagingStream(
         pageSize: Int,
         initialLoadSize: Int,
@@ -70,6 +83,7 @@ class FeedRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             try {
                 feedDataSource.deleteFeed(feedId)
+                // Deleted 이벤트는 발생시키지 않음 (Optimistic UI로 처리)
                 DoRunResult.Success(Unit)
             } catch (e: Exception) {
                 DoRunResult.Failure(DoRunException.DataError("피드 삭제에 실패했습니다: ${e.message}"))
@@ -130,6 +144,9 @@ class FeedRepositoryImpl @Inject constructor(
 
                 // API 호출
                 feedDataSource.updateSelfie(feedId, dataRequestBody, imagePart)
+
+                // 수정 성공 이벤트 발생
+                _feedUpdateEvents.emit(FeedUpdateEvent.Updated(feedId))
 
                 DoRunResult.Success(Unit)
             } catch (e: Exception) {

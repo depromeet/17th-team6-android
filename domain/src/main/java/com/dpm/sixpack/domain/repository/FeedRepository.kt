@@ -2,6 +2,7 @@ package com.dpm.sixpack.domain.repository
 
 import android.net.Uri
 import androidx.paging.PagingData
+import com.dpm.sixpack.domain.event.FeedUpdateEvent
 import com.dpm.sixpack.domain.model.CertifiedUser
 import com.dpm.sixpack.domain.model.Feed
 import com.dpm.sixpack.domain.model.ReactionResult
@@ -9,8 +10,11 @@ import com.dpm.sixpack.domain.model.SelfieCounts
 import com.dpm.sixpack.domain.model.UserSummary
 import com.dpm.sixpack.domain.util.DoRunResult
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
 
 interface FeedRepository {
+    val feedUpdateEvents: SharedFlow<FeedUpdateEvent>
+
     fun getFeedPagingStream(
         pageSize: Int,
         initialLoadSize: Int,

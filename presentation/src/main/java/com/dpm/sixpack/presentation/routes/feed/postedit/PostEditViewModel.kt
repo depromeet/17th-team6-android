@@ -133,6 +133,7 @@ class PostEditViewModel @Inject constructor(
                     }.onError { error ->
                         reduce { state.copy(isLoading = false) }
                         postSideEffect(PostEditSideEffect.ShowError(error.message ?: "게시물 수정에 실패했습니다."))
+                        postSideEffect(PostEditSideEffect.NavigateBack)
                     }
             }
         }
