@@ -1,6 +1,7 @@
 package com.dpm.sixpack.presentation.routes.mypage.ui.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,25 +33,20 @@ internal fun RecordCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+    Box(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .border(
+                    width = 1.dp,
+                    color = SixpackTheme.colors.gray200,
+                    shape = RoundedCornerShape(16.dp),
+                )
+                .background(SixpackTheme.colors.gray0)
+                .clickable(onClick = onClick)
+                .padding(horizontal = 20.dp, vertical = 16.dp),
     ) {
-        Text(
-            text = record.date,
-            style = SixpackTheme.typography.b2Medium,
-            color = SixpackTheme.colors.gray700,
-        )
-
-        Box(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(SixpackTheme.colors.gray0)
-                    .clickable(onClick = onClick)
-                    .padding(20.dp),
-        ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -99,7 +95,6 @@ internal fun RecordCard(
             }
         }
     }
-}
 
 @Composable
 private fun CertificationBadge(

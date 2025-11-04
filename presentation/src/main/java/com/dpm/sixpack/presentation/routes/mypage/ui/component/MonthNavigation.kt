@@ -26,6 +26,8 @@ internal fun MonthNavigation(
     onPreviousClick: () -> Unit,
     onNextClick: () -> Unit,
     modifier: Modifier = Modifier,
+    canGoPrevious: Boolean = true,
+    canGoNext: Boolean = true,
 ) {
     Row(
         modifier =
@@ -36,11 +38,19 @@ internal fun MonthNavigation(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        IconButton(onClick = onPreviousClick) {
+        IconButton(
+            onClick = onPreviousClick,
+            enabled = canGoPrevious,
+        ) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_left),
                 contentDescription = "이전 달",
-                tint = SixpackTheme.colors.gray900,
+                tint =
+                    if (canGoPrevious) {
+                        SixpackTheme.colors.gray900
+                    } else {
+                        SixpackTheme.colors.gray300
+                    },
             )
         }
 
@@ -51,11 +61,19 @@ internal fun MonthNavigation(
             modifier = Modifier.padding(horizontal = 12.dp),
         )
 
-        IconButton(onClick = onNextClick) {
+        IconButton(
+            onClick = onNextClick,
+            enabled = canGoNext,
+        ) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_right),
                 contentDescription = "다음 달",
-                tint = SixpackTheme.colors.gray900,
+                tint =
+                    if (canGoNext) {
+                        SixpackTheme.colors.gray900
+                    } else {
+                        SixpackTheme.colors.gray300
+                    },
             )
         }
     }
@@ -69,6 +87,36 @@ private fun MonthNavigationPreview() {
             yearMonth = YearMonth(year = 2025, month = 10),
             onPreviousClick = {},
             onNextClick = {},
+            canGoPrevious = true,
+            canGoNext = true,
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun MonthNavigationDisabledPreviousPreview() {
+    DoRunPreviewWrapper {
+        MonthNavigation(
+            yearMonth = YearMonth(year = 2025, month = 10),
+            onPreviousClick = {},
+            onNextClick = {},
+            canGoPrevious = false,
+            canGoNext = true,
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun MonthNavigationDisabledNextPreview() {
+    DoRunPreviewWrapper {
+        MonthNavigation(
+            yearMonth = YearMonth(year = 2025, month = 10),
+            onPreviousClick = {},
+            onNextClick = {},
+            canGoPrevious = true,
+            canGoNext = false,
         )
     }
 }
