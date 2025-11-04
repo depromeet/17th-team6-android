@@ -7,7 +7,7 @@ import com.dpm.sixpack.data.source.remote.dto.request.SaveSegmentDataRequestsDto
 import com.dpm.sixpack.data.source.remote.dto.response.FinishRunningResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.SaveSegmentResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.StartRunningResponseDto
-import com.dpm.sixpack.data.source.remote.service.RunningSessionServiceApi
+import com.dpm.sixpack.data.source.remote.service.RunningServiceApi
 import com.dpm.sixpack.data.source.remote.util.base.BaseResponse
 import com.dpm.sixpack.domain.exception.DoRunException
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -24,7 +24,7 @@ import javax.inject.Singleton
 @Singleton
 class RunningSessionDataSource @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val runningSessionServiceApi: RunningSessionServiceApi,
+    private val runningServiceApi: RunningServiceApi,
 ) {
     suspend fun postFinishRunning(
         sessionId: Long,
@@ -40,7 +40,7 @@ class RunningSessionDataSource @Inject constructor(
         val (tempFile, mapImagePart) = createMultipartBodyPart(mapImage, "mapImage")
 
         try {
-            return runningSessionServiceApi.postFinishRunning(
+            return runningServiceApi.postFinishRunning(
                 sessionId = sessionId,
                 data = dataRequestBody,
                 mapImage = mapImagePart,
@@ -54,10 +54,9 @@ class RunningSessionDataSource @Inject constructor(
     suspend fun postSegmentData(
         sessionId: Long,
         saveSegmentDataRequestsDto: SaveSegmentDataRequestsDto,
-    ): BaseResponse<SaveSegmentResponseDto> =
-        runningSessionServiceApi.postSegmentData(sessionId, saveSegmentDataRequestsDto)
+    ): BaseResponse<SaveSegmentResponseDto> = runningServiceApi.postSegmentData(sessionId, saveSegmentDataRequestsDto)
 
-    suspend fun postStartSession(): BaseResponse<StartRunningResponseDto> = runningSessionServiceApi.postStartSession()
+    suspend fun postStartSession(): BaseResponse<StartRunningResponseDto> = runningServiceApi.postStartSession()
 
     /**
      * Bitmap을 임시 파일로 변환하고 MultipartBody.Part를 생성합니다.

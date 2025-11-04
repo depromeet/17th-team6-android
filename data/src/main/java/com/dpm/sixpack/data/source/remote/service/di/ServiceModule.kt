@@ -3,7 +3,7 @@ package com.dpm.sixpack.data.source.remote.service.di
 import com.dpm.sixpack.data.source.remote.service.AuthService
 import com.dpm.sixpack.data.source.remote.service.FeedService
 import com.dpm.sixpack.data.source.remote.service.FriendServiceApi
-import com.dpm.sixpack.data.source.remote.service.RunningSessionServiceApi
+import com.dpm.sixpack.data.source.remote.service.RunningServiceApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,8 +20,8 @@ object ServiceModule {
 
     @Provides
     @Singleton
-    fun provideRunningSessionService(retrofit: Retrofit): RunningSessionServiceApi =
-        retrofit.create(RunningSessionServiceApi::class.java)
+    fun provideRunningSessionService(retrofit: Retrofit): RunningServiceApi =
+        retrofit.create(RunningServiceApi::class.java)
 
     @Provides
     @Singleton

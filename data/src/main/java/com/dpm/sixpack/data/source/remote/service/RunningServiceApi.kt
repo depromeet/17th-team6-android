@@ -16,7 +16,7 @@ import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
 
-interface RunningSessionServiceApi {
+interface RunningServiceApi {
     @POST("$API/$RUNS/$SESSIONS/start")
     suspend fun postStartSession(): BaseResponse<StartRunningResponseDto>
 
