@@ -19,18 +19,25 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 @Composable
 internal fun FriendAwakeButton(
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     onClick: () -> Unit = { },
 ) {
     Button(
         modifier = modifier,
         onClick = {
-            onClick()
+            if (enabled) onClick() else null
         },
         shape = SixpackTheme.shapes.round12,
         colors =
-            ButtonDefaults.buttonColors(
-                containerColor = SixpackTheme.colors.blue200,
-            ),
+            if (enabled) {
+                ButtonDefaults.buttonColors(
+                    containerColor = SixpackTheme.colors.blue200,
+                )
+            } else {
+                ButtonDefaults.buttonColors(
+                    containerColor = SixpackTheme.colors.gray100,
+                )
+            },
     ) {
         Row(
             modifier = Modifier.padding(vertical = 6.dp),
@@ -40,13 +47,13 @@ internal fun FriendAwakeButton(
             Text(
                 text = stringResource(R.string.friend_awake_btn),
                 style = SixpackTheme.typography.b1Bold,
-                color = SixpackTheme.colors.blue600,
+                color = if (enabled) SixpackTheme.colors.blue600 else SixpackTheme.colors.gray400,
             )
             Icon(
                 modifier = Modifier.padding(start = 2.dp),
                 painter = painterResource(id = R.drawable.ic_friend_awake),
                 contentDescription = null,
-                tint = SixpackTheme.colors.blue600,
+                tint = if (enabled) SixpackTheme.colors.blue600 else SixpackTheme.colors.gray400,
             )
         }
     }

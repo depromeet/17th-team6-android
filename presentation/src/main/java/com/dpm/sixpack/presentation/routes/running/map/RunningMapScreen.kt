@@ -42,7 +42,6 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.common.util.PermissionHandler
-import com.dpm.sixpack.presentation.routes.freind.sampleFriendList
 import com.dpm.sixpack.presentation.routes.running.map.MapConstants.DEFAULT_ZOOM
 import com.dpm.sixpack.presentation.routes.running.map.MapConstants.FINAL_RESOLUTION
 import com.dpm.sixpack.presentation.routes.running.map.MapConstants.SNAPSHOT_PADDING

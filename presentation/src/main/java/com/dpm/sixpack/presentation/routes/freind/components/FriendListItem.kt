@@ -27,10 +27,12 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.dpm.sixpack.core.util.TimeUtil.isoStringToEpochSeconds
 import com.dpm.sixpack.presentation.common.model.FriendUiItem
-import com.dpm.sixpack.presentation.common.util.calculateSecDiff
+import com.dpm.sixpack.presentation.common.model.LastRunInfoUi
 import com.dpm.sixpack.presentation.common.util.convertTimeDiffToString
 import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
+import com.dpm.sixpack.presentation.routes.running.map.component.FriendAwakeButton
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
@@ -39,16 +41,39 @@ fun FriendListItem(
     modifier: Modifier = Modifier,
     onAwakeClick: () -> Unit = {},
 ) {
-    val distance = friendItem.distanceInMeter
-    val lastRunAt = friendItem.latestRunAt
-    val lastCheeredAt = friendItem.latestCheeredAt
+    val lastRunInfo = friendItem.lastRunInfo
+    val hasLastRun = lastRunInfo != null
+    val lastCheeredAt = friendItem.latestCheeredAt // 최근 응원 시각 (String?)
+    val currentTimeSec = System.currentTimeMillis() / 1000L
 
-    val secDiff = if (lastRunAt == null) null else calculateSecDiff(lastRunAt)
-    val isOutdated = secDiff == null || secDiff > 48 * 60 * 60
-    val showInactive = isOutdated && !friendItem.isMe
+    // 깨우기 버튼 노출 여부 결정
+    // 마지막 러닝으로부터 몇 초가 지났는지
+    val secondsSinceLastRun =
+        if (hasLastRun) {
+            val lastRunSec = isoStringToEpochSeconds(lastRunInfo!!.lastestRunAt)
+            if (lastRunSec != null) currentTimeSec - lastRunSec else null
+        } else {
+            null // 러닝 기록 없음
+        }
+    // "비활성" = 러닝 기록이 없거나, 48시간(172,800초)을 초과함
+    val isInactive = !hasLastRun || secondsSinceLastRun == null || secondsSinceLastRun > 48 * 60 * 60
+    // 비활성 상태이고, 내가 아닐 때만 버튼 노출
+    val showAwakeButton = isInactive && !friendItem.isMe
 
-//    val wasCheeredRecently = lastCheeredAt != null && calculateSecDiff(lastCheeredAt) < 10 * 60
-//    val showAwakeButton = showInactive && lastCheeredAt != null && calculateSecDiffFromNow(lastCheeredAt)
+    // 깨우기 버튼 활성화 여부
+    // 마지막 응원으로부터 몇 초가 지났는지
+    val secondsSinceLastCheer =
+        if (lastCheeredAt != null) {
+            val lastCheeredSec = isoStringToEpochSeconds(lastCheeredAt)
+            if (lastCheeredSec != null) currentTimeSec - lastCheeredSec else null
+        } else {
+            null // 응원한 적 없음
+        }
+
+    // 1. 응원한 적이 없거나
+    // 2. 응원한 지 24시간이 지났거나
+    val isAwakeButtonEnabled =
+        secondsSinceLastCheer == null || secondsSinceLastCheer >= 24 * 60 * 60
 
     Row(
         modifier =
@@ -79,7 +104,7 @@ fun FriendListItem(
                 contentScale = ContentScale.Crop,
             )
 
-            if (showInactive) {
+            if (isInactive) {
                 InactiveLabel(
                     modifier =
                         Modifier
@@ -124,7 +149,15 @@ fun FriendListItem(
 
                 // 마지막 러닝 시간
                 Text(
-                    text = if (secDiff != null) convertTimeDiffToString(LocalContext.current, secDiff) else "",
+                    text =
+                        if (secondsSinceLastRun != null) {
+                            convertTimeDiffToString(
+                                LocalContext.current,
+                                secondsSinceLastRun,
+                            )
+                        } else {
+                            ""
+                        },
                     style = SixpackTheme.typography.b2Regular,
                     color = SixpackTheme.colors.gray500,
                 )
@@ -134,26 +167,38 @@ fun FriendListItem(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                Text(
-                    text = if (!isOutdated && distance != null) formatDistanceToKm(distance) else "최근 러닝 기록이 없어요",
-                    style = SixpackTheme.typography.b2Medium,
-                    color = SixpackTheme.colors.gray700,
-                )
-
-                Text(
-                    text = if (!isOutdated && friendItem.address != null) friendItem.address else "",
-                    style = SixpackTheme.typography.b2Medium,
-                    color = SixpackTheme.colors.gray700,
-                )
+                if (!isInactive) {
+                    // 거리 표시
+                    Text(
+                        text = formatDistanceToKm(friendItem.lastRunInfo.distanceInMeter),
+                        style = SixpackTheme.typography.b2Medium,
+                        color = SixpackTheme.colors.gray700,
+                    )
+                    // 주소
+                    friendItem.lastRunInfo.address.let {
+                        Text(
+                            text = it,
+                            style = SixpackTheme.typography.b2Medium,
+                            color = SixpackTheme.colors.gray700,
+                        )
+                    }
+                } else {
+                    Text(
+                        text = "최근 러닝 기록이 없어요",
+                        style = SixpackTheme.typography.b2Medium,
+                        color = SixpackTheme.colors.gray700,
+                    )
+                }
             }
         }
 
         // 응원하기
-//        if (showInactive && ) {
-//            FriendAwakeButton(
-//                onClick = onAwakeClick,
-//            )
-//        }
+        if (showAwakeButton) {
+            FriendAwakeButton(
+                onClick = onAwakeClick,
+                enabled = isAwakeButtonEnabled,
+            )
+        }
     }
 }
 
@@ -168,32 +213,90 @@ private fun FriendListItemPreview() {
                 nickName = "승규",
                 isMe = true,
                 profileImgUrl = "",
-                latestRunAt = "2025-10-19T19:57:13Z",
-                distanceInMeter = 5000,
+                lastRunInfo =
+                    LastRunInfoUi(
+                        lastestRunAt = "2025-11-04T09:57:13Z",
+                        distanceInMeter = 3000,
+                        latitude = 37.566535,
+                        longitude = 126.9779692,
+                        address = "서울",
+                    ),
             ),
         )
 
         // 친구, 활성
         FriendListItem(
             FriendUiItem(
+                userId = 2445895,
+                nickName = "소래",
+                isMe = false,
+                profileImgUrl = "",
+                lastRunInfo =
+                    LastRunInfoUi(
+                        lastestRunAt = "2025-11-04T09:57:13Z",
+                        distanceInMeter = 5000,
+                        latitude = 37.566535,
+                        longitude = 126.9779692,
+                        address = "서울",
+                    ),
+                latestCheeredAt = "2025-11-01T09:57:13Z",
+            ),
+        )
+
+        // 친구, 비활성, 깨우기 활성
+        FriendListItem(
+            FriendUiItem(
                 userId = 24455,
                 nickName = "소래",
                 isMe = false,
                 profileImgUrl = "",
-                latestRunAt = "2025-10-20T09:57:13Z",
-                distanceInMeter = 900,
+                lastRunInfo =
+                    LastRunInfoUi(
+                        lastestRunAt = "2025-11-01T09:57:13Z",
+                        distanceInMeter = 5000,
+                        latitude = 37.566535,
+                        longitude = 126.9779692,
+                        address = "서울",
+                    ),
+                latestCheeredAt = "2025-11-01T09:57:13Z",
             ),
         )
 
-        // 비활성 상태 (응원하기 버튼 표시)
+        // // 친구, 비활성, 깨우기 비활성
         FriendListItem(
             FriendUiItem(
-                userId = 9786,
+                userId = 9767886,
                 nickName = "승범",
                 isMe = false,
                 profileImgUrl = "",
-                latestRunAt = "2025-10-16T19:57:13Z",
-                distanceInMeter = 3000,
+                lastRunInfo =
+                    LastRunInfoUi(
+                        lastestRunAt = "2025-11-01T09:57:13Z",
+                        distanceInMeter = 5000,
+                        latitude = 37.566535,
+                        longitude = 126.9779692,
+                        address = "서울",
+                    ),
+                latestCheeredAt = "2025-11-04T09:57:13Z",
+            ),
+        )
+
+        // // 친구, 비활성, 깨우기 비활성
+        FriendListItem(
+            FriendUiItem(
+                userId = 9213786,
+                nickName = "승범",
+                isMe = false,
+                profileImgUrl = "",
+                lastRunInfo =
+                    LastRunInfoUi(
+                        lastestRunAt = "2025-11-02T13:57:13Z",
+                        distanceInMeter = 5000,
+                        latitude = 37.566535,
+                        longitude = 126.9779692,
+                        address = "서울",
+                    ),
+                latestCheeredAt = "2025-11-02T09:57:13Z",
             ),
         )
     }
