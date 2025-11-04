@@ -4,6 +4,8 @@ import com.dpm.sixpack.data.repository.FeedRepositoryImpl
 import com.dpm.sixpack.data.repository.RunningRepositoryImpl
 import com.dpm.sixpack.data.repository.RunningSessionRepositoryImpl
 import com.dpm.sixpack.data.repository.UserPreferenceRepositoryImpl
+import com.dpm.sixpack.domain.repository.AuthRepository
+import com.dpm.sixpack.domain.repository.FileRepository
 import com.dpm.sixpack.domain.repository.FeedRepository
 import com.dpm.sixpack.domain.repository.RunningRepository
 import com.dpm.sixpack.domain.repository.RunningSessionRepository
@@ -17,6 +19,14 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
+    @Binds
+    @Singleton
+    abstract fun bindAuthRepository(authRepositoryImpl: AuthRepositoryImpl): AuthRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindFileRepository(repositoryImpl: FileRepositoryImpl): FileRepository
+
     @Binds
     @Singleton
     abstract fun bindRunningRepository(runningRepository: RunningRepositoryImpl): RunningRepository

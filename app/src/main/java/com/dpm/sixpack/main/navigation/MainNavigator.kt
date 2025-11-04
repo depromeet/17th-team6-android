@@ -17,6 +17,7 @@ import com.dpm.sixpack.presentation.navigation.MainNavTab
 import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToFeed
 import com.dpm.sixpack.presentation.routes.running.navigation.navigateRunningSession
 import com.dpm.sixpack.presentation.routes.sessionreport.navigation.navigateSessionReport
+import com.dpm.sixpack.presentation.routes.signup.navigation.navigateSignUp
 import timber.log.Timber
 
 class MainNavigator(
@@ -53,6 +54,10 @@ class MainNavigator(
     }
 
     fun navigateToHome(navOptions: NavOptions? = null) {
+    }
+
+    fun navigateToSignUp() {
+        navController.navigateSignUp()
     }
 
     fun navigateToRunningSession() {

@@ -142,7 +142,7 @@ fun FriendListItem(
             DoRunDefaultButton(
                 text = "응원하기",
                 onClick = onCheerClick,
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                buttonContentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
             )
         }
     }
