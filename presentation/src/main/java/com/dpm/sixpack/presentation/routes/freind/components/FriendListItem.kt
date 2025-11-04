@@ -31,7 +31,6 @@ import com.dpm.sixpack.presentation.common.model.FriendUiItem
 import com.dpm.sixpack.presentation.common.util.calculateSecDiff
 import com.dpm.sixpack.presentation.common.util.convertTimeDiffToString
 import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
-import com.dpm.sixpack.presentation.routes.running.map.component.FriendAwakeButton
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
@@ -41,10 +40,15 @@ fun FriendListItem(
     onAwakeClick: () -> Unit = {},
 ) {
     val distance = friendItem.distanceInMeter
-    val lastestRunAt = friendItem.lastestRunAt
-    val secDiff = if (lastestRunAt == null) null else calculateSecDiff(lastestRunAt)
+    val lastRunAt = friendItem.latestRunAt
+    val lastCheeredAt = friendItem.latestCheeredAt
+
+    val secDiff = if (lastRunAt == null) null else calculateSecDiff(lastRunAt)
     val isOutdated = secDiff == null || secDiff > 48 * 60 * 60
     val showInactive = isOutdated && !friendItem.isMe
+
+//    val wasCheeredRecently = lastCheeredAt != null && calculateSecDiff(lastCheeredAt) < 10 * 60
+//    val showAwakeButton = showInactive && lastCheeredAt != null && calculateSecDiffFromNow(lastCheeredAt)
 
     Row(
         modifier =
@@ -126,19 +130,30 @@ fun FriendListItem(
                 )
             }
             // 최근 러닝 거리 / 장소
-            Text(
-                text = if (!isOutdated && distance != null) formatDistanceToKm(distance) else "최근 러닝 기록이 없어요",
-                style = SixpackTheme.typography.b2Medium,
-                color = SixpackTheme.colors.gray700,
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                Text(
+                    text = if (!isOutdated && distance != null) formatDistanceToKm(distance) else "최근 러닝 기록이 없어요",
+                    style = SixpackTheme.typography.b2Medium,
+                    color = SixpackTheme.colors.gray700,
+                )
+
+                Text(
+                    text = if (!isOutdated && friendItem.address != null) friendItem.address else "",
+                    style = SixpackTheme.typography.b2Medium,
+                    color = SixpackTheme.colors.gray700,
+                )
+            }
         }
 
         // 응원하기
-        if (showInactive) {
-            FriendAwakeButton(
-                onClick = onAwakeClick,
-            )
-        }
+//        if (showInactive && ) {
+//            FriendAwakeButton(
+//                onClick = onAwakeClick,
+//            )
+//        }
     }
 }
 
@@ -153,7 +168,7 @@ private fun FriendListItemPreview() {
                 nickName = "승규",
                 isMe = true,
                 profileImgUrl = "",
-                lastestRunAt = "2025-10-19T19:57:13Z",
+                latestRunAt = "2025-10-19T19:57:13Z",
                 distanceInMeter = 5000,
             ),
         )
@@ -165,7 +180,7 @@ private fun FriendListItemPreview() {
                 nickName = "소래",
                 isMe = false,
                 profileImgUrl = "",
-                lastestRunAt = "2025-10-20T09:57:13Z",
+                latestRunAt = "2025-10-20T09:57:13Z",
                 distanceInMeter = 900,
             ),
         )
@@ -177,7 +192,7 @@ private fun FriendListItemPreview() {
                 nickName = "승범",
                 isMe = false,
                 profileImgUrl = "",
-                lastestRunAt = "2025-10-16T19:57:13Z",
+                latestRunAt = "2025-10-16T19:57:13Z",
                 distanceInMeter = 3000,
             ),
         )
