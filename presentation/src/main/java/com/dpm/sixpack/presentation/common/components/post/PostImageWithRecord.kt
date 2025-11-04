@@ -15,25 +15,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
-import coil3.request.crossfade
 import com.dpm.sixpack.presentation.R
+import com.dpm.sixpack.presentation.common.components.DoRunDefaultAsyncImage
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
-import com.dpm.sixpack.presentation.common.model.RunningSummaryUiState
+import com.dpm.sixpack.presentation.common.model.RunningSummary
+import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 fun PostImageWithRecord(
     postImageUrl: String,
-    runningSummary: RunningSummaryUiState,
+    runningSummary: RunningSummary,
+    onPostImageClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -41,21 +39,15 @@ fun PostImageWithRecord(
             modifier
                 .fillMaxWidth()
                 .aspectRatio(1f)
-                .clip(RoundedCornerShape(12.dp)),
+                .clip(RoundedCornerShape(12.dp))
+                .noRippleClickable(onClick = onPostImageClick),
     ) {
-        AsyncImage(
-            model =
-                ImageRequest
-                    .Builder(LocalContext.current)
-                    .data(postImageUrl)
-                    .crossfade(true)
-                    .build(),
+        DoRunDefaultAsyncImage(
+            model = postImageUrl,
             contentDescription = "",
             modifier =
                 Modifier
                     .fillMaxSize(),
-            placeholder = ColorPainter(SixpackTheme.colors.gray0),
-            error = ColorPainter(SixpackTheme.colors.gray200),
             contentScale = ContentScale.Crop,
         )
 
@@ -99,7 +91,7 @@ private fun RunningSummaryOverlay(
         ) {
             SummaryItem(
                 title = stringResource(id = R.string.feed_post_image_record_distance),
-                record = "${totalDistance}km",
+                record = totalDistance,
                 recordTextStyle = SixpackTheme.typography.h1Bold,
                 modifier = Modifier.weight(1f),
             )
@@ -123,7 +115,7 @@ private fun RunningSummaryOverlay(
             )
             SummaryItem(
                 title = stringResource(id = R.string.feed_post_image_record_cadence),
-                record = "${cadence}spm",
+                record = "$cadence spm",
                 recordTextStyle = SixpackTheme.typography.t1Bold,
                 modifier = Modifier.weight(1f),
             )
@@ -184,7 +176,7 @@ fun PostTimeTextBox(
 fun PostImageWithRecordPreview() {
     DoRunPreviewWrapper {
         val runningSummary =
-            RunningSummaryUiState(
+            RunningSummary(
                 totalDistance = "5.2",
                 totalTime = "30분", // 30분
                 averagePace = "5'30''",
@@ -197,6 +189,7 @@ fun PostImageWithRecordPreview() {
                 postImageUrl = "",
                 runningSummary = runningSummary,
                 modifier = Modifier.padding(16.dp),
+                onPostImageClick = {},
             )
         }
     }

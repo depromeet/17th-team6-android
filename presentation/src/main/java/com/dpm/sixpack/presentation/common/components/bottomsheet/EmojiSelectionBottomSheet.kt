@@ -24,11 +24,11 @@ import com.dpm.sixpack.presentation.common.model.Emoji
 fun EmojiSelectionBottomSheet(
     isBottomSheetVisible: Boolean,
     onDismissRequest: () -> Unit,
-    onEmojiSelected: (Emoji) -> Unit,
     modifier: Modifier = Modifier,
+    onEmojiSelected: (Emoji) -> Unit,
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
 ) {
-    val emojis = Emoji.entries.filter { it != Emoji.UNKNOWN }
+    val emojis = Emoji.entries
 
     DoRunBottomSheetSlot(
         isBottomSheetVisible = isBottomSheetVisible,

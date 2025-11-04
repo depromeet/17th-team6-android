@@ -15,6 +15,8 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     testImplementation(libs.junit)
+    implementation(libs.bundles.paging)
     androidTestImplementation(libs.bundles.android.test)
     implementation(libs.play.services.location)
+    implementation(libs.androidx.annotation.experimental)
 }

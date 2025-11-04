@@ -13,6 +13,7 @@ dependencies {
 
     implementation(libs.bundles.navermap)
     implementation(libs.bundles.coil)
+    implementation(libs.bundles.paging)
     implementation(libs.constraintlayout.compose)
     implementation(libs.androidx.lifecycle.service)
 }

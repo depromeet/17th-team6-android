@@ -3,6 +3,7 @@ package com.dpm.sixpack.core.util
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import com.dpm.sixpack.core.network.Dispatcher
@@ -71,6 +72,9 @@ internal class TimeZoneBroadcastMonitor @Inject constructor(
                         trySend(zoneIdFromIntent ?: TimeZone.currentSystemDefault())
                     }
                 }
+
+            // Register the BroadcastReceiver
+            context.registerReceiver(receiver, IntentFilter(Intent.ACTION_TIMEZONE_CHANGED))
 
             // Send here again, because registering the Broadcast Receiver can take up to several milliseconds.
             // This way, we can reduce the likelihood that a TZ change wouldn't be caught with the Broadcast Receiver.
