@@ -30,6 +30,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunTopBarSlot
+import com.dpm.sixpack.presentation.routes.mypage.ui.component.MyPageTabText
 import com.dpm.sixpack.presentation.routes.mypage.ui.component.ProfileSection
 import com.dpm.sixpack.presentation.routes.mypage.ui.content.FeedTabContent
 import com.dpm.sixpack.presentation.routes.mypage.ui.content.RecordTabContent
@@ -111,20 +112,9 @@ fun MyPageScreen(
                 selected = state.selectedTab == MyPageTab.CERTIFICATION,
                 onClick = { onIntent(MyPageIntent.OnTabClick(MyPageTab.CERTIFICATION)) },
                 text = {
-                    Text(
+                    MyPageTabText(
                         text = "인증",
-                        style =
-                            if (state.selectedTab == MyPageTab.CERTIFICATION) {
-                                SixpackTheme.typography.b1Bold
-                            } else {
-                                SixpackTheme.typography.b1Regular
-                            },
-                        color =
-                            if (state.selectedTab == MyPageTab.CERTIFICATION) {
-                                SixpackTheme.colors.gray900
-                            } else {
-                                SixpackTheme.colors.gray500
-                            },
+                        isSelected = state.selectedTab == MyPageTab.CERTIFICATION,
                     )
                 },
             )
@@ -132,20 +122,9 @@ fun MyPageScreen(
                 selected = state.selectedTab == MyPageTab.RECORD,
                 onClick = { onIntent(MyPageIntent.OnTabClick(MyPageTab.RECORD)) },
                 text = {
-                    Text(
+                    MyPageTabText(
                         text = "기록",
-                        style =
-                            if (state.selectedTab == MyPageTab.RECORD) {
-                                SixpackTheme.typography.b1Bold
-                            } else {
-                                SixpackTheme.typography.b1Regular
-                            },
-                        color =
-                            if (state.selectedTab == MyPageTab.RECORD) {
-                                SixpackTheme.colors.gray900
-                            } else {
-                                SixpackTheme.colors.gray500
-                            },
+                        isSelected = state.selectedTab == MyPageTab.RECORD,
                     )
                 },
             )
