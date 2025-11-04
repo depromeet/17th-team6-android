@@ -61,7 +61,7 @@ fun PostEditScreen(
                     )
                 }
             },
-            modifier = Modifier.padding(horizontal = 10.dp)
+            modifier = Modifier.padding(horizontal = 10.dp),
         )
 
         // Content

@@ -152,7 +152,7 @@ fun FeedScreen(
         },
         containerColor = SixpackTheme.colors.gray0,
         contentColor = SixpackTheme.colors.gray900,
-        contentWindowInsets = WindowInsets(0)
+        contentWindowInsets = WindowInsets(0),
     ) { paddingValues ->
         val contentModifier =
             Modifier

@@ -14,31 +14,29 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class FeedPageDto(
-    @SerialName("contents")
-    val contents: FeedContentDto,
-    @SerialName("meta")
-    val meta: MetaDto,
+    @SerialName("userSummary")
+    val userSummary: UserSummaryDto,
+    @SerialName("feeds")
+    val feeds: FeedsWrapperDto,
 ) {
     fun toDomain(): FeedPage =
         FeedPage(
-            contents = contents.toDomain(),
-            meta = meta.toDomain(),
+            contents =
+                FeedContent(
+                    userSummary = userSummary.toDomain(),
+                    feeds = feeds.contents.map { it.toDomain() },
+                ),
+            meta = feeds.meta.toDomain(),
         )
 }
 
 @Serializable
-data class FeedContentDto(
-    @SerialName("userSummary")
-    val userSummary: UserSummaryDto,
-    @SerialName("feeds")
-    val feeds: List<FeedDto>,
-) {
-    fun toDomain(): FeedContent =
-        FeedContent(
-            userSummary = userSummary.toDomain(),
-            feeds = feeds.map { it.toDomain() },
-        )
-}
+data class FeedsWrapperDto(
+    @SerialName("contents")
+    val contents: List<FeedDto>,
+    @SerialName("meta")
+    val meta: MetaDto,
+)
 
 @Serializable
 data class UserSummaryDto(
@@ -50,8 +48,8 @@ data class UserSummaryDto(
     val totalDistance: Long,
     @SerialName("selfieCount")
     val selfieCount: Int,
-    @SerialName("imageUrl")
-    val imageUrl: String,
+    @SerialName("profileImageUrl")
+    val profileImageUrl: String,
 ) {
     fun toDomain(): UserSummary =
         UserSummary(
@@ -59,7 +57,7 @@ data class UserSummaryDto(
             friendCount = friendCount,
             totalDistance = totalDistance,
             selfieCount = selfieCount,
-            imageUrl = imageUrl,
+            imageUrl = profileImageUrl,
         )
 }
 
@@ -87,8 +85,8 @@ data class FeedDto(
     val imageUrl: String,
     @SerialName("reactions")
     val reactions: List<ReactionDto>,
-    @SerialName("isMe")
-    val isMe: Boolean,
+    @SerialName("isMyFeed")
+    val isMyFeed: Boolean,
 ) {
     fun toDomain(): Feed =
         Feed(
@@ -98,7 +96,7 @@ data class FeedDto(
                 User(
                     nickName = userName,
                     profileImgUrl = profileImageUrl,
-                    isMe = isMe,
+                    isMe = isMyFeed,
                 ),
             selfieTime = selfieTime,
             runningSessionResult =
@@ -122,15 +120,15 @@ data class ReactionDto(
     val totalCount: Int,
     @SerialName("users")
     val users: List<ReactingUserDto>,
-    @SerialName("isReacted")
-    val isReacted: Boolean = false,
+    @SerialName("isReactedByMe")
+    val isReactedByMe: Boolean = false,
 ) {
     fun toDomain(): Reaction =
         Reaction(
             emojiType = emojiType,
             totalCount = totalCount,
             users = users.map { it.toDomain() },
-            isReacted = isReacted,
+            isReacted = isReactedByMe,
         )
 }
 

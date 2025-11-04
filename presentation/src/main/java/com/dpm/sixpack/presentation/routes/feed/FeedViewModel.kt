@@ -545,6 +545,16 @@ class FeedViewModel @Inject constructor(
                                         ),
                                 )
                             }
+                        }.onError { exception ->
+                            // API 호출 실패 시 로딩 상태를 해제하여 Shimmer가 사라지도록 함
+                            reduce {
+                                state.copy(
+                                    calendarState =
+                                        calenderState.copy(
+                                            isLoading = false,
+                                        ),
+                                )
+                            }
                         }
                 }
             }
