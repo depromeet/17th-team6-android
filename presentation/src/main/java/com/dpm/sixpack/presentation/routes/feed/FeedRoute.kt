@@ -47,6 +47,5 @@ fun FeedRoute(
         state = state,
         feedPagingItems = feedPagingItems,
         onIntent = viewModel::onIntent,
-        onPagingDataEmpty = { viewModel.onIntent(FeedIntent.Observed.PagingDataEmpty) },
         )
 }

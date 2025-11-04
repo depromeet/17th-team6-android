@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -73,7 +72,6 @@ fun FeedScreen(
     feedPagingItems: LazyPagingItems<PostResource>,
     modifier: Modifier = Modifier,
     onIntent: (FeedIntent) -> Unit = {},
-    onPagingDataEmpty = { viewModel.onIntent(FeedIntent.Observed.PagingDataEmpty) },
     ) {
     val lazyListState = rememberLazyListState()
     val pullToRefreshState = rememberPullToRefreshState()
@@ -114,7 +112,7 @@ fun FeedScreen(
             feedPagingItems.itemCount == 0 &&
             state.feedDateState == FeedDateUiState.PostsAvailable
         ) {
-            onPagingDataEmpty()
+            onIntent(FeedIntent.Observed.PagingDataEmpty)
         }
     }
 
@@ -148,7 +146,7 @@ fun FeedScreen(
                     indication = null,
                 ) {
                     if (state.selectedPostMenuId != null) {
-                        onPostMenuClick(-1)
+                        onIntent(FeedIntent.OnPostMenuClick(-1))
                     }
                 }
 
@@ -288,7 +286,7 @@ fun FeedScreen(
 
                     FeedFTAButton(
                         enabled = state.feedDateState != FeedDateUiState.NoPostsAndExpired,
-                        onFTAButtonClick = onFTAButtonClick,
+                        onFTAButtonClick = { onIntent(FeedIntent.OnFloatingActionButtonClick) },
                         modifier = Modifier.align(Alignment.BottomEnd),
                     )
                 }
