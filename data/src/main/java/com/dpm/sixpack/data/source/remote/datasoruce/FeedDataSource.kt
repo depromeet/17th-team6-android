@@ -7,6 +7,8 @@ import com.dpm.sixpack.data.source.remote.dto.response.ReactionResultDto
 import com.dpm.sixpack.data.source.remote.dto.response.SelfieCountsDto
 import com.dpm.sixpack.data.source.remote.service.FeedService
 import com.dpm.sixpack.data.source.remote.util.base.BaseResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import javax.inject.Inject
 
 class FeedDataSource @Inject constructor(
@@ -54,5 +56,16 @@ class FeedDataSource @Inject constructor(
         feedService.getSelfieWeek(
             startDate = startDate,
             endDate = endDate,
+        )
+
+    suspend fun updateSelfie(
+        feedId: Long,
+        data: RequestBody,
+        selfieImage: MultipartBody.Part?,
+    ): BaseResponse<Unit> =
+        feedService.updateSelfie(
+            feedId = feedId,
+            data = data,
+            selfieImage = selfieImage,
         )
 }

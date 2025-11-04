@@ -1,5 +1,6 @@
 package com.dpm.sixpack.domain.repository
 
+import android.net.Uri
 import androidx.paging.PagingData
 import com.dpm.sixpack.domain.model.CertifiedUser
 import com.dpm.sixpack.domain.model.Feed
@@ -31,6 +32,13 @@ interface FeedRepository {
         startDate: String,
         endDate: String,
     ): DoRunResult<SelfieCounts>
+
+    suspend fun updateSelfie(
+        feedId: Long,
+        content: String,
+        imageUri: Uri?,
+        deleteSelfieImage: Boolean?,
+    ): DoRunResult<Unit>
 }
 
 sealed interface FeedListItem {
