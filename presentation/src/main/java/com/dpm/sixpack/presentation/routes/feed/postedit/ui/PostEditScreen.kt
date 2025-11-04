@@ -14,12 +14,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
-import com.dpm.sixpack.presentation.common.components.post.PostImageWithRecord
+import com.dpm.sixpack.presentation.common.components.post.EditablePostImage
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
 import com.dpm.sixpack.presentation.common.model.PostResource
@@ -61,7 +62,7 @@ fun PostEditScreen(
                     )
                 }
             },
-            modifier = Modifier.padding(horizontal = 10.dp),
+            modifier = Modifier,
         )
 
         // Content
@@ -84,31 +85,21 @@ fun PostEditScreen(
             ) {
                 Spacer(modifier = Modifier.height(40.dp))
 
-                // 게시물 이미지
                 val imageUrl =
                     state.selectedImageUri?.toString() ?: state.originalPost.postImageUrl
 
-                PostImageWithRecord(
+                EditablePostImage(
                     postImageUrl = imageUrl,
                     runningSummary = state.originalPost.runningInfo,
-                    onPostImageClick = {},
+                    onImageEditClick = onImageEditButtonClick,
+                    buttonText = stringResource(id = R.string.feed_post_edit_change_background_button),
                     modifier = Modifier.fillMaxWidth(),
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                DoRunDefaultButton(
-                    text = "배경사진 변경",
-                    onClick = onImageEditButtonClick,
-                    modifier = Modifier.fillMaxWidth(),
-                    textColor = SixpackTheme.colors.blue600,
-                    containerColor = SixpackTheme.colors.blue200,
                 )
 
                 Spacer(Modifier.weight(1f))
 
                 DoRunDefaultButton(
-                    text = "수정하기",
+                    text = stringResource(id = R.string.feed_post_edit_submit_button),
                     onClick = onSubmitClick,
                     modifier = Modifier.fillMaxWidth(),
                     textColor = SixpackTheme.colors.gray0,

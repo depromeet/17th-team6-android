@@ -142,6 +142,8 @@
     <!-- endregion-->
 
     <!--region Feed-->
+    <string name="feed_post_edit_change_background_button">배경사진 변경</string>
+    <string name="feed_post_edit_submit_button">수정하기</string>
     <string name="feed_floating_action_button_description">피드 추가</string>
     <string name="feed_load_state_error_message">오류: %1$s</string>
     <string name="feed_load_state_retry_button">재시도</string>
