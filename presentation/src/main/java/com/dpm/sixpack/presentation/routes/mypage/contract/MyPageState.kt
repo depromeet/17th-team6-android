@@ -8,9 +8,6 @@ import kotlinx.parcelize.Parcelize
 data class MyPageState(
     val selectedTab: MyPageTab = MyPageTab.CERTIFICATION,
     val profileInfo: ProfileInfo = ProfileInfo(),
-    val posts: List<Post> = emptyList(),
-    val records: List<RecordItem> = emptyList(),
-    val currentYearMonth: YearMonth = YearMonth(),
     val isLoading: Boolean = false,
 ) : UiState,
     Parcelable

@@ -7,13 +7,5 @@ sealed interface MyPageIntent : UiIntent {
         val tab: MyPageTab,
     ) : MyPageIntent
 
-    data object OnPreviousMonthClick : MyPageIntent
-
-    data object OnNextMonthClick : MyPageIntent
-
-    data class OnRecordClick(
-        val recordId: Long,
-    ) : MyPageIntent
-
     data object OnSettingClick : MyPageIntent
 }
