@@ -15,7 +15,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class FeedPageDto(
     @SerialName("userSummary")
-    val userSummary: UserSummaryDto,
+    val userSummary: UserSummaryDto?,
     @SerialName("feeds")
     val feeds: FeedsWrapperDto,
 ) {
@@ -23,7 +23,7 @@ data class FeedPageDto(
         FeedPage(
             contents =
                 FeedContent(
-                    userSummary = userSummary.toDomain(),
+                    userSummary = userSummary?.toDomain(),
                     feeds = feeds.contents.map { it.toDomain() },
                 ),
             meta = feeds.meta.toDomain(),
