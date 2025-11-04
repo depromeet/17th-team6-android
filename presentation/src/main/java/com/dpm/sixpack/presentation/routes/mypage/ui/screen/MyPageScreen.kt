@@ -205,6 +205,7 @@ private fun MyPageScreenPreview() {
                     profileInfo =
                         ProfileInfo(
                             nickname = "두런두런",
+                            profileImageUrl = null,
                             friendCount = 7,
                             totalDistanceKm = 400.0,
                             certificationCount = 120,
@@ -233,6 +234,7 @@ private fun MyPageScreenRecordTabPreview() {
                     profileInfo =
                         ProfileInfo(
                             nickname = "두런두런",
+                            profileImageUrl = null,
                             friendCount = 7,
                             totalDistanceKm = 400.0,
                             certificationCount = 120,
@@ -275,6 +277,7 @@ private fun MyPageScreenEmptyPreview() {
                     profileInfo =
                         ProfileInfo(
                             nickname = "두런두런",
+                            profileImageUrl = null,
                             friendCount = 7,
                             totalDistanceKm = 0.0,
                             certificationCount = 0,

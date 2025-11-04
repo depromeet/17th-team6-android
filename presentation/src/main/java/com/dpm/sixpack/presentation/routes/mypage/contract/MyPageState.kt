@@ -15,6 +15,7 @@ data class MyPageState(
 @Parcelize
 data class ProfileInfo(
     val nickname: String = "",
+    val profileImageUrl: String? = null,
     val friendCount: Int = 0,
     val totalDistanceKm: Double = 0.0,
     val certificationCount: Int = 0,

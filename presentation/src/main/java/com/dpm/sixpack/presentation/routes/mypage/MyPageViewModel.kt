@@ -43,6 +43,7 @@ class MyPageViewModel
                                     profileInfo =
                                         ProfileInfo(
                                             nickname = userSummary.name,
+                                            profileImageUrl = userSummary.imageUrl,
                                             friendCount = userSummary.friendCount,
                                             totalDistanceKm = userSummary.totalDistance / 1000.0,
                                             certificationCount = userSummary.selfieCount,
