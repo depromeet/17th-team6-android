@@ -65,9 +65,7 @@ fun MyPageScreen(
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.collect { page ->
             val tab = MyPageTab.entries[page]
-            if (tab != state.selectedTab) {
-                onIntent(MyPageIntent.OnTabClick(tab))
-            }
+            onIntent(MyPageIntent.OnTabClick(tab))
         }
     }
 
