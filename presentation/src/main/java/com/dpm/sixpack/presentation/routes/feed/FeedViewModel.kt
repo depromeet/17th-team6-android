@@ -14,7 +14,6 @@ import com.dpm.sixpack.presentation.common.components.post.PostDropDownActionTyp
 import com.dpm.sixpack.presentation.common.model.Emoji
 import com.dpm.sixpack.presentation.common.model.PostReaction
 import com.dpm.sixpack.presentation.common.model.PostResource
-import com.dpm.sixpack.presentation.common.model.PostingUserInfo
 import com.dpm.sixpack.presentation.common.model.ReactingUserInfo
 import com.dpm.sixpack.presentation.common.model.UserInfo
 import com.dpm.sixpack.presentation.common.model.toPostResource
@@ -64,8 +63,6 @@ class FeedViewModel @Inject constructor(
     // 유저가 인증 가능한지 여부 캐싱
     private var isCertifiable: Boolean = false
 
-    private var myPostingInfo : PostingUserInfo = PostingUserInfo()
-
     private val pagingFlowCache = ConcurrentHashMap<LocalDate, Flow<PagingData<PostResource>>>()
     private val reactionDebounceJobs = ConcurrentHashMap<Long, Job>()
     private val optimisticPostsFlow = container.stateFlow.map { it.optimisticPosts }.distinctUntilChanged()
@@ -87,6 +84,10 @@ class FeedViewModel @Inject constructor(
                     flowOf(PagingData.empty())
                 }
             }.cachedIn(viewModelScope)
+
+    init {
+        loadInitialData()
+    }
 
     override fun onIntent(intent: FeedIntent) {
         when (intent) {
@@ -179,6 +180,11 @@ class FeedViewModel @Inject constructor(
             postSideEffect(FeedSideEffect.NavigateToAlarm)
         }
 
+    /**
+     * 날짜 선택 시
+     * 1. 선택된 날짜의 FeedDateState 결정
+     * 2. 선택된 날짜의 인증 유저 로딩 및 내 정보 업데이트
+     */
     private fun handleDateSelected(date: LocalDate) =
         intent {
             val feedDateState = handleFeedDateState(date)
@@ -200,15 +206,35 @@ class FeedViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 초기 데이터 로딩
+     * 1. 오늘 날짜 기준 캘린더 데이터 로딩
+     * 2. 오늘 날짜의 인증 유저 및 내 정보 로딩
+     * 3. FeedDateState 결정 (PostsAvailable, NoPostsAndCertifiable, NoPostsAndExpired)
+     */
+    private fun loadInitialData() =
+        intent {
+            val today = LocalDate.now()
+            val todayString = today.toYyyyMmDdString()
+
+            loadCalendarCounts(pivotDate = today)
+
+            loadCertifiedUsers(todayString)
+        }
+
     private fun loadCertifiedUsers(date: String) =
         intent {
             viewModelScope.launch {
                 feedRepository
                     .getCertifiedUsers(date)
                     .onSuccess { certifiedUsers ->
+                        val postingUsers = certifiedUsers.map { it.toPostingUserInfo() }
+                        val myInfo = postingUsers.find { it.user.isMe }
+
                         reduce {
                             state.copy(
-                                postingUserInfo = certifiedUsers.map { it.toPostingUserInfo() },
+                                postingUserInfo = postingUsers,
+                                myPostingInfo = myInfo,
                             )
                         }
                     }.onError { error ->
@@ -468,11 +494,16 @@ class FeedViewModel @Inject constructor(
             postSideEffect(FeedSideEffect.NavigateToPostUpload(selectedDate))
         }
 
-    // 캘린더 PreFetch 로직
+    // ========== Calendar Prefetch Logic ==========
+    // 캘린더 데이터를 미리 가져오기 위한 로직
     private var fetchedRange: ClosedRange<LocalDate>? = null
     private val calendarApiLock = Mutex()
 
-    // 캘린더 주차 check 함수
+    /**
+     * 캘린더 주차 변경 감지
+     * - 사용자가 스크롤하여 2주 이내의 주차에 도달하면 추가 데이터 로딩
+     * - 미래 날짜는 로딩하지 않음
+     */
     private fun onWeekDisplayed(currentWeekStartDate: LocalDate) {
         val currentState = container.stateFlow.value
         if (currentState.calendarState.isLoading ||
@@ -490,7 +521,11 @@ class FeedViewModel @Inject constructor(
         }
     }
 
-    // 캘린더 count loading 함수
+    /**
+     * 캘린더 카운트 로딩 (1개월 단위)
+     * - Mutex로 동시 호출 방지
+     * - 기존 데이터와 병합하여 캐시
+     */
     private fun loadCalendarCounts(pivotDate: LocalDate) {
         viewModelScope.launch {
             calendarApiLock.withLock {
@@ -555,16 +590,21 @@ class FeedViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 낙관적 업데이트: 리액션 추가/제거 시 즉시 UI에 반영
+     * - 캐싱된 myPostingInfo 사용
+     * - users 리스트에 현재 사용자 추가/제거
+     */
     private fun PostResource.updateReaction(
         emoji: Emoji,
         isReacted: Boolean,
     ): PostResource {
         val targetReaction = this.reactions.find { it.emoji == emoji }
 
-        // 현재 사용자 정보 찾기 (postingUserInfo에서 isMe = true인 사용자)
+        // 캐싱된 내 정보 사용 (Single Source of Truth)
         val currentState = container.stateFlow.value
         val myUserInfo =
-            currentState.postingUserInfo.find { it.user.isMe }?.user
+            currentState.myPostingInfo?.user
                 ?: UserInfo(id = -1L, name = "나", profileImageUrl = "", isMe = true)
 
         val currentTime = System.currentTimeMillis().toString()
