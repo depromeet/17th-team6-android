@@ -129,6 +129,7 @@ class FeedViewModel @Inject constructor(
 
             // UI Observations (시스템 관찰 이벤트)
             is FeedIntent.Observed.VisibleWeeksChanged -> handleVisibleWeeksChanged(intent.startDate)
+            FeedIntent.Observed.PagingDataEmpty -> handlePagingDataEmpty()
         }
     }
 
@@ -462,6 +463,14 @@ class FeedViewModel @Inject constructor(
         intent {
             val selectedDate = state.calendarState.selectedDate
             postSideEffect(FeedSideEffect.NavigateToPostUpload(selectedDate))
+        }
+
+    private fun handlePagingDataEmpty() =
+        intent {
+            val isCertifiable = state.feedDateState == FeedDateUiState.PostsAvailable && isCertifiable
+                reduce {
+                    state.copy(feedDateState = if(isCertifiable)FeedDateUiState.NoPostsAndCertifiable else FeedDateUiState.NoPostsAndExpired)
+                }
         }
 
     // 캘린더 PreFetch 로직

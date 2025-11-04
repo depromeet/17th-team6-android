@@ -80,5 +80,7 @@ sealed interface FeedIntent : UiIntent {
         data class VisibleWeeksChanged(
             val startDate: LocalDate,
         ) : Observed
+
+        data object PagingDataEmpty : Observed
     }
 }

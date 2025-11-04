@@ -51,6 +51,7 @@ fun FeedRoute(
         // Calendar
         onDateSelected = { date -> viewModel.onIntent(FeedIntent.OnDateSelected(date)) },
         onVisibleWeeksChanged = { startDate -> viewModel.onIntent(FeedIntent.Observed.VisibleWeeksChanged(startDate)) },
+        onPagingDataEmpty = { viewModel.onIntent(FeedIntent.Observed.PagingDataEmpty) },
         // Certified Users
         onCertifiedUsersClick = { viewModel.onIntent(FeedIntent.OnCertifiedUsersClick) },
         // FeedPostCard

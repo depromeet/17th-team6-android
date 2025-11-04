@@ -77,6 +77,7 @@ fun FeedScreen(
     // Calendar
     onDateSelected: (LocalDate) -> Unit = {},
     onVisibleWeeksChanged: (LocalDate) -> Unit = {},
+    onPagingDataEmpty: () -> Unit = {},
     // Certified Users
     onCertifiedUsersClick: () -> Unit = {},
     // Post
@@ -128,6 +129,16 @@ fun FeedScreen(
         if (isRefreshing) {
             delay(5000)
             isRefreshing = false
+        }
+    }
+
+    // 초기 paging 데이터가 비어있는지 감지
+    LaunchedEffect(feedPagingItems.loadState.refresh, feedPagingItems.itemCount, state.feedDateState) {
+        if (feedPagingItems.loadState.refresh is LoadState.NotLoading &&
+            feedPagingItems.itemCount == 0 &&
+            state.feedDateState == FeedDateUiState.PostsAvailable
+        ) {
+            onPagingDataEmpty()
         }
     }
 
