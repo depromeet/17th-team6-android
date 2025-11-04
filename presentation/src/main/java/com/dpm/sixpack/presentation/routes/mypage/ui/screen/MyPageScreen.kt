@@ -99,11 +99,12 @@ fun MyPageScreen(
             indicator = { tabPositions ->
                 TabRowDefaults.SecondaryIndicator(
                     Modifier.tabIndicatorOffset(tabPositions[state.selectedTab.ordinal]),
-                    color = SixpackTheme.colors.gray900,
+                    height = 2.dp,
+                    color = SixpackTheme.colors.gray800,
                 )
             },
             divider = {
-                HorizontalDivider(color = SixpackTheme.colors.gray200, thickness = 1.dp)
+                HorizontalDivider(color = SixpackTheme.colors.gray100, thickness = 1.dp)
             },
         ) {
             Tab(
@@ -141,6 +142,7 @@ fun MyPageScreen(
                         onIntent = onFeedTabIntent,
                         modifier = Modifier.fillMaxSize(),
                     )
+
                 1 ->
                     RecordTabContent(
                         state = recordTabState,

@@ -15,8 +15,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
+import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.routes.mypage.contract.ProfileInfo
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
@@ -105,6 +107,22 @@ private fun StatItem(
             text = value,
             style = SixpackTheme.typography.b1Bold,
             color = SixpackTheme.colors.gray900,
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun ProfileSectionPreview() {
+    DoRunPreviewWrapper {
+        ProfileSection(
+            profileInfo =
+                ProfileInfo(
+                    nickname = "두런두런",
+                    friendCount = 7,
+                    totalDistanceKm = 400.5,
+                    certificationCount = 120,
+                ),
         )
     }
 }

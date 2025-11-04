@@ -18,8 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
+import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.routes.mypage.contract.CertificationStatus
 import com.dpm.sixpack.presentation.routes.mypage.contract.RecordItem
 import com.dpm.sixpack.presentation.theme.SixpackTheme
@@ -143,6 +145,48 @@ private fun RecordStat(
             text = value,
             style = SixpackTheme.typography.c1Regular,
             color = SixpackTheme.colors.gray900,
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun RecordCardCompletedPreview() {
+    DoRunPreviewWrapper {
+        RecordCard(
+            record =
+                RecordItem(
+                    id = 1,
+                    date = "2025.09.30 (화)",
+                    time = "오전 10:11",
+                    distanceKm = 8.02,
+                    durationFormatted = "01:12:03",
+                    paceFormatted = "6'74\"",
+                    cadence = 128,
+                    certificationStatus = CertificationStatus.COMPLETED,
+                ),
+            onClick = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun RecordCardAvailablePreview() {
+    DoRunPreviewWrapper {
+        RecordCard(
+            record =
+                RecordItem(
+                    id = 2,
+                    date = "2025.10.01 (수)",
+                    time = "오후 02:30",
+                    distanceKm = 5.5,
+                    durationFormatted = "00:45:20",
+                    paceFormatted = "8'15\"",
+                    cadence = 115,
+                    certificationStatus = CertificationStatus.AVAILABLE,
+                ),
+            onClick = {},
         )
     }
 }

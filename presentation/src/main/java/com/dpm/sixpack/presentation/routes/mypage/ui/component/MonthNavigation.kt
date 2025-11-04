@@ -13,8 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
+import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.routes.mypage.contract.YearMonth
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
@@ -56,5 +58,17 @@ internal fun MonthNavigation(
                 tint = SixpackTheme.colors.gray900,
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun MonthNavigationPreview() {
+    DoRunPreviewWrapper {
+        MonthNavigation(
+            yearMonth = YearMonth(year = 2025, month = 10),
+            onPreviousClick = {},
+            onNextClick = {},
+        )
     }
 }

@@ -90,29 +90,9 @@ class MyPageFeedTabViewModel
 
         override fun onIntent(intent: MyPageFeedTabIntent) {
             when (intent) {
-                is MyPageFeedTabIntent.OnPreviousMonthClick -> handlePreviousMonthClick()
-                is MyPageFeedTabIntent.OnNextMonthClick -> handleNextMonthClick()
                 is MyPageFeedTabIntent.OnPostClick -> handlePostClick(intent.postId)
             }
         }
-
-        private fun handlePreviousMonthClick() =
-            intent {
-                reduce {
-                    state.copy(
-                        currentYearMonth = state.currentYearMonth.addMonths(-1),
-                    )
-                }
-            }
-
-        private fun handleNextMonthClick() =
-            intent {
-                reduce {
-                    state.copy(
-                        currentYearMonth = state.currentYearMonth.addMonths(1),
-                    )
-                }
-            }
 
         private fun handlePostClick(postId: Long) =
             intent {

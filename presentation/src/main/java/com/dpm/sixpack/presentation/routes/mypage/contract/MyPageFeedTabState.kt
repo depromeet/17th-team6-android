@@ -6,7 +6,6 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class MyPageFeedTabState(
-    val currentYearMonth: YearMonth = YearMonth(),
     val isLoading: Boolean = false,
 ) : UiState,
     Parcelable

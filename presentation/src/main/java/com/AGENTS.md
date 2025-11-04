@@ -452,7 +452,9 @@ DoRunDefaultButton(
 
 ### 8. Preview Pattern
 
-**ALWAYS** provide previews for composables.
+**ALWAYS** provide previews for composables, including reusable components.
+
+#### Screen Previews
 
 ```kotlin
 @Preview(name = "Light Mode")
@@ -467,6 +469,144 @@ private fun FeatureScreenPreview() {
             ),
             onIntent = {},
         )
+    }
+}
+```
+
+#### Component Previews
+
+**ALWAYS** provide previews for reusable components in the `ui/component/` package:
+
+**Key principles**:
+- Component previews should be `private` (components themselves are `internal`)
+- Use `DoRunPreviewWrapper` for theme support
+- Provide multiple previews for components with different states
+- Use realistic mock data that represents actual usage
+- Include edge cases (empty, loading, error states)
+
+**Example 1: Simple Component**
+
+```kotlin
+@Composable
+internal fun EmptyState(
+    title: String,
+    description: String,
+    modifier: Modifier = Modifier,
+) {
+    // Component implementation
+}
+
+@Preview
+@Composable
+private fun EmptyStatePreview() {
+    DoRunPreviewWrapper {
+        EmptyState(
+            title = "아직 완료한 인증이 없어요...",
+            description = "러닝을 완료하면 인증할 수 있어요!",
+        )
+    }
+}
+```
+
+**Example 2: Component with Multiple States**
+
+```kotlin
+@Composable
+internal fun RecordCard(
+    record: RecordItem,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    // Component implementation
+}
+
+// Preview for completed state
+@Preview
+@Composable
+private fun RecordCardCompletedPreview() {
+    DoRunPreviewWrapper {
+        RecordCard(
+            record = RecordItem(
+                id = 1,
+                date = "2025.09.30 (화)",
+                time = "오전 10:11",
+                distanceKm = 8.02,
+                certificationStatus = CertificationStatus.COMPLETED,
+            ),
+            onClick = {},
+        )
+    }
+}
+
+// Preview for available state
+@Preview
+@Composable
+private fun RecordCardAvailablePreview() {
+    DoRunPreviewWrapper {
+        RecordCard(
+            record = RecordItem(
+                id = 2,
+                date = "2025.10.01 (수)",
+                time = "오후 02:30",
+                distanceKm = 5.5,
+                certificationStatus = CertificationStatus.AVAILABLE,
+            ),
+            onClick = {},
+        )
+    }
+}
+```
+
+**Example 3: Component with Paging Data**
+
+For components that accept `LazyPagingItems`, use `flowOf(PagingData.from(...)).collectAsLazyPagingItems()`:
+
+```kotlin
+@Preview
+@Composable
+private fun PostGridPreview() {
+    DoRunPreviewWrapper {
+        val mockGridItems = listOf(
+            GridItemType.MonthLabel(year = 2025, month = 10),
+            GridItemType.PostItem(Post(id = 1, imageUrl = null, createdAt = "2025-10-14T10:30:00Z")),
+            GridItemType.PostItem(Post(id = 2, imageUrl = null, createdAt = "2025-10-12T15:20:00Z")),
+        )
+        val gridItemsPagingItems = flowOf(PagingData.from(mockGridItems)).collectAsLazyPagingItems()
+
+        PostGrid(
+            gridItemsPagingItems = gridItemsPagingItems,
+        )
+    }
+}
+```
+
+**Example 4: Interactive Component States**
+
+```kotlin
+@Composable
+internal fun MyPageTabText(
+    text: String,
+    isSelected: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    // Component implementation
+}
+
+// Preview for selected state
+@Preview
+@Composable
+private fun MyPageTabTextSelectedPreview() {
+    DoRunPreviewWrapper {
+        MyPageTabText(text = "인증", isSelected = true)
+    }
+}
+
+// Preview for unselected state
+@Preview
+@Composable
+private fun MyPageTabTextUnselectedPreview() {
+    DoRunPreviewWrapper {
+        MyPageTabText(text = "기록", isSelected = false)
     }
 }
 ```

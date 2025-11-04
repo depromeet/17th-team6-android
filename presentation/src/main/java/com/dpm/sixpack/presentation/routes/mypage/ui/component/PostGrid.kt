@@ -19,12 +19,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.dpm.sixpack.presentation.common.components.image.DoRunAsyncImage
+import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.routes.mypage.contract.GridItemType
 import com.dpm.sixpack.presentation.routes.mypage.contract.Post
 import com.dpm.sixpack.presentation.theme.SixpackTheme
+import kotlinx.coroutines.flow.flowOf
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -153,5 +158,27 @@ private fun PostGridItem(
                         .padding(8.dp),
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun PostGridPreview() {
+    DoRunPreviewWrapper {
+        val mockGridItems =
+            listOf(
+                GridItemType.MonthLabel(year = 2025, month = 10),
+                GridItemType.PostItem(Post(id = 1, imageUrl = null, createdAt = "2025-10-14T10:30:00Z")),
+                GridItemType.PostItem(Post(id = 2, imageUrl = null, createdAt = "2025-10-12T15:20:00Z")),
+                GridItemType.PostItem(Post(id = 3, imageUrl = null, createdAt = "2025-10-09T08:45:00Z")),
+                GridItemType.MonthLabel(year = 2025, month = 9),
+                GridItemType.PostItem(Post(id = 4, imageUrl = null, createdAt = "2025-09-30T14:30:00Z")),
+                GridItemType.PostItem(Post(id = 5, imageUrl = null, createdAt = "2025-09-28T12:00:00Z")),
+            )
+        val gridItemsPagingItems = flowOf(PagingData.from(mockGridItems)).collectAsLazyPagingItems()
+
+        PostGrid(
+            gridItemsPagingItems = gridItemsPagingItems,
+        )
     }
 }

@@ -13,8 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
+import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
@@ -54,5 +56,16 @@ internal fun EmptyState(
                 textAlign = TextAlign.Center,
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun EmptyStatePreview() {
+    DoRunPreviewWrapper {
+        EmptyState(
+            title = "아직 완료한 인증이 없어요...",
+            description = "러닝을 완료하면 인증할 수 있어요!",
+        )
     }
 }
