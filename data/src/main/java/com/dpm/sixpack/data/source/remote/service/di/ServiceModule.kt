@@ -2,6 +2,7 @@ package com.dpm.sixpack.data.source.remote.service.di
 
 import com.dpm.sixpack.data.source.remote.service.AuthService
 import com.dpm.sixpack.data.source.remote.service.FeedService
+import com.dpm.sixpack.data.source.remote.service.MockFeedService
 import com.dpm.sixpack.data.source.remote.service.RunningGoalService
 import com.dpm.sixpack.data.source.remote.service.RunningSessionService
 import dagger.Module
@@ -31,5 +32,10 @@ object ServiceModule {
 
     @Provides
     @Singleton
-    fun provideFeedService(retrofit: Retrofit): FeedService = retrofit.create(FeedService::class.java)
+    fun provideFeedService(mockFeedService: MockFeedService): FeedService = mockFeedService
+
+//     TODO: Switch to real FeedService when API is stable
+    // @Provides
+    // @Singleton
+    // fun provideFeedService(retrofit: Retrofit): FeedService = retrofit.create(FeedService::class.java)
 }

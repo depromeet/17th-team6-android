@@ -4,9 +4,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.filter
 import androidx.paging.insertSeparators
 import androidx.paging.map
-import com.dpm.sixpack.domain.usecase.GetPostsUseCase
+import com.dpm.sixpack.domain.repository.FeedListItem
+import com.dpm.sixpack.domain.usecase.GetMyUserFeedsUseCase
+import com.dpm.sixpack.domain.usecase.GetUserSummaryUseCase
+import com.dpm.sixpack.domain.util.DoRunResult
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.routes.mypage.contract.CertificationStatus
 import com.dpm.sixpack.presentation.routes.mypage.contract.GridItemType
@@ -29,10 +33,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyPageViewModel
-    @Inject
+@Inject
     constructor(
         savedStateHandle: SavedStateHandle,
-        getPostsUseCase: GetPostsUseCase,
+        getMyUserFeedsUseCase: GetMyUserFeedsUseCase,
+        private val getUserSummaryUseCase: GetUserSummaryUseCase,
     ) : BaseViewModel<MyPageState, MyPageIntent, MyPageSideEffect>() {
         override val initialState: MyPageState = MyPageState()
 
@@ -40,14 +45,18 @@ class MyPageViewModel
             container(initialState = initialState, savedStateHandle = savedStateHandle)
 
         val postsPagingFlow: Flow<PagingData<GridItemType>> =
-            getPostsUseCase()
+            getMyUserFeedsUseCase()
                 .map { pagingData ->
                     pagingData
-                        .map { domainPost ->
+                        .filter { feedListItem ->
+                            // Filter out UserSummaryItem, only keep PostItem
+                            feedListItem is FeedListItem.PostItem
+                        }.map { feedListItem ->
+                            val feed = (feedListItem as FeedListItem.PostItem).feed
                             Post(
-                                id = domainPost.id,
-                                imageUrl = domainPost.imageUrl,
-                                createdAt = domainPost.createdAt,
+                                id = feed.feedId,
+                                imageUrl = feed.imageUrl,
+                                createdAt = feed.date,
                             )
                         }
                 }.map { pagingData ->
@@ -88,7 +97,35 @@ class MyPageViewModel
             }
 
         init {
+            loadUserProfile()
             loadMockData()
+        }
+
+        private fun loadUserProfile() {
+            viewModelScope.launch {
+                when (val result = getUserSummaryUseCase()) {
+                    is DoRunResult.Success -> {
+                        val userSummary = result.data
+                        intent {
+                            reduce {
+                                state.copy(
+                                    profileInfo =
+                                        ProfileInfo(
+                                            nickname = userSummary.name,
+                                            friendCount = userSummary.friendCount,
+                                            totalDistanceKm = userSummary.totalDistance / 1000.0,
+                                            certificationCount = userSummary.selfieCount,
+                                        ),
+                                )
+                            }
+                        }
+                    }
+                    is DoRunResult.Failure -> {
+                        // Handle error - keep default ProfileInfo
+                        // Could show error message via SideEffect if needed
+                    }
+                }
+            }
         }
 
         override fun onIntent(intent: MyPageIntent) {

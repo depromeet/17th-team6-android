@@ -18,6 +18,8 @@ interface FeedRepository {
         userId: Long?,
     ): Flow<PagingData<FeedListItem>>
 
+    suspend fun getUserSummary(userId: Long?): DoRunResult<UserSummary>
+
     suspend fun postReaction(
         selfieId: Long,
         emojiType: String,

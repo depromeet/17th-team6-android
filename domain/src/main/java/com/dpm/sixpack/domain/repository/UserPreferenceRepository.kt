@@ -1,6 +1,11 @@
 package com.dpm.sixpack.domain.repository
 
+import kotlinx.coroutines.flow.Flow
+
 interface UserPreferenceRepository {
+
+    fun getUserIdFlow(): Flow<Long>
+
     suspend fun getUserId(): Long
 
     suspend fun getSessionId(): Long?
