@@ -23,7 +23,7 @@ fun DoRunTopBarSlot(
                 .statusBarsPadding()
                 .fillMaxWidth()
                 .height(44.dp)
-                .padding(start = 10.dp),
+                .padding(horizontal = 10.dp),
     ) {
         if (leadingContent != null) {
             Box(modifier = Modifier.align(Alignment.CenterStart)) {

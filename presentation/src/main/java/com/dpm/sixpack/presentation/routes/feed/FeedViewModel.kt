@@ -499,9 +499,11 @@ class FeedViewModel @Inject constructor(
     private fun handlePagingDataEmpty() =
         intent {
             val isCertifiable = state.feedDateState == FeedDateUiState.PostsAvailable && isCertifiable
-                reduce {
-                    state.copy(feedDateState = if(isCertifiable)FeedDateUiState.NoPostsAndCertifiable else FeedDateUiState.NoPostsAndExpired)
-                }
+            reduce {
+                state.copy(
+                    feedDateState = if (isCertifiable)FeedDateUiState.NoPostsAndCertifiable else FeedDateUiState.NoPostsAndExpired,
+                )
+            }
         }
 
     // 캘린더 PreFetch 로직

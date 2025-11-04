@@ -5,7 +5,6 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.dpm.sixpack.presentation.common.model.PostResource
-import com.dpm.sixpack.presentation.routes.feed.contract.FeedIntent
 import com.dpm.sixpack.presentation.routes.feed.contract.FeedSideEffect
 import com.dpm.sixpack.presentation.routes.feed.ui.FeedScreen
 import org.orbitmvi.orbit.compose.collectAsState
@@ -47,5 +46,5 @@ fun FeedRoute(
         state = state,
         feedPagingItems = feedPagingItems,
         onIntent = viewModel::onIntent,
-        )
+    )
 }
