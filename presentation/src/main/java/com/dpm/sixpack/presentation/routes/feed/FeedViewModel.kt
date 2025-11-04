@@ -14,6 +14,9 @@ import com.dpm.sixpack.presentation.common.components.post.PostDropDownActionTyp
 import com.dpm.sixpack.presentation.common.model.Emoji
 import com.dpm.sixpack.presentation.common.model.PostReaction
 import com.dpm.sixpack.presentation.common.model.PostResource
+import com.dpm.sixpack.presentation.common.model.PostingUserInfo
+import com.dpm.sixpack.presentation.common.model.ReactingUserInfo
+import com.dpm.sixpack.presentation.common.model.UserInfo
 import com.dpm.sixpack.presentation.common.model.toPostResource
 import com.dpm.sixpack.presentation.common.model.toPostingUserInfo
 import com.dpm.sixpack.presentation.common.util.format.toYyyyMmDdString
@@ -60,6 +63,8 @@ class FeedViewModel @Inject constructor(
 
     // 유저가 인증 가능한지 여부 캐싱
     private var isCertifiable: Boolean = false
+
+    private var myPostingInfo : PostingUserInfo = PostingUserInfo()
 
     private val pagingFlowCache = ConcurrentHashMap<LocalDate, Flow<PagingData<PostResource>>>()
     private val reactionDebounceJobs = ConcurrentHashMap<Long, Job>()
@@ -555,17 +560,51 @@ class FeedViewModel @Inject constructor(
         isReacted: Boolean,
     ): PostResource {
         val targetReaction = this.reactions.find { it.emoji == emoji }
+
+        // 현재 사용자 정보 찾기 (postingUserInfo에서 isMe = true인 사용자)
+        val currentState = container.stateFlow.value
+        val myUserInfo =
+            currentState.postingUserInfo.find { it.user.isMe }?.user
+                ?: UserInfo(id = -1L, name = "나", profileImageUrl = "", isMe = true)
+
+        val currentTime = System.currentTimeMillis().toString()
+
+        val myReactingUserInfo =
+            ReactingUserInfo(
+                user = myUserInfo,
+                reactedAt = currentTime,
+                emoji = emoji,
+            )
+
         val newReactions =
             if (targetReaction == null && isReacted) {
                 // 새 리액션 추가
-                this.reactions + PostReaction(emoji = emoji, count = "1", isReacted = true, users = emptyList())
+                this.reactions +
+                    PostReaction(
+                        emoji = emoji,
+                        count = "1",
+                        isReacted = true,
+                        users = listOf(myReactingUserInfo),
+                    )
             } else if (targetReaction != null) {
                 // 기존 리액션 수정
                 this.reactions
                     .map {
                         if (it.emoji == emoji) {
                             val newCount = (it.count.toIntOrNull() ?: 0) + (if (isReacted) 1 else -1)
-                            it.copy(count = newCount.toString(), isReacted = isReacted)
+                            val newUsers =
+                                if (isReacted) {
+                                    // 리액션 추가: 현재 사용자를 리스트에 추가
+                                    it.users + myReactingUserInfo
+                                } else {
+                                    // 리액션 제거: 현재 사용자를 리스트에서 제거
+                                    it.users.filterNot { user -> user.user.isMe }
+                                }
+                            it.copy(
+                                count = newCount.toString(),
+                                isReacted = isReacted,
+                                users = newUsers,
+                            )
                         } else {
                             it
                         }

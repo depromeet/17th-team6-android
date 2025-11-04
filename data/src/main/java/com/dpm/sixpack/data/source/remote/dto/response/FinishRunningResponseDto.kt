@@ -31,9 +31,9 @@ data class FinishRunningResponseDto(
 ) {
     fun toRunningSessionResult() =
         RunningSessionResult(
-            totalDistanceMeter = totalDistance,
+            totalDistanceMeter = totalDistance.toInt(),
             totalDurationSec = totalDuration,
-            avgPace = avgPace,
+            avgPace = avgPace.toInt(),
             avgCadence = avgCadence,
             maxCadence = maxCadence,
         )
