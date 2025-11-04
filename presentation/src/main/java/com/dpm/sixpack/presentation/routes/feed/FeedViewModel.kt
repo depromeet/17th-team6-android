@@ -14,6 +14,8 @@ import com.dpm.sixpack.presentation.common.components.post.PostDropDownActionTyp
 import com.dpm.sixpack.presentation.common.model.Emoji
 import com.dpm.sixpack.presentation.common.model.PostReaction
 import com.dpm.sixpack.presentation.common.model.PostResource
+import com.dpm.sixpack.presentation.common.model.ReactingUserInfo
+import com.dpm.sixpack.presentation.common.model.UserInfo
 import com.dpm.sixpack.presentation.common.model.toPostResource
 import com.dpm.sixpack.presentation.common.model.toPostingUserInfo
 import com.dpm.sixpack.presentation.common.util.format.toYyyyMmDdString
@@ -82,6 +84,10 @@ class FeedViewModel @Inject constructor(
                     flowOf(PagingData.empty())
                 }
             }.cachedIn(viewModelScope)
+
+    init {
+        loadInitialData()
+    }
 
     override fun onIntent(intent: FeedIntent) {
         when (intent) {
@@ -175,6 +181,11 @@ class FeedViewModel @Inject constructor(
             postSideEffect(FeedSideEffect.NavigateToAlarm)
         }
 
+    /**
+     * 날짜 선택 시
+     * 1. 선택된 날짜의 FeedDateState 결정
+     * 2. 선택된 날짜의 인증 유저 로딩 및 내 정보 업데이트
+     */
     private fun handleDateSelected(date: LocalDate) =
         intent {
             val feedDateState = handleFeedDateState(date)
@@ -196,15 +207,35 @@ class FeedViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 초기 데이터 로딩
+     * 1. 오늘 날짜 기준 캘린더 데이터 로딩
+     * 2. 오늘 날짜의 인증 유저 및 내 정보 로딩
+     * 3. FeedDateState 결정 (PostsAvailable, NoPostsAndCertifiable, NoPostsAndExpired)
+     */
+    private fun loadInitialData() =
+        intent {
+            val today = LocalDate.now()
+            val todayString = today.toYyyyMmDdString()
+
+            loadCalendarCounts(pivotDate = today)
+
+            loadCertifiedUsers(todayString)
+        }
+
     private fun loadCertifiedUsers(date: String) =
         intent {
             viewModelScope.launch {
                 feedRepository
                     .getCertifiedUsers(date)
                     .onSuccess { certifiedUsers ->
+                        val postingUsers = certifiedUsers.map { it.toPostingUserInfo() }
+                        val myInfo = postingUsers.find { it.user.isMe }
+
                         reduce {
                             state.copy(
-                                postingUserInfo = certifiedUsers.map { it.toPostingUserInfo() },
+                                postingUserInfo = postingUsers,
+                                myPostingInfo = myInfo,
                             )
                         }
                     }.onError { error ->
@@ -477,7 +508,11 @@ class FeedViewModel @Inject constructor(
     private var fetchedRange: ClosedRange<LocalDate>? = null
     private val calendarApiLock = Mutex()
 
-    // 캘린더 주차 check 함수
+    /**
+     * 캘린더 주차 변경 감지
+     * - 사용자가 스크롤하여 2주 이내의 주차에 도달하면 추가 데이터 로딩
+     * - 미래 날짜는 로딩하지 않음
+     */
     private fun onWeekDisplayed(currentWeekStartDate: LocalDate) {
         val currentState = container.stateFlow.value
         if (currentState.calendarState.isLoading ||
@@ -495,7 +530,11 @@ class FeedViewModel @Inject constructor(
         }
     }
 
-    // 캘린더 count loading 함수
+    /**
+     * 캘린더 카운트 로딩 (1개월 단위)
+     * - Mutex로 동시 호출 방지
+     * - 기존 데이터와 병합하여 캐시
+     */
     private fun loadCalendarCounts(pivotDate: LocalDate) {
         viewModelScope.launch {
             calendarApiLock.withLock {
@@ -575,17 +614,51 @@ class FeedViewModel @Inject constructor(
         isReacted: Boolean,
     ): PostResource {
         val targetReaction = this.reactions.find { it.emoji == emoji }
+
+        // 캐싱된 내 정보 사용 (Single Source of Truth)
+        val currentState = container.stateFlow.value
+        val myUserInfo =
+            currentState.myPostingInfo?.user
+                ?: UserInfo(id = -1L, name = "나", profileImageUrl = "", isMe = true)
+
+        val currentTime = System.currentTimeMillis().toString()
+
+        val myReactingUserInfo =
+            ReactingUserInfo(
+                user = myUserInfo,
+                reactedAt = currentTime,
+                emoji = emoji,
+            )
+
         val newReactions =
             if (targetReaction == null && isReacted) {
                 // 새 리액션 추가
-                this.reactions + PostReaction(emoji = emoji, count = "1", isReacted = true, users = emptyList())
+                this.reactions +
+                    PostReaction(
+                        emoji = emoji,
+                        count = "1",
+                        isReacted = true,
+                        users = listOf(myReactingUserInfo),
+                    )
             } else if (targetReaction != null) {
                 // 기존 리액션 수정
                 this.reactions
                     .map {
                         if (it.emoji == emoji) {
                             val newCount = (it.count.toIntOrNull() ?: 0) + (if (isReacted) 1 else -1)
-                            it.copy(count = newCount.toString(), isReacted = isReacted)
+                            val newUsers =
+                                if (isReacted) {
+                                    // 리액션 추가: 현재 사용자를 리스트에 추가
+                                    it.users + myReactingUserInfo
+                                } else {
+                                    // 리액션 제거: 현재 사용자를 리스트에서 제거
+                                    it.users.filterNot { user -> user.user.isMe }
+                                }
+                            it.copy(
+                                count = newCount.toString(),
+                                isReacted = isReacted,
+                                users = newUsers,
+                            )
                         } else {
                             it
                         }

@@ -39,14 +39,14 @@ internal fun MainRunningRecordGrid(
         ) {
             RecordItem(
                 label = stringResource(R.string.record_current_distance),
-                recordValue = formatDistanceToKm(recordState.currentDistance.toLong()),
+                recordValue = formatDistanceToKm(recordState.currentDistance),
                 emphasize = true,
                 textColor = SixpackTheme.colors.blue600,
             )
             Spacer(modifier = Modifier.height(20.dp))
             RecordItem(
                 label = stringResource(R.string.record_average_pace),
-                recordValue = formatPaceToString(recordState.avgPace.toLong()),
+                recordValue = formatPaceToString(recordState.avgPace),
             )
         }
         // 오른쪽 열

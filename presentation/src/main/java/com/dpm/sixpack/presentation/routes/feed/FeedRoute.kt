@@ -46,48 +46,7 @@ fun FeedRoute(
     FeedScreen(
         state = state,
         feedPagingItems = feedPagingItems,
-        onTopBarGroupIconClick = { viewModel.onIntent(FeedIntent.OnTopBarGroupIconClick) },
-        onTopBarAlarmIconClick = { viewModel.onIntent(FeedIntent.OnTopBarAlarmIconClick) },
-        // Calendar
-        onDateSelected = { date -> viewModel.onIntent(FeedIntent.OnDateSelected(date)) },
-        onVisibleWeeksChanged = { startDate -> viewModel.onIntent(FeedIntent.Observed.VisibleWeeksChanged(startDate)) },
+        onIntent = viewModel::onIntent,
         onPagingDataEmpty = { viewModel.onIntent(FeedIntent.Observed.PagingDataEmpty) },
-        // Certified Users
-        onCertifiedUsersClick = { viewModel.onIntent(FeedIntent.OnCertifiedUsersClick) },
-        // FeedPostCard
-        onPostUserProfileClick = { userId, isMe -> viewModel.onIntent(FeedIntent.OnUserProfileClick(userId, isMe)) },
-        onPostMenuClick = { feedId -> viewModel.onIntent(FeedIntent.OnPostMenuClick(feedId)) },
-        onPostImageClick = { post -> viewModel.onIntent(FeedIntent.OnPostImageClick(post)) },
-        onPostReactionClick = {
-            post,
-            emoji,
-            isReacted,
-            ->
-            viewModel.onIntent(FeedIntent.OnPostReactionClick(post, emoji, isReacted))
-        },
-        onPostReactionLongClick = {
-            feedId,
-            reactions,
-            emoji,
-            ->
-            viewModel.onIntent(FeedIntent.OnPostReactionLongClick(feedId, reactions, emoji))
-        },
-        onPostAddReactionClick = { post -> viewModel.onIntent(FeedIntent.OnPostAddReactionClick(post)) },
-        onDropDownMenuClick = { post, action -> viewModel.onIntent(FeedIntent.OnDropDownMenuClick(post, action)) },
-        // BottomSheet
-        onBottomSheetDismiss = { viewModel.onIntent(FeedIntent.OnBottomSheetDismiss) },
-        onUserReactionSheetUserProfileClick = {
-            userId,
-            isMe,
-            ->
-            viewModel.onIntent(FeedIntent.OnUserProfileClick(userId, isMe))
-        },
-        onUserReactionSheetTabClick = { emoji -> viewModel.onIntent(FeedIntent.OnUserReactionSheetTabClick(emoji)) },
-        onEmojiSelected = { emoji -> viewModel.onIntent(FeedIntent.OnEmojiSheetEmojiSelected(emoji)) },
-        // Dialog
-        onDialogDismiss = { viewModel.onIntent(FeedIntent.OnDialogDismiss) },
-        onDialogConfirmClick = { viewModel.onIntent(FeedIntent.OnDialogConfirmClick) },
-        // FAB
-        onFTAButtonClick = { viewModel.onIntent(FeedIntent.OnFloatingActionButtonClick) },
-    )
+        )
 }

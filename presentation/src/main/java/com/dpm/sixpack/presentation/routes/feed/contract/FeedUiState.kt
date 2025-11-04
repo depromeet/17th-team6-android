@@ -26,6 +26,7 @@ data class FeedUiState(
     val reactionDetailsUiState: ReactionDetailsUiState = ReactionDetailsUiState.Loading,
     // Certification User
     val postingUserInfo: List<PostingUserInfo> = listOf(),
+    val myPostingInfo: PostingUserInfo? = null,
     // Optimistic Update
     val optimisticPosts: Map<Long, PostResource> = emptyMap(),
     val optimisticDeletedFeedIds: Set<Long> = emptySet(),

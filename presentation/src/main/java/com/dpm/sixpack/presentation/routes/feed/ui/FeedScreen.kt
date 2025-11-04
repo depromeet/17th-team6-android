@@ -46,7 +46,6 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.bottomsheet.EmojiSelectionBottomSheet
 import com.dpm.sixpack.presentation.common.components.bottomsheet.ReactionUsersBottomSheet
-import com.dpm.sixpack.presentation.common.components.post.PostDropDownActionType
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.model.Emoji
 import com.dpm.sixpack.presentation.common.model.PostReaction
@@ -58,6 +57,7 @@ import com.dpm.sixpack.presentation.routes.feed.component.FeedFTAButton
 import com.dpm.sixpack.presentation.routes.feed.component.FeedTopBar
 import com.dpm.sixpack.presentation.routes.feed.component.dialog.PostDeleteDialog
 import com.dpm.sixpack.presentation.routes.feed.component.dialog.PostReportDialog
+import com.dpm.sixpack.presentation.routes.feed.contract.FeedIntent
 import com.dpm.sixpack.presentation.routes.feed.contract.FeedUiState
 import com.dpm.sixpack.presentation.routes.feed.contract.uistate.FeedCalenderUiState
 import com.dpm.sixpack.presentation.routes.feed.contract.uistate.FeedDateUiState
@@ -72,33 +72,9 @@ fun FeedScreen(
     state: FeedUiState,
     feedPagingItems: LazyPagingItems<PostResource>,
     modifier: Modifier = Modifier,
-    onTopBarGroupIconClick: () -> Unit = {},
-    onTopBarAlarmIconClick: () -> Unit = {},
-    // Calendar
-    onDateSelected: (LocalDate) -> Unit = {},
-    onVisibleWeeksChanged: (LocalDate) -> Unit = {},
-    onPagingDataEmpty: () -> Unit = {},
-    // Certified Users
-    onCertifiedUsersClick: () -> Unit = {},
-    // Post
-    onPostUserProfileClick: (Long, Boolean) -> Unit = { _, _ -> },
-    onPostMenuClick: (Long) -> Unit = {},
-    onPostImageClick: (PostResource) -> Unit = {},
-    onPostReactionClick: (PostResource, Emoji, Boolean) -> Unit = { _, _, _ -> },
-    onPostReactionLongClick: (Long, List<PostReaction>, Emoji) -> Unit = { _, _, _ -> },
-    onPostAddReactionClick: (PostResource) -> Unit = {},
-    onDropDownMenuClick: (PostResource, PostDropDownActionType) -> Unit = { _, _ -> },
-    // BottomSheet
-    onBottomSheetDismiss: () -> Unit = {},
-    onUserReactionSheetUserProfileClick: (Long, Boolean) -> Unit = { _, _ -> },
-    onUserReactionSheetTabClick: (Emoji) -> Unit = {},
-    onEmojiSelected: (Emoji) -> Unit = {},
-    // Dialog
-    onDialogDismiss: () -> Unit = {},
-    onDialogConfirmClick: () -> Unit = {},
-    // FAB
-    onFTAButtonClick: () -> Unit = {},
-) {
+    onIntent: (FeedIntent) -> Unit = {},
+    onPagingDataEmpty = { viewModel.onIntent(FeedIntent.Observed.PagingDataEmpty) },
+    ) {
     val lazyListState = rememberLazyListState()
     val pullToRefreshState = rememberPullToRefreshState()
     var isRefreshing by remember { mutableStateOf(false) }
@@ -149,8 +125,8 @@ fun FeedScreen(
         topBar = {
             Column(modifier = Modifier.fillMaxWidth()) {
                 FeedTopBar(
-                    onGroupIconClick = onTopBarGroupIconClick,
-                    onAlarmIconClick = onTopBarAlarmIconClick,
+                    onGroupIconClick = { onIntent(FeedIntent.OnTopBarGroupIconClick) },
+                    onAlarmIconClick = { onIntent(FeedIntent.OnTopBarAlarmIconClick) },
                 )
 
                 if (isScrolled) {
@@ -163,7 +139,6 @@ fun FeedScreen(
         },
         containerColor = SixpackTheme.colors.gray0,
         contentColor = SixpackTheme.colors.gray900,
-        contentWindowInsets = WindowInsets(0),
     ) { paddingValues ->
         val contentModifier =
             Modifier
@@ -207,8 +182,10 @@ fun FeedScreen(
                         // Calendar
                         feedCalendarItem(
                             calendarState = state.calendarState,
-                            onDateSelected = onDateSelected,
-                            onWeekDisplayed = onVisibleWeeksChanged,
+                            onDateSelected = { date -> onIntent(FeedIntent.OnDateSelected(date)) },
+                            onWeekDisplayed = { startDate ->
+                                onIntent(FeedIntent.Observed.VisibleWeeksChanged(startDate))
+                            },
                         )
 
                         // Divider
@@ -229,14 +206,36 @@ fun FeedScreen(
                                     postingUserInfo = state.postingUserInfo,
                                     feedPagingItems = feedPagingItems,
                                     selectedPostMenuId = state.selectedPostMenuId,
-                                    onCertifiedUsersClick = onCertifiedUsersClick,
-                                    onPostMenuClick = onPostMenuClick,
-                                    onDropDownMenuClick = onDropDownMenuClick,
-                                    onPostImageClick = onPostImageClick,
-                                    onPostUserProfileClick = onPostUserProfileClick,
-                                    onReactionClick = onPostReactionClick,
-                                    onReactionLongClick = onPostReactionLongClick,
-                                    onAddReactionClick = onPostAddReactionClick,
+                                    onCertifiedUsersClick = { onIntent(FeedIntent.OnCertifiedUsersClick) },
+                                    onPostMenuClick = { feedId -> onIntent(FeedIntent.OnPostMenuClick(feedId)) },
+                                    onDropDownMenuClick = {
+                                        post,
+                                        action,
+                                        ->
+                                        onIntent(FeedIntent.OnDropDownMenuClick(post, action))
+                                    },
+                                    onPostImageClick = { post -> onIntent(FeedIntent.OnPostImageClick(post)) },
+                                    onPostUserProfileClick = {
+                                        userId,
+                                        isMe,
+                                        ->
+                                        onIntent(FeedIntent.OnUserProfileClick(userId, isMe))
+                                    },
+                                    onReactionClick = {
+                                        post,
+                                        emoji,
+                                        isReacted,
+                                        ->
+                                        onIntent(FeedIntent.OnPostReactionClick(post, emoji, isReacted))
+                                    },
+                                    onReactionLongClick = {
+                                        feedId,
+                                        reactions,
+                                        emoji,
+                                        ->
+                                        onIntent(FeedIntent.OnPostReactionLongClick(feedId, reactions, emoji))
+                                    },
+                                    onAddReactionClick = { post -> onIntent(FeedIntent.OnPostAddReactionClick(post)) },
                                 )
                             }
                         }
@@ -244,7 +243,7 @@ fun FeedScreen(
 
                     FeedFTAButton(
                         enabled = state.feedDateState != FeedDateUiState.NoPostsAndExpired,
-                        onFTAButtonClick = onFTAButtonClick,
+                        onFTAButtonClick = { onIntent(FeedIntent.OnFloatingActionButtonClick) },
                         modifier = Modifier.align(Alignment.BottomEnd),
                     )
                 }
@@ -263,8 +262,10 @@ fun FeedScreen(
                         // Calendar
                         feedCalendarItem(
                             calendarState = state.calendarState,
-                            onDateSelected = onDateSelected,
-                            onWeekDisplayed = onVisibleWeeksChanged,
+                            onDateSelected = { date -> onIntent(FeedIntent.OnDateSelected(date)) },
+                            onWeekDisplayed = { startDate ->
+                                onIntent(FeedIntent.Observed.VisibleWeeksChanged(startDate))
+                            },
                         )
 
                         // Divider
@@ -296,31 +297,31 @@ fun FeedScreen(
     }
     ReactionUsersBottomSheet(
         isBottomSheetVisible = state.bottomSheetState.reactionUsers,
-        onDismissRequest = onBottomSheetDismiss,
+        onDismissRequest = { onIntent(FeedIntent.OnBottomSheetDismiss) },
         reactionDetails = state.reactionDetailsUiState,
-        onUserProfileClick = onUserReactionSheetUserProfileClick,
-        onTabSelected = onUserReactionSheetTabClick,
+        onUserProfileClick = { userId, isMe -> onIntent(FeedIntent.OnUserProfileClick(userId, isMe)) },
+        onTabSelected = { emoji -> onIntent(FeedIntent.OnUserReactionSheetTabClick(emoji)) },
     )
 
     EmojiSelectionBottomSheet(
         isBottomSheetVisible = state.bottomSheetState.emojiSelection,
-        onDismissRequest = onBottomSheetDismiss,
-        onEmojiSelected = onEmojiSelected,
+        onDismissRequest = { onIntent(FeedIntent.OnBottomSheetDismiss) },
+        onEmojiSelected = { emoji -> onIntent(FeedIntent.OnEmojiSheetEmojiSelected(emoji)) },
     )
 
     if (state.dialogState.deleteFeedId != null) {
         PostDeleteDialog(
-            onDismissRequest = onDialogDismiss,
-            onCancelClick = onDialogDismiss,
-            onConfirmClick = onDialogConfirmClick,
+            onDismissRequest = { onIntent(FeedIntent.OnDialogDismiss) },
+            onCancelClick = { onIntent(FeedIntent.OnDialogDismiss) },
+            onConfirmClick = { onIntent(FeedIntent.OnDialogConfirmClick) },
         )
     }
 
     if (state.dialogState.reportFeedId != null) {
         PostReportDialog(
-            onDismissRequest = onDialogDismiss,
-            onCancelClick = onDialogDismiss,
-            onConfirmClick = onDialogConfirmClick,
+            onDismissRequest = { onIntent(FeedIntent.OnDialogDismiss) },
+            onCancelClick = { onIntent(FeedIntent.OnDialogDismiss) },
+            onConfirmClick = { onIntent(FeedIntent.OnDialogConfirmClick) },
         )
     }
 }

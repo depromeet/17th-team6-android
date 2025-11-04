@@ -131,7 +131,7 @@ fun FriendListItem(
             }
             // 최근 러닝 거리
             Text(
-                text = if (!isOutdated) formatDistanceToKm(distanceInMeter.toLong()) else "최근 러닝 기록이 없어요",
+                text = if (!isOutdated) formatDistanceToKm(distanceInMeter) else "최근 러닝 기록이 없어요",
                 style = MaterialTheme.typography.bodyMedium,
                 color = SixpackTheme.colors.gray700,
             )
@@ -142,7 +142,7 @@ fun FriendListItem(
             DoRunDefaultButton(
                 text = "응원하기",
                 onClick = onCheerClick,
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                buttonContentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
             )
         }
     }

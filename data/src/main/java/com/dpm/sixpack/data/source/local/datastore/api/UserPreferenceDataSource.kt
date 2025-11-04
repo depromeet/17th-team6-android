@@ -7,13 +7,19 @@ interface UserPreferenceDataSource {
 
     val sessionId: Flow<Long?>
 
-    val isOnboardingComplete: Flow<Boolean>
+    val accessToken: Flow<String?>
 
-    suspend fun updateOnboardingComplete(isComplete: Boolean)
+    val refreshToken: Flow<String?>
 
     suspend fun updateUserId(userId: Long)
 
     suspend fun updateSessionId(sessionId: Long)
 
     suspend fun clearSessionId()
+
+    suspend fun updateAccessToken(token: String)
+
+    suspend fun updateRefreshToken(token: String)
+
+    suspend fun clearTokens()
 }

@@ -1,5 +1,6 @@
 package com.dpm.sixpack.data.source.remote.service.di
 
+import com.dpm.sixpack.data.source.remote.service.AuthService
 import com.dpm.sixpack.data.source.remote.service.FeedService
 import com.dpm.sixpack.data.source.remote.service.RunningGoalService
 import com.dpm.sixpack.data.source.remote.service.RunningSessionService
@@ -14,6 +15,10 @@ import kotlin.jvm.java
 @Module
 @InstallIn(SingletonComponent::class)
 object ServiceModule {
+    @Provides
+    @Singleton
+    fun provideAuthService(retrofit: Retrofit): AuthService = retrofit.create(AuthService::class.java)
+
     @Provides
     @Singleton
     fun provideRunningGoalService(retrofit: Retrofit): RunningGoalService =
