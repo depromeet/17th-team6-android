@@ -3,6 +3,8 @@ package com.dpm.sixpack.presentation.common.util
 import android.content.Context
 import com.dpm.sixpack.core.util.TimeUtil.isoStringToEpochSeconds
 import com.dpm.sixpack.presentation.R
+import java.time.Duration
+import java.time.Instant
 import kotlin.math.roundToLong
 
 /**
@@ -50,6 +52,42 @@ internal fun convertTimeDiffToString(
         // 24시간 이상
         else -> {
             val days = (secDiff / dayInSec).roundToLong()
+            context.getString(R.string.days_before, days)
+        }
+    }
+}
+
+// TODO 승규형 이거 UTC 로 비교해야 잘된데! 바꾼거 확인부탁!
+fun String.toTimeAgoString(context: Context): String {
+    val postInstant = runCatching { Instant.parse(this) }.getOrNull() ?: return ""
+
+    val nowInstant = Instant.now()
+
+    val secDiff = Duration.between(postInstant, nowInstant).seconds
+
+    // 4. 상수 정의 (Long 타입으로)
+    val minuteInSec = 60L
+    val hourInSec = 3600L
+    val dayInSec = 86400L
+
+    return when {
+        // 5. 🌟 (버그 수정) 미래 시간이거나 1분 미만 차이일 때
+        secDiff < minuteInSec -> {
+            context.getString(R.string.minutes_before, 1)
+        }
+
+        secDiff < hourInSec -> {
+            val minutes = (secDiff / minuteInSec)
+            context.getString(R.string.minutes_before, minutes)
+        }
+
+        secDiff < dayInSec -> {
+            val hours = (secDiff / hourInSec)
+            context.getString(R.string.hours_before, hours)
+        }
+
+        else -> {
+            val days = (secDiff / dayInSec)
             context.getString(R.string.days_before, days)
         }
     }

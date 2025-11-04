@@ -24,6 +24,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.google.firebase.messaging.ktx)
     implementation(libs.bundles.navigation)
+    implementation(libs.bundles.coil)
     implementation(libs.kotlinx.datetime)
     implementation(libs.androidx.core.splashscreen)
 }

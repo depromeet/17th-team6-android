@@ -6,7 +6,7 @@ data class RunningSessionResult(
     val avgPace: Int, // 평균 페이스 (예: "5'30\"")
     val maxPace: MaxPaceData, // 최고 페이스 (예: "4'30\"")
     val avgCadence: Int, // 평균 케이던스 (steps per minute)
-    val maxCadence: Int,
+    val maxCadence: Int = 0,
 )
 
 data class MaxPaceData(

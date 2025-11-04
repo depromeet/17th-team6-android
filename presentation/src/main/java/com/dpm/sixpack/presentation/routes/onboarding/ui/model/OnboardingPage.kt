@@ -12,16 +12,16 @@ enum class OnboardingPage(
     Page1(
         R.string.onboarding_title_1,
         R.string.onboarding_desc_1,
-        R.drawable.ill_character_success, // TODO SR-N change image
+        R.drawable.ill_onboarding_1,
     ),
     Page2(
         R.string.onboarding_title_2,
         R.string.onboarding_desc_2,
-        R.drawable.ill_character_success, // TODO TODO SR-N change image
+        R.drawable.ill_onboarding_2,
     ),
     Page3(
         R.string.onboarding_title_3,
         R.string.onboarding_desc_3,
-        R.drawable.ill_character_success, // TODO TODO SR-N change image
+        R.drawable.ill_onboarding_3,
     ),
 }

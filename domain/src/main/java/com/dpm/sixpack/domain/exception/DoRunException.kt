@@ -50,6 +50,47 @@ sealed class DoRunException(
     ) : DoRunException(message, cause)
 
     /**
+     * 유효성 검증 에러 (HTTP 400)
+     */
+    data class ValidationError(
+        override val message: String,
+        override val cause: Throwable? = null,
+    ) : DoRunException(message, cause)
+
+    /**
+     * Rate Limit 에러 (HTTP 429)
+     */
+    data class RateLimitError(
+        override val message: String,
+        override val cause: Throwable? = null,
+    ) : DoRunException(message, cause)
+
+    /**
+     * 인증 코드 불일치 (HTTP 400)
+     */
+    data class CodeMismatchError(
+        override val message: String,
+        override val cause: Throwable? = null,
+    ) : DoRunException(message, cause)
+
+    /**
+     * 인증 코드 만료 (HTTP 410)
+     */
+    data class CodeExpiredError(
+        override val message: String,
+        override val cause: Throwable? = null,
+    ) : DoRunException(message, cause)
+
+    /**
+     * 미가입 사용자 (HTTP 201)
+     * 인증은 성공했지만 회원가입이 필요한 경우
+     */
+    data class UserNotRegisteredError(
+        override val message: String,
+        override val cause: Throwable? = null,
+    ) : DoRunException(message, cause)
+
+    /**
      * 알 수 없는 에러
      */
     data class UnknownError(

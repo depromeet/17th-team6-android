@@ -5,17 +5,23 @@ interface UserPreferenceRepository {
 
     suspend fun getSessionId(): Long?
 
-    suspend fun getFcmDeviceToken(): String?
-
-    suspend fun getIsOnboardingComplete(): Boolean
-
     suspend fun updateUserId(userId: Long)
 
     suspend fun updateSessionId(sessionId: Long)
 
+    suspend fun clearSessionId()
+
+    suspend fun getFcmDeviceToken(): String?
+
+    suspend fun getAccessToken(): String?
+
+    suspend fun getRefreshToken(): String?
+
     suspend fun updateFcmDeviceToken(token: String)
 
-    suspend fun updateOnboardingComplete(isComplete: Boolean)
+    suspend fun updateAccessToken(token: String)
 
-    suspend fun clearSessionId()
+    suspend fun updateRefreshToken(token: String)
+
+    suspend fun clearTokens()
 }
