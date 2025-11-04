@@ -1,7 +1,7 @@
 package com.dpm.sixpack.data.source.remote.service.di
 
-import com.dpm.sixpack.data.source.remote.service.FeedService
 import com.dpm.sixpack.data.source.remote.service.AuthService
+import com.dpm.sixpack.data.source.remote.service.FeedService
 import com.dpm.sixpack.data.source.remote.service.RunningGoalService
 import com.dpm.sixpack.data.source.remote.service.RunningSessionService
 import dagger.Module
