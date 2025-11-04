@@ -28,6 +28,7 @@ android {
 dependencies {
     testImplementation(libs.junit)
     implementation(libs.kotlinx.datetime)
+    implementation(libs.bundles.coil)
     androidTestImplementation(libs.bundles.android.test)
     implementation(libs.androidx.activity.compose)
 }

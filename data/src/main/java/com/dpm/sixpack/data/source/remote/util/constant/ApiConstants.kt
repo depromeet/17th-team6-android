@@ -8,4 +8,6 @@ object ApiConstants {
     const val GOALS = "goals"
     const val SESSIONS = "sessions"
     const val PLANS = "plans"
+    const val SELFIE = "selfie"
+    const val FEEDS = "feeds"
 }

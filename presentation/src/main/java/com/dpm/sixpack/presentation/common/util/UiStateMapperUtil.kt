@@ -12,6 +12,25 @@ fun formatSecondsToTime(totalSeconds: Int): String {
     return String.format("%02d:%02d:%02d", hours, minutes, remainingSeconds)
 }
 
+fun formatPaceToString(paceInSeconds: Int): String {
+    val minutes = paceInSeconds / 60
+    val seconds = paceInSeconds % 60
+
+    return String.format("%02d'%02d", minutes, seconds)
+}
+
+fun formatDistanceToKm(distanceInMeters: Int): String {
+    if (distanceInMeters < 1000) return "${distanceInMeters}m"
+    val km = distanceInMeters / 1000.0
+    val formattedString = String.format("%.2f", km)
+
+    return if (formattedString.endsWith("0")) {
+        "${formattedString.dropLast(1)}km"
+    } else {
+        "${formattedString}km"
+    }
+}
+
 fun formatSecondsToPace(totalSeconds: Int): String {
     val seconds = abs(totalSeconds)
 
@@ -32,23 +51,4 @@ fun calculatePace(
     val seconds = paceInSeconds % 60
 
     return String.format("%02d'%02d", minutes, seconds)
-}
-
-fun formatPaceToString(paceInSeconds: Int): String {
-    val minutes = paceInSeconds / 60
-    val seconds = paceInSeconds % 60
-
-    return String.format("%02d'%02d", minutes, seconds)
-}
-
-fun formatDistanceToKm(distanceInMeters: Int): String {
-    if (distanceInMeters < 1000) return "${distanceInMeters}m"
-    val km = distanceInMeters / 1000.0
-    val formattedString = String.format("%.2f", km)
-
-    return if (formattedString.endsWith("0")) {
-        "${formattedString.dropLast(1)}km"
-    } else {
-        "${formattedString}km"
-    }
 }

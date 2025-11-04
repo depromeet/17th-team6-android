@@ -21,6 +21,7 @@ dependencies {
     androidTestImplementation(libs.bundles.android.test)
 
     implementation(libs.bundles.navigation)
+    implementation(libs.bundles.coil)
     implementation(libs.kotlinx.datetime)
     implementation(libs.androidx.core.splashscreen)
 }
