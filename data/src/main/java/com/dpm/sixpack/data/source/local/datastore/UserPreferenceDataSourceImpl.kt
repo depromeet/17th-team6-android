@@ -28,6 +28,7 @@ class UserPreferenceDataSourceImpl @Inject constructor(
         dataStore.data.map { preferences ->
             preferences[FCM_DEVICE_TOKEN]
         }
+
     override val accessToken: Flow<String?> =
         dataStore.data.map { preferences ->
             preferences[ACCESS_TOKEN]
