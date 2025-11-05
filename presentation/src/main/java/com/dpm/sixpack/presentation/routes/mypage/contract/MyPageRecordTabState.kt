@@ -9,5 +9,7 @@ data class MyPageRecordTabState(
     val records: List<RecordItem> = emptyList(),
     val currentYearMonth: YearMonth = YearMonth(),
     val isLoading: Boolean = false,
+    val canGoPreviousMonth: Boolean = false,
+    val canGoNextMonth: Boolean = false,
 ) : UiState,
     Parcelable

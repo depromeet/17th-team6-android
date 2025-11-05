@@ -1,17 +1,18 @@
 package com.dpm.sixpack.presentation.routes.mypage
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
+import com.dpm.sixpack.domain.usecase.GetRunSessionsUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
-import com.dpm.sixpack.presentation.routes.mypage.contract.CertificationStatus
 import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageRecordTabIntent
 import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageRecordTabSideEffect
 import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageRecordTabState
-import com.dpm.sixpack.presentation.routes.mypage.contract.RecordItem
+import com.dpm.sixpack.presentation.routes.mypage.contract.YearMonth
+import com.dpm.sixpack.presentation.routes.mypage.util.RunSessionMapper.toRecordItems
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
+import timber.log.Timber
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,14 +20,22 @@ class MyPageRecordTabViewModel
 @Inject
     constructor(
         savedStateHandle: SavedStateHandle,
+        private val getRunSessionsUseCase: GetRunSessionsUseCase,
     ) : BaseViewModel<MyPageRecordTabState, MyPageRecordTabIntent, MyPageRecordTabSideEffect>() {
-        override val initialState: MyPageRecordTabState = MyPageRecordTabState()
+        override val initialState: MyPageRecordTabState =
+            MyPageRecordTabState(
+                currentYearMonth =
+                    YearMonth(
+                        year = LocalDate.now().year,
+                        month = LocalDate.now().monthValue,
+                    ),
+            )
 
         override val container: Container<MyPageRecordTabState, MyPageRecordTabSideEffect> =
             container(initialState = initialState, savedStateHandle = savedStateHandle)
 
         init {
-            loadMockData()
+            loadRecords()
         }
 
         override fun onIntent(intent: MyPageRecordTabIntent) {
@@ -44,6 +53,7 @@ class MyPageRecordTabViewModel
                         currentYearMonth = state.currentYearMonth.addMonths(-1),
                     )
                 }
+                loadRecords()
             }
 
         private fun handleNextMonthClick() =
@@ -53,6 +63,7 @@ class MyPageRecordTabViewModel
                         currentYearMonth = state.currentYearMonth.addMonths(1),
                     )
                 }
+                loadRecords()
             }
 
         private fun handleRecordClick(recordId: Long) =
@@ -60,48 +71,52 @@ class MyPageRecordTabViewModel
                 postSideEffect(MyPageRecordTabSideEffect.NavigateToRecordDetail(recordId))
             }
 
-        private fun loadMockData() {
-            viewModelScope.launch {
-                // TODO: Replace with real data from repository
-                val mockRecords =
-                    listOf(
-                        RecordItem(
-                            id = 1,
-                            date = "2025.09.30 (화)",
-                            time = "오전 10:11",
-                            distanceKm = 8.02,
-                            durationFormatted = "01:12:03",
-                            paceFormatted = "6'74\"",
-                            cadence = 128,
-                            certificationStatus = null,
-                        ),
-                        RecordItem(
-                            id = 2,
-                            date = "2025.09.29 (월)",
-                            time = "오전 10:11",
-                            distanceKm = 8.02,
-                            durationFormatted = "01:12:03",
-                            paceFormatted = "6'74\"",
-                            cadence = 128,
-                            certificationStatus = CertificationStatus.AVAILABLE,
-                        ),
-                        RecordItem(
-                            id = 3,
-                            date = "2025.09.27 (토)",
-                            time = "오전 10:11",
-                            distanceKm = 8.02,
-                            durationFormatted = "01:12:03",
-                            paceFormatted = "6'74\"",
-                            cadence = 128,
-                            certificationStatus = CertificationStatus.COMPLETED,
-                        ),
-                    )
+        private fun loadRecords() =
+            intent {
+                reduce { state.copy(isLoading = true) }
 
-                intent {
+                getRunSessionsUseCase(
+                    yearMonth = state.currentYearMonth.year to state.currentYearMonth.month,
+                    isSelfied = null,
+                ).onSuccess { runSessions ->
+                    val records = runSessions.toRecordItems()
+                    val navigationState = calculateNavigationState()
+
                     reduce {
-                        state.copy(records = mockRecords)
+                        state.copy(
+                            records = records,
+                            isLoading = false,
+                            canGoPreviousMonth = navigationState.canGoPrevious,
+                            canGoNextMonth = navigationState.canGoNext,
+                        )
+                    }
+                }.onError { exception ->
+                    Timber.e("Failed to load run sessions: ${exception.message}")
+                    reduce {
+                        state.copy(
+                            records = emptyList(),
+                            isLoading = false,
+                            canGoPreviousMonth = false,
+                            canGoNextMonth = false,
+                        )
                     }
                 }
             }
+
+        private fun calculateNavigationState(): NavigationState {
+            val currentDate = LocalDate.now()
+            val currentYearMonth = YearMonth(currentDate.year, currentDate.monthValue)
+
+            // canGoPrevious는 항상 true
+            // canGoNext는 현재 선택된 월이 오늘 기준 월보다 작을 때만 true
+            val canGoNext =
+                container.stateFlow.value.currentYearMonth.let { it.year * 12 + it.month } < currentYearMonth.let { it.year * 12 + it.month }
+
+            return NavigationState(canGoPrevious = true, canGoNext = canGoNext)
         }
+
+        private data class NavigationState(
+            val canGoPrevious: Boolean,
+            val canGoNext: Boolean,
+        )
     }

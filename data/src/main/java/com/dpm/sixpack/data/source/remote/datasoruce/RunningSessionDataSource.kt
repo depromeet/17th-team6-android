@@ -4,6 +4,7 @@ import com.dpm.sixpack.data.source.remote.dto.request.FinishRunningRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.SaveSegmentDataRequestsDto
 import com.dpm.sixpack.data.source.remote.dto.request.StartRunningRequestDto
 import com.dpm.sixpack.data.source.remote.dto.response.FinishRunningResponseDto
+import com.dpm.sixpack.data.source.remote.dto.response.RunSessionListResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.SaveSegmentResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.StartRunningResponseDto
 import com.dpm.sixpack.data.source.remote.service.RunningSessionService
@@ -30,4 +31,10 @@ class RunningSessionDataSource
         suspend fun postStartRunning(
             startRunningRequestDto: StartRunningRequestDto,
         ): BaseResponse<StartRunningResponseDto> = runningSessionService.postStartRunning(startRunningRequestDto)
+
+        suspend fun getRunSessions(
+            isSelfied: Boolean?,
+            startDateTime: String?,
+        ): BaseResponse<List<RunSessionListResponseDto>> =
+            runningSessionService.getRunSessions(isSelfied, startDateTime)
     }

@@ -5,6 +5,7 @@ import com.dpm.sixpack.data.source.remote.datasoruce.RunningSessionDataSource
 import com.dpm.sixpack.data.source.remote.dto.request.StartRunningRequestDto
 import com.dpm.sixpack.domain.exception.DoRunException
 import com.dpm.sixpack.domain.model.RealtimeRunningData
+import com.dpm.sixpack.domain.model.RunSession
 import com.dpm.sixpack.domain.model.RunningSessionResult
 import com.dpm.sixpack.domain.repository.RunningSessionRepository
 import com.dpm.sixpack.domain.usecase.SaveRealtimeRunningDataResult
@@ -69,6 +70,23 @@ class RunningSessionRepositoryImpl @Inject constructor(
                         ?: throw DoRunException.DataError("서버 응답 데이터가 비어 있습니다.")
 
                 DoRunResult.Success(runningSessionResult)
+            } catch (e: Exception) {
+                DoRunResult.Failure(DoRunException.DataError("네트워크 요청에 실패했습니다: ${e.message}"))
+            }
+        }
+
+    override suspend fun getRunSessions(
+        isSelfied: Boolean?,
+        startDateTime: String?,
+    ): DoRunResult<List<RunSession>> =
+        withContext(Dispatchers.IO) {
+            try {
+                val response = runningSessionDataSource.getRunSessions(isSelfied, startDateTime)
+                val runSessions =
+                    response.data?.map { it.toRunSession() }
+                        ?: throw DoRunException.DataError("서버 응답 데이터가 비어 있습니다.")
+
+                DoRunResult.Success(runSessions)
             } catch (e: Exception) {
                 DoRunResult.Failure(DoRunException.DataError("네트워크 요청에 실패했습니다: ${e.message}"))
             }

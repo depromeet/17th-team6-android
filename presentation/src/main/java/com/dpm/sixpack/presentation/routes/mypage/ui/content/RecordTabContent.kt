@@ -11,12 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageRecordTabIntent
 import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageRecordTabState
-import com.dpm.sixpack.presentation.routes.mypage.contract.YearMonth
 import com.dpm.sixpack.presentation.routes.mypage.ui.component.EmptyState
 import com.dpm.sixpack.presentation.routes.mypage.ui.component.MonthNavigation
 import com.dpm.sixpack.presentation.routes.mypage.ui.component.RecordCard
 import com.dpm.sixpack.presentation.theme.SixpackTheme
-import java.time.LocalDate
 
 @Composable
 internal fun RecordTabContent(
@@ -24,51 +22,14 @@ internal fun RecordTabContent(
     onIntent: (MyPageRecordTabIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    // Calculate navigation bounds
-    val (canGoPrevious, canGoNext) =
-        if (state.records.isEmpty()) {
-            false to false
-        } else {
-            // Parse dates to find min/max YearMonth
-            val yearMonths =
-                state.records.mapNotNull { record ->
-                    try {
-                        // Parse "2025.09.30 (화)" format
-                        val parts = record.date.split(".")
-                        if (parts.size >= 2) {
-                            val year = parts[0].toInt()
-                            val month = parts[1].toInt()
-                            YearMonth(year, month)
-                        } else {
-                            null
-                        }
-                    } catch (e: Exception) {
-                        null
-                    }
-                }
-
-            if (yearMonths.isNotEmpty()) {
-                val minYearMonth = yearMonths.minBy { it.year * 12 + it.month }
-                val currentDate = LocalDate.now()
-                val currentYearMonth = YearMonth(currentDate.year, currentDate.monthValue)
-
-                val canGoPrev = state.currentYearMonth.let { it.year * 12 + it.month } > minYearMonth.let { it.year * 12 + it.month }
-                val canGoNext = state.currentYearMonth.let { it.year * 12 + it.month } < currentYearMonth.let { it.year * 12 + it.month }
-
-                canGoPrev to canGoNext
-            } else {
-                false to false
-            }
-        }
-
     Column(modifier = modifier) {
         // Month Navigation
         MonthNavigation(
             yearMonth = state.currentYearMonth,
             onPreviousClick = { onIntent(MyPageRecordTabIntent.OnPreviousMonthClick) },
             onNextClick = { onIntent(MyPageRecordTabIntent.OnNextMonthClick) },
-            canGoPrevious = canGoPrevious,
-            canGoNext = canGoNext,
+            canGoPrevious = state.canGoPreviousMonth,
+            canGoNext = state.canGoNextMonth,
         )
 
         if (state.records.isEmpty()) {
