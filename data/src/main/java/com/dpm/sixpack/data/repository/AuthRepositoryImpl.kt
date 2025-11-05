@@ -125,4 +125,26 @@ class AuthRepositoryImpl @Inject constructor(
                 )
             }
         }
+
+    override suspend fun refreshToken(refreshToken: String): DoRunResult<com.dpm.sixpack.domain.model.AuthToken> =
+        withContext(Dispatchers.IO) {
+            try {
+                val response = authDataSource.refreshToken(refreshToken)
+
+                val authToken =
+                    response.data?.toAuthToken()
+                        ?: throw DoRunException.DataError("서버 응답 데이터가 비어 있습니다.")
+
+                DoRunResult.Success(authToken)
+            } catch (e: DoRunException) {
+                DoRunResult.Failure(e)
+            } catch (e: Exception) {
+                DoRunResult.Failure(
+                    DoRunException.NetworkError(
+                        message = "토큰 갱신에 실패했습니다: ${e.message}",
+                        cause = e,
+                    ),
+                )
+            }
+        }
 }
