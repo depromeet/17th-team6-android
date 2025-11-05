@@ -14,8 +14,13 @@ import com.dpm.sixpack.data.source.remote.util.ContentUriRequestBody
 import com.dpm.sixpack.domain.event.FeedUpdateEvent
 import com.dpm.sixpack.domain.exception.DoRunException
 import com.dpm.sixpack.domain.model.CertifiedUser
+import com.dpm.sixpack.domain.model.Feed
+import com.dpm.sixpack.domain.model.ReactingUser
+import com.dpm.sixpack.domain.model.Reaction
 import com.dpm.sixpack.domain.model.ReactionResult
+import com.dpm.sixpack.domain.model.RunningSessionResult
 import com.dpm.sixpack.domain.model.SelfieCounts
+import com.dpm.sixpack.domain.model.User
 import com.dpm.sixpack.domain.repository.FeedListItem
 import com.dpm.sixpack.domain.repository.FeedRepository
 import com.dpm.sixpack.domain.repository.FeedType
@@ -64,7 +69,7 @@ class FeedRepositoryImpl @Inject constructor(
             },
         ).flow
 
-    override suspend fun getFeedDetail(feedId: Long): DoRunResult<com.dpm.sixpack.domain.model.Feed> =
+    override suspend fun getFeedDetail(feedId: Long): DoRunResult<Feed> =
         withContext(Dispatchers.IO) {
             try {
                 val response = feedDataSource.getFeedDetail(feedId)
@@ -94,7 +99,6 @@ class FeedRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             try {
                 feedDataSource.deleteFeed(feedId)
-                // Deleted 이벤트는 발생시키지 않음 (Optimistic UI로 처리)
                 DoRunResult.Success(Unit)
             } catch (e: Exception) {
                 DoRunResult.Failure(DoRunException.DataError("피드 삭제에 실패했습니다: ${e.message}"))

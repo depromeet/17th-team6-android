@@ -132,9 +132,9 @@ internal fun MainNavHost(
                 navigateToMyPage = {},
             )
 
-            addPostDetailNavGraph (
+            addPostDetailNavGraph(
                 navigateToBack = { navController.popBackStack() },
-                )
+            )
         }
     }
 }

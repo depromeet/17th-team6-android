@@ -1,6 +1,6 @@
 package com.dpm.sixpack.data.source.remote.datasoruce.di
 
-import com.dpm.sixpack.data.source.remote.datasoruce.MockAuthDataSource
+import com.dpm.sixpack.data.source.remote.datasoruce.AuthDataSourceImpl
 import com.dpm.sixpack.data.source.remote.datasoruce.api.AuthDataSource
 import dagger.Binds
 import dagger.Module
