@@ -12,7 +12,7 @@ import com.dpm.sixpack.presentation.routes.feed.navigation.addFeedNavGraph
 import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.addProfileCreationNavGraph
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.navigateProfileCreation
-import com.dpm.sixpack.presentation.routes.running.navigation.addRunningSessionNavGraph
+import com.dpm.sixpack.presentation.routes.running.navigation.addRunningNavGraph
 import com.dpm.sixpack.presentation.routes.running.navigation.navigateRunningSession
 import com.dpm.sixpack.presentation.routes.sessionreport.navigation.addSessionReportNavGraph
 import com.dpm.sixpack.presentation.routes.signin.navigation.addSignInNavGraph
@@ -25,7 +25,7 @@ import com.dpm.sixpack.presentation.routes.terms.navigation.navigateTerms
 @Composable
 internal fun MainNavHost(
     appState: SixPackAppState,
-    onShowSnackbar: suspend (String, String?) -> Boolean,
+    onShowSnackBar: (String, String?) -> Unit,
     setFullScreenLoading: (Boolean) -> Unit,
     onBottomBarVisibilityChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -104,7 +104,8 @@ internal fun MainNavHost(
                 onNavigateBack = navigator::popBackStack,
             )
 
-            addRunningSessionNavGraph(
+            addRunningNavGraph(
+                onShowSnackBar = onShowSnackBar,
                 onNavigateToBack = navigator::popBackStack,
                 onBottomBarVisibilityChange = onBottomBarVisibilityChange,
                 navigateToSessionReport = navigator::navigateToSessionReport,

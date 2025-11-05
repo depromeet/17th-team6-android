@@ -13,6 +13,7 @@ import com.naver.maps.map.compose.rememberFusedLocationSource
 @Composable
 fun RunningRoute(
     onNavigateToBack: () -> Unit,
+    onShowSnackBar: (String, String?) -> Unit,
     navigateToReport: () -> Unit,
     setFullScreenLoading: (Boolean) -> Unit,
     onBottomBarVisibilityChange: (Boolean) -> Unit,
@@ -29,6 +30,7 @@ fun RunningRoute(
 
     RunningMapScreen(
         modifier = modifier.fillMaxSize(),
+        onShowSnackBar = onShowSnackBar,
         locationSource = locationSource,
         cameraPositionState = cameraPositionState,
         onBottomBarVisibilityChange = onBottomBarVisibilityChange,

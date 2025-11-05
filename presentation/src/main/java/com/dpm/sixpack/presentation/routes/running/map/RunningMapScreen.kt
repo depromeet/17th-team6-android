@@ -3,7 +3,6 @@ package com.dpm.sixpack.presentation.routes.running.map
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.view.Gravity
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
@@ -90,6 +89,7 @@ internal fun RunningMapScreen(
     mapViewModel: MapViewModel = hiltViewModel(),
     setFullScreenLoading: (Boolean) -> Unit,
     onBottomBarVisibilityChange: (Boolean) -> Unit,
+    onShowSnackBar: (String, String?) -> Unit,
     navigateToReport: () -> Unit,
 ) {
     val mapState by mapViewModel.collectAsState()
@@ -113,7 +113,8 @@ internal fun RunningMapScreen(
             }
 
             is MapSideEffect.ShowToast -> {
-                Toast.makeText(context, sideEffect.resId, Toast.LENGTH_SHORT).show()
+                val message = context.getString(sideEffect.resId)
+                onShowSnackBar(message, null)
             }
         }
     }
@@ -134,6 +135,7 @@ internal fun RunningMapScreen(
         cameraPositionState = cameraPositionState,
         locationSource = locationSource,
         setFullScreenLoading = setFullScreenLoading,
+        onShowSnackBar = onShowSnackBar,
         onMapIntent = mapViewModel::onIntent,
     )
 }
@@ -145,6 +147,7 @@ private fun RunningMapScreenContent(
     cameraPositionState: CameraPositionState,
     locationSource: LocationSource,
     setFullScreenLoading: (Boolean) -> Unit,
+    onShowSnackBar: (String, String?) -> Unit,
     onMapIntent: (MapIntent) -> Unit,
     modifier: Modifier,
 ) {
@@ -372,6 +375,7 @@ private fun RunningMapScreenContent(
                         onSessionFinish = {
                             onMapIntent(MapIntent.ReadyToFinish)
                         },
+                        onShowSnackBar = onShowSnackBar,
                         setFullScreenLoading = setFullScreenLoading,
                     )
                 }

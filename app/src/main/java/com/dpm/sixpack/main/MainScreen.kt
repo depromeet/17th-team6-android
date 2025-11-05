@@ -2,27 +2,32 @@ package com.dpm.sixpack.main
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarDuration.Indefinite
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dpm.sixpack.SixPackAppState
 import com.dpm.sixpack.core.permission.SixPackPermissions.Companion.AllPermissions
 import com.dpm.sixpack.main.navigation.MainNavHost
+import com.dpm.sixpack.presentation.common.components.DoRunSnackBar
 import com.dpm.sixpack.presentation.common.components.FullScreenLoadingIndicator
 import com.dpm.sixpack.presentation.common.util.PermissionHandler
 import com.dpm.sixpack.presentation.navigation.MainBottomBar
 import com.dpm.sixpack.presentation.navigation.MainNavTab
 import com.dpm.sixpack.presentation.theme.SixpackTheme
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun MainScreen(
@@ -71,6 +76,8 @@ internal fun MainScreenContent(
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
+    val scope = rememberCoroutineScope()
+
     Scaffold(
         modifier = modifier,
         containerColor = SixpackTheme.colors.gray0,
@@ -84,6 +91,18 @@ internal fun MainScreenContent(
                 },
             )
         },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState) { snackBarData ->
+                DoRunSnackBar(
+                    snackBarData = snackBarData,
+                    modifier =
+                        Modifier
+                            .wrapContentWidth()
+                            .padding(horizontal = 36.dp)
+                            .padding(bottom = 16.dp),
+                )
+            }
+        },
     ) { paddingValue ->
         MainNavHost(
             modifier =
@@ -91,12 +110,14 @@ internal fun MainScreenContent(
                     .fillMaxSize()
                     .padding(bottom = paddingValue.calculateBottomPadding()),
             appState = appState,
-            onShowSnackbar = { message, action ->
-                snackbarHostState.showSnackbar(
-                    message = message,
-                    actionLabel = action,
-                    duration = SnackbarDuration.Short,
-                ) == SnackbarResult.ActionPerformed
+            onShowSnackBar = { message, action ->
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = message,
+                        actionLabel = action,
+                        duration = SnackbarDuration.Short,
+                    )
+                }
             },
             onBottomBarVisibilityChange = appState.navigator::setBottomBarVisibility,
             setFullScreenLoading = setFullScreenLoading,
