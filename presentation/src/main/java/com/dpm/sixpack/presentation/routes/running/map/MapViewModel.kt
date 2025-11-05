@@ -152,6 +152,7 @@ class MapViewModel @Inject constructor(
                     isStartButtonEnabled = false,
                 )
             }
+            postSideEffect(MapSideEffect.SetBottomBarVisibility(true))
             postSideEffect(MapSideEffect.ShowToast(R.string.running_permission_toast))
         }
 
@@ -186,6 +187,8 @@ class MapViewModel @Inject constructor(
                     }
                 }
             }
+
+            postSideEffect(MapSideEffect.SetBottomBarVisibility(true))
         }
 
     private fun handleSessionFinish(mapImage: Bitmap) =
@@ -202,7 +205,6 @@ class MapViewModel @Inject constructor(
                     mapViewState = MapViewState.Friend(),
                 )
             }
-
             // TODO SK: 리포트 화면 세션ID 전달
 //            postSideEffect(MapSideEffect.NavigateToReport())
         }
