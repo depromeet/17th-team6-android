@@ -5,6 +5,7 @@ import com.dpm.sixpack.data.source.remote.dto.request.FriendDeleteRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.FriendNotificationRequestDto
 import com.dpm.sixpack.data.source.remote.dto.response.AddFriendResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.FriendCodeResponseDto
+import com.dpm.sixpack.data.source.remote.dto.response.FriendNotifyResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.FriendsRunningStatusResponseDto
 import com.dpm.sixpack.data.source.remote.service.FriendServiceApi
 import com.dpm.sixpack.data.source.remote.util.base.BaseResponse
@@ -18,8 +19,9 @@ class FriendDataSource @Inject constructor(
     /**
      * 친구에게 알림 보내기 (친구 응원하기)
      */
-    suspend fun postFriendNotification(requestDto: FriendNotificationRequestDto): BaseResponse<Nothing> =
-        friendServiceApi.postFriendNotification(requestDto)
+    suspend fun postFriendNotification(
+        requestDto: FriendNotificationRequestDto,
+    ): BaseResponse<FriendNotifyResponseDto> = friendServiceApi.postFriendNotification(requestDto)
 
     /**
      * 친구 삭제

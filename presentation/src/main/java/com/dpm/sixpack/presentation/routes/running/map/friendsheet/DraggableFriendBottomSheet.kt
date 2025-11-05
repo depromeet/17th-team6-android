@@ -1,5 +1,6 @@
 package com.dpm.sixpack.presentation.routes.running.map.friendsheet
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.Orientation
@@ -18,6 +19,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -39,11 +41,17 @@ internal fun DraggableFriendBottomSheet(
     viewModel: FriendSheetViewModel = hiltViewModel(),
 ) {
     val pagingItems = viewModel.friendPagingFlow.collectAsLazyPagingItems()
+    val context = LocalContext.current
 
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
             is FriendSheetSideEffect.UserItemClicked -> {
                 // TODO: sideEffect.userId를 사용해 프로필 화면 등으로 이동
+            }
+
+            is FriendSheetSideEffect.ShowToast -> {
+                val text = context.getString(sideEffect.stringResId, sideEffect.args)
+                Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
             }
         }
     }

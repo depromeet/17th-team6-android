@@ -6,7 +6,7 @@ import com.dpm.sixpack.domain.util.DoRunResult
 import kotlinx.coroutines.flow.Flow
 
 interface FriendRepository {
-    suspend fun postFriendNotification(friendUserId: Long): DoRunResult<Unit>
+    suspend fun postFriendNotification(friendUserId: Long): DoRunResult<String>
 
     suspend fun deleteFriend(friendUidList: List<Long>): DoRunResult<Unit>
 

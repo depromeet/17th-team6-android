@@ -104,43 +104,6 @@
     <!-- endregion-->
 
 
-    <!-- region Home -->
-    <string name="home_title">홈</string>
-    <string name="home_goal_list">목표 목록</string>
-    <string name="home_goal_distance">목표 거리</string>
-    <string name="home_goal_session_count">%d회차 목표</string>
-    <string name="home_goal_run_again_title_condition">한 번 달린 목표로 달리고 싶다면,</string>
-    <string name="home_goal_run_again_title">이전 목표로 달리기</string>
-    <string name="home_goal_run">러닝하러 가기</string>
-    <string name="home_goal_achieve">목표 달성! 꾸준함이 모인 멋진 결과네요!!</string>
-    <string name="home_goal_edit_description">또 다른 도전을 원한다면?\n새로운 목표로 변경해요!</string>
-    <string name="home_goal_edit">목표 변경하기</string>
-
-    <string name="home_goal_list_title">목표 목록</string>
-    <string name="home_goal_list_run_again">이 목표로 다시 러닝</string>
-    <string name="home_goal_list_start_condition">이전 회차를 끝내야 도전할 수 있어요.</string>
-
-    <string name="home_goal_edit_title">목표 변경</string>
-    <string name="home_goal_edit_question_title">어떤 목표로 도전할까요?</string>
-    <string name="home_goal_edit_question_description">목표를 변경하면, 이전 기록은 리셋됩니다.</string>
-    <string name="home_goal_edit_result_title">나에게 꼭 맞는\n목표가 준비되었어요!</string>
-    <string name="home_goal_edit_recommend">추천</string>
-    <string name="home_goal_edit_total_session_count">추천</string>
-    <string name="home_goal_edit_for_marathon_title">마라톤에 도전할래요</string>
-    <string name="home_goal_edit_for_marathon_description">10km · 21km · 42km</string>
-    <string name="home_goal_edit_for_stamina_title">체력을 키울래요</string>
-    <string name="home_goal_edit_for_stamina_description">30분 달리기</string>
-    <string name="home_goal_edit_for_endurance_title">지구력을 키울래요</string>
-    <string name="home_goal_edit_for_endurance_description">Zone2 러닝</string>
-
-    <string name="home_goal_cheer_up_0_1">시작이 반이에요! 같이 달려볼까요?</string>
-    <string name="home_goal_cheer_up_1_25">몸이 점점 풀리고 있어요! 힘차게 달려볼까요?</string>
-    <string name="home_goal_cheer_up_26_50">지금처럼만 달리면 충분해요!</string>
-    <string name="home_goal_cheer_up_51_75">목표까지 얼마 남지 않았어요!</string>
-    <string name="home_goal_cheer_up_76_100">거의 다 왔어요. 끝까지 함께 달려요!</string>
-
-    <!-- endregion-->
-
     <!--region Feed-->
     <string name="feed_floating_action_button_description">피드 추가</string>
     <string name="feed_load_state_error_message">오류: %1$s</string>
@@ -234,5 +197,6 @@
     <string name="hours_before">%1$d시간 전</string>
     <string name="days_before">%1$d일 전</string>
     <string name="inactive_label_text">zzz</string>
+    <string name="friend_awake_toast">잠자는 %s 님을 깨웠어요</string>
     <!--endregion-->
 </resources>

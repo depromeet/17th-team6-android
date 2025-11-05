@@ -39,14 +39,15 @@ class FriendRepositoryImpl @Inject constructor(
             },
         ).flow
 
-    override suspend fun postFriendNotification(friendUserId: Long): DoRunResult<Unit> =
+    override suspend fun postFriendNotification(friendUserId: Long): DoRunResult<String> =
         withContext(Dispatchers.IO) {
             try {
                 val requestDto = FriendNotificationRequestDto(userId = friendUserId)
 
-                friendDataSource.postFriendNotification(requestDto)
+                val responseDto = friendDataSource.postFriendNotification(requestDto)
+                val nickname = responseDto.data?.nickname ?: throw DoRunException.DataError("응답 데이터가 없습니다")
 
-                DoRunResult.Success(Unit)
+                DoRunResult.Success(nickname)
             } catch (e: HttpException) {
                 DoRunResult.Failure(DoRunException.ServerError(e.code(), e.message.toString()))
             } catch (e: Exception) {

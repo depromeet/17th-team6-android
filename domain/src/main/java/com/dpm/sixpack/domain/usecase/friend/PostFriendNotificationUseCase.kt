@@ -7,6 +7,6 @@ import javax.inject.Inject
 class PostFriendNotificationUseCase @Inject constructor(
     private val friendRepository: FriendRepository,
 ) {
-    suspend operator fun invoke(friendUserId: Long): DoRunResult<Unit> =
+    suspend operator fun invoke(friendUserId: Long): DoRunResult<String> =
         friendRepository.postFriendNotification(friendUserId)
 }

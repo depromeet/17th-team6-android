@@ -8,6 +8,7 @@ import androidx.paging.map
 import com.dpm.sixpack.domain.model.Friend
 import com.dpm.sixpack.domain.usecase.friend.GetFriendRunningStatusUseCase
 import com.dpm.sixpack.domain.usecase.friend.PostFriendNotificationUseCase
+import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.common.model.FriendUiItem
 import com.dpm.sixpack.presentation.common.model.toUiItem
@@ -59,7 +60,8 @@ class FriendSheetViewModel @Inject constructor(
     private fun handleAwakeFriend(userId: Long) =
         intent {
             postFriendNotificationUseCase(userId)
-                .onSuccess {
+                .onSuccess { result ->
+                    postSideEffect(FriendSheetSideEffect.ShowToast(R.string.friend_awake_toast, result))
                     refresh()
                 }.onError { e ->
                     Timber.w("FriendSheetViewModel: Failed to post friend notification: ${e.message}")
