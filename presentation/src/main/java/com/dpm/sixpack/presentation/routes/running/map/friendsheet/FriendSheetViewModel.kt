@@ -41,8 +41,8 @@ class FriendSheetViewModel @Inject constructor(
     val friendPagingFlow: Flow<PagingData<FriendUiItem>> =
         refreshTrigger
             .flatMapLatest {
-                // 'refreshTrigger'의 값이 바뀔 때마다 (emit될 때마다)
-                //  flatMapLatest가 기존 Flow를 취소하고 getFriendRunningStatusUseCase()를 '새로' 호출합니다.
+                // 'refreshTrigger'의 값이 바뀔 때마다
+                //  flatMapLatest가 기존 Flow를 취소하고 getFriendRunningStatusUseCase()를 재호출합니다.
                 getFriendRunningStatusUseCase()
             }.map { pagingData: PagingData<Friend> ->
                 pagingData.map { friend: Friend ->
@@ -52,7 +52,7 @@ class FriendSheetViewModel @Inject constructor(
 
     override fun onIntent(intent: FriendSheetIntent) {
         when (intent) {
-            is FriendSheetIntent.AwakeFriend -> TODO()
+            is FriendSheetIntent.AwakeFriend -> handleAwakeFriend(intent.userId)
             is FriendSheetIntent.ClickUser -> handleClickUser(intent.userId)
         }
     }
