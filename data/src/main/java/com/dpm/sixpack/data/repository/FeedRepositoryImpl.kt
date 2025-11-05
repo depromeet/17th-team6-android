@@ -15,12 +15,8 @@ import com.dpm.sixpack.domain.event.FeedUpdateEvent
 import com.dpm.sixpack.domain.exception.DoRunException
 import com.dpm.sixpack.domain.model.CertifiedUser
 import com.dpm.sixpack.domain.model.Feed
-import com.dpm.sixpack.domain.model.ReactingUser
-import com.dpm.sixpack.domain.model.Reaction
 import com.dpm.sixpack.domain.model.ReactionResult
-import com.dpm.sixpack.domain.model.RunningSessionResult
 import com.dpm.sixpack.domain.model.SelfieCounts
-import com.dpm.sixpack.domain.model.User
 import com.dpm.sixpack.domain.repository.FeedListItem
 import com.dpm.sixpack.domain.repository.FeedRepository
 import com.dpm.sixpack.domain.repository.FeedType
