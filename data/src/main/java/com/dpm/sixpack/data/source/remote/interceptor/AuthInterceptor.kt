@@ -1,7 +1,6 @@
 package com.dpm.sixpack.data.source.remote.interceptor
 
-import com.dpm.sixpack.domain.repository.UserPreferenceRepository
-import kotlinx.coroutines.runBlocking
+import com.dpm.sixpack.data.cache.TokenMemoryCache
 import okhttp3.Interceptor
 import okhttp3.Response
 import timber.log.Timber
@@ -9,46 +8,57 @@ import javax.inject.Inject
 
 /**
  * 모든 API 요청에 인증 헤더를 자동으로 추가하는 Interceptor
+ * TokenMemoryCache를 통해 메모리에 캐싱된 토큰을 사용하여 성능 최적화 (runBlocking 제거)
  */
 class AuthInterceptor
     @Inject
     constructor(
-        private val userPreferenceRepository: UserPreferenceRepository,
+        private val tokenMemoryCache: TokenMemoryCache,
     ) : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
             val originalRequest = chain.request()
+            val requestUrl = originalRequest.url.encodedPath
 
             // S3 presigned URL에는 헤더를 추가하지 않음 (서명 검증 실패 방지)
             if (isS3Request(originalRequest.url.host)) {
                 return chain.proceed(originalRequest)
             }
 
+            Timber.d("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+            Timber.d("AuthInterceptor: 요청 시작")
+            Timber.d("AuthInterceptor: URL = $requestUrl")
+            Timber.d("AuthInterceptor: Method = ${originalRequest.method}")
+
             val requestBuilder = originalRequest.newBuilder()
 
-            runBlocking {
-                try {
-                    // X-User-Id 헤더 추가
-                    val userId = userPreferenceRepository.getUserId()
-                    requestBuilder.addHeader(X_USER_ID, userId.toString())
-                } catch (e: Exception) {
-                    Timber.e("AuthInterceptor: Failed to get UserId: ${e.message}")
-                }
+            // X-User-Id 헤더 추가 (메모리 캐시에서 즉시 가져옴, runBlocking 불필요)
+            val userId = tokenMemoryCache.getUserId()
+            if (userId != null) {
+                requestBuilder.addHeader(X_USER_ID, userId.toString())
+                Timber.d("AuthInterceptor: ✅ X-User-Id 헤더 추가 = $userId")
+            } else {
+                Timber.w("AuthInterceptor: ⚠️ UserId가 null입니다. X-User-Id 헤더 추가 안함")
+            }
 
-                try {
-                    // Authorization Bearer 헤더 추가
-                    val accessToken = userPreferenceRepository.getAccessToken()
-                    if (!accessToken.isNullOrBlank()) {
-                        requestBuilder.addHeader(AUTHORIZATION, "$BEARER $accessToken")
-                    } else {
-                        Timber.d("AuthInterceptor: AccessToken is null, proceeding without Authorization header")
-                    }
-                } catch (e: Exception) {
-                    Timber.e("AuthInterceptor: Failed to get AccessToken: ${e.message}")
-                }
+            // Authorization Bearer 헤더 추가 (메모리 캐시에서 즉시 가져옴, runBlocking 불필요)
+            val accessToken = tokenMemoryCache.getAccessToken()
+            if (!accessToken.isNullOrBlank()) {
+                requestBuilder.addHeader(AUTHORIZATION, "$BEARER $accessToken")
+                val maskedToken = accessToken.take(10) + "..." + accessToken.takeLast(10)
+                Timber.d("AuthInterceptor: ✅ Authorization 헤더 추가 = Bearer $maskedToken")
+            } else {
+                Timber.w("AuthInterceptor: ⚠️ AccessToken이 null 또는 blank입니다. Authorization 헤더 추가 안함")
             }
 
             val newRequest = requestBuilder.build()
-            return chain.proceed(newRequest)
+            Timber.d("AuthInterceptor: 요청 진행 중...")
+
+            val response = chain.proceed(newRequest)
+
+            Timber.d("AuthInterceptor: 응답 받음 - Status Code = ${response.code}")
+            Timber.d("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+
+            return response
         }
 
         private fun isS3Request(host: String): Boolean = host.contains("amazonaws.com")
