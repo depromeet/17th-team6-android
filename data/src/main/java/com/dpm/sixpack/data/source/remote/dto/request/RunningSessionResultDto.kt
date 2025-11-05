@@ -1,10 +1,8 @@
 package com.dpm.sixpack.data.source.remote.dto.request
 
-import android.annotation.SuppressLint
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class RunningSessionResultDto(
     @SerialName("distance")
@@ -17,21 +15,18 @@ data class RunningSessionResultDto(
     val cadence: CadenceRequestDto,
 )
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class DistanceRequestDto(
     @SerialName("total")
     val total: Int,
 )
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class DurationRequestDto(
     @SerialName("total")
     val total: Int,
 )
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class PaceRequestDto(
     @SerialName("avg")
@@ -40,7 +35,6 @@ data class PaceRequestDto(
     val max: MaxPaceRequestDto,
 )
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class MaxPaceRequestDto(
     @SerialName("value")
@@ -51,7 +45,6 @@ data class MaxPaceRequestDto(
     val longitude: Double,
 )
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class CadenceRequestDto(
     @SerialName("avg")
@@ -60,7 +53,6 @@ data class CadenceRequestDto(
     val max: MaxCadenceRequestDto,
 )
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class MaxCadenceRequestDto(
     @SerialName("value")

@@ -1,12 +1,10 @@
 package com.dpm.sixpack.data.source.remote.dto.request
 
-import android.annotation.SuppressLint
 import com.dpm.sixpack.core.util.TimeUtil.formatMillisToIsoUtc
 import com.dpm.sixpack.data.source.local.database.entity.RunningTrackPointEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class SaveSegmentDataRequestsDto(
     @SerialName("segments")
@@ -15,7 +13,6 @@ data class SaveSegmentDataRequestsDto(
     val isStopped: Boolean,
 )
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class SegmentDataDto(
     @SerialName("latitude")

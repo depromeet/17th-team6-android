@@ -1,11 +1,9 @@
 package com.dpm.sixpack.data.source.remote.dto.response
 
-import android.annotation.SuppressLint
 import com.dpm.sixpack.data.source.remote.dto.request.SegmentDataDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class SessionDetailResponseDto(
     @SerialName("id")
@@ -40,7 +38,6 @@ data class SessionDetailResponseDto(
     val segments: List<List<SegmentDataDto>>,
 )
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class SessionDetailFeedDto(
     @SerialName("id")
