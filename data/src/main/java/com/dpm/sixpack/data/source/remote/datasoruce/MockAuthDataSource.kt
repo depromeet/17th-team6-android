@@ -1,6 +1,7 @@
 package com.dpm.sixpack.data.source.remote.datasoruce
 
 import com.dpm.sixpack.data.source.remote.datasoruce.api.AuthDataSource
+import com.dpm.sixpack.data.source.remote.dto.response.RefreshTokenResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.SignUpResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.TokenDto
 import com.dpm.sixpack.data.source.remote.dto.response.UserDto
@@ -91,6 +92,21 @@ class MockAuthDataSource @Inject constructor() : AuthDataSource {
                             accessToken = "mock_access_token",
                             refreshToken = "mock_refresh_token",
                         ),
+                ),
+        )
+    }
+
+    override suspend fun refreshToken(refreshToken: String): BaseResponse<RefreshTokenResponseDto> {
+        delay(500L)
+        // 토큰 갱신 성공 응답
+        return BaseResponse(
+            status = "200",
+            message = "토큰 갱신 성공",
+            timestamp = getCurrentTimestamp(),
+            data =
+                RefreshTokenResponseDto(
+                    accessToken = "mock_new_access_token_${System.currentTimeMillis()}",
+                    refreshToken = "mock_new_refresh_token_${System.currentTimeMillis()}",
                 ),
         )
     }

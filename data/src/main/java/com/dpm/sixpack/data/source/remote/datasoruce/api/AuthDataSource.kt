@@ -1,5 +1,6 @@
 package com.dpm.sixpack.data.source.remote.datasoruce.api
 
+import com.dpm.sixpack.data.source.remote.dto.response.RefreshTokenResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.SignUpResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.VerifySmsResponseDto
 import com.dpm.sixpack.data.source.remote.util.base.BaseResponse
@@ -19,4 +20,6 @@ interface AuthDataSource {
         phoneNumber: String,
         profileImage: File?,
     ): BaseResponse<SignUpResponseDto>
+
+    suspend fun refreshToken(refreshToken: String): BaseResponse<RefreshTokenResponseDto>
 }

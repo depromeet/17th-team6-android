@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -14,6 +15,7 @@ import com.dpm.sixpack.LocalTimeZone
 import com.dpm.sixpack.core.util.NetworkMonitor
 import com.dpm.sixpack.core.util.TimeZoneMonitor
 import com.dpm.sixpack.main.navigation.rememberMainNavigator
+import com.dpm.sixpack.presentation.destinations.OnboardingRoute
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 import com.dpm.sixpack.rememberSixPackAppState
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,6 +52,21 @@ class MainActivity : ComponentActivity() {
                     )
 
                 val currentTimeZone by appState.currentTimeZone.collectAsStateWithLifecycle()
+
+                // AuthEvent 처리: 토큰 만료/갱신 실패 시 Onboarding 화면으로 이동
+                LaunchedEffect(Unit) {
+                    viewModel.container.sideEffectFlow.collect { sideEffect ->
+                        when (sideEffect) {
+                            is MainSideEffect.NavigateToOnboarding -> {
+                                // Onboarding 화면으로 이동 (백스택 전체 클리어)
+                                appState.navigator.navController.navigate(OnboardingRoute) {
+                                    // 백스택 전체 클리어
+                                    popUpTo(0) { inclusive = true }
+                                }
+                            }
+                        }
+                    }
+                }
 
                 CompositionLocalProvider(
                     LocalTimeZone provides currentTimeZone,

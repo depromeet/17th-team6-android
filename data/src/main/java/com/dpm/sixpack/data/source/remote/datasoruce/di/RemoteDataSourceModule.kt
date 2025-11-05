@@ -10,10 +10,9 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 @Module
 internal abstract class RemoteDataSourceModule {
-    @Binds
-    abstract fun bindsAuthDataSource(dataSource: MockAuthDataSource): AuthDataSource
+//    @Binds
+//    abstract fun bindsAuthDataSource(dataSource: MockAuthDataSource): AuthDataSource
 
-    // TODO: 서버 API 안정화 후 MockAuthDataSource → AuthDataSourceImpl로 변경
-    // @Binds
-    // abstract fun bindsAuthDataSource(dataSource: AuthDataSourceImpl): AuthDataSource
+    @Binds
+    abstract fun bindsAuthDataSource(dataSource: AuthDataSourceImpl): AuthDataSource
 }

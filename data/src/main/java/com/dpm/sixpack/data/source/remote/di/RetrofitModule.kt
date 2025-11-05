@@ -3,6 +3,7 @@ package com.dpm.sixpack.data.source.remote.di
 import com.dpm.sixpack.core.BuildConfig
 import com.dpm.sixpack.core.BuildConfig.DEBUG
 import com.dpm.sixpack.data.source.remote.interceptor.AuthInterceptor
+import com.dpm.sixpack.data.source.remote.interceptor.TokenAuthenticator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,6 +44,7 @@ object RetrofitModule {
     fun providesOkHttpClient(
         loggingInterceptor: HttpLoggingInterceptor,
         authInterceptor: AuthInterceptor,
+        tokenAuthenticator: TokenAuthenticator,
     ): Call.Factory =
         OkHttpClient
             .Builder()
@@ -50,8 +52,9 @@ object RetrofitModule {
                 connectTimeout(10, TimeUnit.SECONDS)
                 writeTimeout(10, TimeUnit.SECONDS)
                 readTimeout(10, TimeUnit.SECONDS)
-                addInterceptor(authInterceptor)
                 if (DEBUG) addInterceptor(loggingInterceptor)
+                addInterceptor(authInterceptor)
+                authenticator(tokenAuthenticator)
             }.build()
 
     @OptIn(ExperimentalSerializationApi::class)

@@ -1,5 +1,6 @@
 package com.dpm.sixpack.domain.repository
 
+import com.dpm.sixpack.domain.model.AuthToken
 import com.dpm.sixpack.domain.model.SignUpResult
 import com.dpm.sixpack.domain.model.SmsVerificationResult
 import com.dpm.sixpack.domain.util.DoRunResult
@@ -18,4 +19,6 @@ interface AuthRepository {
         phoneNumber: String,
         profileImage: File?,
     ): DoRunResult<SignUpResult>
+
+    suspend fun refreshToken(refreshToken: String): DoRunResult<AuthToken>
 }

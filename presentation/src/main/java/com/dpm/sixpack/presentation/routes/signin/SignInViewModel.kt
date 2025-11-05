@@ -131,10 +131,23 @@ class SignInViewModel @Inject constructor(
 
             result
                 .onSuccess { verificationResult ->
-                    // Existing user, proceed to login
                     reduce { state.copy(isLoading = false) }
-                    postSideEffect(SignInSideEffect.NavigateToHome)
-                    Timber.d("Sign in verified, navigating to home")
+
+                    // isExistingUser 필드로 기존/신규 사용자 구분
+                    if (verificationResult.isExistingUser) {
+                        // 기존 사용자: 로그인 성공, 홈으로 이동
+                        postSideEffect(SignInSideEffect.NavigateToHome)
+                        Timber.d("Sign in verified (existing user), navigating to home")
+                    } else {
+                        // 신규 사용자: 미등록 다이얼로그 표시
+                        reduce {
+                            state.copy(
+                                showUnregisteredDialog = true,
+                                unregisteredPhoneNumber = state.phoneNumber,
+                            )
+                        }
+                        Timber.d("User not registered: ${state.phoneNumber}")
+                    }
                 }.onError { exception ->
                     Timber.e("Failed to verify phone number: ${exception.message}")
                     reduce {
@@ -145,16 +158,6 @@ class SignInViewModel @Inject constructor(
                     }
 
                     when (exception) {
-                        is DoRunException.UserNotRegisteredError -> {
-                            // User not registered, show dialog
-                            reduce {
-                                state.copy(
-                                    showUnregisteredDialog = true,
-                                    unregisteredPhoneNumber = state.phoneNumber,
-                                )
-                            }
-                            Timber.d("User not registered: ${state.phoneNumber}")
-                        }
                         is DoRunException.CodeMismatchError -> {
                             postSideEffect(SignInSideEffect.ShowCodeMismatchError)
                         }
