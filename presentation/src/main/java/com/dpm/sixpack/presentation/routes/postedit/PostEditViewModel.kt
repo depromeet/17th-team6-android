@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.feed.postedit
+package com.dpm.sixpack.presentation.routes.postedit
 
 import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
@@ -6,9 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.dpm.sixpack.domain.repository.FeedRepository
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.common.model.toPostResource
-import com.dpm.sixpack.presentation.routes.feed.postedit.contract.PostEditIntent
-import com.dpm.sixpack.presentation.routes.feed.postedit.contract.PostEditSideEffect
-import com.dpm.sixpack.presentation.routes.feed.postedit.contract.PostEditUiState
+import com.dpm.sixpack.presentation.routes.postedit.contract.PostEditIntent
+import com.dpm.sixpack.presentation.routes.postedit.contract.PostEditSideEffect
+import com.dpm.sixpack.presentation.routes.postedit.contract.PostEditUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
