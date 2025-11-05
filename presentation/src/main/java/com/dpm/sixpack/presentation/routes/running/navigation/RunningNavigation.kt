@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import com.dpm.sixpack.presentation.destinations.MainRoute
 import com.dpm.sixpack.presentation.routes.running.RunningRoute
 
-fun NavController.navigateRunningSession(navOptions: NavOptions? = null) {
+fun NavController.navigateRunning(navOptions: NavOptions? = null) {
     navigate(MainRoute.Running, navOptions)
 }
 
