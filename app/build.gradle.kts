@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.sixpack.android.application)
     alias(libs.plugins.google.services)
+    id("kotlin-parcelize")
 }
 
 android {
@@ -28,4 +29,7 @@ dependencies {
     implementation(libs.bundles.coil)
     implementation(libs.kotlinx.datetime)
     implementation(libs.androidx.core.splashscreen)
+
+    // Orbit MVI for MainViewModel
+    implementation(libs.bundles.orbit)
 }

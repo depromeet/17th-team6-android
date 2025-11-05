@@ -14,8 +14,6 @@ import org.orbitmvi.orbit.viewmodel.container
 import timber.log.Timber
 import javax.inject.Inject
 
-private typealias ProfileCreationSyntax = Syntax<ProfileCreationState, ProfileCreationSideEffect>
-
 @HiltViewModel
 class ProfileCreationViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
