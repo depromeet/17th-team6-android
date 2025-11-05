@@ -9,12 +9,13 @@ import androidx.navigation.navOptions
 import com.dpm.sixpack.SixPackAppState
 import com.dpm.sixpack.presentation.destinations.SignInRoute
 import com.dpm.sixpack.presentation.routes.feed.navigation.addFeedNavGraph
-import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
-import com.dpm.sixpack.presentation.routes.profilecreation.navigation.addProfileCreationNavGraph
-import com.dpm.sixpack.presentation.routes.profilecreation.navigation.navigateProfileCreation
 import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToCertifiedUsers
 import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToPostEdit
-import com.dpm.sixpack.presentation.routes.onboarding.OnboardingRoute
+import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
+import com.dpm.sixpack.presentation.routes.postdetail.navigation.addPostDetailNavGraph
+import com.dpm.sixpack.presentation.routes.postdetail.navigation.navigateToPostDetail
+import com.dpm.sixpack.presentation.routes.profilecreation.navigation.addProfileCreationNavGraph
+import com.dpm.sixpack.presentation.routes.profilecreation.navigation.navigateProfileCreation
 import com.dpm.sixpack.presentation.routes.running.navigation.addRunningSessionNavGraph
 import com.dpm.sixpack.presentation.routes.running.navigation.navigateRunningSession
 import com.dpm.sixpack.presentation.routes.sessionreport.navigation.addSessionReportNavGraph
@@ -119,7 +120,15 @@ internal fun MainNavHost(
             addFeedNavGraph(
                 navigateToBack = { navController.popBackStack() },
                 navigateToCertifiedUsers = navController::navigateToCertifiedUsers,
+                navigateToPostDetail = navController::navigateToPostDetail,
                 navigateToPostEdit = navController::navigateToPostEdit,
+            )
+
+            addPostDetailNavGraph(
+                navigateToBack = { navController.popBackStack() },
+                navigateToPostEdit = navController::navigateToPostEdit,
+                navigateToUserProfile = {},
+                navigateToMyPage = {}
             )
         }
     }

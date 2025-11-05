@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.dpm.sixpack.presentation.common.model.PostResource
 import com.dpm.sixpack.presentation.routes.feed.contract.FeedSideEffect
 import com.dpm.sixpack.presentation.routes.feed.ui.FeedScreen
 import org.orbitmvi.orbit.compose.collectAsState
@@ -18,7 +17,7 @@ fun FeedRoute(
     navigateToCertifiedUserList: (String) -> Unit,
     navigateToUserProfile: (Long) -> Unit,
     navigateToMyPage: () -> Unit,
-    navigateToPostDetail: (PostResource) -> Unit,
+    navigateToPostDetail: (Long) -> Unit,
     navigateToPostUpload: () -> Unit,
     navigateToPostEdit: (Long) -> Unit,
 ) {
@@ -32,7 +31,7 @@ fun FeedRoute(
             is FeedSideEffect.NavigateToCertificationFriend -> navigateToCertifiedUserList(sideEffect.date)
             is FeedSideEffect.NavigateToMyPage -> navigateToMyPage()
             is FeedSideEffect.NavigateToUserPage -> navigateToUserProfile(sideEffect.userId)
-            is FeedSideEffect.NavigateToPostDetail -> navigateToPostDetail(sideEffect.post)
+            is FeedSideEffect.NavigateToPostDetail -> navigateToPostDetail(sideEffect.post.feedId)
             is FeedSideEffect.NavigateToPostUpload -> navigateToPostUpload()
             is FeedSideEffect.NavigateToPostEdit -> navigateToPostEdit(sideEffect.feedId)
             is FeedSideEffect.ShowToast -> {
