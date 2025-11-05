@@ -34,7 +34,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -90,12 +89,21 @@ class FeedViewModel @Inject constructor(
             .distinctUntilChanged()
             .flatMapLatest { date ->
                 val count = container.stateFlow.value.calendarState.postCounts[date] ?: 0
-                if (count > 0) {
-                    getPagingFlowForDate(date)
-                } else {
-                    flowOf(PagingData.empty())
-                }
+//                if (count > 0) {
+                getPagingFlowForDate(date)
+//                } else {
+//                    flowOf(PagingData.empty())
+//                }
             }.cachedIn(viewModelScope)
+            .combine(optimisticPostsFlow) { pagingData, optimisticPosts ->
+                pagingData.map { postResource ->
+                    optimisticPosts[postResource.feedId] ?: postResource
+                }
+            }.combine(optimisticDeletedFeedIdsFlow) { pagingData, deletedFeedIds ->
+                pagingData.filter { postResource ->
+                    postResource.feedId !in deletedFeedIds
+                }
+            }
 
     init {
         loadInitialData()
@@ -187,29 +195,18 @@ class FeedViewModel @Inject constructor(
     private fun getPagingFlowForDate(date: LocalDate): Flow<PagingData<PostResource>> =
         pagingFlowCache.getOrPut(date) {
             val dateString = date.toYyyyMmDdString()
-            val originalPagingFlow =
-                getFeedsByDateUseCase(dateString)
-                    .map { pagingData: PagingData<FeedListItem> ->
-                        pagingData.map { item ->
-                            when (item) {
-                                is FeedListItem.PostItem ->
-                                    item.toPostResource()
+            getFeedsByDateUseCase(dateString)
+                .map { pagingData: PagingData<FeedListItem> ->
+                    pagingData.map { item ->
+                        when (item) {
+                            is FeedListItem.PostItem ->
+                                item.toPostResource()
 
-                                is FeedListItem.UserSummaryItem ->
-                                    throw IllegalStateException("Main Feed should not contain UserSummaryItem")
-                            }
+                            is FeedListItem.UserSummaryItem ->
+                                throw IllegalStateException("Main Feed should not contain UserSummaryItem")
                         }
                     }
-            originalPagingFlow
-                .combine(optimisticPostsFlow) { pagingData, optimisticPosts ->
-                    pagingData.map { postResource ->
-                        optimisticPosts[postResource.feedId] ?: postResource
-                    }
-                }.combine(optimisticDeletedFeedIdsFlow) { pagingData, deletedFeedIds ->
-                    pagingData.filter { postResource ->
-                        postResource.feedId !in deletedFeedIds
-                    }
-                }.cachedIn(viewModelScope)
+                }
         }
 
     // TopBar Intent
