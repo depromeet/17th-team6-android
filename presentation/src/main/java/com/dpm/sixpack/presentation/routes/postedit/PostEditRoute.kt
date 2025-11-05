@@ -10,10 +10,15 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -22,6 +27,7 @@ import com.dpm.sixpack.presentation.common.util.PermissionHandler
 import com.dpm.sixpack.presentation.routes.postedit.contract.PostEditIntent
 import com.dpm.sixpack.presentation.routes.postedit.contract.PostEditSideEffect
 import com.dpm.sixpack.presentation.routes.postedit.ui.PostEditScreen
+import com.dpm.sixpack.presentation.theme.SixpackTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -108,23 +114,39 @@ fun PostEditRoute(
         }
     }
 
-    PostEditScreen(
-        state = state,
-        onBackButtonClick = {
-            viewModel.onIntent(PostEditIntent.OnBackClick)
-        },
-        onSaveIconClick = {
-            viewModel.onIntent(PostEditIntent.OnSaveClick)
-        },
-        onImageEditButtonClick = {
-            viewModel.onIntent(PostEditIntent.OnImageEditButtonClick)
-        },
-        onSubmitClick = {
-            viewModel.onIntent(PostEditIntent.OnSubmitClick)
-        },
-    )
+    when (!state.isLoading) {
+        true -> {
+            PostEditScreen(
+                state = state,
+                onBackButtonClick = {
+                    viewModel.onIntent(PostEditIntent.OnBackClick)
+                },
+                onSaveIconClick = {
+                    viewModel.onIntent(PostEditIntent.OnSaveClick)
+                },
+                onImageEditButtonClick = {
+                    viewModel.onIntent(PostEditIntent.OnImageEditButtonClick)
+                },
+                onSubmitClick = {
+                    viewModel.onIntent(PostEditIntent.OnSubmitClick)
+                },
+            )
+        }
+
+        else -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                CircularProgressIndicator(
+                    color = SixpackTheme.colors.blue600,
+                )
+            }
+        }
+    }
 }
 
+// TODO SB 이미지 저장 Util로 구현 제대로 해야함
 private suspend fun saveImageToGallery(
     context: Context,
     imageUrl: String,

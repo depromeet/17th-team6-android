@@ -43,7 +43,6 @@ fun PostEditScreen(
             modifier
                 .fillMaxSize(),
     ) {
-        // TopBar
         DoRunNavigationTopBar(
             navigateToBack = onBackButtonClick,
             trailingIcon = {
@@ -64,51 +63,39 @@ fun PostEditScreen(
             },
             modifier = Modifier,
         )
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 20.dp)
+                    .padding(bottom = 24.dp),
+        ) {
+            Spacer(modifier = Modifier.height(40.dp))
 
-        // Content
-        if (state.isLoading) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                CircularProgressIndicator(
-                    color = SixpackTheme.colors.blue600,
-                )
-            }
-        } else {
-            Column(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 20.dp)
-                        .padding(bottom = 24.dp),
-            ) {
-                Spacer(modifier = Modifier.height(40.dp))
+            val imageUrl =
+                state.selectedImageUri?.toString() ?: state.originalPost.postImageUrl
 
-                val imageUrl =
-                    state.selectedImageUri?.toString() ?: state.originalPost.postImageUrl
+            EditablePostImage(
+                postImageUrl = imageUrl,
+                runningSummary = state.originalPost.runningInfo,
+                onImageEditClick = onImageEditButtonClick,
+                buttonText = stringResource(id = R.string.feed_post_edit_change_background_button),
+                modifier = Modifier.fillMaxWidth(),
+            )
 
-                EditablePostImage(
-                    postImageUrl = imageUrl,
-                    runningSummary = state.originalPost.runningInfo,
-                    onImageEditClick = onImageEditButtonClick,
-                    buttonText = stringResource(id = R.string.feed_post_edit_change_background_button),
-                    modifier = Modifier.fillMaxWidth(),
-                )
+            Spacer(Modifier.weight(1f))
 
-                Spacer(Modifier.weight(1f))
-
-                DoRunDefaultButton(
-                    text = stringResource(id = R.string.feed_post_edit_submit_button),
-                    onClick = onSubmitClick,
-                    modifier = Modifier.fillMaxWidth(),
-                    textColor = SixpackTheme.colors.gray0,
-                    containerColor = SixpackTheme.colors.blue600,
-                )
-            }
+            DoRunDefaultButton(
+                text = stringResource(id = R.string.feed_post_edit_submit_button),
+                onClick = onSubmitClick,
+                modifier = Modifier.fillMaxWidth(),
+                textColor = SixpackTheme.colors.gray0,
+                containerColor = SixpackTheme.colors.blue600,
+            )
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
