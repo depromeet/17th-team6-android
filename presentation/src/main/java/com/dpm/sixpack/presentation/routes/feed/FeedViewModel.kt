@@ -536,7 +536,12 @@ class FeedViewModel @Inject constructor(
             val isCertifiable = state.feedDateState == FeedDateUiState.PostsAvailable && isCertifiable
             reduce {
                 state.copy(
-                    feedDateState = if (isCertifiable)FeedDateUiState.NoPostsAndCertifiable else FeedDateUiState.NoPostsAndExpired,
+                    feedDateState =
+                        if (isCertifiable) {
+                            FeedDateUiState.NoPostsAndCertifiable
+                        } else {
+                            FeedDateUiState.NoPostsAndExpired
+                        },
                 )
             }
         }

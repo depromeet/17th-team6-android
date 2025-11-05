@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -50,7 +49,7 @@ fun PostDetailScreen(
                 trailingIcon = {
                     if (uiState.post != null) {
                         PostDropDownMenuIcon(
-                            modifier= Modifier.padding(10.dp),
+                            modifier = Modifier.padding(10.dp),
                             isMyPost = uiState.post.user.user.isMe,
                             isMenuExpanded = uiState.isMenuExpanded,
                             onMenuClick = { onIntent(PostDetailIntent.OnMenuClick(!uiState.isMenuExpanded)) },
@@ -196,7 +195,7 @@ private fun PostDetailContent(
     ) {
         Spacer(modifier = Modifier.height(40.dp))
 
-        Column{
+        Column {
             PostUserInfo(
                 modifier = Modifier.padding(horizontal = 20.dp),
                 userImageUrl = post.user.user.profileImageUrl,

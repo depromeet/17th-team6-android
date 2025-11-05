@@ -128,7 +128,7 @@ internal fun MainNavHost(
                 navigateToBack = { navController.popBackStack() },
                 navigateToPostEdit = navController::navigateToPostEdit,
                 navigateToUserProfile = {},
-                navigateToMyPage = {}
+                navigateToMyPage = {},
             )
         }
     }
