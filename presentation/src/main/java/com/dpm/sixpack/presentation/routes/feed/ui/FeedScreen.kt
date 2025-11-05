@@ -193,14 +193,6 @@ fun FeedScreen(
                         feedDividerItem()
 
                         when (state.feedDateState) {
-                            FeedDateUiState.NoPostsAndCertifiable -> {
-                                item(key = "empty_certifiable") { EmptyStateCertifiable() }
-                            }
-
-                            FeedDateUiState.NoPostsAndExpired -> {
-                                item(key = "empty_expired") { EmptyStateExpired() }
-                            }
-
                             FeedDateUiState.PostsAvailable -> {
                                 feedContentItems(
                                     isInitialLoad = isInitialLoad,
@@ -239,6 +231,7 @@ fun FeedScreen(
                                     onAddReactionClick = { post -> onIntent(FeedIntent.OnPostAddReactionClick(post)) },
                                 )
                             }
+                            else -> {}
                         }
                     }
 
@@ -281,9 +274,7 @@ fun FeedScreen(
                                 item(key = "empty_expired") { EmptyStateExpired() }
                             }
 
-                            FeedDateUiState.PostsAvailable -> {
-                                // 이 분기는 도달하지 않음 (외부 if 문에서 처리됨)
-                            }
+                            else -> {}
                         }
                     }
 

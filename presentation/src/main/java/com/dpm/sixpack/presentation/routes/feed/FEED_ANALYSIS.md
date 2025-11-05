@@ -426,6 +426,33 @@ originalPagingFlow
   - 성능 유지: Debounce 최적화 그대로 유지
   - 호환성: 기존 Paging 통합 로직 변경 없음
 
+**2025-11-06**:
+- ✅ **PagingData Flow 중복 collect 오류 해결**:
+  - **문제**: reaction 추가 시 `java.lang.IllegalStateException: Attempt to collect twice from pageEventFlow` 오류 발생
+  - **원인**: `getPagingFlowForDate()`에서 optimistic update를 combine한 후 캐시하여, `optimisticPostsFlow` 변경 시 이미 캐시된 PagingFlow를 다시 collect하려고 시도
+  - **해결**:
+    - `getPagingFlowForDate()`를 순수 함수로 변경 (optimistic update 로직 제거)
+    - optimistic update를 `feedPagingData`의 `cachedIn()` **후**에 적용하도록 이동
+  - **효과**:
+    - optimistic update 변경이 원본 PagingFlow를 다시 collect하지 않음
+    - 날짜별 캐시는 원본 데이터만 유지하여 안정성 향상
+    - PagingData와 optimistic update의 책임 분리로 코드 구조 개선
+  - **변경 파일**: `FeedViewModel.kt` (Line 87-107, 198-213)
+
+- ✅ **아키텍처 개선**:
+  ```kotlin
+  // Before: getPagingFlowForDate()에서 optimistic update 적용 후 캐시
+  originalPagingFlow
+      .combine(optimisticPostsFlow) { ... }  // ❌ 캐시 안에서 combine
+      .cachedIn(viewModelScope)
+
+  // After: cachedIn 후 optimistic update 적용
+  feedPagingData = getPagingFlowForDate(date)  // 원본 데이터만 캐시
+      .cachedIn(viewModelScope)
+      .combine(optimisticPostsFlow) { ... }     // ✅ 캐시 밖에서 combine
+      .combine(optimisticDeletedFeedIdsFlow) { ... }
+  ```
+
 ---
 
 ## 총평
