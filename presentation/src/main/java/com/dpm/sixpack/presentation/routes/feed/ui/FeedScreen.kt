@@ -102,7 +102,7 @@ fun FeedScreen(
     // Timeout: 5초 이상 로딩 시 자동 종료 (UX: 너무 긴 로딩 방지)
     LaunchedEffect(isRefreshing) {
         if (isRefreshing) {
-            delay(5000)
+            delay(3000)
             isRefreshing = false
         }
     }
@@ -233,7 +233,7 @@ fun FeedScreen(
                                         reactions,
                                         emoji,
                                         ->
-                                        onIntent(FeedIntent.OnPostReactionLongClick(feedId, reactions, emoji))
+                                        onIntent(FeedIntent.OnPostReactionLongClick(reactions, emoji))
                                     },
                                     onAddReactionClick = { post -> onIntent(FeedIntent.OnPostAddReactionClick(post)) },
                                 )

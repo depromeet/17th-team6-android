@@ -43,7 +43,6 @@ sealed interface FeedIntent : UiIntent {
     ) : FeedIntent
 
     data class OnPostReactionLongClick(
-        val feedId: Long,
         val reactions: List<PostReaction>,
         val selectedEmoji: Emoji,
     ) : FeedIntent

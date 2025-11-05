@@ -61,14 +61,22 @@ class FeedViewModel @Inject constructor(
     override val container: Container<FeedUiState, FeedSideEffect> =
         container(initialState = initialState, savedStateHandle = savedStateHandle)
 
-    // 유저가 인증 가능한지 여부 캐싱
-    private var isCertifiable: Boolean = true
-
     // 마지막으로 처리한 이벤트의 타임스탬프 (중복 처리 방지)
     private var lastProcessedTimestamp = 0L
 
+    /**
+     * TODO SB 추후에 48시간 이내로 정확하게 구현
+     * 선택된 날짜가 인증 가능한 날짜인지 확인
+     * 오늘 기준 2일 전까지만 인증 가능
+     */
+    private fun isCertifiable(selectedDate: LocalDate): Boolean {
+        val today = LocalDate.now()
+        val minCertifiableDate = today.minusDays(2)
+        return !selectedDate.isBefore(minCertifiableDate)
+    }
+
     private val pagingFlowCache = ConcurrentHashMap<LocalDate, Flow<PagingData<PostResource>>>()
-    private val reactionDebounceJobs = ConcurrentHashMap<Long, Job>()
+    private val reactionDebounceJobs = ConcurrentHashMap<Pair<Long, Emoji>, Job>()
     private val optimisticPostsFlow = container.stateFlow.map { it.optimisticPosts }.distinctUntilChanged()
     private val optimisticDeletedFeedIdsFlow =
         container.stateFlow
@@ -145,7 +153,6 @@ class FeedViewModel @Inject constructor(
             is FeedIntent.OnPostReactionClick -> handlePostReactionClick(intent.post, intent.emoji, intent.isReacted)
             is FeedIntent.OnPostReactionLongClick ->
                 handlePostReactionLongClick(
-                    intent.feedId,
                     intent.reactions,
                     intent.selectedEmoji,
                 )
@@ -237,7 +244,7 @@ class FeedViewModel @Inject constructor(
         val postCount = container.stateFlow.value.calendarState.postCounts[selectedDate] ?: 0
         return when {
             postCount > 0 -> FeedDateUiState.PostsAvailable
-            postCount == 0 && isCertifiable -> FeedDateUiState.NoPostsAndCertifiable
+            postCount == 0 && isCertifiable(selectedDate) -> FeedDateUiState.NoPostsAndCertifiable
             else -> FeedDateUiState.NoPostsAndExpired
         }
     }
@@ -317,6 +324,7 @@ class FeedViewModel @Inject constructor(
         emoji: Emoji,
         isReacted: Boolean,
     ) = intent {
+        val reactionKey = post.feedId to emoji
         val newPost = post.updateReaction(emoji, isReacted)
         reduce {
             state.copy(
@@ -324,28 +332,27 @@ class FeedViewModel @Inject constructor(
             )
         }
 
-        reactionDebounceJobs[post.feedId]?.cancel()
-        reactionDebounceJobs[post.feedId] =
+        reactionDebounceJobs[reactionKey]?.cancel()
+        reactionDebounceJobs[reactionKey] =
             viewModelScope.launch {
                 delay(REACTION_DEBOUNCE_MS)
                 try {
                     feedRepository.postReaction(post.feedId, emoji.type)
                 } catch (e: Exception) {
-                    // 4. 롤백
+                    // 롤백: optimisticPosts에서 제거하여 원본 Paging 데이터가 보이도록 함
                     reduce {
                         state.copy(
-                            optimisticPosts = state.optimisticPosts + (post.feedId to post),
+                            optimisticPosts = state.optimisticPosts - post.feedId,
                         )
                     }
                     postSideEffect(FeedSideEffect.ShowToast("리액션 업데이트 실패"))
                 } finally {
-                    reactionDebounceJobs.remove(post.feedId)
+                    reactionDebounceJobs.remove(reactionKey)
                 }
             }
     }
 
     private fun handlePostReactionLongClick(
-        feedId: Long,
         reactions: List<PostReaction>,
         selectedEmoji: Emoji,
     ) = intent {
@@ -425,17 +432,6 @@ class FeedViewModel @Inject constructor(
                 )
             }
         }
-
-    private fun handleUserReactionSheetUserProfileClick(
-        userId: Long,
-        isMe: Boolean,
-    ) = intent {
-        if (isMe) {
-            postSideEffect(FeedSideEffect.NavigateToMyPage)
-        } else {
-            postSideEffect(FeedSideEffect.NavigateToUserPage(userId))
-        }
-    }
 
     private fun handleUserReactionSheetTabClick(selectedEmoji: Emoji) =
         intent {
@@ -533,11 +529,12 @@ class FeedViewModel @Inject constructor(
 
     private fun handlePagingDataEmpty() =
         intent {
-            val isCertifiable = state.feedDateState == FeedDateUiState.PostsAvailable && isCertifiable
+            val selectedDate = state.calendarState.selectedDate
+            val canCertify = state.feedDateState == FeedDateUiState.PostsAvailable && isCertifiable(selectedDate)
             reduce {
                 state.copy(
                     feedDateState =
-                        if (isCertifiable) {
+                        if (canCertify) {
                             FeedDateUiState.NoPostsAndCertifiable
                         } else {
                             FeedDateUiState.NoPostsAndExpired
