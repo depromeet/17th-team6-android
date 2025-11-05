@@ -2,6 +2,7 @@ package com.dpm.sixpack.data.source.remote.datasoruce
 
 import com.dpm.sixpack.data.source.remote.dto.request.ReactionRequestDto
 import com.dpm.sixpack.data.source.remote.dto.response.CertifiedUsersDto
+import com.dpm.sixpack.data.source.remote.dto.response.FeedDto
 import com.dpm.sixpack.data.source.remote.dto.response.FeedPageDto
 import com.dpm.sixpack.data.source.remote.dto.response.ReactionResultDto
 import com.dpm.sixpack.data.source.remote.dto.response.SelfieCountsDto
@@ -25,6 +26,11 @@ class FeedDataSource @Inject constructor(
             userId = userId,
             page = page,
             size = size,
+        )
+
+    suspend fun getFeedDetail(feedId: Long): BaseResponse<FeedDto> =
+        feedService.getFeedDetail(
+            feedId = feedId,
         )
 
     suspend fun postReaction(

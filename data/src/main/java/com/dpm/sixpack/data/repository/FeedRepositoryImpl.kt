@@ -64,6 +64,17 @@ class FeedRepositoryImpl @Inject constructor(
             },
         ).flow
 
+    override suspend fun getFeedDetail(feedId: Long): DoRunResult<com.dpm.sixpack.domain.model.Feed> =
+        withContext(Dispatchers.IO) {
+            try {
+                val response = feedDataSource.getFeedDetail(feedId)
+                val feed = response.data?.toDomain() ?: throw DoRunException.DataError("데이터 변환에 실패했습니다")
+                DoRunResult.Success(feed)
+            } catch (e: Exception) {
+                DoRunResult.Failure(DoRunException.DataError("피드 상세 조회에 실패했습니다: ${e.message}"))
+            }
+        }
+
     override suspend fun postReaction(
         selfieId: Long,
         emojiType: String,

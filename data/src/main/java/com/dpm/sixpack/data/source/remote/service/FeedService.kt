@@ -2,6 +2,7 @@ package com.dpm.sixpack.data.source.remote.service
 
 import com.dpm.sixpack.data.source.remote.dto.request.ReactionRequestDto
 import com.dpm.sixpack.data.source.remote.dto.response.CertifiedUsersDto
+import com.dpm.sixpack.data.source.remote.dto.response.FeedDto
 import com.dpm.sixpack.data.source.remote.dto.response.FeedPageDto
 import com.dpm.sixpack.data.source.remote.dto.response.ReactionResultDto
 import com.dpm.sixpack.data.source.remote.dto.response.SelfieCountsDto
@@ -27,6 +28,12 @@ interface FeedService {
         @Query("page") page: Int,
         @Query("size") size: Int,
     ): BaseResponse<FeedPageDto>
+
+    // 인증피드 상세 조회
+    @GET("/api/selfie/feeds/{feedId}")
+    suspend fun getFeedDetail(
+        @Path("feedId") feedId: Long,
+    ): BaseResponse<FeedDto>
 
     // 2. 인증피드 업로드 (TODO: 구현 필요 - multipart/form-data)
     // @POST("/api/selfie/feeds")
