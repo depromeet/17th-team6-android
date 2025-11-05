@@ -112,6 +112,13 @@ constructor(
                     // 첫 번째 요청이므로 실제로 토큰 갱신 수행
                     val currentRefreshToken = userPreferenceRepository.getRefreshToken()
 
+                    // 토큰이 이미 클리어된 경우 (다른 스레드가 실패 후 토큰 삭제 완료)
+                    if (currentAccessToken.isNullOrBlank() && currentRefreshToken.isNullOrBlank()) {
+                        Timber.w("TokenAuthenticator: ⚠️ 토큰이 이미 클리어되었습니다! (다른 스레드가 실패 처리 완료)")
+                        Timber.w("TokenAuthenticator: 추가 AuthEvent 발행 없이 요청 취소")
+                        return@runBlocking null
+                    }
+
                     if (currentRefreshToken.isNullOrBlank()) {
                         Timber.e("TokenAuthenticator: ❌ RefreshToken이 null 또는 blank입니다!")
                         Timber.e("TokenAuthenticator: 토큰 갱신 불가능 → 인증 세션 종료")
@@ -171,7 +178,7 @@ constructor(
                     Timber.e("TokenAuthenticator: ❌ 예외 발생!")
                     Timber.e("TokenAuthenticator: 예외 타입 = ${e.javaClass.simpleName}")
                     Timber.e("TokenAuthenticator: 예외 메시지 = ${e.message}")
-                    Timber.e("TokenAuthenticator: 스택 트레이스:", e)
+                    Timber.e(e, "TokenAuthenticator: 스택 트레이스:")
                     Timber.e("TokenAuthenticator: 인증 세션 종료")
                     // 인증 세션 종료 (DataStore와 메모리 캐시 모두 삭제)
                     userPreferenceRepository.clearTokens() // 내부에서 tokenMemoryCache.clear() 호출
