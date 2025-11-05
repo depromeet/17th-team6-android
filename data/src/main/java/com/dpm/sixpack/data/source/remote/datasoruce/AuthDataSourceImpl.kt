@@ -1,9 +1,13 @@
 package com.dpm.sixpack.data.source.remote.datasoruce
 
 import com.dpm.sixpack.data.source.remote.datasoruce.api.AuthDataSource
+import com.dpm.sixpack.data.source.remote.di.AuthRetrofit
+import com.dpm.sixpack.data.source.remote.di.RefreshRetrofit
+import com.dpm.sixpack.data.source.remote.dto.request.RefreshTokenRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.SendSmsRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.SignUpRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.VerifySmsRequestDto
+import com.dpm.sixpack.data.source.remote.dto.response.RefreshTokenResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.SignUpResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.VerifySmsResponseDto
 import com.dpm.sixpack.data.source.remote.service.AuthService
@@ -17,8 +21,14 @@ import retrofit2.Response
 import java.io.File
 import javax.inject.Inject
 
+/**
+ * AuthDataSource 구현체
+ * - 일반 API는 authService 사용 (AuthInterceptor + TokenAuthenticator 포함)
+ * - 토큰 갱신 API는 refreshAuthService 사용 (데드락 방지)
+ */
 class AuthDataSourceImpl @Inject constructor(
-    private val authService: AuthService,
+    @AuthRetrofit private val authService: AuthService,
+    @RefreshRetrofit private val refreshAuthService: AuthService,
     private val json: Json,
 ) : AuthDataSource {
     override suspend fun sendSmsCode(phoneNumber: String): Response<BaseResponse<Unit>> {
@@ -68,5 +78,17 @@ class AuthDataSourceImpl @Inject constructor(
             data = dataRequestBody,
             profileImage = imagePart,
         )
+    }
+
+    /**
+     * 토큰 갱신 API - refreshAuthService 사용 (데드락 방지)
+     * TokenAuthenticator에서 호출되므로 별도의 OkHttpClient 사용 필요
+     */
+    override suspend fun refreshToken(refreshToken: String): BaseResponse<RefreshTokenResponseDto> {
+        val requestDto =
+            RefreshTokenRequestDto(
+                refreshToken = refreshToken,
+            )
+        return refreshAuthService.refreshToken(request = requestDto)
     }
 }
