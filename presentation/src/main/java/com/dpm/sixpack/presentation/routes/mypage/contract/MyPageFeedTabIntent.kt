@@ -6,4 +6,6 @@ sealed interface MyPageFeedTabIntent : UiIntent {
     data class OnPostClick(
         val postId: Long,
     ) : MyPageFeedTabIntent
+
+    data object OnRetryClick : MyPageFeedTabIntent
 }

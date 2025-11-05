@@ -43,6 +43,7 @@ class MyPageRecordTabViewModel
                 is MyPageRecordTabIntent.OnPreviousMonthClick -> handlePreviousMonthClick()
                 is MyPageRecordTabIntent.OnNextMonthClick -> handleNextMonthClick()
                 is MyPageRecordTabIntent.OnRecordClick -> handleRecordClick(intent.recordId)
+                is MyPageRecordTabIntent.OnRetryClick -> loadRecords()
             }
         }
 
@@ -86,6 +87,7 @@ class MyPageRecordTabViewModel
                         state.copy(
                             records = records,
                             isLoading = false,
+                            error = null,
                             canGoPreviousMonth = navigationState.canGoPrevious,
                             canGoNextMonth = navigationState.canGoNext,
                         )
@@ -96,6 +98,7 @@ class MyPageRecordTabViewModel
                         state.copy(
                             records = emptyList(),
                             isLoading = false,
+                            error = exception.message ?: "알 수 없는 오류가 발생했습니다",
                             canGoPreviousMonth = false,
                             canGoNextMonth = false,
                         )

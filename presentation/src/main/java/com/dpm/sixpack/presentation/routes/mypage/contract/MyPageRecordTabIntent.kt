@@ -10,4 +10,6 @@ sealed interface MyPageRecordTabIntent : UiIntent {
     data class OnRecordClick(
         val recordId: Long,
     ) : MyPageRecordTabIntent
+
+    data object OnRetryClick : MyPageRecordTabIntent
 }

@@ -7,5 +7,6 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class MyPageFeedTabState(
     val isLoading: Boolean = false,
+    val error: String? = null,
 ) : UiState,
     Parcelable

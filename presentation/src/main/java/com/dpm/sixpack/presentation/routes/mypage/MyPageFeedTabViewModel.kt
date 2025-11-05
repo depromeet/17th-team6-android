@@ -91,6 +91,10 @@ class MyPageFeedTabViewModel
         override fun onIntent(intent: MyPageFeedTabIntent) {
             when (intent) {
                 is MyPageFeedTabIntent.OnPostClick -> handlePostClick(intent.postId)
+                is MyPageFeedTabIntent.OnRetryClick -> {
+                    // Paging handles retry through LazyPagingItems.retry() in UI
+                    // No action needed in ViewModel
+                }
             }
         }
 
