@@ -18,12 +18,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.common.components.bottomsheet.EmojiSelectionBottomSheet
 import com.dpm.sixpack.presentation.common.components.bottomsheet.ReactionUsersBottomSheet
-import com.dpm.sixpack.presentation.common.components.post.FeedPostCard
+import com.dpm.sixpack.presentation.common.components.post.PostDropDownMenuIcon
+import com.dpm.sixpack.presentation.common.components.post.PostImageWithRecord
+import com.dpm.sixpack.presentation.common.components.post.PostReactionRow
+import com.dpm.sixpack.presentation.common.components.post.PostUserInfo
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
+import com.dpm.sixpack.presentation.common.util.toTimeAgoString
 import com.dpm.sixpack.presentation.routes.feed.component.dialog.PostDeleteDialog
 import com.dpm.sixpack.presentation.routes.feed.component.dialog.PostReportDialog
 import com.dpm.sixpack.presentation.routes.postdetail.contract.PostDetailIntent
@@ -41,6 +47,19 @@ fun PostDetailScreen(
         topBar = {
             DoRunNavigationTopBar(
                 navigateToBack = { onIntent(PostDetailIntent.OnBackClick) },
+                trailingIcon = {
+                    if (uiState.post != null) {
+                        PostDropDownMenuIcon(
+                            modifier= Modifier.padding(10.dp),
+                            isMyPost = uiState.post.user.user.isMe,
+                            isMenuExpanded = uiState.isMenuExpanded,
+                            onMenuClick = { onIntent(PostDetailIntent.OnMenuClick(!uiState.isMenuExpanded)) },
+                            onDropDownMenuClick = { action ->
+                                onIntent(PostDetailIntent.OnDropDownMenuClick(uiState.post, action))
+                            },
+                        )
+                    }
+                },
             )
         },
         containerColor = SixpackTheme.colors.gray0,
@@ -166,6 +185,7 @@ private fun PostDetailContent(
     modifier: Modifier = Modifier,
 ) {
     val post = uiState.post ?: return
+    val context = LocalContext.current
 
     Column(
         modifier =
@@ -174,30 +194,44 @@ private fun PostDetailContent(
                 .background(SixpackTheme.colors.gray0)
                 .verticalScroll(rememberScrollState()),
     ) {
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(40.dp))
 
-        FeedPostCard(
-            modifier = Modifier.padding(horizontal = 24.dp),
-            postDetail = post,
-            isMenuExpanded = uiState.isMenuExpanded,
-            onPostUserProfileClick = { userId, isMe ->
-                onIntent(PostDetailIntent.OnUserProfileClick(userId, isMe))
-            },
-            onMenuClick = {
-                onIntent(PostDetailIntent.OnMenuClick(!uiState.isMenuExpanded))
-            },
-            onDropDownMenuClick = { action ->
-                onIntent(PostDetailIntent.OnDropDownMenuClick(post, action))
-            },
-            onReactionChipClick = { emoji, isReacted ->
-                onIntent(PostDetailIntent.OnPostReactionClick(post, emoji, isReacted))
-            },
-            onReactionChipLongClick = { emoji, reactions ->
-                onIntent(PostDetailIntent.OnPostReactionLongClick(post.feedId, reactions, emoji))
-            },
-            onAddReactionClick = {
-                onIntent(PostDetailIntent.OnAddReactionClick(post))
-            },
-        )
+        Column{
+            PostUserInfo(
+                modifier = Modifier.padding(horizontal = 20.dp),
+                userImageUrl = post.user.user.profileImageUrl,
+                userName = post.user.user.name,
+                postingTime = post.user.postingTime.toTimeAgoString(context),
+                isMyPost = post.user.user.isMe,
+                onPostUserProfileClick = {
+                    onIntent(PostDetailIntent.OnUserProfileClick(post.user.user.id, post.user.user.isMe))
+                },
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            PostImageWithRecord(
+                postImageUrl = post.postImageUrl,
+                runningSummary = post.runningInfo,
+                onPostImageClick = {},
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            PostReactionRow(
+                modifier = Modifier.padding(horizontal = 20.dp),
+                feedId = post.feedId,
+                reactions = post.reactions,
+                onReactionChipClick = { emoji, isReacted ->
+                    onIntent(PostDetailIntent.OnPostReactionClick(post, emoji, isReacted))
+                },
+                onReactionChipLongClick = { emoji, reactions ->
+                    onIntent(PostDetailIntent.OnPostReactionLongClick(post.feedId, reactions, emoji))
+                },
+                onAddReactionClick = {
+                    onIntent(PostDetailIntent.OnAddReactionClick(post))
+                },
+            )
+        }
     }
 }
