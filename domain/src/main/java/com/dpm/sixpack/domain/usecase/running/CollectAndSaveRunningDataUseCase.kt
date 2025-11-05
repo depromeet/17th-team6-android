@@ -46,8 +46,9 @@ class CollectAndSaveRunningDataUseCase @Inject constructor(
         //  1초마다 로컬DB 저장 수행
         useCaseScope.launch {
             stateTracker.runningDataState.filterNotNull().collect { data ->
-                Timber.d("RealtimeRunningData: $data")
-                runningSessionRepository.saveRealtimeDataOnLocal(data)
+                runningSessionRepository.saveRealtimeDataOnLocal(data).onError {
+                    Timber.w("Failed to save on Local DB: ${it.message}")
+                }
             }
         }
     }
