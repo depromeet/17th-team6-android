@@ -1,6 +1,5 @@
 package com.dpm.sixpack.presentation.common.components.bottomsheet
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -32,11 +31,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -179,14 +176,6 @@ private fun ReactingUserRow(
             userName = reactingUser.user.name,
             isMyReaction = reactingUser.user.isMe,
             onUserProfileClick = { onUserProfileClick(reactingUser.user.id, reactingUser.user.isMe) },
-        )
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        Image(
-            imageVector = ImageVector.vectorResource(id = reactingUser.emoji.iconRes),
-            contentDescription = reactingUser.emoji.name,
-            modifier = Modifier.size(24.dp),
         )
     }
 }

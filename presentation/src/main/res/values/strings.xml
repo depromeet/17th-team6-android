@@ -148,8 +148,8 @@
     <string name="feed_load_state_error_message">오류: %1$s</string>
     <string name="feed_load_state_retry_button">재시도</string>
     <string name="feed_empty_state_no_certification_description">인증 없음</string>
-    <string name="feed_empty_state_no_certification_title">이 날 인증한 친구가 없어요..</string>
-    <string name="feed_empty_state_no_certification_subtitle">친구들과 함께 러닝 기록을 인증해보세요!</string>
+    <string name="feed_empty_state_no_certification_title">이 날은 아무도 인증하지 않았어요..</string>
+    <string name="feed_empty_state_no_certification_subtitle">48시간이 지난 기록은 인증할 수 없어요.</string>
     <string name="feed_empty_state_waiting_certification_description">인증 대기</string>
     <string name="feed_empty_state_waiting_certification_title">정말 조용하네요..!</string>
     <string name="feed_empty_state_waiting_certification_subtitle">지금 첫 러닝을 인증해보세요!</string>
