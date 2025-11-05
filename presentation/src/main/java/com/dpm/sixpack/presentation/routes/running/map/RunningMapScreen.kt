@@ -3,6 +3,7 @@ package com.dpm.sixpack.presentation.routes.running.map
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.view.Gravity
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
@@ -26,10 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.layer.drawLayer
-import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
@@ -39,6 +37,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.dpm.sixpack.core.permission.PermissionUtil
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.common.util.PermissionHandler
@@ -94,6 +93,8 @@ internal fun RunningMapScreen(
     navigateToReport: () -> Unit,
 ) {
     val mapState by mapViewModel.collectAsState()
+    val context = LocalContext.current
+    val showPermissionHandler = remember { mutableStateOf(false) }
 
     mapViewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
@@ -110,6 +111,10 @@ internal fun RunningMapScreen(
                 onBottomBarVisibilityChange(true)
                 navigateToReport()
             }
+
+            is MapSideEffect.ShowToast -> {
+                Toast.makeText(context, sideEffect.resId, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -119,6 +124,7 @@ internal fun RunningMapScreen(
         permissionsToRequest = MapConstants.MAP_PERMISSIONS,
         onPermissionResult = { isGranted ->
             mapViewModel.onIntent(MapIntent.UpdatePermission(isGranted))
+            showPermissionHandler.value = !isGranted
         },
     )
 
@@ -142,8 +148,7 @@ private fun RunningMapScreenContent(
     onMapIntent: (MapIntent) -> Unit,
     modifier: Modifier,
 ) {
-    val graphicsLayer = rememberGraphicsLayer()
-
+    val context = LocalContext.current
     val density = LocalDensity.current
     val sheetPeekHeightPx = with(density) { sheetPeekHeight.toPx() }
     val startButtonHeightPx = with(density) { startButtonHeightDp.toPx() }
@@ -211,15 +216,6 @@ private fun RunningMapScreenContent(
                             end.linkTo(parent.end)
                             width = Dimension.fillToConstraints
                             height = Dimension.fillToConstraints
-                        }.drawWithContent {
-                            // 컨텐츠를 GraphicsLayer에 기록(record)합니다.
-                            graphicsLayer.record {
-                                // this@drawWithContent.drawContent()를 호출하여 Composable의 실제 내용(지도)을 그립니다.
-                                this@drawWithContent.drawContent()
-                            }
-
-                            // 기록된 레이어를 화면에 그립니다. (이걸 해야 지도가 보임)
-                            drawLayer(graphicsLayer)
                         },
                 cameraPositionState = cameraPositionState,
                 properties =
@@ -352,12 +348,17 @@ private fun RunningMapScreenContent(
                     )
 
                     RunningStartButton(
+                        enabled = mapState.isStartButtonEnabled,
                         modifier =
                             Modifier.constrainAs(startButtonRef) {
                                 bottom.linkTo(parent.bottom)
                             },
                         onStartClick = {
-                            onMapIntent(MapIntent.SessionStartClick)
+                            if (PermissionUtil.hasPermissions(context, MapConstants.MAP_PERMISSIONS)) {
+                                onMapIntent(MapIntent.SessionStartClick)
+                            } else {
+                                onMapIntent(MapIntent.SessionStartFailed)
+                            }
                         },
                     )
                 }
@@ -409,8 +410,9 @@ private fun RunningMapScreenContent(
 
 @Composable
 private fun RunningStartButton(
-    onStartClick: () -> Unit,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier,
+    onStartClick: () -> Unit = {},
 ) {
     Box(
         modifier =
@@ -425,6 +427,7 @@ private fun RunningStartButton(
                 Modifier
                     .fillMaxWidth()
                     .height(56.dp),
+            enabled = enabled,
             onClick = {
                 Timber.d("Running Session Start Clicked")
                 onStartClick()

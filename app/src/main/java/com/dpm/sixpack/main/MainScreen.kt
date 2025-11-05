@@ -12,10 +12,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dpm.sixpack.SixPackAppState
+import com.dpm.sixpack.core.permission.SixPackPermissions.Companion.AllPermissions
 import com.dpm.sixpack.main.navigation.MainNavHost
 import com.dpm.sixpack.presentation.common.components.FullScreenLoadingIndicator
+import com.dpm.sixpack.presentation.common.util.PermissionHandler
 import com.dpm.sixpack.presentation.navigation.MainBottomBar
 import com.dpm.sixpack.presentation.navigation.MainNavTab
 import com.dpm.sixpack.presentation.theme.SixpackTheme
@@ -32,6 +36,14 @@ internal fun MainScreen(
 
     // FIXME: Replace with actual string resource
     val notConnectedMessage = "stringResource(R.string.not_connected)"
+
+    PermissionHandler(
+        context = LocalContext.current,
+        lifecycleOwner = LocalLifecycleOwner.current,
+        permissionsToRequest = AllPermissions,
+        onPermissionResult = { isGranted ->
+        },
+    )
 
     LaunchedEffect(isOffline) {
         if (isOffline) {

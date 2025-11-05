@@ -1,9 +1,11 @@
 package com.dpm.sixpack.presentation.routes.running.session
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.constraintlayout.compose.ConstrainScope
 import androidx.constraintlayout.compose.ConstrainedLayoutReference
 import androidx.constraintlayout.compose.ConstraintLayoutScope
@@ -29,12 +31,16 @@ fun ConstraintLayoutScope.RunningSessionScreen(
     setFullScreenLoading: (Boolean) -> Unit,
     sessionViewModel: RunningSessionViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
     val sessionState = sessionViewModel.collectAsState().value
 
     sessionViewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
             is RunningSessionSideEffect.SessionFinish -> onSessionFinish()
             is RunningSessionSideEffect.UpdateRunningPath -> updateNewRunningPath(sideEffect.newPathState)
+            is RunningSessionSideEffect.ShowToast -> {
+                Toast.makeText(context, sideEffect.resId, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

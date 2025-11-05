@@ -18,6 +18,8 @@ sealed interface MapIntent : RunningRouteIntent {
         val isGranted: Boolean,
     ) : MapIntent
 
+    data object SessionStartFailed : MapIntent
+
     data class UpdateRunningMapPath(
         val pathState: PathState,
     ) : MapIntent

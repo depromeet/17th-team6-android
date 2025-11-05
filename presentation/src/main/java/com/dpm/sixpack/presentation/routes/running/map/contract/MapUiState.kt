@@ -1,14 +1,15 @@
 package com.dpm.sixpack.presentation.routes.running.map.contract
 
 import android.os.Parcelable
-import com.dpm.sixpack.presentation.routes.friend.contract.FriendUiState
 import com.dpm.sixpack.presentation.routes.running.RunningRouteUiState
+import com.dpm.sixpack.presentation.routes.running.map.friendsheet.contract.FriendSheetUiState
 import com.naver.maps.geometry.LatLngBounds
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class MapUiState(
     val isFollowingModeEnabled: Boolean = true,
+    val isStartButtonEnabled: Boolean = true,
     val mapViewState: MapViewState = MapViewState.Loading,
 ) : RunningRouteUiState
 
@@ -22,7 +23,7 @@ sealed interface MapViewState : Parcelable {
 
     @Parcelize
     data class Friend(
-        val friendState: FriendUiState = FriendUiState(),
+        val friendState: FriendSheetUiState = FriendSheetUiState(),
     ) : MapViewState
 
     @Parcelize

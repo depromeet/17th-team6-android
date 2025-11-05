@@ -147,45 +147,29 @@
     <string name="feed_reaction_bottom_sheet_user_profile_image_description">User profile image</string>
     <!--endregion -->
 
-    <!--region Screen Selection Tab-->
+    <!--region Running -->
     <string name="screen_tab_goal_title">목표</string>
     <string name="screen_tab_map_title">지도</string>
-    <!--endregion -->
-
-    <!--region Running Phase-->
     <string name="running_phase_warmup_title">웜업</string>
     <string name="running_phase_main_title">러닝</string>
     <string name="running_phase_cooldown_title">쿨다운</string>
-    <!--endregion-->
-
-    <!--region Running Record-->
     <string name="record_current_distance">현재 거리</string>
     <string name="record_running_duration">러닝 시간</string>
     <string name="record_average_pace">평균 페이스</string>
     <string name="record_cadence">케이던스</string>
-    <!--endregion-->
-
-    <!--region Running Record Panel-->
     <string name="panel_skip">건너뛰기</string>
     <string name="panel_target_distance">목표거리</string>
     <string name="panel_record_pause">기록 중지</string>
     <string name="panel_record_resume">계속 운동하기</string>
     <string name="panel_record_terminate">기록 종료</string>
-    <!--endregion-->
-
-    <!--region RunningDialog -->
     <string name="dialog_cancel">취소</string>
     <string name="dialog_running_stop_title">러닝기록 종료</string>
     <string name="dialog_running_stop_content">이대로 기록을 종료하시겠어요?</string>
-    <!--endregion-->
-
-    <!--region Ready Loading -->
     <string name="ready_main_primary">잠시 후 러닝 시작</string>
-    <!--endregion-->
-
-    <!--region RunningSessionScreen -->
     <string name="session_start_running_button">오늘의 러닝 시작</string>
-    <!--endregion-->
+    <string name="running_permission_toast">러닝 시작에 필요한 권한이 없어요</string>
+    <string name="running_start_failed_toast">러닝 시작 실패</string>
+
 
     <!-- Button Default Text -->
     <string name="button_default_next">다음</string>

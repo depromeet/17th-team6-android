@@ -7,6 +7,7 @@ import androidx.annotation.RequiresPermission
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dpm.sixpack.domain.usecase.FinishRunningSessionUseCase
+import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapIntent
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapSideEffect
@@ -46,6 +47,7 @@ class MapViewModel @Inject constructor(
     override fun onIntent(intent: MapIntent) {
         when (intent) {
             MapIntent.SessionStartClick -> handleSessionStartButtonClick()
+            MapIntent.SessionStartFailed -> handleSessionStartFailed()
             MapIntent.ReadyToFinish -> handleSessionFinishReady()
             MapIntent.ToggleFollowingMode -> handleToggleFollowingMode()
             MapIntent.FollowingModeOff -> handleToggleFollowingModeOff()
@@ -111,12 +113,22 @@ class MapViewModel @Inject constructor(
             loadLocationFromClient(
                 onSuccess = { latLng ->
                     intent {
+                        reduce {
+                            state.copy(
+                                isStartButtonEnabled = true,
+                            )
+                        }
                         postSideEffect(MapSideEffect.SetCameraPosition(latLng))
                     }
                 },
             )
         } else {
             intent {
+                reduce {
+                    state.copy(
+                        isStartButtonEnabled = false,
+                    )
+                }
                 postSideEffect(MapSideEffect.SetCameraPosition(MapConstants.DEFAULT_CAMERA_POSITION.target))
             }
         }
@@ -131,6 +143,16 @@ class MapViewModel @Inject constructor(
             }
 
             postSideEffect(MapSideEffect.SetBottomBarVisibility(false))
+        }
+
+    private fun handleSessionStartFailed() =
+        intent {
+            reduce {
+                state.copy(
+                    isStartButtonEnabled = false,
+                )
+            }
+            postSideEffect(MapSideEffect.ShowToast(R.string.running_permission_toast))
         }
 
     // 세션 종료 준비
