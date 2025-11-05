@@ -180,6 +180,7 @@
     <string name="minutes_before">%1$d분 전</string>
     <string name="hours_before">%1$d시간 전</string>
     <string name="days_before">%1$d일 전</string>
+    <string name="years_before">%1$d년 전</string>
     <string name="inactive_label_text">zzz</string>
     <string name="friend_awake_toast">잠자는 %s 님을 깨웠어요</string>
     <!--endregion-->

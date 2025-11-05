@@ -16,6 +16,7 @@ internal fun convertTimeDiffToString(
     val minuteInSec = 60
     val hourInSec = 60 * minuteInSec // 3600
     val dayInSec = 24 * hourInSec // 86400
+    val yearInSec = 365 * dayInSec // 31536000
 
     return when {
         // 60초 미만 (음수 포함, 즉 미래 시간이거나 1분 미만 차이)
@@ -36,10 +37,16 @@ internal fun convertTimeDiffToString(
             context.getString(R.string.hours_before, hours)
         }
 
-        // 24시간 이상
-        else -> {
+        // 24시간 이상 1년 미만
+        secDiff < yearInSec -> {
             val days = (secDiff / dayInSec)
             context.getString(R.string.days_before, days)
+        }
+
+        // 1년 이상
+        else -> {
+            val years = (secDiff / yearInSec)
+            context.getString(R.string.days_before, years)
         }
     }
 }
