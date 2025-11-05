@@ -15,7 +15,7 @@ import com.dpm.sixpack.domain.model.MaxPaceData
 import com.dpm.sixpack.domain.model.RealtimeRunningData
 import com.dpm.sixpack.domain.model.RunningSessionResult
 import com.dpm.sixpack.domain.repository.RunningSessionRepository
-import com.dpm.sixpack.domain.usecase.SaveRealtimeRunningDataResult
+import com.dpm.sixpack.domain.usecase.running.SaveRealtimeRunningDataResult
 import com.dpm.sixpack.domain.util.DoRunResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

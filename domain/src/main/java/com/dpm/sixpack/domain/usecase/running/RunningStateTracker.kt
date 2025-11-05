@@ -1,4 +1,4 @@
-package com.dpm.sixpack.domain.usecase
+package com.dpm.sixpack.domain.usecase.running
 
 import android.location.Location
 import com.dpm.sixpack.domain.model.MaxPaceData

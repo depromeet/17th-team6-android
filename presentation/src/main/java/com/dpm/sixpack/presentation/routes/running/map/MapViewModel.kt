@@ -6,7 +6,7 @@ import android.graphics.Bitmap
 import androidx.annotation.RequiresPermission
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.dpm.sixpack.domain.usecase.FinishRunningSessionUseCase
+import com.dpm.sixpack.domain.usecase.running.FinishRunningSessionUseCase
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapIntent

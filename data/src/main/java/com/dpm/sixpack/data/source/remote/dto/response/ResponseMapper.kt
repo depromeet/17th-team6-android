@@ -5,7 +5,7 @@ import com.dpm.sixpack.domain.model.LastRunInfo
 import com.dpm.sixpack.domain.model.MaxPaceData
 import com.dpm.sixpack.domain.model.RunningSessionResult
 import com.dpm.sixpack.domain.model.User
-import com.dpm.sixpack.domain.usecase.SaveRealtimeRunningDataResult
+import com.dpm.sixpack.domain.usecase.running.SaveRealtimeRunningDataResult
 
 fun FinishRunningResponseDto.toRunningSessionResult() =
     RunningSessionResult(

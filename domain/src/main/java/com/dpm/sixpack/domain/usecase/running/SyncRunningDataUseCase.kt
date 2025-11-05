@@ -1,4 +1,4 @@
-package com.dpm.sixpack.domain.usecase
+package com.dpm.sixpack.domain.usecase.running
 
 import com.dpm.sixpack.domain.exception.DoRunException
 import com.dpm.sixpack.domain.repository.RunningSessionRepository

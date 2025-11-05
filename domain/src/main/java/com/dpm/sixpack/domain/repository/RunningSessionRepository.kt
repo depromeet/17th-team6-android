@@ -2,7 +2,7 @@ package com.dpm.sixpack.domain.repository
 
 import android.graphics.Bitmap
 import com.dpm.sixpack.domain.model.RealtimeRunningData
-import com.dpm.sixpack.domain.usecase.SaveRealtimeRunningDataResult
+import com.dpm.sixpack.domain.usecase.running.SaveRealtimeRunningDataResult
 import com.dpm.sixpack.domain.util.DoRunResult
 
 interface RunningSessionRepository {
