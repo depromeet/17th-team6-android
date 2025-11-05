@@ -17,6 +17,12 @@ class AuthInterceptor
     ) : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
             val originalRequest = chain.request()
+
+            // S3 presigned URL에는 헤더를 추가하지 않음 (서명 검증 실패 방지)
+            if (isS3Request(originalRequest.url.host)) {
+                return chain.proceed(originalRequest)
+            }
+
             val requestBuilder = originalRequest.newBuilder()
 
             runBlocking {
@@ -44,6 +50,8 @@ class AuthInterceptor
             val newRequest = requestBuilder.build()
             return chain.proceed(newRequest)
         }
+
+        private fun isS3Request(host: String): Boolean = host.contains("amazonaws.com")
 
         companion object {
             private const val X_USER_ID = "X-User-Id"
