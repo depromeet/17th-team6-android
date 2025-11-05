@@ -92,9 +92,10 @@ fun FeedScreen(
         }
     }
 
+    // Refresh 로직이 끝난 이후 1초이후 Spinner 사라짐
     LaunchedEffect(feedPagingItems.loadState.refresh) {
         if (isRefreshing && feedPagingItems.loadState.refresh !is LoadState.Loading) {
-            delay(300)
+            delay(1000)
             isRefreshing = false
         }
     }

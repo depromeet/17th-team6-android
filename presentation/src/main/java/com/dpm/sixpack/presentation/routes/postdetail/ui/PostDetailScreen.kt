@@ -225,7 +225,7 @@ private fun PostDetailContent(
                     onIntent(PostDetailIntent.OnPostReactionClick(post, emoji, isReacted))
                 },
                 onReactionChipLongClick = { emoji, reactions ->
-                    onIntent(PostDetailIntent.OnPostReactionLongClick(post.feedId, reactions, emoji))
+                    onIntent(PostDetailIntent.OnPostReactionLongClick(reactions, emoji))
                 },
                 onAddReactionClick = {
                     onIntent(PostDetailIntent.OnAddReactionClick(post))

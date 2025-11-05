@@ -27,7 +27,6 @@ sealed interface PostDetailIntent : UiIntent {
     ) : PostDetailIntent
 
     data class OnPostReactionLongClick(
-        val feedId: Long,
         val reactions: List<PostReaction>,
         val selectedEmoji: Emoji,
     ) : PostDetailIntent

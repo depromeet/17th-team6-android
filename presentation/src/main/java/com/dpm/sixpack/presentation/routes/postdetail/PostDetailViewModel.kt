@@ -17,11 +17,15 @@ import com.dpm.sixpack.presentation.routes.postdetail.contract.PostDetailIntent
 import com.dpm.sixpack.presentation.routes.postdetail.contract.PostDetailSideEffect
 import com.dpm.sixpack.presentation.routes.postdetail.contract.PostDetailUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
+
+private const val REACTION_DEBOUNCE_MS = 1000L // 1초 debounce (Feed와 동일)
 
 @HiltViewModel
 class PostDetailViewModel @Inject constructor(
@@ -35,6 +39,9 @@ class PostDetailViewModel @Inject constructor(
             initialState = initialState,
             savedStateHandle = savedStateHandle,
         )
+
+    // 리액션별로 독립적인 debounce Job 관리
+    private val reactionDebounceJobs = ConcurrentHashMap<Pair<Long, Emoji>, Job>()
 
     override fun onIntent(intent: PostDetailIntent) {
         when (intent) {
@@ -67,7 +74,7 @@ class PostDetailViewModel @Inject constructor(
 
     fun loadPost(feedId: Long) =
         intent {
-            reduce { state.copy(isLoading = true) }
+            reduce { state.copy(isLoading = true, error = null) }
 
             viewModelScope.launch {
                 feedRepository
@@ -77,11 +84,16 @@ class PostDetailViewModel @Inject constructor(
                             state.copy(
                                 post = feed.toPostResource(),
                                 isLoading = false,
+                                error = null,
                             )
                         }
                     }.onError { error ->
-                        postSideEffect(PostDetailSideEffect.ShowToast(error.message ?: "게시물을 불러올 수 없습니다."))
-                        reduce { state.copy(isLoading = false) }
+                        reduce {
+                            state.copy(
+                                isLoading = false,
+                                error = error.message ?: "게시물을 불러올 수 없습니다.",
+                            )
+                        }
                     }
             }
         }
@@ -114,28 +126,35 @@ class PostDetailViewModel @Inject constructor(
         emoji: Emoji,
         isReacted: Boolean,
     ) = intent {
+        val reactionKey = post.feedId to emoji
         val newPost = post.updateReaction(emoji, isReacted)
         reduce {
             state.copy(post = newPost)
         }
 
-        // API call with debounce
-        viewModelScope.launch {
-            delay(100) // Debounce
-            feedRepository
-                .postReaction(
-                    selfieId = post.feedId,
-                    emojiType = emoji.type,
-                ).onError { exception ->
-                    // Revert on error
-                    reduce { state.copy(post = post) }
-                    postSideEffect(
-                        PostDetailSideEffect.ShowToast(
-                            exception.message ?: "반응 추가에 실패했습니다.",
-                        ),
-                    )
+        // 리액션별로 독립적으로 동작
+        reactionDebounceJobs[reactionKey]?.cancel()
+        reactionDebounceJobs[reactionKey] =
+            viewModelScope.launch {
+                delay(REACTION_DEBOUNCE_MS)
+                try {
+                    feedRepository
+                        .postReaction(
+                            selfieId = post.feedId,
+                            emojiType = emoji.type,
+                        ).onError { exception ->
+                            // 실패 시 서버에서 최신 데이터 다시 가져오기
+                            loadPost(post.feedId)
+                            postSideEffect(
+                                PostDetailSideEffect.ShowToast(
+                                    exception.message ?: "반응 추가에 실패했습니다.",
+                                ),
+                            )
+                        }
+                } finally {
+                    reactionDebounceJobs.remove(reactionKey)
                 }
-        }
+            }
     }
 
     private fun handlePostReactionLongClick(
@@ -179,17 +198,12 @@ class PostDetailViewModel @Inject constructor(
                 val newDialogState = state.dialogState.copy(deleteFeedId = post.feedId, actionType = action)
                 reduce {
                     state.copy(
-                        isMenuExpanded = false,
                         dialogState = newDialogState,
                     )
                 }
             }
 
             PostDropDownActionType.SAVE_IMAGE -> {
-                // TODO: 이미지 저장 로직
-                reduce {
-                    state.copy(isMenuExpanded = false)
-                }
                 postSideEffect(PostDetailSideEffect.ShowToast("이미지 저장 기능은 준비 중입니다."))
             }
 
@@ -197,7 +211,6 @@ class PostDetailViewModel @Inject constructor(
                 val newDialogState = state.dialogState.copy(reportFeedId = post.feedId, actionType = action)
                 reduce {
                     state.copy(
-                        isMenuExpanded = false,
                         dialogState = newDialogState,
                     )
                 }
@@ -276,6 +289,7 @@ class PostDetailViewModel @Inject constructor(
         intent {
             val postToUpdate = state.postForEmojiSelection ?: return@intent
 
+            val reactionKey = postToUpdate.feedId to emoji
             val newPost = postToUpdate.updateReaction(emoji, isReacted = true)
             reduce {
                 state.copy(
@@ -285,21 +299,29 @@ class PostDetailViewModel @Inject constructor(
                 )
             }
 
-            viewModelScope.launch {
-                feedRepository
-                    .postReaction(
-                        selfieId = postToUpdate.feedId,
-                        emojiType = emoji.type,
-                    ).onSuccess { }
-                    .onError { exception ->
-                        reduce { state.copy(post = postToUpdate) }
-                        postSideEffect(
-                            PostDetailSideEffect.ShowToast(
-                                exception.message ?: "리액션 추가에 실패했습니다.",
-                            ),
-                        )
+            // 이전 Job 취소 및 새 Job 시작
+            reactionDebounceJobs[reactionKey]?.cancel()
+            reactionDebounceJobs[reactionKey] =
+                viewModelScope.launch {
+                    delay(REACTION_DEBOUNCE_MS)
+                    try {
+                        feedRepository
+                            .postReaction(
+                                selfieId = postToUpdate.feedId,
+                                emojiType = emoji.type,
+                            ).onError { exception ->
+                                // 실패 시 서버에서 최신 데이터 다시 가져오기
+                                loadPost(postToUpdate.feedId)
+                                postSideEffect(
+                                    PostDetailSideEffect.ShowToast(
+                                        exception.message ?: "리액션 추가에 실패했습니다.",
+                                    ),
+                                )
+                            }
+                    } finally {
+                        reactionDebounceJobs.remove(reactionKey)
                     }
-            }
+                }
         }
 
     private fun PostResource.updateReaction(
