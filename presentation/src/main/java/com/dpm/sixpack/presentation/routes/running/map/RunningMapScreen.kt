@@ -348,6 +348,7 @@ private fun RunningMapScreenContent(
                         draggableState = draggableState,
                         sheetHeight = sheetMaxHeight,
                         startButtonHeight = startButtonHeightDp,
+                        onShowSnackBar = onShowSnackBar,
                     )
 
                     RunningStartButton(
@@ -414,8 +415,8 @@ private fun RunningMapScreenContent(
 
 @Composable
 private fun RunningStartButton(
-    enabled: Boolean = true,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     onStartClick: () -> Unit = {},
 ) {
     Box(

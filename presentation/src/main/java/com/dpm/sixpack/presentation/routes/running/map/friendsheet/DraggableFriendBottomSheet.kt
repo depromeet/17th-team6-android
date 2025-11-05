@@ -1,6 +1,5 @@
 package com.dpm.sixpack.presentation.routes.running.map.friendsheet
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.Orientation
@@ -24,7 +23,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.dpm.sixpack.presentation.routes.running.map.component.FriendSheetTitle
 import com.dpm.sixpack.presentation.routes.running.map.component.SheetDragState
 import com.dpm.sixpack.presentation.routes.running.map.friendsheet.contract.FriendSheetIntent
 import com.dpm.sixpack.presentation.routes.running.map.friendsheet.contract.FriendSheetSideEffect
@@ -37,11 +35,12 @@ internal fun DraggableFriendBottomSheet(
     sheetHeight: Dp,
     startButtonHeight: Dp,
     modifier: Modifier = Modifier,
+    onShowSnackBar: (String, String?) -> Unit = { _, _ -> },
     onFriendIconClick: () -> Unit = {},
     viewModel: FriendSheetViewModel = hiltViewModel(),
 ) {
-    val pagingItems = viewModel.friendPagingFlow.collectAsLazyPagingItems()
     val context = LocalContext.current
+    val pagingItems = viewModel.friendPagingFlow.collectAsLazyPagingItems()
 
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
@@ -51,7 +50,7 @@ internal fun DraggableFriendBottomSheet(
 
             is FriendSheetSideEffect.ShowToast -> {
                 val text = context.getString(sideEffect.stringResId, sideEffect.args)
-                Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+                onShowSnackBar(text, null)
             }
         }
     }

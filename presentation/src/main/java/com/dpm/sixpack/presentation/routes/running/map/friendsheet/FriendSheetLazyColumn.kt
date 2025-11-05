@@ -13,21 +13,33 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
+import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.model.FriendUiItem
 import com.dpm.sixpack.presentation.theme.SixpackTheme
+import kotlinx.coroutines.delay
 
 @Composable
 internal fun FriendSheetLazyColumn(
@@ -36,94 +48,144 @@ internal fun FriendSheetLazyColumn(
     onAwakeClick: (Long) -> Unit = {},
     onItemClick: (Long) -> Unit = {},
 ) {
-    when (pagingItems.loadState.refresh) {
-        is LoadState.Loading -> {
-            Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
-        }
+    var isRefreshing by remember { mutableStateOf(false) }
+    val pullRefreshState = rememberPullToRefreshState()
 
-        is LoadState.Error -> {
-            Column(
-                modifier = modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Text(
-                    text = "데이터를 불러오는 데 실패했습니다.",
-                    style = SixpackTheme.typography.b1Regular,
-                    color = SixpackTheme.colors.gray700,
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                TextButton(
-                    onClick = {
-                        pagingItems.retry()
-                    },
-                    colors =
-                        ButtonColors(
-                            containerColor = Color.Transparent,
-                            contentColor = Color.Transparent,
-                            disabledContainerColor = Color.Transparent,
-                            disabledContentColor = Color.Transparent,
-                        ),
+    LaunchedEffect(pagingItems.loadState.refresh) {
+        if (isRefreshing && pagingItems.loadState.refresh !is LoadState.Loading) {
+            delay(300)
+            isRefreshing = false
+        }
+    }
+
+    // Timeout: 5초 이상 로딩 시 자동 종료 (UX: 너무 긴 로딩 방지)
+    LaunchedEffect(isRefreshing) {
+        if (isRefreshing) {
+            delay(5000)
+            isRefreshing = false
+        }
+    }
+
+    PullToRefreshBox(
+        modifier = modifier.fillMaxSize(),
+        state = pullRefreshState,
+        isRefreshing = isRefreshing,
+        onRefresh = {
+            isRefreshing = true
+            pagingItems.refresh()
+        },
+        indicator = {
+            Indicator(
+                state = pullRefreshState,
+                isRefreshing = isRefreshing,
+                modifier = Modifier.align(Alignment.TopCenter),
+                color = SixpackTheme.colors.blue600,
+                containerColor = Color.White,
+            )
+        },
+    ) {
+        when (pagingItems.loadState.refresh) {
+            is LoadState.Loading -> {
+                if (pagingItems.itemCount == 0) {
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
+                }
+            }
+
+            is LoadState.Error -> {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Row(
-                        modifier = Modifier.padding(all = 12.dp),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        verticalAlignment = Alignment.CenterVertically,
+                    Text(
+                        text = "데이터를 불러오는 데 실패했습니다.",
+                        style = SixpackTheme.typography.b1Regular,
+                        color = SixpackTheme.colors.gray700,
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    TextButton(
+                        onClick = {
+                            pagingItems.retry()
+                        },
+                        colors =
+                            ButtonDefaults.textButtonColors(
+                                containerColor = Color.Transparent,
+                                contentColor = SixpackTheme.colors.gray700,
+                                disabledContainerColor = Color.Transparent,
+                                disabledContentColor = Color.Transparent,
+                            ),
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(all = 12.dp),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text(
+                                text = stringResource(R.string.request_retry),
+                                style = SixpackTheme.typography.b1Regular,
+                                color = SixpackTheme.colors.gray700,
+                            )
+                            Icon(
+                                imageVector = Icons.Default.Refresh,
+                                contentDescription = null,
+                                tint = SixpackTheme.colors.gray700,
+                            )
+                        }
+                    }
+                }
+            }
+
+            is LoadState.NotLoading -> {
+                if (pagingItems.itemCount == 1 && pagingItems[0]?.isMe == true) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Text(
-                            text = "재시도",
-                            style = SixpackTheme.typography.b1Regular,
+                            text = stringResource(R.string.friend_empty),
+                            style = SixpackTheme.typography.t2Bold,
+                            color = SixpackTheme.colors.gray900,
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = stringResource(R.string.friend_add_suggestion),
+                            style = SixpackTheme.typography.b2Regular,
                             color = SixpackTheme.colors.gray700,
                         )
-                        Icon(
-                            imageVector = Icons.Default.Refresh,
-                            contentDescription = null,
-                            tint = SixpackTheme.colors.gray700,
-                        )
                     }
-                }
-            }
-        }
-        // 로드 성공 (및 비어있는 상태)
-        is LoadState.NotLoading -> {
-            // 목록이 비어있는지 확인
-            if (pagingItems.itemCount == 0) {
-                Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("친구가 없습니다.")
-                }
-                return
-            }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        items(
+                            pagingItems.itemCount,
+                            key = pagingItems.itemKey { it.userId },
+                        ) { index ->
+                            val friendItem = pagingItems[index]
+                            friendItem?.let {
+                                FriendSheetListItem(
+                                    friendItem = it,
+                                    onAwakeClick = {
+                                        onAwakeClick(it.userId)
+                                    },
+                                    modifier =
+                                        Modifier.clickable {
+                                            onItemClick(it.userId)
+                                        },
+                                )
+                            }
+                        }
 
-            // 실제 목록을 그리는 LazyColumn
-            LazyColumn(
-                modifier = modifier,
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                items(
-                    pagingItems.itemCount,
-                    key = pagingItems.itemKey { it.userId },
-                ) { index ->
-                    val friendItem = pagingItems[index]
-                    friendItem?.let {
-                        FriendSheetListItem(
-                            friendItem = it,
-                            onAwakeClick = {
-                                onAwakeClick(it.userId)
-                            },
-                            modifier =
-                                Modifier.clickable {
-                                    onItemClick(it.userId)
-                                },
-                        )
-                    }
-                }
-
-                if (pagingItems.loadState.append is LoadState.Loading) {
-                    item {
-                        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                            CircularProgressIndicator()
+                        if (pagingItems.loadState.append is LoadState.Loading) {
+                            item {
+                                Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                                    CircularProgressIndicator()
+                                }
+                            }
                         }
                     }
                 }

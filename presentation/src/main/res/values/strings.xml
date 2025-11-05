@@ -11,6 +11,7 @@
     <string name="common_find_account">계정찾기</string>
     <string name="common_recommended_duration">권장 러닝 시간</string>
     <string name="common_recommended_pace">권장 페이스</string>
+    <string name="request_retry">재시도</string>
 
     <!-- endregion -->
 
@@ -175,6 +176,7 @@
     <string name="button_default_next">다음</string>
 
     <!-- region Friend List -->
+    <string name="friend_no_recent_running">최신 러닝 기록이 없어요..</string>
     <string name="friend_status_title">친구 현황</string>
     <string name="friend_awake_btn">깨우기</string>
     <string name="minutes_before">%1$d분 전</string>
@@ -183,5 +185,7 @@
     <string name="years_before">%1$d년 전</string>
     <string name="inactive_label_text">zzz</string>
     <string name="friend_awake_toast">잠자는 %s 님을 깨웠어요</string>
+    <string name="friend_empty">친구가 없어요..</string>
+    <string name="friend_add_suggestion">친구를 초대해 함께 달려보세요!</string>
     <!--endregion-->
 </resources>

@@ -6,7 +6,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -20,7 +19,7 @@ internal fun InactiveLabel(modifier: Modifier = Modifier) {
         text = stringResource(R.string.inactive_label_text),
         modifier =
             modifier
-                .background(Color(0xFF717171), CircleShape)
+                .background(SixpackTheme.colors.gray500, CircleShape)
                 .padding(horizontal = 6.dp, vertical = 2.dp),
         color = SixpackTheme.colors.gray0,
         fontSize = 12.sp,

@@ -36,7 +36,7 @@ class FriendSheetViewModel @Inject constructor(
     override val container: Container<FriendSheetUiState, FriendSheetSideEffect> =
         container(initialState = initialState, savedStateHandle = savedStateHandle)
 
-    private val refreshTrigger = MutableStateFlow(Unit)
+    private val refreshTrigger = MutableStateFlow(0)
 
     val friendPagingFlow: Flow<PagingData<FriendUiItem>> =
         refreshTrigger
@@ -75,6 +75,6 @@ class FriendSheetViewModel @Inject constructor(
 
     private fun refresh() =
         intent {
-            refreshTrigger.emit(Unit)
+            refreshTrigger.value++
         }
 }

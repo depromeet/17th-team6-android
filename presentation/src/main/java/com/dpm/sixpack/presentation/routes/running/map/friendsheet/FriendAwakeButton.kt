@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.running.map.component
+package com.dpm.sixpack.presentation.routes.running.map.friendsheet
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

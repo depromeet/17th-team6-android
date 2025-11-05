@@ -21,16 +21,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.core.util.TimeUtil.isoStringToEpochSeconds
+import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultAsyncImage
 import com.dpm.sixpack.presentation.common.model.FriendUiItem
 import com.dpm.sixpack.presentation.common.model.LastRunInfoUi
 import com.dpm.sixpack.presentation.common.util.convertTimeDiffToString
 import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
-import com.dpm.sixpack.presentation.routes.running.map.component.FriendAwakeButton
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
@@ -91,9 +93,9 @@ internal fun FriendSheetListItem(
                     Modifier
                         .size(50.dp)
                         .clip(CircleShape)
-                        .border(1.dp, SixpackTheme.colors.gray200, shape = CircleShape),
-                placeholder = ColorPainter(SixpackTheme.colors.gray0),
-                error = ColorPainter(SixpackTheme.colors.gray0),
+                        .border(1.dp, SixpackTheme.colors.blue600, shape = CircleShape),
+                placeholder = ColorPainter(SixpackTheme.colors.gray50),
+                error = painterResource(id = R.drawable.ill_profile_placeholder),
                 contentScale = ContentScale.Crop,
             )
 
@@ -115,14 +117,13 @@ internal fun FriendSheetListItem(
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                // nickname
                 Text(
                     text = friendItem.nickName,
                     color = SixpackTheme.colors.gray900,
                     style = SixpackTheme.typography.t2Bold,
                     fontWeight = FontWeight.Bold,
                 )
-                // '나' 태그
+
                 if (friendItem.isMe) {
                     Surface(
                         modifier = Modifier.padding(start = 6.dp),
@@ -161,7 +162,7 @@ internal fun FriendSheetListItem(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 if (!isInactive) {
-                    // 거리 표시
+                    // 거리
                     Text(
                         text = formatDistanceToKm(friendItem.lastRunInfo.distanceInMeter),
                         style = SixpackTheme.typography.b2Medium,
@@ -177,7 +178,7 @@ internal fun FriendSheetListItem(
                     }
                 } else {
                     Text(
-                        text = "최근 러닝 기록이 없어요",
+                        text = stringResource(R.string.friend_no_recent_running),
                         style = SixpackTheme.typography.b2Medium,
                         color = SixpackTheme.colors.gray700,
                     )
