@@ -13,7 +13,6 @@ import com.dpm.sixpack.presentation.common.model.toPostResource
 import com.dpm.sixpack.presentation.routes.feed.contract.uistate.FeedBottomSheetState
 import com.dpm.sixpack.presentation.routes.feed.contract.uistate.FeedDialogState
 import com.dpm.sixpack.presentation.routes.feed.contract.uistate.ReactionDetailsUiState
-import com.dpm.sixpack.presentation.routes.feed.postedit.contract.PostEditSideEffect
 import com.dpm.sixpack.presentation.routes.postdetail.contract.PostDetailIntent
 import com.dpm.sixpack.presentation.routes.postdetail.contract.PostDetailSideEffect
 import com.dpm.sixpack.presentation.routes.postdetail.contract.PostDetailUiState
@@ -36,7 +35,6 @@ class PostDetailViewModel @Inject constructor(
             initialState = initialState,
             savedStateHandle = savedStateHandle,
         )
-
 
     override fun onIntent(intent: PostDetailIntent) {
         when (intent) {
@@ -72,8 +70,8 @@ class PostDetailViewModel @Inject constructor(
             reduce { state.copy(isLoading = true) }
 
             viewModelScope.launch {
-
-                feedRepository.getFeedDetail(feedId)
+                feedRepository
+                    .getFeedDetail(feedId)
                     .onSuccess { feed ->
                         reduce {
                             state.copy(
@@ -81,8 +79,7 @@ class PostDetailViewModel @Inject constructor(
                                 isLoading = false,
                             )
                         }
-                    }
-                    .onError { error ->
+                    }.onError { error ->
                         postSideEffect(PostDetailSideEffect.ShowToast(error.message ?: "게시물을 불러올 수 없습니다."))
                         reduce { state.copy(isLoading = false) }
                     }
@@ -96,12 +93,10 @@ class PostDetailViewModel @Inject constructor(
 
     private fun handleMenuClick(isExpanded: Boolean) =
         intent {
-
             reduce {
                 state.copy(isMenuExpanded = isExpanded)
             }
         }
-
 
     private fun handleUserProfileClick(
         userId: Long,
@@ -150,10 +145,11 @@ class PostDetailViewModel @Inject constructor(
         reduce {
             state.copy(
                 bottomSheetState = state.bottomSheetState.copy(reactionUsers = true),
-                reactionDetailsUiState = ReactionDetailsUiState.Success(
-                    reactions = reactions,
-                    selectedEmoji = selectedEmoji
-                ),
+                reactionDetailsUiState =
+                    ReactionDetailsUiState.Success(
+                        reactions = reactions,
+                        selectedEmoji = selectedEmoji,
+                    ),
             )
         }
     }
@@ -197,7 +193,6 @@ class PostDetailViewModel @Inject constructor(
                 postSideEffect(PostDetailSideEffect.ShowToast("이미지 저장 기능은 준비 중입니다."))
             }
 
-
             PostDropDownActionType.REPORT -> {
                 val newDialogState = state.dialogState.copy(reportFeedId = post.feedId, actionType = action)
                 reduce {
@@ -207,7 +202,6 @@ class PostDetailViewModel @Inject constructor(
                     )
                 }
             }
-
 
             PostDropDownActionType.IDLE -> {}
         }
@@ -296,8 +290,7 @@ class PostDetailViewModel @Inject constructor(
                     .postReaction(
                         selfieId = postToUpdate.feedId,
                         emojiType = emoji.type,
-                    )
-                    .onSuccess { }
+                    ).onSuccess { }
                     .onError { exception ->
                         reduce { state.copy(post = postToUpdate) }
                         postSideEffect(
@@ -314,7 +307,6 @@ class PostDetailViewModel @Inject constructor(
         isReacted: Boolean,
     ): PostResource {
         val targetReaction = this.reactions.find { it.emoji == emoji }
-
 
         // TODO 내 정보 저장해놓고 가져오기 SB
         // 내 정보 생성 (PostDetail에서는 state에서 가져오지 않고 현재 post의 user 정보 사용)

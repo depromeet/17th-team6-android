@@ -5,7 +5,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.dpm.sixpack.presentation.common.model.PostResource
 import com.dpm.sixpack.presentation.destinations.CertifiedUsers
 import com.dpm.sixpack.presentation.destinations.MainRoute
 import com.dpm.sixpack.presentation.destinations.PostEdit
@@ -31,7 +30,7 @@ fun NavGraphBuilder.addFeedNavGraph(
     navigateToAlarm: () -> Unit = {},
     navigateToUserProfile: (Long) -> Unit = {},
     navigateToMyPage: () -> Unit = {},
-    navigateToPostDetail: (PostResource) -> Unit = {},
+    navigateToPostDetail: (Long) -> Unit = {},
     navigateToUpload: () -> Unit = {},
     navigateToPostEdit: (Long) -> Unit = {},
     navigateToCertifiedUsers: (String) -> Unit = {},
@@ -40,9 +39,7 @@ fun NavGraphBuilder.addFeedNavGraph(
         FeedRoute(
             navigateToGroup = navigateToGroup,
             navigateToAlarm = navigateToAlarm,
-            navigateToCertifiedUserList = { date ->
-                navigateToCertifiedUsers(date)
-            },
+            navigateToCertifiedUserList = navigateToCertifiedUsers,
             navigateToUserProfile = navigateToUserProfile,
             navigateToMyPage = navigateToMyPage,
             navigateToPostDetail = navigateToPostDetail,

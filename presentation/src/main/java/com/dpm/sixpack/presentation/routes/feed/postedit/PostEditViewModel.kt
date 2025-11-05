@@ -5,11 +5,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dpm.sixpack.domain.repository.FeedRepository
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
+import com.dpm.sixpack.presentation.common.model.toPostResource
 import com.dpm.sixpack.presentation.routes.feed.postedit.contract.PostEditIntent
 import com.dpm.sixpack.presentation.routes.feed.postedit.contract.PostEditSideEffect
 import com.dpm.sixpack.presentation.routes.feed.postedit.contract.PostEditUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
@@ -30,32 +30,24 @@ class PostEditViewModel @Inject constructor(
             reduce { state.copy(isLoading = true) }
 
             viewModelScope.launch {
-                // TODO: Implement getFeedById in FeedRepository
-                // For now, use mock data
-                // feedRepository.getFeedById(feedId)
-                //     .onSuccess { feed ->
-                //         reduce {
-                //             state.copy(
-                //                 originalPost = feed.toPostResource(),
-                //                 isLoading = false,
-                //             )
-                //         }
-                //     }
-                //     .onError { error ->
-                //         postSideEffect(PostEditSideEffect.ShowError(error.message ?: "게시물을 불러올 수 없습니다."))
-                //         reduce { state.copy(isLoading = false) }
-                //     }
+                intent {
+                    reduce { state.copy(isLoading = true) }
 
-                // Mock implementation - remove when API is ready
-                delay(500) // Simulate network delay
-                reduce {
-                    state.copy(
-                        originalPost =
-                            state.originalPost.copy(
-                                feedId = feedId,
-                            ),
-                        isLoading = false,
-                    )
+                    viewModelScope.launch {
+                        feedRepository
+                            .getFeedDetail(feedId)
+                            .onSuccess { feed ->
+                                reduce {
+                                    state.copy(
+                                        originalPost = feed.toPostResource(),
+                                        isLoading = false,
+                                    )
+                                }
+                            }.onError { error ->
+                                postSideEffect(PostEditSideEffect.ShowToast(error.message ?: "게시물을 불러올 수 없습니다."))
+                                reduce { state.copy(isLoading = false) }
+                            }
+                    }
                 }
             }
         }

@@ -18,5 +18,4 @@ sealed interface PostDetailSideEffect : SideEffect {
     data class ShowToast(
         val message: String,
     ) : PostDetailSideEffect
-
 }

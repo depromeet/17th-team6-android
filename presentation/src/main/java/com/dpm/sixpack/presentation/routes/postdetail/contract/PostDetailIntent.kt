@@ -10,7 +10,10 @@ sealed interface PostDetailIntent : UiIntent {
     // TopBar
     data object OnBackClick : PostDetailIntent
 
-    data class OnMenuClick(val isExpanded : Boolean) : PostDetailIntent
+    data class OnMenuClick(
+        val isExpanded: Boolean,
+    ) : PostDetailIntent
+
     // Post Actions
     data class OnUserProfileClick(
         val userId: Long,
@@ -53,6 +56,7 @@ sealed interface PostDetailIntent : UiIntent {
     data object OnDialogDismiss : PostDetailIntent
 
     data object OnDialogConfirmClick : PostDetailIntent
+
     // Retry
     data object OnRetryClick : PostDetailIntent
 }
