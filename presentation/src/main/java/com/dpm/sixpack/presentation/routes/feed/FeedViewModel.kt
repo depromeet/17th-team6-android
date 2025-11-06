@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.filter
 import androidx.paging.map
+import com.dpm.sixpack.domain.event.FeedUpdateEvent
 import com.dpm.sixpack.domain.repository.FeedListItem
 import com.dpm.sixpack.domain.repository.FeedRepository
 import com.dpm.sixpack.domain.usecase.GetFeedsByDateUseCase
@@ -33,7 +34,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -60,11 +60,22 @@ class FeedViewModel @Inject constructor(
     override val container: Container<FeedUiState, FeedSideEffect> =
         container(initialState = initialState, savedStateHandle = savedStateHandle)
 
-    // 유저가 인증 가능한지 여부 캐싱
-    private var isCertifiable: Boolean = false
+    // 마지막으로 처리한 이벤트의 타임스탬프 (중복 처리 방지)
+    private var lastProcessedTimestamp = 0L
+
+    /**
+     * TODO SB 추후에 48시간 이내로 정확하게 구현
+     * 선택된 날짜가 인증 가능한 날짜인지 확인
+     * 오늘 기준 2일 전까지만 인증 가능
+     */
+    private fun isCertifiable(selectedDate: LocalDate): Boolean {
+        val today = LocalDate.now()
+        val minCertifiableDate = today.minusDays(2)
+        return !selectedDate.isBefore(minCertifiableDate)
+    }
 
     private val pagingFlowCache = ConcurrentHashMap<LocalDate, Flow<PagingData<PostResource>>>()
-    private val reactionDebounceJobs = ConcurrentHashMap<Long, Job>()
+    private val reactionDebounceJobs = ConcurrentHashMap<Pair<Long, Emoji>, Job>()
     private val optimisticPostsFlow = container.stateFlow.map { it.optimisticPosts }.distinctUntilChanged()
     private val optimisticDeletedFeedIdsFlow =
         container.stateFlow
@@ -78,15 +89,55 @@ class FeedViewModel @Inject constructor(
             .distinctUntilChanged()
             .flatMapLatest { date ->
                 val count = container.stateFlow.value.calendarState.postCounts[date] ?: 0
-                if (count > 0) {
-                    getPagingFlowForDate(date)
-                } else {
-                    flowOf(PagingData.empty())
-                }
+//                if (count > 0) {
+                getPagingFlowForDate(date)
+//                } else {
+//                    flowOf(PagingData.empty())
+//                }
             }.cachedIn(viewModelScope)
+            .combine(optimisticPostsFlow) { pagingData, optimisticPosts ->
+                pagingData.map { postResource ->
+                    optimisticPosts[postResource.feedId] ?: postResource
+                }
+            }.combine(optimisticDeletedFeedIdsFlow) { pagingData, deletedFeedIds ->
+                pagingData.filter { postResource ->
+                    postResource.feedId !in deletedFeedIds
+                }
+            }
 
     init {
         loadInitialData()
+        observeFeedUpdateEvents()
+    }
+
+    /**
+     * Repository에서 발생하는 Feed 변경 이벤트를 구독
+     * 수정/업로드 시 자동으로 Paging을 갱신
+     */
+    private fun observeFeedUpdateEvents() {
+        // TODO Room 구현시 싹다 삭제
+        viewModelScope.launch {
+            feedRepository.feedUpdateEvents
+                .collect { event ->
+                    // 이미 처리한 이벤트는 무시 (화면 재진입 시 replay된 이벤트 방지)
+                    if (event.timestamp <= lastProcessedTimestamp) {
+                        return@collect
+                    }
+
+                    lastProcessedTimestamp = event.timestamp
+
+                    intent {
+                        when (event) {
+                            is FeedUpdateEvent.Updated -> {
+                                postSideEffect(FeedSideEffect.RefreshPagingList)
+                            }
+                            is FeedUpdateEvent.Uploaded -> {
+                                postSideEffect(FeedSideEffect.RefreshPagingList)
+                            }
+                        }
+                    }
+                }
+        }
     }
 
     override fun onIntent(intent: FeedIntent) {
@@ -110,7 +161,6 @@ class FeedViewModel @Inject constructor(
             is FeedIntent.OnPostReactionClick -> handlePostReactionClick(intent.post, intent.emoji, intent.isReacted)
             is FeedIntent.OnPostReactionLongClick ->
                 handlePostReactionLongClick(
-                    intent.feedId,
                     intent.reactions,
                     intent.selectedEmoji,
                 )
@@ -135,6 +185,7 @@ class FeedViewModel @Inject constructor(
 
             // UI Observations (시스템 관찰 이벤트)
             is FeedIntent.Observed.VisibleWeeksChanged -> handleVisibleWeeksChanged(intent.startDate)
+            FeedIntent.Observed.PagingDataEmpty -> handlePagingDataEmpty()
         }
     }
 
@@ -144,29 +195,18 @@ class FeedViewModel @Inject constructor(
     private fun getPagingFlowForDate(date: LocalDate): Flow<PagingData<PostResource>> =
         pagingFlowCache.getOrPut(date) {
             val dateString = date.toYyyyMmDdString()
-            val originalPagingFlow =
-                getFeedsByDateUseCase(dateString)
-                    .map { pagingData: PagingData<FeedListItem> ->
-                        pagingData.map { item ->
-                            when (item) {
-                                is FeedListItem.PostItem ->
-                                    item.toPostResource()
+            getFeedsByDateUseCase(dateString)
+                .map { pagingData: PagingData<FeedListItem> ->
+                    pagingData.map { item ->
+                        when (item) {
+                            is FeedListItem.PostItem ->
+                                item.toPostResource()
 
-                                is FeedListItem.UserSummaryItem ->
-                                    throw IllegalStateException("Main Feed should not contain UserSummaryItem")
-                            }
+                            is FeedListItem.UserSummaryItem ->
+                                throw IllegalStateException("Main Feed should not contain UserSummaryItem")
                         }
                     }
-            originalPagingFlow
-                .combine(optimisticPostsFlow) { pagingData, optimisticPosts ->
-                    pagingData.map { postResource ->
-                        optimisticPosts[postResource.feedId] ?: postResource
-                    }
-                }.combine(optimisticDeletedFeedIdsFlow) { pagingData, deletedFeedIds ->
-                    pagingData.filter { postResource ->
-                        postResource.feedId !in deletedFeedIds
-                    }
-                }.cachedIn(viewModelScope)
+                }
         }
 
     // TopBar Intent
@@ -201,7 +241,7 @@ class FeedViewModel @Inject constructor(
         val postCount = container.stateFlow.value.calendarState.postCounts[selectedDate] ?: 0
         return when {
             postCount > 0 -> FeedDateUiState.PostsAvailable
-            postCount == 0 && isCertifiable -> FeedDateUiState.NoPostsAndCertifiable
+            postCount == 0 && isCertifiable(selectedDate) -> FeedDateUiState.NoPostsAndCertifiable
             else -> FeedDateUiState.NoPostsAndExpired
         }
     }
@@ -249,7 +289,8 @@ class FeedViewModel @Inject constructor(
 
     private fun handleCertifiedUsersClick() =
         intent {
-            postSideEffect(FeedSideEffect.NavigateToCertificationFriend)
+            val selectedDate = state.calendarState.selectedDate
+            postSideEffect(FeedSideEffect.NavigateToCertificationFriend(selectedDate.toYyyyMmDdString()))
         }
 
     private fun handleUserProfileClick(
@@ -280,6 +321,7 @@ class FeedViewModel @Inject constructor(
         emoji: Emoji,
         isReacted: Boolean,
     ) = intent {
+        val reactionKey = post.feedId to emoji
         val newPost = post.updateReaction(emoji, isReacted)
         reduce {
             state.copy(
@@ -287,28 +329,27 @@ class FeedViewModel @Inject constructor(
             )
         }
 
-        reactionDebounceJobs[post.feedId]?.cancel()
-        reactionDebounceJobs[post.feedId] =
+        reactionDebounceJobs[reactionKey]?.cancel()
+        reactionDebounceJobs[reactionKey] =
             viewModelScope.launch {
                 delay(REACTION_DEBOUNCE_MS)
                 try {
                     feedRepository.postReaction(post.feedId, emoji.type)
                 } catch (e: Exception) {
-                    // 4. 롤백
+                    // 롤백: optimisticPosts에서 제거하여 원본 Paging 데이터가 보이도록 함
                     reduce {
                         state.copy(
-                            optimisticPosts = state.optimisticPosts + (post.feedId to post),
+                            optimisticPosts = state.optimisticPosts - post.feedId,
                         )
                     }
                     postSideEffect(FeedSideEffect.ShowToast("리액션 업데이트 실패"))
                 } finally {
-                    reactionDebounceJobs.remove(post.feedId)
+                    reactionDebounceJobs.remove(reactionKey)
                 }
             }
     }
 
     private fun handlePostReactionLongClick(
-        feedId: Long,
         reactions: List<PostReaction>,
         selectedEmoji: Emoji,
     ) = intent {
@@ -343,7 +384,7 @@ class FeedViewModel @Inject constructor(
                 reduce {
                     state.copy(selectedPostMenuId = -1L)
                 }
-                postSideEffect(FeedSideEffect.NavigateToPostEdit(post))
+                postSideEffect(FeedSideEffect.NavigateToPostEdit(post.feedId))
             }
 
             PostDropDownActionType.DELETE -> {
@@ -388,17 +429,6 @@ class FeedViewModel @Inject constructor(
                 )
             }
         }
-
-    private fun handleUserReactionSheetUserProfileClick(
-        userId: Long,
-        isMe: Boolean,
-    ) = intent {
-        if (isMe) {
-            postSideEffect(FeedSideEffect.NavigateToMyPage)
-        } else {
-            postSideEffect(FeedSideEffect.NavigateToUserPage(userId))
-        }
-    }
 
     private fun handleUserReactionSheetTabClick(selectedEmoji: Emoji) =
         intent {
@@ -494,8 +524,23 @@ class FeedViewModel @Inject constructor(
             postSideEffect(FeedSideEffect.NavigateToPostUpload(selectedDate))
         }
 
-    // ========== Calendar Prefetch Logic ==========
-    // 캘린더 데이터를 미리 가져오기 위한 로직
+    private fun handlePagingDataEmpty() =
+        intent {
+            val selectedDate = state.calendarState.selectedDate
+            val canCertify = state.feedDateState == FeedDateUiState.PostsAvailable && isCertifiable(selectedDate)
+            reduce {
+                state.copy(
+                    feedDateState =
+                        if (canCertify) {
+                            FeedDateUiState.NoPostsAndCertifiable
+                        } else {
+                            FeedDateUiState.NoPostsAndExpired
+                        },
+                )
+            }
+        }
+
+    // 캘린더 PreFetch 로직
     private var fetchedRange: ClosedRange<LocalDate>? = null
     private val calendarApiLock = Mutex()
 
@@ -584,17 +629,22 @@ class FeedViewModel @Inject constructor(
                                         ),
                                 )
                             }
+                        }.onError { exception ->
+                            // API 호출 실패 시 로딩 상태를 해제하여 Shimmer가 사라지도록 함
+                            reduce {
+                                state.copy(
+                                    calendarState =
+                                        calenderState.copy(
+                                            isLoading = false,
+                                        ),
+                                )
+                            }
                         }
                 }
             }
         }
     }
 
-    /**
-     * 낙관적 업데이트: 리액션 추가/제거 시 즉시 UI에 반영
-     * - 캐싱된 myPostingInfo 사용
-     * - users 리스트에 현재 사용자 추가/제거
-     */
     private fun PostResource.updateReaction(
         emoji: Emoji,
         isReacted: Boolean,

@@ -20,9 +20,9 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 fun FeedFTAButton(
-    enabled: Boolean,
     onFTAButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     Box(
         modifier =
