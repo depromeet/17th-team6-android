@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -26,6 +27,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.dpm.sixpack.presentation.common.components.image.DoRunAsyncImage
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
+import com.dpm.sixpack.presentation.common.util.compose.rememberAdaptiveGridMinSize
 import com.dpm.sixpack.presentation.routes.mypage.contract.GridItemType
 import com.dpm.sixpack.presentation.routes.mypage.contract.Post
 import com.dpm.sixpack.presentation.theme.SixpackTheme
@@ -38,8 +40,11 @@ internal fun PostGrid(
     gridItemsPagingItems: LazyPagingItems<GridItemType>,
     modifier: Modifier = Modifier,
 ) {
+    // 최소 3개 컬럼을 보장하는 adaptive 그리드 셀 크기 계산
+    val adaptiveMinSize = rememberAdaptiveGridMinSize()
+
     LazyVerticalGrid(
-        columns = GridCells.Fixed(3),
+        columns = GridCells.Adaptive(minSize = adaptiveMinSize),
         modifier = modifier,
         contentPadding = PaddingValues(horizontal = 20.dp, vertical = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -55,7 +60,7 @@ internal fun PostGrid(
                 }
             },
             span = { index ->
-                androidx.compose.foundation.lazy.grid.GridItemSpan(1)
+                GridItemSpan(1)
             },
         ) { index ->
             when (val item = gridItemsPagingItems[index]) {
