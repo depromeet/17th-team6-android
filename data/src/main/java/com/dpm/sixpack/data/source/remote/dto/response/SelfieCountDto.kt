@@ -8,12 +8,12 @@ import kotlinx.serialization.Serializable
 // TODO SB swagger 명세 바뀌면 네이밍 수정
 @Serializable
 data class SelfieCountsDto(
-    @SerialName("counts")
-    val counts: List<SelfieCountDto>,
+    @SerialName("countList")
+    val countList: List<SelfieCountDto>,
 ) {
     fun toDomain(): SelfieCounts =
         SelfieCounts(
-            counts = counts.map { it.toDomain() },
+            counts = countList.map { it.toDomain() },
         )
 }
 

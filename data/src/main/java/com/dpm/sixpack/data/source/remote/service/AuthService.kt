@@ -1,10 +1,13 @@
 package com.dpm.sixpack.data.source.remote.service
 
+import com.dpm.sixpack.data.source.remote.dto.request.RefreshTokenRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.SendSmsRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.VerifySmsRequestDto
+import com.dpm.sixpack.data.source.remote.dto.response.RefreshTokenResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.SignUpResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.VerifySmsResponseDto
 import com.dpm.sixpack.data.source.remote.util.base.BaseResponse
+import com.dpm.sixpack.data.source.remote.util.constant.ApiConstants.TOKEN_REFRESH_PATH
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -30,4 +33,9 @@ interface AuthService {
         @Part("data") data: RequestBody,
         @Part profileImage: MultipartBody.Part?,
     ): BaseResponse<SignUpResponseDto>
+
+    @POST(TOKEN_REFRESH_PATH)
+    suspend fun refreshToken(
+        @Body request: RefreshTokenRequestDto,
+    ): BaseResponse<RefreshTokenResponseDto>
 }

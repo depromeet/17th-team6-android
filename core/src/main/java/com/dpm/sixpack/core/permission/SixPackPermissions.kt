@@ -23,6 +23,11 @@ sealed class SixPackPermissions(
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     object NotificationPermission : SixPackPermissions(Manifest.permission.POST_NOTIFICATIONS)
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    object ReadMediaImagesPermission : SixPackPermissions(Manifest.permission.READ_MEDIA_IMAGES)
+
+    object ReadExternalStoragePermission : SixPackPermissions(Manifest.permission.READ_EXTERNAL_STORAGE)
+
     companion object {
         val LocationPermissions =
             listOf(
@@ -55,6 +60,16 @@ sealed class SixPackPermissions(
                 addAll(SensorPermissions)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     add(NotificationPermission)
+                }
+            }
+        }
+
+        val ImagePermissions by lazy {
+            mutableListOf<SixPackPermissions>().apply {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    add(ReadMediaImagesPermission)
+                } else {
+                    add(ReadExternalStoragePermission)
                 }
             }
         }

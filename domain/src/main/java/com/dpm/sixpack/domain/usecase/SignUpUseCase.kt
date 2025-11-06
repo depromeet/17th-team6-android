@@ -7,24 +7,26 @@ import com.dpm.sixpack.domain.util.DoRunResult
 import java.io.File
 import javax.inject.Inject
 
-class SignUpUseCase @Inject constructor(
-    private val authRepository: AuthRepository,
-    private val userPreferenceRepository: UserPreferenceRepository,
-) {
-    suspend operator fun invoke(
-        nickname: String,
-        phoneNumber: String,
-        profileImage: File?,
-    ): DoRunResult<SignUpResult> {
-        val result = authRepository.signUp(nickname, phoneNumber, profileImage)
+class SignUpUseCase
+    @Inject
+    constructor(
+        private val authRepository: AuthRepository,
+        private val userPreferenceRepository: UserPreferenceRepository,
+    ) {
+        suspend operator fun invoke(
+            nickname: String,
+            phoneNumber: String,
+            profileImage: File?,
+        ): DoRunResult<SignUpResult> {
+            val result = authRepository.signUp(nickname, phoneNumber, profileImage)
 
-        // 회원가입 성공 시 userId, token 저장
-        result.onSuccess { signUpResult ->
-            userPreferenceRepository.updateUserId(signUpResult.user.id)
-            userPreferenceRepository.updateAccessToken(signUpResult.token.accessToken)
-            userPreferenceRepository.updateRefreshToken(signUpResult.token.refreshToken)
+            // 회원가입 성공 시 userId, token 저장
+            result.onSuccess { signUpResult ->
+                userPreferenceRepository.updateUserId(signUpResult.user.id)
+                userPreferenceRepository.updateAccessToken(signUpResult.token.accessToken)
+                userPreferenceRepository.updateRefreshToken(signUpResult.token.refreshToken)
+            }
+
+            return result
         }
-
-        return result
     }
-}

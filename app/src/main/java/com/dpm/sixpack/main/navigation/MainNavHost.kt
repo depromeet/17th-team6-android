@@ -9,7 +9,12 @@ import androidx.navigation.navOptions
 import com.dpm.sixpack.SixPackAppState
 import com.dpm.sixpack.presentation.destinations.SignInRoute
 import com.dpm.sixpack.presentation.routes.feed.navigation.addFeedNavGraph
+import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToCertifiedUsers
 import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
+import com.dpm.sixpack.presentation.routes.postdetail.navigation.addPostDetailNavGraph
+import com.dpm.sixpack.presentation.routes.postdetail.navigation.navigateToPostDetail
+import com.dpm.sixpack.presentation.routes.postedit.navigation.addPostDetailNavGraph
+import com.dpm.sixpack.presentation.routes.postedit.navigation.navigateToPostEdit
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.addProfileCreationNavGraph
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.navigateProfileCreation
 import com.dpm.sixpack.presentation.routes.running.navigation.addRunningSessionNavGraph
@@ -31,12 +36,12 @@ internal fun MainNavHost(
     modifier: Modifier = Modifier,
 ) {
     val navigator = appState.navigator
-
+    val navController = navigator.navController
     Box(
         modifier = modifier.fillMaxSize(),
     ) {
         NavHost(
-            navController = navigator.navController,
+            navController = navController,
             startDestination = navigator.startDestination,
         ) {
             addOnboardingNavGraph(
@@ -112,10 +117,26 @@ internal fun MainNavHost(
             )
 
             addSessionReportNavGraph(
-                onNavigateToBack = navigator::popBackStack,
+                onNavigateToBack = { navigator::popBackStack },
             )
 
-            addFeedNavGraph()
+            addFeedNavGraph(
+                navigateToBack = { navController.popBackStack() },
+                navigateToCertifiedUsers = navController::navigateToCertifiedUsers,
+                navigateToPostDetail = navController::navigateToPostDetail,
+                navigateToPostEdit = navController::navigateToPostEdit,
+            )
+
+            addPostDetailNavGraph(
+                navigateToBack = { navController.popBackStack() },
+                navigateToPostEdit = navController::navigateToPostEdit,
+                navigateToUserProfile = {},
+                navigateToMyPage = {},
+            )
+
+            addPostDetailNavGraph(
+                navigateToBack = { navController.popBackStack() },
+            )
         }
     }
 }

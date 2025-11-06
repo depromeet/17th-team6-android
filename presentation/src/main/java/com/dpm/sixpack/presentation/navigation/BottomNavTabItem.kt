@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -50,6 +51,7 @@ fun RowScope.BottomNavTabItem(
             painter = painterResource(id = tab.iconResId),
             contentDescription = stringResource(tab.titleResId),
             tint = if (isSelected) selectedColor else unselectedColor,
+            modifier = Modifier.size(24.dp)
         )
 
         Text(

@@ -23,6 +23,7 @@ fun DoRunNavigationTopBar(
     navigateToBack: () -> Unit,
     modifier: Modifier = Modifier,
     titleContent: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     DoRunTopBarSlot(
         modifier = modifier,
@@ -32,6 +33,7 @@ fun DoRunNavigationTopBar(
             )
         },
         content = titleContent,
+        trailingContent = trailingIcon,
     )
 }
 

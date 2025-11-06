@@ -1,9 +1,11 @@
 package com.dpm.sixpack.data.source.remote.datasoruce
 
 import com.dpm.sixpack.data.source.remote.datasoruce.api.AuthDataSource
+import com.dpm.sixpack.data.source.remote.dto.request.RefreshTokenRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.SendSmsRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.SignUpRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.VerifySmsRequestDto
+import com.dpm.sixpack.data.source.remote.dto.response.RefreshTokenResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.SignUpResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.VerifySmsResponseDto
 import com.dpm.sixpack.data.source.remote.service.AuthService
@@ -68,5 +70,13 @@ class AuthDataSourceImpl @Inject constructor(
             data = dataRequestBody,
             profileImage = imagePart,
         )
+    }
+
+    override suspend fun refreshToken(refreshToken: String): BaseResponse<RefreshTokenResponseDto> {
+        val requestDto =
+            RefreshTokenRequestDto(
+                refreshToken = refreshToken,
+            )
+        return authService.refreshToken(request = requestDto)
     }
 }

@@ -17,11 +17,15 @@ object PermissionUtil {
     private const val KEY_LOCATION_PERMISSION_REQUESTED = "location_permission_requested"
     private const val KEY_NOTIFICATION_PERMISSION_REQUESTED = "notification_permission_requested"
 
+    private const val KEY_IMAGE_PERMISSION_REQUESTED = "image_permission_requested"
+
     private fun mapPermissionToKey(permission: SixPackPermissions): String =
         when (permission) {
             is SixPackPermissions.FineLocationPermission -> KEY_LOCATION_PERMISSION_REQUESTED
             is SixPackPermissions.CourseLocationPermission -> KEY_LOCATION_PERMISSION_REQUESTED
             is SixPackPermissions.NotificationPermission -> KEY_NOTIFICATION_PERMISSION_REQUESTED
+            is SixPackPermissions.ReadMediaImagesPermission -> KEY_IMAGE_PERMISSION_REQUESTED
+            is SixPackPermissions.ReadExternalStoragePermission -> KEY_IMAGE_PERMISSION_REQUESTED
             else -> throw IllegalArgumentException("Invalid permission: $permission")
         }
 
