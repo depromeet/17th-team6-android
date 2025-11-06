@@ -2,6 +2,7 @@ package com.dpm.sixpack.data.source.remote.dto.request
 
 import com.dpm.sixpack.core.util.TimeUtil.formatMillisToIsoUtc
 import com.dpm.sixpack.data.source.local.database.entity.RunningTrackPointEntity
+import com.dpm.sixpack.domain.model.Segment
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -31,7 +32,19 @@ data class SegmentDataDto(
     val distance: Int,
     @SerialName("time")
     val time: String, // "2024-01-15T09:00:00Z"
-)
+) {
+    fun toDomain() =
+        Segment(
+            latitude = latitude,
+            longitude = longitude,
+            altitude = altitude,
+            speed = speed,
+            pace = pace,
+            cadence = cadence,
+            distance = distance,
+            time = time,
+        )
+}
 
 fun RunningTrackPointEntity.toSegmentDataDto(): SegmentDataDto =
     SegmentDataDto(
