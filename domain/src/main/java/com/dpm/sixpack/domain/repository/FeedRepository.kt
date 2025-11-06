@@ -38,7 +38,7 @@ interface FeedRepository {
     ): DoRunResult<SelfieCounts>
 
     suspend fun uploadPost(
-        sessionId: String,
+        sessionId: Long,
         content: String?,
         imageUri: Uri?,
     ): DoRunResult<Unit>

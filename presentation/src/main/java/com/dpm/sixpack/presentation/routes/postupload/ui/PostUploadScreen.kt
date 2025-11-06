@@ -99,7 +99,7 @@ fun PostUploadScreen(
 fun PostUploadScreenPreview() {
     val dummyState =
         PostUploadUiState(
-            sessionId = "123",
+            sessionId = 1,
             runningSummary =
                 RunningSummary(
                     totalDistance = "8.02km",

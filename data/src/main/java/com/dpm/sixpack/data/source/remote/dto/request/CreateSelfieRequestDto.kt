@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CreateSelfieRequestDto(
     @SerialName("runSessionId")
-    val runSessionId: String,
+    val runSessionId: Long,
     @SerialName("content")
     val content: String?,
 )

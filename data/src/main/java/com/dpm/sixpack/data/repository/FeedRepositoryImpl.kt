@@ -79,7 +79,7 @@ class FeedRepositoryImpl @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.P)
     override suspend fun uploadPost(
-        sessionId: String,
+        sessionId: Long,
         content: String?,
         imageUri: Uri?,
     ): DoRunResult<Unit> =
