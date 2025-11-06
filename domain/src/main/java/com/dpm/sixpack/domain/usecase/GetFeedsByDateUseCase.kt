@@ -7,8 +7,11 @@ import com.dpm.sixpack.domain.repository.FeedType
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-/*
-    해당 날짜의 인증 피드를 pageSize만큼 반환합니다..
+/**
+ * 특정 날짜의 피드 리스트를 가져오는 UseCase
+ *
+ * - 실제 Repository에서 데이터를 가져오거나,
+ * - USE_MOCK_DATA 플래그가 true면 목데이터를 반환합니다.
  */
 class GetFeedsByDateUseCase @Inject constructor(
     private val feedRepository: FeedRepository,

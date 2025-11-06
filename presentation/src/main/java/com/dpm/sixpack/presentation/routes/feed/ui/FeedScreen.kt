@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -91,9 +92,10 @@ fun FeedScreen(
         }
     }
 
+    // Refresh 로직이 끝난 이후 1초이후 Spinner 사라짐
     LaunchedEffect(feedPagingItems.loadState.refresh) {
         if (isRefreshing && feedPagingItems.loadState.refresh !is LoadState.Loading) {
-            delay(300)
+            delay(1000)
             isRefreshing = false
         }
     }
@@ -101,8 +103,18 @@ fun FeedScreen(
     // Timeout: 5초 이상 로딩 시 자동 종료 (UX: 너무 긴 로딩 방지)
     LaunchedEffect(isRefreshing) {
         if (isRefreshing) {
-            delay(5000)
+            delay(3000)
             isRefreshing = false
+        }
+    }
+
+    // 초기 paging 데이터가 비어있는지 감지
+    LaunchedEffect(feedPagingItems.loadState.refresh, feedPagingItems.itemCount, state.feedDateState) {
+        if (feedPagingItems.loadState.refresh is LoadState.NotLoading &&
+            feedPagingItems.itemCount == 0 &&
+            state.feedDateState == FeedDateUiState.PostsAvailable
+        ) {
+            onIntent(FeedIntent.Observed.PagingDataEmpty)
         }
     }
 
@@ -127,6 +139,7 @@ fun FeedScreen(
         },
         containerColor = SixpackTheme.colors.gray0,
         contentColor = SixpackTheme.colors.gray900,
+        contentWindowInsets = WindowInsets(0),
     ) { paddingValues ->
         val contentModifier =
             Modifier
@@ -180,14 +193,6 @@ fun FeedScreen(
                         feedDividerItem()
 
                         when (state.feedDateState) {
-                            FeedDateUiState.NoPostsAndCertifiable -> {
-                                item(key = "empty_certifiable") { EmptyStateCertifiable() }
-                            }
-
-                            FeedDateUiState.NoPostsAndExpired -> {
-                                item(key = "empty_expired") { EmptyStateExpired() }
-                            }
-
                             FeedDateUiState.PostsAvailable -> {
                                 feedContentItems(
                                     isInitialLoad = isInitialLoad,
@@ -221,11 +226,12 @@ fun FeedScreen(
                                         reactions,
                                         emoji,
                                         ->
-                                        onIntent(FeedIntent.OnPostReactionLongClick(feedId, reactions, emoji))
+                                        onIntent(FeedIntent.OnPostReactionLongClick(reactions, emoji))
                                     },
                                     onAddReactionClick = { post -> onIntent(FeedIntent.OnPostAddReactionClick(post)) },
                                 )
                             }
+                            else -> {}
                         }
                     }
 
@@ -268,9 +274,7 @@ fun FeedScreen(
                                 item(key = "empty_expired") { EmptyStateExpired() }
                             }
 
-                            FeedDateUiState.PostsAvailable -> {
-                                // 이 분기는 도달하지 않음 (외부 if 문에서 처리됨)
-                            }
+                            else -> {}
                         }
                     }
 

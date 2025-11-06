@@ -11,6 +11,7 @@ private const val KEY_FOREGROUND_SERVICE_PERMISSION_REQUESTED = "foreground_serv
 private const val KEY_FOREGROUND_SERVICE_LOCATION_PERMISSION_REQUESTED =
     "foreground_service_location_permission_requested"
 private const val KEY_ACTIVITY_RECOGNITION_PERMISSION_REQUESTED = "activity_recognition_permission_requested"
+private const val KEY_IMAGE_PERMISSION_REQUESTED = "image_permission_requested"
 
 sealed class SixPackPermissions(
     val permission: String,
@@ -55,6 +56,17 @@ sealed class SixPackPermissions(
             KEY_NOTIFICATION_PERMISSION_REQUESTED,
         )
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    object ReadMediaImagesPermission : SixPackPermissions(
+        Manifest.permission.READ_MEDIA_IMAGES,
+        KEY_IMAGE_PERMISSION_REQUESTED,
+    )
+
+    object ReadExternalStoragePermission : SixPackPermissions(
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        KEY_IMAGE_PERMISSION_REQUESTED,
+    )
+
     companion object {
         val LocationPermissions =
             listOf(
@@ -84,13 +96,24 @@ sealed class SixPackPermissions(
 
         val RequiredPermissions by lazy {
             mutableListOf<SixPackPermissions>().apply {
+                addAll(SensorPermissions)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     add(NotificationPermission)
                 }
             }
         }
 
-        val OptionalPermissions = LocationPermissions + SensorPermissions + ForegroundServicePermissions
+        val ImagePermissions by lazy {
+            mutableListOf<SixPackPermissions>().apply {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    add(ReadMediaImagesPermission)
+                } else {
+                    add(ReadExternalStoragePermission)
+                }
+            }
+        }
+
+        val OptionalPermissions = LocationPermissions
 
         val AllPermissions = RequiredPermissions + OptionalPermissions
     }

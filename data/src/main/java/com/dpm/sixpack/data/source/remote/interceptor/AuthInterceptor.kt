@@ -19,6 +19,11 @@ class AuthInterceptor
             val originalRequest = chain.request()
             val requestUrl = originalRequest.url.encodedPath
 
+            // S3 presigned URL에는 헤더를 추가하지 않음 (서명 검증 실패 방지)
+            if (isS3Request(originalRequest.url.host)) {
+                return chain.proceed(originalRequest)
+            }
+
             Timber.d("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
             Timber.d("AuthInterceptor: 요청 시작")
             Timber.d("AuthInterceptor: URL = $requestUrl")
@@ -55,6 +60,8 @@ class AuthInterceptor
 
             return response
         }
+
+        private fun isS3Request(host: String): Boolean = host.contains("amazonaws.com")
 
         companion object {
             private const val X_USER_ID = "X-User-Id"

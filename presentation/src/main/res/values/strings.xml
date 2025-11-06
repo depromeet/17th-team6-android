@@ -106,12 +106,14 @@
 
 
     <!--region Feed-->
+    <string name="feed_post_edit_change_background_button">배경사진 변경</string>
+    <string name="feed_post_edit_submit_button">수정하기</string>
     <string name="feed_floating_action_button_description">피드 추가</string>
     <string name="feed_load_state_error_message">오류: %1$s</string>
     <string name="feed_load_state_retry_button">재시도</string>
     <string name="feed_empty_state_no_certification_description">인증 없음</string>
-    <string name="feed_empty_state_no_certification_title">이 날 인증한 친구가 없어요..</string>
-    <string name="feed_empty_state_no_certification_subtitle">친구들과 함께 러닝 기록을 인증해보세요!</string>
+    <string name="feed_empty_state_no_certification_title">이 날은 아무도 인증하지 않았어요..</string>
+    <string name="feed_empty_state_no_certification_subtitle">48시간이 지난 기록은 인증할 수 없어요.</string>
     <string name="feed_empty_state_waiting_certification_description">인증 대기</string>
     <string name="feed_empty_state_waiting_certification_title">정말 조용하네요..!</string>
     <string name="feed_empty_state_waiting_certification_subtitle">지금 첫 러닝을 인증해보세요!</string>
@@ -146,6 +148,7 @@
     <string name="feed_reaction_bottom_sheet_all_tab">모두</string>
     <string name="feed_reaction_bottom_sheet_my_reaction_badge">나</string>
     <string name="feed_reaction_bottom_sheet_user_profile_image_description">User profile image</string>
+    <string name="certified_users_title">인증목록</string>
     <!--endregion -->
 
     <!--region Running -->

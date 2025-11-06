@@ -3,20 +3,22 @@ package com.dpm.sixpack.presentation.navigation
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 import kotlinx.collections.immutable.toPersistentList
 
@@ -33,8 +35,18 @@ fun MainBottomBar(
         enter = fadeIn(),
         exit = fadeOut(),
     ) {
+        val borderColor = SixpackTheme.colors.gray50
         BottomAppBar(
-            modifier = modifier,
+            modifier = modifier
+                .drawBehind {
+                    val strokeWidth = 1.dp.toPx()
+                    drawLine(
+                        color = borderColor,
+                        start = Offset(0f, 0f),
+                        end = Offset(size.width, 0f),
+                        strokeWidth = strokeWidth
+                    )
+                },
             contentColor = SixpackTheme.colors.gray0,
             containerColor = SixpackTheme.colors.gray0,
             contentPadding = PaddingValues(0.dp),
@@ -43,11 +55,7 @@ fun MainBottomBar(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .height(70.dp)
-                        .border(
-                            width = 1.dp,
-                            color = SixpackTheme.colors.gray50,
-                        ).background(color = SixpackTheme.colors.gray0),
+                        .height(60.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -66,12 +74,15 @@ fun MainBottomBar(
 @Preview
 @Composable
 private fun MainBottomBarPreview() {
-    MaterialTheme {
-        MainBottomBar(
-            visible = true,
-            mainNavTabs = MainNavTab.entries.toPersistentList(),
-            currentTab = MainNavTab.RUNNING,
-            onTabSelected = { },
-        )
+    DoRunPreviewWrapper {
+        Column(modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center) {
+            MainBottomBar(
+                visible = true,
+                mainNavTabs = MainNavTab.entries.toPersistentList(),
+                currentTab = MainNavTab.RUNNING,
+                onTabSelected = { },
+            )
+        }
     }
 }
