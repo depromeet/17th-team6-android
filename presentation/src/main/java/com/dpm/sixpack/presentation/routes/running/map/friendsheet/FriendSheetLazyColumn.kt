@@ -140,21 +140,40 @@ internal fun FriendSheetLazyColumn(
             is LoadState.NotLoading -> {
                 if (pagingItems.itemCount == 1 && pagingItems[0]?.isMe == true) {
                     Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
-                        Text(
-                            text = stringResource(R.string.friend_empty),
-                            style = SixpackTheme.typography.t2Bold,
-                            color = SixpackTheme.colors.gray900,
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = stringResource(R.string.friend_add_suggestion),
-                            style = SixpackTheme.typography.b2Regular,
-                            color = SixpackTheme.colors.gray700,
-                        )
+                        val me = pagingItems[0]
+                        me?.let {
+                            FriendSheetListItem(
+                                friendItem = it,
+                                onAwakeClick = {
+                                    onAwakeClick(it.userId)
+                                },
+                                modifier =
+                                    Modifier.clickable {
+                                        onItemClick(it.userId)
+                                    },
+                            )
+                        }
+
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            Text(
+                                text = stringResource(R.string.friend_empty),
+                                style = SixpackTheme.typography.t2Bold,
+                                color = SixpackTheme.colors.gray900,
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = stringResource(R.string.friend_add_suggestion),
+                                style = SixpackTheme.typography.b2Regular,
+                                color = SixpackTheme.colors.gray700,
+                            )
+                        }
                     }
                 } else {
                     LazyColumn(
