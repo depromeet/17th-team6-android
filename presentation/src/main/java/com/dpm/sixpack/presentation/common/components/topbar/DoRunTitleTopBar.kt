@@ -37,6 +37,31 @@ fun DoRunNavigationTopBar(
     )
 }
 
+/**
+ * 타이틀이 있는 TopBar
+ * DoRunNavigationTopBar의 래퍼 함수
+ */
+@Composable
+fun DoRunTitleTopBar(
+    title: String,
+    onBackClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    trailingIcon: @Composable (() -> Unit)? = null,
+) {
+    DoRunNavigationTopBar(
+        navigateToBack = onBackClick,
+        modifier = modifier,
+        titleContent = {
+            Text(
+                text = title,
+                style = SixpackTheme.typography.h3Bold,
+                color = SixpackTheme.colors.gray900,
+            )
+        },
+        trailingIcon = trailingIcon,
+    )
+}
+
 @Composable
 fun NavigateBackButton(
     onClick: () -> Unit,
