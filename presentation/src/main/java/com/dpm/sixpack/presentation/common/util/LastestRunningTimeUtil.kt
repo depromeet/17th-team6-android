@@ -4,7 +4,6 @@ import android.content.Context
 import com.dpm.sixpack.presentation.R
 import java.time.Duration
 import java.time.Instant
-import kotlin.math.roundToLong
 
 /**
  * "n분 전", "n시간 전" 등으로 변환
@@ -63,6 +62,7 @@ fun String.toTimeAgoString(context: Context): String {
     val minuteInSec = 60L
     val hourInSec = 3600L
     val dayInSec = 86400L
+    val yearInSec = 365 * dayInSec
 
     return when {
         // 5. 🌟 (버그 수정) 미래 시간이거나 1분 미만 차이일 때
@@ -80,9 +80,15 @@ fun String.toTimeAgoString(context: Context): String {
             context.getString(R.string.hours_before, hours)
         }
 
-        else -> {
+        secDiff < yearInSec -> {
             val days = (secDiff / dayInSec)
             context.getString(R.string.days_before, days)
+        }
+
+        // 1년 이상
+        else -> {
+            val years = (secDiff / yearInSec)
+            context.getString(R.string.days_before, years)
         }
     }
 }
