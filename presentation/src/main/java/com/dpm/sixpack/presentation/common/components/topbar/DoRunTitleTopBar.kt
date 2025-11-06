@@ -54,7 +54,7 @@ fun DoRunTitleTopBar(
         titleContent = {
             Text(
                 text = title,
-                style = SixpackTheme.typography.h3Bold,
+                style = SixpackTheme.typography.t1Bold,
                 color = SixpackTheme.colors.gray900,
             )
         },

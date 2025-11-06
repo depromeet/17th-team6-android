@@ -4,7 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -41,7 +41,7 @@ fun SettingsMenuItem(
         modifier =
             modifier
                 .fillMaxWidth()
-                .height(44.dp)
+                .heightIn(min = 44.dp)
                 .clickable(onClick = onClick)
                 .padding(horizontal = SixPackDimen.defaultSideMargin, vertical = 10.dp)
                 .padding(start = 8.dp),
@@ -50,7 +50,7 @@ fun SettingsMenuItem(
     ) {
         Text(
             text = title,
-            style = SixpackTheme.typography.b2Regular,
+            style = SixpackTheme.typography.b1Medium,
             color = SixpackTheme.colors.gray900,
         )
 
@@ -61,7 +61,7 @@ fun SettingsMenuItem(
                 painter = painterResource(id = R.drawable.ic_arrow_right),
                 contentDescription = "Navigate to $title",
                 modifier = Modifier.size(24.dp),
-                tint = SixpackTheme.colors.gray400,
+                tint = SixpackTheme.colors.gray800,
             )
         }
     }

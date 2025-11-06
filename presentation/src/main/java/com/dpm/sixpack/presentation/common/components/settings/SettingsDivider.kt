@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,7 +22,8 @@ fun SettingsDivider(modifier: Modifier = Modifier) {
             modifier
                 .fillMaxWidth()
                 .height(1.dp)
-                .background(SixpackTheme.colors.gray200),
+                .background(SixpackTheme.colors.gray100)
+                .padding(vertical = 8.dp)
     )
 }
 
