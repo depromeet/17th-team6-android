@@ -39,7 +39,7 @@ import java.io.IOException
 fun PostEditRoute(
     feedId: Long,
     viewModel: PostEditViewModel = hiltViewModel(),
-    onNavigateBack: () -> Unit,
+    navigateBack: () -> Unit,
 ) {
     val state by viewModel.collectAsState()
 
@@ -85,7 +85,7 @@ fun PostEditRoute(
     // SideEffect 처리
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
-            PostEditSideEffect.NavigateBack -> onNavigateBack()
+            PostEditSideEffect.NavigateBack -> navigateBack()
 
             PostEditSideEffect.OpenImagePicker -> {
                 imagePickerLauncher.launch(

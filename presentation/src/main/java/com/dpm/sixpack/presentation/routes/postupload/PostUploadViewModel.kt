@@ -33,6 +33,7 @@ class PostUploadViewModel @Inject constructor(
     private fun initializeState() =
         intent {
             val route = savedStateHandle.toRoute<PostUpload>()
+
             reduce {
                 state.copy(
                     sessionId = route.sessionId,

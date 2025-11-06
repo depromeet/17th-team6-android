@@ -11,13 +11,13 @@ fun NavController.navigateToPostEdit(feedId: Long) {
     navigate(PostEdit(feedId = feedId))
 }
 
-fun NavGraphBuilder.addPostDetailNavGraph(navigateToBack: () -> Unit = {}) {
+fun NavGraphBuilder.addPostEditNavGraph(navigateBack: () -> Unit = {}) {
     composable<PostEdit> { backStackEntry ->
         val route = backStackEntry.toRoute<PostEdit>()
 
         PostEditRoute(
             feedId = route.feedId,
-            onNavigateBack = navigateToBack,
+            navigateBack = navigateBack,
         )
     }
 }

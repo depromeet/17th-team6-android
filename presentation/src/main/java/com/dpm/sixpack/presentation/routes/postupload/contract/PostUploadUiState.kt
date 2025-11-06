@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PostUploadUiState(
-    val sessionId: String = "",
+    val sessionId: Long = 0,
     val mapImageUrl: String = "",
     val runningSummary: RunningSummary = RunningSummary(),
     val selectedImageUri: Uri? = null,
