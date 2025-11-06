@@ -33,7 +33,7 @@ fun DoRunSnackBar(
             Text(
                 text = snackBarData.visuals.message,
                 color = SixpackTheme.colors.gray0,
-                style = SixpackTheme.typography.b1Bold,
+                style = SixpackTheme.typography.b1Medium,
                 textAlign = TextAlign.Center,
             )
 
@@ -43,7 +43,7 @@ fun DoRunSnackBar(
                     Text(
                         text = actionLabel,
                         color = SixpackTheme.colors.gray0,
-                        style = SixpackTheme.typography.b1Bold,
+                        style = SixpackTheme.typography.b1Medium,
                     )
                 }
             }

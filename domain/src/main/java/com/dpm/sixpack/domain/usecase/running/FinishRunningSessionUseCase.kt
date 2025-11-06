@@ -16,9 +16,11 @@ class FinishRunningSessionUseCase @Inject constructor(
             userPreferenceRepository.getSessionId()
                 ?: return DoRunResult.Failure(DoRunException.DataError("저장된 세션 ID가 없어 종료할 수 없습니다."))
 
-        val result = runningSessionRepository.finishSession(sessionId, mapImage)
-        // TODO SK: 성공시에만 로컬 세션ID 지워야하는지?
-        userPreferenceRepository.clearSessionId()
+        val result =
+            runningSessionRepository.finishSession(sessionId, mapImage).onSuccess {
+                // TODO SK: 성공시에만 로컬 세션ID 지워야하는지?
+                userPreferenceRepository.clearSessionId()
+            }
         return result
     }
 }

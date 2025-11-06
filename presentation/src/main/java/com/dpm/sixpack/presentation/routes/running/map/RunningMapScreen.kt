@@ -91,6 +91,7 @@ internal fun RunningMapScreen(
     onBottomBarVisibilityChange: (Boolean) -> Unit,
     onShowSnackBar: (String, String?) -> Unit,
     navigateToReport: () -> Unit,
+    navigateToFriendList: () -> Unit,
 ) {
     val mapState by mapViewModel.collectAsState()
     val context = LocalContext.current
@@ -110,6 +111,10 @@ internal fun RunningMapScreen(
                 val sessionId = sideEffect.sessionId
                 onBottomBarVisibilityChange(true)
                 navigateToReport()
+            }
+
+            is MapSideEffect.NavigateToFriendList -> {
+                navigateToFriendList()
             }
 
             is MapSideEffect.ShowToast -> {
@@ -349,6 +354,9 @@ private fun RunningMapScreenContent(
                         sheetHeight = sheetMaxHeight,
                         startButtonHeight = startButtonHeightDp,
                         onShowSnackBar = onShowSnackBar,
+                        onFriendIconClick = {
+                            onMapIntent(MapIntent.FriendIconClick)
+                        },
                     )
 
                     RunningStartButton(

@@ -9,11 +9,13 @@ import androidx.navigation.navOptions
 import com.dpm.sixpack.SixPackAppState
 import com.dpm.sixpack.presentation.destinations.SignInRoute
 import com.dpm.sixpack.presentation.routes.feed.navigation.addFeedNavGraph
+import com.dpm.sixpack.presentation.routes.friend.navigation.addFriendNavGraph
+import com.dpm.sixpack.presentation.routes.friend.navigation.navigateToFriendGraph
 import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.addProfileCreationNavGraph
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.navigateProfileCreation
 import com.dpm.sixpack.presentation.routes.running.navigation.addRunningNavGraph
-import com.dpm.sixpack.presentation.routes.running.navigation.navigateRunningSession
+import com.dpm.sixpack.presentation.routes.running.navigation.navigateRunning
 import com.dpm.sixpack.presentation.routes.sessionreport.navigation.addSessionReportNavGraph
 import com.dpm.sixpack.presentation.routes.signin.navigation.addSignInNavGraph
 import com.dpm.sixpack.presentation.routes.signin.navigation.navigateSignIn
@@ -64,7 +66,7 @@ internal fun MainNavHost(
 
             addProfileCreationNavGraph(
                 onNavigateToHome = {
-                    navigator.navController.navigateRunningSession(
+                    navigator.navController.navigateRunning(
                         navOptions {
                             popUpTo(navigator.navController.graph.id) {
                                 inclusive = true
@@ -80,7 +82,7 @@ internal fun MainNavHost(
 
             addSignInNavGraph(
                 onNavigateToHome = {
-                    navigator.navController.navigateRunningSession(
+                    navigator.navController.navigateRunning(
                         navOptions {
                             popUpTo(navigator.navController.graph.id) {
                                 inclusive = true
@@ -106,9 +108,10 @@ internal fun MainNavHost(
 
             addRunningNavGraph(
                 onShowSnackBar = onShowSnackBar,
-                onNavigateToBack = navigator::popBackStack,
                 onBottomBarVisibilityChange = onBottomBarVisibilityChange,
                 navigateToSessionReport = navigator::navigateToSessionReport,
+                navigateToBack = navigator::popBackStack,
+                navigateToFriendList = navigator.navController::navigateToFriendGraph,
                 showFullScreenLoading = setFullScreenLoading,
             )
 
@@ -117,6 +120,12 @@ internal fun MainNavHost(
             )
 
             addFeedNavGraph()
+
+            addFriendNavGraph(
+                navController = navigator.navController,
+                navigateToBack = navigator::popBackStack,
+                onShowSnackBar = onShowSnackBar,
+            )
         }
     }
 }

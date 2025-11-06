@@ -51,6 +51,11 @@ class MapViewModel @Inject constructor(
             MapIntent.ReadyToFinish -> handleSessionFinishReady()
             MapIntent.ToggleFollowingMode -> handleToggleFollowingMode()
             MapIntent.FollowingModeOff -> handleToggleFollowingModeOff()
+            MapIntent.FriendIconClick ->
+                intent {
+                    postSideEffect(MapSideEffect.NavigateToFriendList)
+                }
+
             is MapIntent.SessionFinish -> handleSessionFinish(intent.mapImage)
             is MapIntent.UpdateUserLocation -> handleUserLocationChange(intent.latLng)
             is MapIntent.UpdatePermission -> handlePermissionUpdate(intent.isGranted)

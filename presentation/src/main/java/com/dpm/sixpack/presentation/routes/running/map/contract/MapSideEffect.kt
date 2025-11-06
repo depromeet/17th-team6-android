@@ -20,4 +20,6 @@ sealed interface MapSideEffect : RunningRouteSideEffect {
     data class ShowToast(
         @StringRes val resId: Int,
     ) : MapSideEffect
+
+    data object NavigateToFriendList : MapSideEffect
 }

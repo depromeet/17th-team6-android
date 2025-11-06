@@ -31,4 +31,6 @@ sealed interface MapIntent : RunningRouteIntent {
     data class SessionFinish(
         val mapImage: Bitmap,
     ) : MapIntent
+
+    data object FriendIconClick : MapIntent
 }

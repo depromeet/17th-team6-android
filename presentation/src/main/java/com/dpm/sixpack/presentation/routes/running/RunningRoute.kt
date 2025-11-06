@@ -12,9 +12,10 @@ import com.naver.maps.map.compose.rememberFusedLocationSource
 @OptIn(ExperimentalNaverMapApi::class)
 @Composable
 fun RunningRoute(
-    onNavigateToBack: () -> Unit,
-    onShowSnackBar: (String, String?) -> Unit,
+    navigateToBack: () -> Unit,
     navigateToReport: () -> Unit,
+    navigateToFriendList: () -> Unit,
+    onShowSnackBar: (String, String?) -> Unit,
     setFullScreenLoading: (Boolean) -> Unit,
     onBottomBarVisibilityChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -36,5 +37,6 @@ fun RunningRoute(
         onBottomBarVisibilityChange = onBottomBarVisibilityChange,
         navigateToReport = navigateToReport,
         setFullScreenLoading = setFullScreenLoading,
+        navigateToFriendList = navigateToFriendList,
     )
 }

@@ -188,4 +188,11 @@
     <string name="friend_empty">친구가 없어요..</string>
     <string name="friend_add_suggestion">친구를 초대해 함께 달려보세요!</string>
     <!--endregion-->
+
+    <!-- region Add Friend -->
+    <string name="friend_code_no_exist">존재하지 않는 코드에요. 다시 입력해주세요</string>
+    <string name="friend_code_invalid">코드가 올바르지 않아요. 다시 입력해주세요</string>
+    <string name="friend_add_success">%s 친구가 추가되었어요.</string>
+    <!--endregion-->
+
 </resources>

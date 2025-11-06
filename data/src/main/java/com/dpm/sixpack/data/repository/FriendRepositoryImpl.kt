@@ -100,7 +100,11 @@ class FriendRepositoryImpl @Inject constructor(
 
                 DoRunResult.Success(nickname)
             } catch (e: HttpException) {
-                DoRunResult.Failure(DoRunException.ServerError(e.code(), e.message.toString()))
+                when (val code = e.code()) {
+                    400 -> DoRunResult.Failure(DoRunException.ServerError(code, "잘못된 요청"))
+                    404 -> DoRunResult.Failure(DoRunException.ServerError(code, "해당 코드의 유저를 찾을 수 없습니다."))
+                    else -> DoRunResult.Failure(DoRunException.ServerError(code, e.message.toString()))
+                }
             } catch (e: Exception) {
                 DoRunResult.Failure(DoRunException.DataError("친구 추가 실패: ${e.message}"))
             }

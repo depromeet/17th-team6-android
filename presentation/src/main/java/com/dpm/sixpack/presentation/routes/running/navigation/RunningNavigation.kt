@@ -13,18 +13,20 @@ fun NavController.navigateRunning(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.addRunningNavGraph(
     onShowSnackBar: (String, String?) -> Unit,
-    onNavigateToBack: () -> Unit,
-    navigateToSessionReport: () -> Unit,
     showFullScreenLoading: (Boolean) -> Unit,
     onBottomBarVisibilityChange: (Boolean) -> Unit,
+    navigateToBack: () -> Unit,
+    navigateToSessionReport: () -> Unit,
+    navigateToFriendList: () -> Unit,
 ) {
     composable<MainRoute.Running> {
         RunningRoute(
             onShowSnackBar = onShowSnackBar,
-            onNavigateToBack = onNavigateToBack,
             onBottomBarVisibilityChange = onBottomBarVisibilityChange,
-            navigateToReport = navigateToSessionReport,
             setFullScreenLoading = showFullScreenLoading,
+            navigateToReport = navigateToSessionReport,
+            navigateToBack = navigateToBack,
+            navigateToFriendList = navigateToFriendList,
         )
     }
 }

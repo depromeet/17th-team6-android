@@ -2,7 +2,7 @@ package com.dpm.sixpack.data.source.remote.di
 
 import com.dpm.sixpack.core.BuildConfig
 import com.dpm.sixpack.core.BuildConfig.DEBUG
-import com.dpm.sixpack.data.source.remote.interceptor.AuthInterceptor
+import com.dpm.sixpack.data.source.remote.interceptor.AuthorizationInterceptor
 import com.dpm.sixpack.data.source.remote.interceptor.TokenAuthenticator
 import dagger.Module
 import dagger.Provides
@@ -10,7 +10,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
-import okhttp3.Interceptor
 import okhttp3.Call
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -44,7 +43,7 @@ object RetrofitModule {
     @Singleton
     fun providesOkHttpClient(
         loggingInterceptor: HttpLoggingInterceptor,
-        authInterceptor: AuthInterceptor,
+        authorizationInterceptor: AuthorizationInterceptor,
         tokenAuthenticator: TokenAuthenticator,
     ): Call.Factory =
         OkHttpClient
@@ -53,20 +52,8 @@ object RetrofitModule {
                 connectTimeout(10, TimeUnit.SECONDS)
                 writeTimeout(10, TimeUnit.SECONDS)
                 readTimeout(10, TimeUnit.SECONDS)
-
-                addInterceptor(
-                    Interceptor { chain ->
-                        val originalRequest = chain.request()
-                        val newRequest =
-                            originalRequest
-                                .newBuilder()
-                                .header("Authorization", "Bearer 1")
-                                .build()
-                        chain.proceed(newRequest)
-                    },
-                )
                 if (DEBUG) addInterceptor(loggingInterceptor)
-                addInterceptor(authInterceptor)
+                addInterceptor(authorizationInterceptor)
                 authenticator(tokenAuthenticator)
             }.build()
 
