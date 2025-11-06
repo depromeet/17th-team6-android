@@ -43,7 +43,6 @@ sealed interface FeedIntent : UiIntent {
     ) : FeedIntent
 
     data class OnPostReactionLongClick(
-        val feedId: Long,
         val reactions: List<PostReaction>,
         val selectedEmoji: Emoji,
     ) : FeedIntent
@@ -80,5 +79,7 @@ sealed interface FeedIntent : UiIntent {
         data class VisibleWeeksChanged(
             val startDate: LocalDate,
         ) : Observed
+
+        data object PagingDataEmpty : Observed
     }
 }

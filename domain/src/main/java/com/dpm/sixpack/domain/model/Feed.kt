@@ -36,7 +36,7 @@ data class FeedPage(
 )
 
 data class FeedContent(
-    val userSummary: UserSummary,
+    val userSummary: UserSummary?,
     val feeds: List<Feed>,
 )
 

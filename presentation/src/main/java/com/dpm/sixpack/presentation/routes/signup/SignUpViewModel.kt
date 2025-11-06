@@ -130,15 +130,23 @@ class SignUpViewModel @Inject constructor(
 
             result
                 .onSuccess { verificationResult ->
-                    // User already registered, show dialog
-                    reduce {
-                        state.copy(
-                            isLoading = false,
-                            showRegisteredDialog = true,
-                            registeredPhoneNumber = state.phoneNumber,
-                        )
+                    reduce { state.copy(isLoading = false) }
+
+                    // isExistingUser 필드로 기존/신규 사용자 구분
+                    if (verificationResult.isExistingUser) {
+                        // 기존 사용자: 이미 등록됨, 다이얼로그 표시
+                        reduce {
+                            state.copy(
+                                showRegisteredDialog = true,
+                                registeredPhoneNumber = state.phoneNumber,
+                            )
+                        }
+                        Timber.d("User already registered: ${state.phoneNumber}")
+                    } else {
+                        // 신규 사용자: 프로필 생성으로 이동
+                        postSideEffect(SignUpSideEffect.NavigateToProfileCreation(phoneNumber = state.phoneNumber))
+                        Timber.d("Phone number verified successfully (new user), moving to profile creation")
                     }
-                    Timber.d("User already registered: ${state.phoneNumber}")
                 }.onError { exception ->
                     Timber.e("Failed to verify phone number: ${exception.message}")
                     reduce {
@@ -149,12 +157,6 @@ class SignUpViewModel @Inject constructor(
                     }
 
                     when (exception) {
-                        is DoRunException.UserNotRegisteredError -> {
-                            // New user, proceed to profile creation
-                            reduce { state.copy(isLoading = false) }
-                            postSideEffect(SignUpSideEffect.NavigateToProfileCreation(phoneNumber = state.phoneNumber))
-                            Timber.d("Phone number verified successfully, moving to profile creation")
-                        }
                         is DoRunException.CodeMismatchError -> {
                             postSideEffect(SignUpSideEffect.ShowCodeMismatchError)
                         }

@@ -66,13 +66,8 @@ class AuthRepositoryImpl @Inject constructor(
                             response.body()?.data?.toSmsVerificationResult()
                                 ?: throw DoRunException.DataError("서버 응답 데이터가 비어 있습니다.")
 
+                        // isExistingUser 필드로 기존/신규 사용자 구분 (UseCase에서 처리)
                         DoRunResult.Success(verificationResult)
-                    }
-                    201 -> {
-                        val errorMessage = response.body()?.message ?: "회원가입이 필요합니다."
-                        DoRunResult.Failure(
-                            DoRunException.UserNotRegisteredError(message = errorMessage),
-                        )
                     }
                     400 -> {
                         val errorMessage = response.body()?.message ?: "인증 코드가 일치하지 않습니다."
@@ -125,6 +120,28 @@ class AuthRepositoryImpl @Inject constructor(
                 DoRunResult.Failure(
                     DoRunException.NetworkError(
                         message = "회원가입에 실패했습니다: ${e.message}",
+                        cause = e,
+                    ),
+                )
+            }
+        }
+
+    override suspend fun refreshToken(refreshToken: String): DoRunResult<com.dpm.sixpack.domain.model.AuthToken> =
+        withContext(Dispatchers.IO) {
+            try {
+                val response = authDataSource.refreshToken(refreshToken)
+
+                val authToken =
+                    response.data?.toAuthToken()
+                        ?: throw DoRunException.DataError("서버 응답 데이터가 비어 있습니다.")
+
+                DoRunResult.Success(authToken)
+            } catch (e: DoRunException) {
+                DoRunResult.Failure(e)
+            } catch (e: Exception) {
+                DoRunResult.Failure(
+                    DoRunException.NetworkError(
+                        message = "토큰 갱신에 실패했습니다: ${e.message}",
                         cause = e,
                     ),
                 )

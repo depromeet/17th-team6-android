@@ -37,8 +37,8 @@ class FeedPagingSource(
             val postItems = feedContent.feeds.map { FeedListItem.PostItem(it) }
             val finalItemList = mutableListOf<FeedListItem>()
 
-            if (pageNum == 0 && type == FeedType.USER_PAGE_FEED) {
-                finalItemList.add(FeedListItem.UserSummaryItem(feedContent.userSummary))
+            if (pageNum == 0 && type == FeedType.USER_PAGE_FEED && feedContent.userSummary != null) {
+                finalItemList.add(FeedListItem.UserSummaryItem(feedContent.userSummary!!))
             }
 
             finalItemList.addAll(postItems)

@@ -25,7 +25,6 @@ data class ReactingUserInfo(
     val emoji: Emoji,
 ) : Parcelable
 
-// TODO 슬랙보고 string 바꾸기
 @Parcelize
 enum class Emoji(
     val type: String,
@@ -41,10 +40,10 @@ enum class Emoji(
         @DrawableRes
         get() =
             when (this) {
-                SURPRISE -> R.drawable.ic_reaction_surprise // 적절한 아이콘 리소스로 변경 필요
+                SURPRISE -> R.drawable.ic_reaction_surprise
                 HEART -> R.drawable.ic_reaction_heart
-                THUMBS_UP -> R.drawable.ic_reaction_thumbs_up // 적절한 아이콘 리소스로 변경 필요
-                CONGRATS -> R.drawable.ic_reaction_congrats // 적절한 아이콘 리소스로 변경 필요
+                THUMBS_UP -> R.drawable.ic_reaction_thumbs_up
+                CONGRATS -> R.drawable.ic_reaction_congrats
                 FIRE -> R.drawable.ic_reaction_fire
             }
 
