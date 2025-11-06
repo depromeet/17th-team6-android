@@ -13,18 +13,18 @@ import javax.inject.Inject
  * including friend count, total distance, and selfie count.
  */
 class GetUserSummaryUseCase
-@Inject
-constructor(
-    private val feedRepository: FeedRepository,
-    private val userPreferenceRepository: UserPreferenceRepository
-) {
-    /**
-     * Retrieves the user summary for the current logged-in user.
-     *
-     * @return DoRunResult containing UserSummary on success, or error on failure
-     */
-    suspend operator fun invoke(): DoRunResult<UserSummary> {
-        val userId = userPreferenceRepository.getUserId()
-        return feedRepository.getUserSummary(userId)
+    @Inject
+    constructor(
+        private val feedRepository: FeedRepository,
+        private val userPreferenceRepository: UserPreferenceRepository,
+    ) {
+        /**
+         * Retrieves the user summary for the current logged-in user.
+         *
+         * @return DoRunResult containing UserSummary on success, or error on failure
+         */
+        suspend operator fun invoke(): DoRunResult<UserSummary> {
+            val userId = userPreferenceRepository.getUserId()
+            return feedRepository.getUserSummary(userId)
+        }
     }
-}

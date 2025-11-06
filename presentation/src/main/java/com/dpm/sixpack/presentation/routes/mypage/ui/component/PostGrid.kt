@@ -1,6 +1,7 @@
 package com.dpm.sixpack.presentation.routes.mypage.ui.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,6 +39,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 internal fun PostGrid(
     gridItemsPagingItems: LazyPagingItems<GridItemType>,
+    onPostClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     // 최소 3개 컬럼을 보장하는 adaptive 그리드 셀 크기 계산
@@ -74,6 +76,7 @@ internal fun PostGrid(
                 is GridItemType.PostItem -> {
                     PostGridItem(
                         post = item.post,
+                        onClick = { onPostClick(item.post.id) },
                         modifier = Modifier.size(109.dp),
                     )
                 }
@@ -129,6 +132,7 @@ private fun MonthGridItem(
 @Composable
 private fun PostGridItem(
     post: Post,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val day =
@@ -142,7 +146,8 @@ private fun PostGridItem(
     Box(
         modifier =
             modifier
-                .clip(RoundedCornerShape(8.dp)),
+                .clip(RoundedCornerShape(8.dp))
+                .clickable(onClick = onClick),
     ) {
         // Image
         DoRunAsyncImage(
@@ -184,6 +189,7 @@ private fun PostGridPreview() {
 
         PostGrid(
             gridItemsPagingItems = gridItemsPagingItems,
+            onPostClick = {},
         )
     }
 }

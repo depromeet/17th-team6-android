@@ -8,7 +8,6 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.dpm.sixpack.presentation.routes.mypage.contract.GridItemType
 import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageFeedTabIntent
-import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageFeedTabState
 import com.dpm.sixpack.presentation.routes.mypage.ui.component.EmptyState
 import com.dpm.sixpack.presentation.routes.mypage.ui.component.ErrorState
 import com.dpm.sixpack.presentation.routes.mypage.ui.component.FeedTabLoadingState
@@ -16,7 +15,6 @@ import com.dpm.sixpack.presentation.routes.mypage.ui.component.PostGrid
 
 @Composable
 internal fun FeedTabContent(
-    state: MyPageFeedTabState,
     gridItemsPagingItems: LazyPagingItems<GridItemType>,
     onIntent: (MyPageFeedTabIntent) -> Unit,
     modifier: Modifier = Modifier,
@@ -52,6 +50,9 @@ internal fun FeedTabContent(
             else -> {
                 PostGrid(
                     gridItemsPagingItems = gridItemsPagingItems,
+                    onPostClick = { postId ->
+                        onIntent(MyPageFeedTabIntent.OnPostClick(postId))
+                    },
                     modifier = Modifier.fillMaxSize(),
                 )
             }

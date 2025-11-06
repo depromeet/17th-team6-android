@@ -42,59 +42,58 @@ internal fun RecordCard(
                     width = 1.dp,
                     color = SixpackTheme.colors.gray200,
                     shape = RoundedCornerShape(16.dp),
-                )
-                .background(SixpackTheme.colors.gray0)
+                ).background(SixpackTheme.colors.gray0)
                 .clickable(onClick = onClick)
                 .padding(horizontal = 20.dp, vertical = 16.dp),
     ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        Text(
-                            text = record.time,
-                            style = SixpackTheme.typography.c1Regular,
-                            color = SixpackTheme.colors.gray700,
-                        )
-                        record.certificationStatus?.let { status ->
-                            CertificationBadge(status = status)
-                        }
-                    }
-
                     Text(
-                        text = "${record.distanceKm}km",
-                        style = SixpackTheme.typography.h2Bold,
-                        color = SixpackTheme.colors.gray900,
+                        text = record.time,
+                        style = SixpackTheme.typography.c1Regular,
+                        color = SixpackTheme.colors.gray700,
                     )
-
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    ) {
-                        RecordStat(label = "시간", value = record.durationFormatted)
-                        RecordStat(label = "페이스", value = record.paceFormatted)
-                        RecordStat(label = "케이던스", value = "${record.cadence} spm")
+                    record.certificationStatus?.let { status ->
+                        CertificationBadge(status = status)
                     }
                 }
 
-                if (record.certificationStatus == CertificationStatus.COMPLETED) {
-                    Icon(
-                        painter = painterResource(R.drawable.ill_character_success),
-                        contentDescription = null,
-                        tint = Color.Unspecified,
-                        modifier = Modifier.size(72.dp),
-                    )
+                Text(
+                    text = "${record.distanceKm}km",
+                    style = SixpackTheme.typography.h2Bold,
+                    color = SixpackTheme.colors.gray900,
+                )
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    RecordStat(label = "시간", value = record.durationFormatted)
+                    RecordStat(label = "페이스", value = record.paceFormatted)
+                    RecordStat(label = "케이던스", value = "${record.cadence} spm")
                 }
+            }
+
+            if (record.certificationStatus == CertificationStatus.COMPLETED) {
+                Icon(
+                    painter = painterResource(R.drawable.ill_character_success),
+                    contentDescription = null,
+                    tint = Color.Unspecified,
+                    modifier = Modifier.size(72.dp),
+                )
             }
         }
     }
+}
 
 @Composable
 private fun CertificationBadge(

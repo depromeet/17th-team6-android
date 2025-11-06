@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyPageRecordTabViewModel
-@Inject
+    @Inject
     constructor(
         savedStateHandle: SavedStateHandle,
         private val getRunSessionsUseCase: GetRunSessionsUseCase,
@@ -113,7 +113,9 @@ class MyPageRecordTabViewModel
             // canGoPrevious는 항상 true
             // canGoNext는 현재 선택된 월이 오늘 기준 월보다 작을 때만 true
             val canGoNext =
-                container.stateFlow.value.currentYearMonth.let { it.year * 12 + it.month } < currentYearMonth.let { it.year * 12 + it.month }
+                container.stateFlow.value.currentYearMonth
+                    .let { it.year * 12 + it.month } <
+                    currentYearMonth.let { it.year * 12 + it.month }
 
             return NavigationState(canGoPrevious = true, canGoNext = canGoNext)
         }

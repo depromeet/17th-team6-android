@@ -21,7 +21,9 @@ internal fun RecordTabLoadingState(modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         // Month Navigation - 실제와 동일하게 표시
         MonthNavigation(
-            yearMonth = com.dpm.sixpack.presentation.routes.mypage.contract.YearMonth(),
+            yearMonth =
+                com.dpm.sixpack.presentation.routes.mypage.contract
+                    .YearMonth(),
             onPreviousClick = {},
             onNextClick = {},
             canGoPrevious = false,
@@ -44,8 +46,10 @@ internal fun RecordTabLoadingState(modifier: Modifier = Modifier) {
                             Modifier
                                 .width(100.dp)
                                 .height(21.dp)
-                                .clip(androidx.compose.foundation.shape.RoundedCornerShape(4.dp))
-                                .background(SixpackTheme.colors.gray200),
+                                .clip(
+                                    androidx.compose.foundation.shape
+                                        .RoundedCornerShape(4.dp),
+                                ).background(SixpackTheme.colors.gray200),
                     )
 
                     // Record cards skeleton
@@ -58,7 +62,6 @@ internal fun RecordTabLoadingState(modifier: Modifier = Modifier) {
     }
 }
 
-
 @Preview
 @Composable
 private fun RecordTabLoadingStatePreview() {
@@ -66,4 +69,3 @@ private fun RecordTabLoadingStatePreview() {
         RecordTabLoadingState()
     }
 }
-

@@ -23,7 +23,6 @@ fun MyPageRoute(
     onNavigateToRecordDetail: (Long) -> Unit = {},
 ) {
     val state by viewModel.collectAsState()
-    val feedTabState by feedTabViewModel.collectAsState()
     val recordTabState by recordTabViewModel.collectAsState()
 
     val gridItemsPagingItems = feedTabViewModel.postsPagingFlow.collectAsLazyPagingItems()
@@ -48,7 +47,6 @@ fun MyPageRoute(
 
     MyPageScreen(
         state = state,
-        feedTabState = feedTabState,
         recordTabState = recordTabState,
         gridItemsPagingItems = gridItemsPagingItems,
         onIntent = viewModel::onIntent,

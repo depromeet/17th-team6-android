@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyPageViewModel
-@Inject
+    @Inject
     constructor(
         savedStateHandle: SavedStateHandle,
         private val getUserSummaryUseCase: GetUserSummaryUseCase,

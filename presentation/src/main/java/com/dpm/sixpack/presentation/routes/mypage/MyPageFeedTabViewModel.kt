@@ -26,7 +26,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyPageFeedTabViewModel
-@Inject
+    @Inject
     constructor(
         savedStateHandle: SavedStateHandle,
         getMyUserFeedsUseCase: GetMyUserFeedsUseCase,

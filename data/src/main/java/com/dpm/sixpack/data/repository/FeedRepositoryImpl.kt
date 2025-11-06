@@ -87,8 +87,9 @@ class FeedRepositoryImpl @Inject constructor(
                         page = 0,
                         size = 1,
                     )
-                val feedPage = response.data?.toDomain() ?: throw DoRunException.DataError("데이터 변환에 실패했습니다")
-                DoRunResult.Success(feedPage.contents.userSummary)
+                val userSummary =
+                    response.data?.userSummary?.toDomain() ?: throw DoRunException.DataError("데이터 변환에 실패했습니다")
+                DoRunResult.Success(userSummary)
             } catch (e: DoRunException) {
                 DoRunResult.Failure(e)
             } catch (e: Exception) {

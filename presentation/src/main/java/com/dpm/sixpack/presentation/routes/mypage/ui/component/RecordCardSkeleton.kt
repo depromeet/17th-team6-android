@@ -29,8 +29,7 @@ internal fun RecordCardSkeleton(modifier: Modifier = Modifier) {
                     width = 1.dp,
                     color = SixpackTheme.colors.gray200,
                     shape = RoundedCornerShape(16.dp),
-                )
-                .background(SixpackTheme.colors.gray0)
+                ).background(SixpackTheme.colors.gray0)
                 .padding(horizontal = 20.dp, vertical = 16.dp),
     ) {
         Column(

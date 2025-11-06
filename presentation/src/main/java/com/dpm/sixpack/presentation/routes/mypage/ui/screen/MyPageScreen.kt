@@ -30,14 +30,9 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunTopBarSlot
-import com.dpm.sixpack.presentation.routes.mypage.ui.component.MyPageTabText
-import com.dpm.sixpack.presentation.routes.mypage.ui.component.ProfileSection
-import com.dpm.sixpack.presentation.routes.mypage.ui.content.FeedTabContent
-import com.dpm.sixpack.presentation.routes.mypage.ui.content.RecordTabContent
 import com.dpm.sixpack.presentation.routes.mypage.contract.CertificationStatus
 import com.dpm.sixpack.presentation.routes.mypage.contract.GridItemType
 import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageFeedTabIntent
-import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageFeedTabState
 import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageIntent
 import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageRecordTabIntent
 import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageRecordTabState
@@ -46,13 +41,16 @@ import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageTab
 import com.dpm.sixpack.presentation.routes.mypage.contract.Post
 import com.dpm.sixpack.presentation.routes.mypage.contract.ProfileInfo
 import com.dpm.sixpack.presentation.routes.mypage.contract.RecordItem
+import com.dpm.sixpack.presentation.routes.mypage.ui.component.MyPageTabText
+import com.dpm.sixpack.presentation.routes.mypage.ui.component.ProfileSection
+import com.dpm.sixpack.presentation.routes.mypage.ui.content.FeedTabContent
+import com.dpm.sixpack.presentation.routes.mypage.ui.content.RecordTabContent
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 import kotlinx.coroutines.flow.flowOf
 
 @Composable
 fun MyPageScreen(
     state: MyPageState,
-    feedTabState: MyPageFeedTabState,
     recordTabState: MyPageRecordTabState,
     gridItemsPagingItems: LazyPagingItems<GridItemType>,
     onIntent: (MyPageIntent) -> Unit,
@@ -76,9 +74,10 @@ fun MyPageScreen(
     }
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(SixpackTheme.colors.gray0),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(SixpackTheme.colors.gray0),
     ) {
         // TopBar
         MyPageTopBar(
@@ -137,7 +136,6 @@ fun MyPageScreen(
             when (page) {
                 0 ->
                     FeedTabContent(
-                        state = feedTabState,
                         gridItemsPagingItems = gridItemsPagingItems,
                         onIntent = onFeedTabIntent,
                         modifier = Modifier.fillMaxSize(),
@@ -211,7 +209,6 @@ private fun MyPageScreenPreview() {
                             certificationCount = 120,
                         ),
                 ),
-            feedTabState = MyPageFeedTabState(),
             recordTabState = MyPageRecordTabState(),
             gridItemsPagingItems = gridItemsPagingItems,
             onIntent = {},
@@ -240,7 +237,6 @@ private fun MyPageScreenRecordTabPreview() {
                             certificationCount = 120,
                         ),
                 ),
-            feedTabState = MyPageFeedTabState(),
             recordTabState =
                 MyPageRecordTabState(
                     records =
@@ -283,7 +279,6 @@ private fun MyPageScreenEmptyPreview() {
                             certificationCount = 0,
                         ),
                 ),
-            feedTabState = MyPageFeedTabState(),
             recordTabState = MyPageRecordTabState(),
             gridItemsPagingItems = gridItemsPagingItems,
             onIntent = {},

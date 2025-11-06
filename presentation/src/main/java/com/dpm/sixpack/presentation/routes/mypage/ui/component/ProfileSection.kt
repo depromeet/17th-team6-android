@@ -70,7 +70,7 @@ internal fun ProfileSection(
 
         // Stats
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             StatItem(
                 label = "누적 거리",
