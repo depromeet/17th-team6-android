@@ -3,9 +3,11 @@ package com.dpm.sixpack.presentation.routes.postedit
 import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.dpm.sixpack.domain.repository.FeedRepository
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.common.model.toPostResource
+import com.dpm.sixpack.presentation.destinations.PostEdit
 import com.dpm.sixpack.presentation.routes.postedit.contract.PostEditIntent
 import com.dpm.sixpack.presentation.routes.postedit.contract.PostEditSideEffect
 import com.dpm.sixpack.presentation.routes.postedit.contract.PostEditUiState
@@ -25,7 +27,17 @@ class PostEditViewModel @Inject constructor(
     override val container: Container<PostEditUiState, PostEditSideEffect> =
         container(initialState = initialState, savedStateHandle = savedStateHandle)
 
-    fun loadPost(feedId: Long) =
+    init{
+        initializeState()
+    }
+
+    private fun initializeState() {
+        val route = savedStateHandle.toRoute<PostEdit>()
+
+        loadPost(route.feedId)
+    }
+
+    private fun loadPost(feedId: Long) =
         intent {
             reduce { state.copy(isLoading = true) }
 

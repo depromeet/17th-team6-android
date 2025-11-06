@@ -42,11 +42,8 @@ fun NavGraphBuilder.addFeedNavGraph(
         )
     }
 
-    composable<CertifiedUsers> { backStackEntry ->
-        val route = backStackEntry.toRoute<CertifiedUsers>()
-
+    composable<CertifiedUsers> {
         CertifiedUsersRoute(
-            date = route.date,
             navigateToBack = navigateToBack,
             navigateToUserProfile = navigateToUserProfile,
             navigateToMyPage = navigateToMyPage,

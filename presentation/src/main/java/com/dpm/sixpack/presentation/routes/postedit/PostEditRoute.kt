@@ -37,16 +37,10 @@ import java.io.IOException
 
 @Composable
 fun PostEditRoute(
-    feedId: Long,
     viewModel: PostEditViewModel = hiltViewModel(),
     navigateBack: () -> Unit,
 ) {
     val state by viewModel.collectAsState()
-
-    // Post 데이터 로드
-    LaunchedEffect(feedId) {
-        viewModel.loadPost(feedId)
-    }
 
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current

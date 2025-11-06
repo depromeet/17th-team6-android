@@ -11,17 +11,12 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 fun CertifiedUsersRoute(
-    date: String,
     navigateToBack: () -> Unit,
     navigateToUserProfile: (Long) -> Unit,
     navigateToMyPage: () -> Unit,
     viewModel: CertifiedUsersViewModel = hiltViewModel(),
 ) {
     val state by viewModel.collectAsState()
-
-    LaunchedEffect(Unit) {
-        viewModel.loadCertifiedUsers(date)
-    }
 
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {

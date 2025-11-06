@@ -17,11 +17,8 @@ fun NavGraphBuilder.addPostDetailNavGraph(
     navigateToMyPage: () -> Unit = {},
     navigateToPostEdit: (Long) -> Unit = {},
 ) {
-    composable<PostDetail> { backStackEntry ->
-        val route = backStackEntry.toRoute<PostDetail>()
-
+    composable<PostDetail> {
         PostDetailRoute(
-            feedId = route.feedId,
             navigateToMyPage = navigateToMyPage,
             navigateToBack = navigateToBack,
             navigateToUserProfile = navigateToUserProfile,
