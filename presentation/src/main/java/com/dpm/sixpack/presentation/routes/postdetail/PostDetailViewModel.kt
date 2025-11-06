@@ -249,7 +249,7 @@ class PostDetailViewModel @Inject constructor(
         intent {
             viewModelScope.launch {
                 feedRepository
-                    .deleteFeed(feedId)
+                    .deletePost(feedId)
                     .onSuccess {
                         postSideEffect(PostDetailSideEffect.ShowToast("게시물이 삭제되었습니다."))
                         postSideEffect(PostDetailSideEffect.NavigateToBack)

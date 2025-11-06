@@ -113,7 +113,7 @@ class PostEditViewModel @Inject constructor(
 
             viewModelScope.launch {
                 feedRepository
-                    .updateSelfie(
+                    .updatePost(
                         feedId = state.originalPost.feedId,
                         content = "", // TODO: content 추가 필요 시 UiState에 추가
                         imageUri = selectedImageUri,

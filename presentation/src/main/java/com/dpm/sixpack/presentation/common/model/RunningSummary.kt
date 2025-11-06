@@ -8,7 +8,9 @@ import com.dpm.sixpack.presentation.common.util.format.formatSecondsToTimeInFeed
 import com.dpm.sixpack.presentation.common.util.format.toKoreanFeedTimeStringOrNull
 import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Parcelize
 @Immutable
 data class RunningSummary(

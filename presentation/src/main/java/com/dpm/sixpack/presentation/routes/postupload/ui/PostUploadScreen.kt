@@ -71,7 +71,7 @@ fun PostUploadScreen(
             Spacer(modifier = Modifier.height(40.dp))
 
             val imageUrl =
-                state.selectedSelfieUri?.toString() ?: state.mapImageUrl
+                state.selectedImageUri?.toString() ?: state.mapImageUrl
 
             EditablePostImage(
                 postImageUrl = imageUrl,
