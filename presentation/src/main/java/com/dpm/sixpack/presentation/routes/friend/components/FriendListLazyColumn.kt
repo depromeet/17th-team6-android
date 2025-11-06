@@ -100,7 +100,7 @@ internal fun FriendListLazyColumn(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
-                        text = "데이터를 불러오는 데 실패했습니다.",
+                        text = stringResource(R.string.data_load_failed),
                         style = SixpackTheme.typography.b1Regular,
                         color = SixpackTheme.colors.gray700,
                     )

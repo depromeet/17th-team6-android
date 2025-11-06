@@ -12,6 +12,9 @@
     <string name="common_recommended_duration">권장 러닝 시간</string>
     <string name="common_recommended_pace">권장 페이스</string>
     <string name="request_retry">재시도</string>
+    <string name="clipboard_copy">클립보드에 내 코드가 복사되었어요!</string>
+    <string name="data_load_failed">데이터를 불러오는 데 실패했습니다.</string>
+
 
     <!-- endregion -->
 
@@ -193,9 +196,18 @@
     <!--endregion-->
 
     <!-- region Add Friend -->
+    <string name="friend_list_screen_title">친구</string>
+    <string name="friend_list">친구목록</string>
+    <string name="add_friend_screen_title">친구 코드 입력</string>
     <string name="friend_code_no_exist">존재하지 않는 코드에요. 다시 입력해주세요</string>
     <string name="friend_code_invalid">코드가 올바르지 않아요. 다시 입력해주세요</string>
     <string name="friend_add_success">%s 친구가 추가되었어요.</string>
+    <string name="friend_delete">친구 삭제하기</string>
+    <string name="friend_code_enter_button">친구 코드 입력하기</string>
+    <string name="friend_code_enter_done_button">입력 완료</string>
+    <string name="my_friend_code_copy">내 코드 복사하기</string>
+    <string name="friend_code_input_title">추가할 친구의 친구 코드를 입력해주세요</string>
+    <string name="friend_code_input_description">친구코드 8자리 입력</string>
     <!--endregion-->
 
 </resources>

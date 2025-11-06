@@ -11,7 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
@@ -37,7 +39,7 @@ internal fun FriendBottomBar(
                     Modifier
                         .fillMaxWidth()
                         .height(56.dp),
-                text = "친구 코드 입력하기",
+                text = stringResource(R.string.friend_code_enter_button),
                 onClick = onAddFriendClick,
             )
 
@@ -46,7 +48,7 @@ internal fun FriendBottomBar(
                 modifier = Modifier.padding(top = 8.dp),
             ) {
                 Text(
-                    text = "내 코드 복사하기",
+                    text = stringResource(R.string.my_friend_code_copy),
                     color = SixpackTheme.colors.gray500,
                     style = SixpackTheme.typography.b2Medium,
                 )

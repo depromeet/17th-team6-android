@@ -1,5 +1,6 @@
 package com.dpm.sixpack.presentation.routes.friend
 
+import android.R.id.message
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -7,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.routes.friend.contract.FriendIntent
 import com.dpm.sixpack.presentation.routes.friend.contract.FriendSideEffect
 import com.dpm.sixpack.presentation.routes.friend.contract.FriendUiState
@@ -26,7 +28,7 @@ fun FriendListRoute(
     val state = viewModel.collectAsState()
     val friendState = state.value as? FriendUiState.FriendList
 
-    //  Paging Flow (리스트용)
+    // Paging Flow (리스트용)
     val pagingItems = viewModel.friendPagingFlow.collectAsLazyPagingItems()
 
     viewModel.collectSideEffect { sideEffect ->
@@ -50,8 +52,7 @@ fun FriendListRoute(
 
                 clipboardManager.setPrimaryClip(clip)
 
-//                val message = context.getString(sideEffect.successMessageResId)
-                val message = "클립보드에 내 코드가 복사되었어요!"
+                val message = context.getString(R.string.clipboard_copy)
                 onShowSnackBar(message, null)
             }
 

@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.core.util.TimeUtil.isoStringToEpochSeconds
 import com.dpm.sixpack.presentation.R
@@ -110,7 +111,7 @@ internal fun FriendListItem(
             ) {
                 Icon(
                     imageVector = Icons.Default.MoreHoriz,
-                    contentDescription = "친구 옵션",
+                    contentDescription = null,
                     tint = Color.Gray,
                 )
             }
@@ -124,7 +125,7 @@ internal fun FriendListItem(
                     modifier = Modifier.height(DROPDOWN_MENU_ITEM_HEIGHT_DP.dp),
                     text = {
                         Text(
-                            text = "친구 삭제하기",
+                            text = stringResource(R.string.friend_delete),
                             style = SixpackTheme.typography.b2Regular,
                             color = SixpackTheme.colors.gray700,
                         )

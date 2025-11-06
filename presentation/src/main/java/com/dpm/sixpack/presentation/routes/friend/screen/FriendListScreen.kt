@@ -14,9 +14,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
+import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.dialog.DialogButtonType
 import com.dpm.sixpack.presentation.common.components.dialog.DoRunDefaultDialog
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
@@ -41,7 +43,7 @@ internal fun FriendListScreen(
                 navigateToBack = { onIntent(FriendListIntent.NavigateBackClick) },
                 titleContent = {
                     Text(
-                        text = "친구",
+                        text = stringResource(R.string.friend_list_screen_title),
                         textAlign = TextAlign.Center,
                         style = SixpackTheme.typography.t1Bold,
                         color = SixpackTheme.colors.gray900,
@@ -73,7 +75,7 @@ internal fun FriendListScreen(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = "친구목록",
+                    text = stringResource(R.string.friend_list),
                     style = SixpackTheme.typography.t1Bold,
                     color = SixpackTheme.colors.gray900,
                 )
@@ -86,21 +88,19 @@ internal fun FriendListScreen(
 
             Spacer(Modifier.height(12.dp))
 
-            (state as? FriendUiState.FriendList)?.let {
-                FriendListLazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    showOptionForUserId = it.showOptionForUserId,
-                    pagingItems = pagingItems,
-                    onRefresh = { onIntent(FriendListIntent.Refresh) },
-                    onOptionClick = { userId -> onIntent(FriendListIntent.OptionClick(userId)) },
-                    onOptionDismiss = { onIntent(FriendListIntent.DismissOptionMenu) },
-                    onDeleteClick = { userId -> onIntent(FriendListIntent.ShowDeleteDialog(userId)) },
-                )
-            }
+            FriendListLazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                showOptionForUserId = state.showOptionForUserId,
+                pagingItems = pagingItems,
+                onRefresh = { onIntent(FriendListIntent.Refresh) },
+                onOptionClick = { userId -> onIntent(FriendListIntent.OptionClick(userId)) },
+                onOptionDismiss = { onIntent(FriendListIntent.DismissOptionMenu) },
+                onDeleteClick = { userId -> onIntent(FriendListIntent.ShowDeleteDialog(userId)) },
+            )
         }
     }
 
-    if ((state as? FriendUiState.FriendList)?.showDeleteDialogForUserId != null) {
+    if (state.showDeleteDialogForUserId != null) {
         val deletedTarget = state.showDeleteDialogForUserId
         DoRunDefaultDialog(
             modifier = Modifier.fillMaxWidth(),
@@ -115,7 +115,7 @@ internal fun FriendListScreen(
             cancelButtonText = "취소",
             confirmButtonText = "삭제",
             onConfirmClick = {
-                if (deletedTarget != null) onIntent(FriendListIntent.ConfirmDeleteFriend(deletedTarget))
+                onIntent(FriendListIntent.ConfirmDeleteFriend(deletedTarget))
             },
             confirmButtonType = DialogButtonType.Destructive,
         )
