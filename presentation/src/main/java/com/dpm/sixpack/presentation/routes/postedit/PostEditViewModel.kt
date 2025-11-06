@@ -27,7 +27,7 @@ class PostEditViewModel @Inject constructor(
     override val container: Container<PostEditUiState, PostEditSideEffect> =
         container(initialState = initialState, savedStateHandle = savedStateHandle)
 
-    init{
+    init {
         initializeState()
     }
 

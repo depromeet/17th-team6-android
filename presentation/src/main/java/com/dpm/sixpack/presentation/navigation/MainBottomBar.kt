@@ -37,16 +37,17 @@ fun MainBottomBar(
     ) {
         val borderColor = SixpackTheme.colors.gray50
         BottomAppBar(
-            modifier = modifier
-                .drawBehind {
-                    val strokeWidth = 1.dp.toPx()
-                    drawLine(
-                        color = borderColor,
-                        start = Offset(0f, 0f),
-                        end = Offset(size.width, 0f),
-                        strokeWidth = strokeWidth
-                    )
-                },
+            modifier =
+                modifier
+                    .drawBehind {
+                        val strokeWidth = 1.dp.toPx()
+                        drawLine(
+                            color = borderColor,
+                            start = Offset(0f, 0f),
+                            end = Offset(size.width, 0f),
+                            strokeWidth = strokeWidth,
+                        )
+                    },
             contentColor = SixpackTheme.colors.gray0,
             containerColor = SixpackTheme.colors.gray0,
             contentPadding = PaddingValues(0.dp),
@@ -75,8 +76,10 @@ fun MainBottomBar(
 @Composable
 private fun MainBottomBarPreview() {
     DoRunPreviewWrapper {
-        Column(modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+        ) {
             MainBottomBar(
                 visible = true,
                 mainNavTabs = MainNavTab.entries.toPersistentList(),

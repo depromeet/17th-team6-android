@@ -18,7 +18,7 @@ data class PostEdit(
 @Serializable
 data class PostUpload(
     val sessionId: Long,
-    val mapImageUrl : String,
+    val mapImageUrl: String,
     val runningSummary: RunningSummary,
 ) : MainFeedRoute
 

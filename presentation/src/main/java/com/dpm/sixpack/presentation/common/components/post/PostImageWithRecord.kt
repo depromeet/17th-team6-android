@@ -115,7 +115,7 @@ private fun RunningSummaryOverlay(
             )
             SummaryItem(
                 title = stringResource(id = R.string.feed_post_image_record_cadence),
-                record =  cadence ,
+                record = cadence,
                 recordTextStyle = SixpackTheme.typography.t1Bold,
                 modifier = Modifier.weight(1f),
             )
@@ -157,8 +157,7 @@ fun PostTimeTextBox(
                 .background(
                     color = SixpackTheme.colors.gray900.copy(alpha = 0.4f),
                     shape = RoundedCornerShape(33.dp),
-                )
-                .padding(
+                ).padding(
                     vertical = 6.dp,
                     horizontal = 12.dp,
                 ),

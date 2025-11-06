@@ -26,7 +26,7 @@ class CertifiedUsersViewModel @Inject constructor(
     override val container: Container<CertifiedUsersUiState, CertifiedUsersSideEffect> =
         container(initialState = initialState, savedStateHandle = savedStateHandle)
 
-    init{
+    init {
         initializeState()
     }
 

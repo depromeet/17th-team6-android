@@ -15,5 +15,6 @@ sealed interface PostUploadIntent : UiIntent {
     data class OnImagePermissionResult(
         val isGranted: Boolean,
     ) : PostUploadIntent
+
     data object OnUploadButtonClick : PostUploadIntent
 }

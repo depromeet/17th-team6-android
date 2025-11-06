@@ -24,23 +24,24 @@ inline fun <reified T : Any> serializableType(
     val serializer: KSerializer<T> = serializer()
 
     return object : NavType<T>(isNullableAllowed = isNullableAllowed) {
-
-        override fun get(bundle: Bundle, key: String): T? {
-            return bundle.getString(key)?.let {
+        override fun get(
+            bundle: Bundle,
+            key: String,
+        ): T? =
+            bundle.getString(key)?.let {
                 json.decodeFromString(serializer, it)
             }
-        }
 
-        override fun put(bundle: Bundle, key: String, value: T) {
+        override fun put(
+            bundle: Bundle,
+            key: String,
+            value: T,
+        ) {
             bundle.putString(key, json.encodeToString(serializer, value))
         }
 
-        override fun parseValue(value: String): T {
-            return json.decodeFromString(serializer, value)
-        }
+        override fun parseValue(value: String): T = json.decodeFromString(serializer, value)
 
-        override fun serializeAsValue(value: T): String {
-            return json.encodeToString(serializer, value)
-        }
+        override fun serializeAsValue(value: T): String = json.encodeToString(serializer, value)
     }
 }

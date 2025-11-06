@@ -42,7 +42,7 @@ class PostDetailViewModel @Inject constructor(
             savedStateHandle = savedStateHandle,
         )
 
-    init{
+    init {
         initializeState()
     }
 

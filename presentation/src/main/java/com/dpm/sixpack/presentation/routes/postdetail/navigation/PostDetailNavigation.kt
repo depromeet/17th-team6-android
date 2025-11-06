@@ -3,7 +3,6 @@ package com.dpm.sixpack.presentation.routes.postdetail.navigation
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import androidx.navigation.toRoute
 import com.dpm.sixpack.presentation.destinations.PostDetail
 import com.dpm.sixpack.presentation.routes.postdetail.PostDetailRoute
 

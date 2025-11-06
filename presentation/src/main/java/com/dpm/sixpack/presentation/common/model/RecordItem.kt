@@ -13,11 +13,11 @@ data class RecordItem(
     val sessionId: Long = 0,
     val runningSummary: RunningSummary = RunningSummary(),
     val mapImageUrl: String = "",
-    val isPosted : Boolean = false,
+    val isPosted: Boolean = false,
     val postTime: String = "",
-) : Parcelable{
+) : Parcelable {
     val formattedTime: String
         get() = postTime.toTimeOnlyOrNull() ?: LocalDate.now().toString()
-    val formattedDate : String
+    val formattedDate: String
         get() = postTime.toDateWithDayOfWeekOrNull() ?: LocalDate.now().toString()
 }
