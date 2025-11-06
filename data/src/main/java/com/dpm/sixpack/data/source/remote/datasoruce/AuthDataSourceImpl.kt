@@ -79,4 +79,8 @@ class AuthDataSourceImpl @Inject constructor(
             )
         return authService.refreshToken(request = requestDto)
     }
+
+    override suspend fun logout(): BaseResponse<Unit> = authService.logout()
+
+    override suspend fun withdraw(): BaseResponse<Unit> = authService.withdraw()
 }

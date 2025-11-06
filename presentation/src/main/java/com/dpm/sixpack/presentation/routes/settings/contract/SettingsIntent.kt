@@ -18,4 +18,8 @@ sealed interface SettingsIntent : UiIntent {
     data object OnLogoutClick : SettingsIntent
 
     data object OnWithdrawClick : SettingsIntent
+
+    data object OnLogoutConfirm : SettingsIntent
+
+    data object OnWithdrawConfirm : SettingsIntent
 }

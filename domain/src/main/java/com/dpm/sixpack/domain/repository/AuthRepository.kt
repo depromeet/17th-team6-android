@@ -21,4 +21,8 @@ interface AuthRepository {
     ): DoRunResult<SignUpResult>
 
     suspend fun refreshToken(refreshToken: String): DoRunResult<AuthToken>
+
+    suspend fun logout(): DoRunResult<Unit>
+
+    suspend fun withdraw(): DoRunResult<Unit>
 }

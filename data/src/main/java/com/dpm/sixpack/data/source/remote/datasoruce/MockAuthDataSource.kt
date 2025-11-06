@@ -110,4 +110,26 @@ class MockAuthDataSource @Inject constructor() : AuthDataSource {
                 ),
         )
     }
+
+    override suspend fun logout(): BaseResponse<Unit> {
+        delay(500L)
+        // 로그아웃 성공 응답
+        return BaseResponse(
+            status = "200",
+            message = "로그아웃 성공",
+            timestamp = getCurrentTimestamp(),
+            data = Unit,
+        )
+    }
+
+    override suspend fun withdraw(): BaseResponse<Unit> {
+        delay(500L)
+        // 회원 탈퇴 성공 응답
+        return BaseResponse(
+            status = "200",
+            message = "회원 탈퇴 성공",
+            timestamp = getCurrentTimestamp(),
+            data = Unit,
+        )
+    }
 }

@@ -46,12 +46,7 @@ fun NavGraphBuilder.addSettingsNavGraph(
             onNavigateToPushNotification = {
                 navController.navigateToSettingsPushNotification()
             },
-            onShowLogoutDialog = {
-                // TODO: 로그아웃 다이얼로그 표시
-            },
-            onShowWithdrawDialog = {
-                // TODO: 탈퇴 다이얼로그 표시
-            },
+            onShowSnackbar = onShowSnackbar,
         )
     }
 

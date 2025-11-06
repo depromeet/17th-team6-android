@@ -15,6 +15,8 @@ class SettingsViewModel
     @Inject
     constructor(
         savedStateHandle: SavedStateHandle,
+        private val logoutUseCase: com.dpm.sixpack.domain.usecase.LogoutUseCase,
+        private val withdrawUseCase: com.dpm.sixpack.domain.usecase.WithdrawUseCase,
     ) : BaseViewModel<SettingsState, SettingsIntent, SettingsSideEffect>() {
         override val initialState: SettingsState =
             SettingsState(
@@ -34,6 +36,8 @@ class SettingsViewModel
                 SettingsIntent.OnTermsClick -> handleTermsClick()
                 SettingsIntent.OnLogoutClick -> handleLogoutClick()
                 SettingsIntent.OnWithdrawClick -> handleWithdrawClick()
+                SettingsIntent.OnLogoutConfirm -> handleLogoutConfirm()
+                SettingsIntent.OnWithdrawConfirm -> handleWithdrawConfirm()
             }
         }
 
@@ -77,5 +81,33 @@ class SettingsViewModel
         private fun handleWithdrawClick() =
             intent {
                 postSideEffect(SettingsSideEffect.ShowWithdrawDialog)
+            }
+
+        private fun handleLogoutConfirm() =
+            intent {
+                reduce { state.copy(isLoading = true) }
+
+                logoutUseCase()
+                    .onSuccess {
+                        reduce { state.copy(isLoading = false) }
+                        postSideEffect(SettingsSideEffect.LogoutSuccess)
+                    }.onError {
+                        reduce { state.copy(isLoading = false) }
+                        postSideEffect(SettingsSideEffect.LogoutFailed)
+                    }
+            }
+
+        private fun handleWithdrawConfirm() =
+            intent {
+                reduce { state.copy(isLoading = true) }
+
+                withdrawUseCase()
+                    .onSuccess {
+                        reduce { state.copy(isLoading = false) }
+                        postSideEffect(SettingsSideEffect.WithdrawSuccess)
+                    }.onError {
+                        reduce { state.copy(isLoading = false) }
+                        postSideEffect(SettingsSideEffect.WithdrawFailed)
+                    }
             }
     }

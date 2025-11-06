@@ -22,4 +22,8 @@ interface AuthDataSource {
     ): BaseResponse<SignUpResponseDto>
 
     suspend fun refreshToken(refreshToken: String): BaseResponse<RefreshTokenResponseDto>
+
+    suspend fun logout(): BaseResponse<Unit>
+
+    suspend fun withdraw(): BaseResponse<Unit>
 }

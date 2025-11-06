@@ -18,4 +18,12 @@ sealed interface SettingsSideEffect : SideEffect {
     data object ShowLogoutDialog : SettingsSideEffect
 
     data object ShowWithdrawDialog : SettingsSideEffect
+
+    data object LogoutSuccess : SettingsSideEffect
+
+    data object LogoutFailed : SettingsSideEffect
+
+    data object WithdrawSuccess : SettingsSideEffect
+
+    data object WithdrawFailed : SettingsSideEffect
 }

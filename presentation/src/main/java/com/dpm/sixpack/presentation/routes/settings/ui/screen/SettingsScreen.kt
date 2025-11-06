@@ -15,6 +15,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
+import com.dpm.sixpack.presentation.common.components.dialog.DialogButtonType
+import com.dpm.sixpack.presentation.common.components.dialog.DoRunDefaultDialog
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.components.settings.SettingsDivider
 import com.dpm.sixpack.presentation.common.components.settings.SettingsMenuItem
@@ -27,6 +29,10 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 internal fun SettingsScreen(
     state: SettingsState,
     onIntent: (SettingsIntent) -> Unit,
+    showLogoutDialog: Boolean,
+    showWithdrawDialog: Boolean,
+    onDismissLogoutDialog: () -> Unit,
+    onDismissWithdrawDialog: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -105,6 +111,34 @@ internal fun SettingsScreen(
             )
         }
     }
+
+    // 로그아웃 다이얼로그
+    if (showLogoutDialog) {
+        DoRunDefaultDialog(
+            title = stringResource(R.string.settings_logout_dialog_title),
+            subtitle = stringResource(R.string.settings_logout_dialog_subtitle),
+            onDismissRequest = onDismissLogoutDialog,
+            onCancelClick = onDismissLogoutDialog,
+            cancelButtonText = stringResource(R.string.settings_logout_dialog_cancel),
+            confirmButtonText = stringResource(R.string.settings_logout_dialog_confirm),
+            onConfirmClick = { onIntent(SettingsIntent.OnLogoutConfirm) },
+            confirmButtonType = DialogButtonType.Primary,
+        )
+    }
+
+    // 회원 탈퇴 다이얼로그
+    if (showWithdrawDialog) {
+        DoRunDefaultDialog(
+            title = stringResource(R.string.settings_withdraw_dialog_title),
+            subtitle = stringResource(R.string.settings_withdraw_dialog_subtitle),
+            onDismissRequest = onDismissWithdrawDialog,
+            onCancelClick = onDismissWithdrawDialog,
+            cancelButtonText = stringResource(R.string.settings_withdraw_dialog_cancel),
+            confirmButtonText = stringResource(R.string.settings_withdraw_dialog_confirm),
+            onConfirmClick = { onIntent(SettingsIntent.OnWithdrawConfirm) },
+            confirmButtonType = DialogButtonType.Destructive,
+        )
+    }
 }
 
 @Preview
@@ -117,6 +151,10 @@ private fun SettingsScreenPreview() {
                     appVersion = "3.13.0",
                 ),
             onIntent = {},
+            showLogoutDialog = false,
+            showWithdrawDialog = false,
+            onDismissLogoutDialog = {},
+            onDismissWithdrawDialog = {},
         )
     }
 }

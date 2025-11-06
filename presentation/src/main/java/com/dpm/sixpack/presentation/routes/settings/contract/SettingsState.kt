@@ -6,4 +6,5 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class SettingsState(
     val appVersion: String = "",
+    val isLoading: Boolean = false,
 ) : UiState

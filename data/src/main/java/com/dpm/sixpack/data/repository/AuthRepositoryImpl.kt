@@ -147,4 +147,38 @@ class AuthRepositoryImpl @Inject constructor(
                 )
             }
         }
+
+    override suspend fun logout(): DoRunResult<Unit> =
+        withContext(Dispatchers.IO) {
+            try {
+                authDataSource.logout()
+                DoRunResult.Success(Unit)
+            } catch (e: DoRunException) {
+                DoRunResult.Failure(e)
+            } catch (e: Exception) {
+                DoRunResult.Failure(
+                    DoRunException.NetworkError(
+                        message = "로그아웃에 실패했습니다: ${e.message}",
+                        cause = e,
+                    ),
+                )
+            }
+        }
+
+    override suspend fun withdraw(): DoRunResult<Unit> =
+        withContext(Dispatchers.IO) {
+            try {
+                authDataSource.withdraw()
+                DoRunResult.Success(Unit)
+            } catch (e: DoRunException) {
+                DoRunResult.Failure(e)
+            } catch (e: Exception) {
+                DoRunResult.Failure(
+                    DoRunException.NetworkError(
+                        message = "회원 탈퇴에 실패했습니다: ${e.message}",
+                        cause = e,
+                    ),
+                )
+            }
+        }
 }

@@ -284,5 +284,21 @@
     <string name="settings_push_marketing_disabled_snackbar">마케팅 정보 수신 동의가 해제되었어요.</string>
     <string name="settings_push_notification_enabled_snackbar">알림이 켜졌어요.</string>
     <string name="settings_push_notification_disabled_snackbar">알림이 꺼졌어요.</string>
+
+    <!-- 로그아웃 다이얼로그 -->
+    <string name="settings_logout_dialog_title">로그아웃 하시겠어요?</string>
+    <string name="settings_logout_dialog_subtitle">로그아웃 후 다시 로그인해야 해요.</string>
+    <string name="settings_logout_dialog_cancel">취소</string>
+    <string name="settings_logout_dialog_confirm">로그아웃</string>
+    <string name="settings_logout_success_snackbar">로그아웃 되었습니다.</string>
+    <string name="settings_logout_error_snackbar">로그아웃에 실패했습니다.</string>
+
+    <!-- 회원 탈퇴 다이얼로그 -->
+    <string name="settings_withdraw_dialog_title">정말 탈퇴하시겠어요?</string>
+    <string name="settings_withdraw_dialog_subtitle">탈퇴 시 모든 데이터가 삭제되며\n복구할 수 없어요.</string>
+    <string name="settings_withdraw_dialog_cancel">취소</string>
+    <string name="settings_withdraw_dialog_confirm">탈퇴하기</string>
+    <string name="settings_withdraw_success_snackbar">회원 탈퇴가 완료되었습니다.</string>
+    <string name="settings_withdraw_error_snackbar">회원 탈퇴에 실패했습니다.</string>
     <!-- endregion-->
 </resources>
