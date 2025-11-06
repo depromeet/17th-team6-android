@@ -9,7 +9,6 @@ import com.dpm.sixpack.presentation.routes.profilecreation.contract.ProfileCreat
 import com.dpm.sixpack.presentation.routes.profilecreation.contract.ProfileCreationState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
-import org.orbitmvi.orbit.syntax.Syntax
 import org.orbitmvi.orbit.viewmodel.container
 import timber.log.Timber
 import javax.inject.Inject

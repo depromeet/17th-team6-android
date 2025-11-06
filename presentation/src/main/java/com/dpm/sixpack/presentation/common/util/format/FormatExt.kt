@@ -47,14 +47,15 @@ private val KOREAN_FEED_TIME_FORMATTER =
     DateTimeFormatter.ofPattern("yyyy.MM.dd '·' a h:mm", Locale.KOREAN)
 private val ASIA_ZONE_ID = ZoneId.of("Asia/Seoul")
 
-fun String.toKoreanFeedTimeStringOrNull(): String? {
-    return runCatching {
+fun String.toKoreanFeedTimeStringOrNull(): String? =
+    runCatching {
         val localDateTime = LocalDateTime.parse(this, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
 
-        localDateTime.atZone(ZoneId.of("UTC"))
+        localDateTime
+            .atZone(ZoneId.of("UTC"))
             .withZoneSameInstant(ASIA_ZONE_ID)
             .format(KOREAN_FEED_TIME_FORMATTER)
-    }.onFailure { error -> // ⬇️ 실패 시 로그 찍기
-        Timber.e( "파싱 실패! 에러: ${error.message}")
+    }.onFailure { error ->
+        // ⬇️ 실패 시 로그 찍기
+        Timber.e("파싱 실패! 에러: ${error.message}")
     }.getOrNull()
-}

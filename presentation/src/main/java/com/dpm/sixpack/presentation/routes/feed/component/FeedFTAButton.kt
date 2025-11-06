@@ -23,7 +23,7 @@ fun FeedFTAButton(
     onFTAButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    ) {
+) {
     Box(
         modifier =
             modifier
