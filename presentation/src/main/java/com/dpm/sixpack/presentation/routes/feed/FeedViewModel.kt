@@ -9,7 +9,7 @@ import androidx.paging.map
 import com.dpm.sixpack.domain.event.FeedUpdateEvent
 import com.dpm.sixpack.domain.repository.FeedListItem
 import com.dpm.sixpack.domain.repository.FeedRepository
-import com.dpm.sixpack.domain.usecase.GetFeedsByDateUseCase
+import com.dpm.sixpack.domain.usecase.feed.GetFeedsByDateUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.common.components.post.PostDropDownActionType
 import com.dpm.sixpack.presentation.common.model.Emoji
