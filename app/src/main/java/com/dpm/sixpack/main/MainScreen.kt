@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dpm.sixpack.SixPackAppState
 import com.dpm.sixpack.main.navigation.MainNavHost
+import com.dpm.sixpack.presentation.common.components.FullScreenLoadingIndicator
 import com.dpm.sixpack.presentation.navigation.MainBottomBar
 import com.dpm.sixpack.presentation.navigation.MainNavTab
 import com.dpm.sixpack.presentation.theme.SixpackTheme
@@ -23,6 +24,8 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 internal fun MainScreen(
     appState: SixPackAppState,
     modifier: Modifier = Modifier,
+    showFullScreenLoading: Boolean = false,
+    setFullScreenLoading: (Boolean) -> Unit = {},
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
@@ -43,12 +46,16 @@ internal fun MainScreen(
         modifier = modifier,
         appState = appState,
         snackbarHostState = snackbarHostState,
+        showFullScreenLoading = showFullScreenLoading,
+        setFullScreenLoading = setFullScreenLoading,
     )
 }
 
 @Composable
 internal fun MainScreenContent(
     appState: SixPackAppState,
+    showFullScreenLoading: Boolean,
+    setFullScreenLoading: (Boolean) -> Unit,
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
@@ -80,6 +87,11 @@ internal fun MainScreenContent(
                 ) == SnackbarResult.ActionPerformed
             },
             onBottomBarVisibilityChange = appState.navigator::setBottomBarVisibility,
+            setFullScreenLoading = setFullScreenLoading,
         )
+    }
+
+    if (showFullScreenLoading) {
+        FullScreenLoadingIndicator()
     }
 }

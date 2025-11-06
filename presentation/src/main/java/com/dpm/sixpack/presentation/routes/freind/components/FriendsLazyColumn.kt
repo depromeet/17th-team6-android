@@ -14,7 +14,7 @@ import com.dpm.sixpack.presentation.common.model.FriendItem
 fun FriendsLazyColumn(
     modifier: Modifier = Modifier,
     friendList: List<FriendItem> = emptyList(),
-    onCheerClick: (Long) -> Unit = {},
+    onAwakeClick: (Long) -> Unit = {},
 ) {
     LazyColumn(
         modifier = modifier,
@@ -31,8 +31,8 @@ fun FriendsLazyColumn(
                 profileImgUrl = friend.profileImgUrl,
                 lastestRunAt = friend.lastestRunAt,
                 distanceInMeter = friend.distanceInMeter,
-                onCheerClick = {
-                    onCheerClick(friend.userId)
+                onAwakeClick = {
+                    onAwakeClick(friend.userId)
                 },
             )
         }

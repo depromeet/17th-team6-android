@@ -12,6 +12,7 @@ data class SixPackShapes(
     val round12: Shape,
     val round16: Shape,
     val round20: Shape,
+    val round24: Shape,
     val full: Shape,
 )
 
@@ -22,5 +23,6 @@ val SixPackShapesValue =
         round12 = RoundedCornerShape(12.dp),
         round16 = RoundedCornerShape(16.dp),
         round20 = RoundedCornerShape(20.dp),
+        round24 = RoundedCornerShape(24.dp),
         full = RoundedCornerShape(50),
     )

@@ -3,16 +3,17 @@ package com.dpm.sixpack.runningservice
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Intent
-import android.location.Location
 import android.os.Binder
 import android.os.IBinder
+import android.telecom.VideoProfile.isPaused
 import androidx.core.app.NotificationCompat
+import androidx.core.app.ServiceCompat.stopForeground
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.dpm.sixpack.core.util.TimeUtil
 import com.dpm.sixpack.domain.model.RealtimeRunningData
-import com.dpm.sixpack.domain.usecase.GetGpsDataUseCase
-import com.dpm.sixpack.domain.usecase.GetStepCountUseCase
+import com.dpm.sixpack.domain.usecase.CollectAndSaveRunningDataUseCase
+import com.dpm.sixpack.domain.usecase.SyncRunningDataUseCase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -20,16 +21,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
-import kotlin.math.round
 
 @AndroidEntryPoint
 class RunningService : LifecycleService() {
     @Inject
-    lateinit var getGpsDataUseCase: GetGpsDataUseCase
+    lateinit var runningDataUseCase: CollectAndSaveRunningDataUseCase
 
     @Inject
-    lateinit var getStepCountUseCase: GetStepCountUseCase
+    lateinit var syncRunningDataUseCase: SyncRunningDataUseCase
 
     @Inject
     lateinit var baseNotificationBuilder: NotificationCompat.Builder
@@ -46,18 +47,8 @@ class RunningService : LifecycleService() {
     private var isServiceRunning = false
     private var isPaused = true
 
-    private var durationInSeconds: Int = 0
-    private var lastLocation: Location? = null
-    private var totalDistance: Double = 0.0
-    private var stepsBeforePause: Long = 0L
-    private var currentSteps: Long = 0L
-    private var paceAverage: Int = 0
-    private var cadence: Int = 0
-
-    // Coroutine Jobs
-    private var timerJob: Job? = null
-    private var locationJob: Job? = null
-    private var stepJob: Job? = null
+    private var dataObserverJob: Job? = null
+    private var syncTimerJob: Job? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -72,7 +63,12 @@ class RunningService : LifecycleService() {
         intent?.action?.let { action ->
             when (action) {
                 RunningActions.START_OR_RESUME -> {
-                    startOrResumeService()
+                    if (!isServiceRunning) {
+                        isServiceRunning = true
+                        startService()
+                    } else {
+                        resumeService()
+                    }
                 }
 
                 RunningActions.PAUSE -> {
@@ -89,178 +85,121 @@ class RunningService : LifecycleService() {
 
     override fun onDestroy() {
         super.onDestroy()
+        // UseCase의 Scope를 반드시 닫아야함
+        runningDataUseCase.close()
         stopService()
-    }
-
-    private fun startOrResumeService() {
-        if (!isServiceRunning) {
-            isServiceRunning = true
-            startService()
-        } else {
-            resumeService()
-        }
     }
 
     private fun startService() {
         isPaused = false
-        initStates()
         createNotificationChannel()
         startForeground(NOTIFICATION_ID, baseNotificationBuilder.build())
-        startJobs()
+
+        // 1. 실시간 데이터 수집 및 UI 발행 시작
+        runningDataUseCase.start()
+        observeRunningData()
+
+        // 2. 5분 주기 동기화 타이머 시작
+        startSyncTimer()
     }
 
     private fun resumeService() {
         if (isPaused) {
             isPaused = false
-            startJobs()
+            runningDataUseCase.resume()
+
+            // 5분 동기화 타이머를 다시 시작합니다.
+            startSyncTimer()
         }
     }
 
     private fun pauseService() {
         isPaused = true
-        stepsBeforePause = currentSteps
-        cancelJobs()
+        runningDataUseCase.pause()
+
+        syncTimerJob?.cancel()
+        syncTimerJob = null
+
+        // 일시정지 시점에 1회 동기화를 즉시 실행합니다.
+        if (isServiceRunning) {
+            lifecycleScope.launch {
+                syncRunningDataUseCase(true)
+                    .onSuccess {
+                        Timber.d("RunningService: Sync on pause successful.")
+                    }.onError { e ->
+                        Timber.w(e.message, "Sync on pause failed.")
+                    }
+            }
+        }
     }
 
     private fun stopService() {
         isServiceRunning = false
         isPaused = true
-        cancelJobs()
-        initStates()
+
+        // UseCase 중지 및 데이터 구독 중지
+        dataObserverJob?.cancel()
+        dataObserverJob = null
+        runningDataUseCase.stop()
+
+        // 5분 동기화 타이머 중지
+        syncTimerJob?.cancel()
+        syncTimerJob = null
+
+        // 서비스의 상태도 초기화
+        _runningDataState.value = null
+
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
     }
 
-    private fun initStates() {
-        durationInSeconds = 0
-        lastLocation = null
-        totalDistance = 0.0
-        paceAverage = 0
-        cadence = 0
-        stepsBeforePause = 0L
-        currentSteps = 0L
-        _runningDataState.value = null
+    // UseCase의 runningDataState를 구독하여 Service의 StateFlow와 알림을 업데이트
+    private fun observeRunningData() {
+        if (dataObserverJob?.isActive == true) return
+
+        dataObserverJob =
+            lifecycleScope.launch {
+                runningDataUseCase.runningDataState.collect { data ->
+                    _runningDataState.value = data
+
+                    // 알림 업데이트 (data가 null이 아닐 때)
+                    data?.let {
+                        updateNotification(it.durationInSec)
+                    }
+                }
+            }
     }
 
-    private fun startJobs() {
-        startTimer()
-        startLocationCollection()
-        startStepCollection()
-    }
+    /**
+     * 5분마다 세그먼트 데이터를 동기화하는 타이머를 시작
+     */
+    private fun startSyncTimer() {
+        if (syncTimerJob?.isActive == true) return // 이미 실행 중이면 무시
 
-    private fun cancelJobs() {
-        timerJob?.cancel()
-        locationJob?.cancel()
-        stepJob?.cancel()
-    }
-
-    // 시간 측정
-    private fun startTimer() {
-        timerJob =
+        syncTimerJob =
             lifecycleScope.launch {
                 while (isActive) {
-                    durationInSeconds += 1
-                    delay(1000L)
+                    // 1. 5분 대기
+                    delay(SYNC_INTERVAL_MS)
 
-                    if (durationInSeconds % CALCULATE_PERIOD == 0 || durationInSeconds == 1) {
-                        paceAverage = calculateAvgPace(totalDistance, durationInSeconds)
-                        cadence = calculateAvgCadence(currentSteps, durationInSeconds)
-                    }
-                    postCurrentRunningDataState()
-
-                    updateNotification(durationInSeconds)
-                }
-            }
-    }
-
-    // 1초마다 RealTime 데이터 업데이트
-    private fun postCurrentRunningDataState() {
-        lastLocation?.let {
-            val roundedDistance = (round(totalDistance / 10.0) * 10).toInt()
-
-            _runningDataState.value =
-                RealtimeRunningData(
-                    latitude = it.latitude,
-                    longitude = it.longitude,
-                    altitude = it.altitude,
-                    speed = it.speed,
-                    pace = paceAverage,
-                    cadence = cadence,
-                    totalDistanceMeter = roundedDistance,
-                    duration = durationInSeconds,
-                    timestamp = System.currentTimeMillis(),
-                )
-        }
-    }
-
-    /**
-     * GPS 데이터 구독하여 거리만 업데이트
-     */
-    private fun startLocationCollection() {
-        locationJob =
-            lifecycleScope.launch {
-                getGpsDataUseCase().collect { result ->
-                    result.onSuccess { newLocation ->
-                        if (!isPaused) {
-                            lastLocation?.let {
-                                totalDistance += it.distanceTo(newLocation)
+                    // 서비스가 실행 중일 때만 (일시정지 여부와 관계없이) 동기화
+                    if (isServiceRunning && !isPaused) {
+                        Timber.d("RunningService: 5-minute sync timer. Attempting to sync segments...")
+                        // 3. 동기화 UseCase 호출
+                        syncRunningDataUseCase(false)
+                            .onSuccess {
+                                Timber.d("RunningService: Sync on pause successful.")
+                            }.onError { e ->
+                                Timber.w(e.message, "Sync on pause failed.")
                             }
-                            lastLocation = newLocation
-                        }
+                    } else {
+                        Timber.d("RunningService: 5-minute sync timer. Skipped (isPaused=$isPaused)")
                     }
                 }
             }
-    }
-
-    /**
-     * 걸음 수 데이터 구독하여 걸음 수를 누적 업데이트
-     */
-    private fun startStepCollection() {
-        stepJob =
-            lifecycleScope.launch {
-                getStepCountUseCase().collect { result ->
-                    result.onSuccess { stepsSinceResume ->
-                        if (!isPaused) {
-                            currentSteps = stepsBeforePause + stepsSinceResume.toLong()
-                        }
-                    }
-                }
-            }
-    }
-
-    // --- 계산 헬퍼 함수 ---
-
-    private fun calculateAvgPace(
-        totalDistanceInMeters: Double,
-        durationInSeconds: Int,
-    ): Int {
-        // 거리가 10m 미만이거나 시간이 0이면 페이스 계산 의미 없음
-        if (durationInSeconds <= 0) {
-            return 0
-        }
-
-        // (거리 m) / (시간 s) = 초당 미터
-        val speedInMps = totalDistanceInMeters / durationInSeconds
-        if (speedInMps <= 0) return 0
-
-        // 1000m / (초당 가는 미터) = 초/km
-        val secondsPerKilometer = 1000.0 / speedInMps
-        return secondsPerKilometer.toInt()
-    }
-
-    private fun calculateAvgCadence(
-        totalSteps: Long,
-        durationInSeconds: Int,
-    ): Int {
-        if (durationInSeconds <= 0L) {
-            return 0
-        }
-        val durationInMinutes = durationInSeconds / 60.0
-        return (totalSteps / durationInMinutes).toInt()
     }
 
     // --- Notification ---
-
     private fun updateNotification(durationInSeconds: Int) {
         val notification =
             baseNotificationBuilder
@@ -289,6 +228,6 @@ class RunningService : LifecycleService() {
     }
 
     companion object {
-        private const val CALCULATE_PERIOD = 3
+        private const val SYNC_INTERVAL_MS = 5 * 60 * 1000L
     }
 }

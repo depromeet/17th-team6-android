@@ -22,7 +22,7 @@ data class RunningSummary(
 fun RunningSessionResult.toRunningSummary(postTime: String): RunningSummary =
     RunningSummary(
         totalDistance = formatDistanceToKm(totalDistanceMeter),
-        totalTime = formatSecondsToTimeInFeed(totalDurationSec),
+        totalTime = formatSecondsToTimeInFeed(totalDurationSec.toLong()),
         averagePace = formatPace(avgPace),
         cadence = avgCadence.toString(),
         recordDateTime = postTime.toKoreanFeedTimeStringOrNull() ?: "날짜를 알 수 없음",

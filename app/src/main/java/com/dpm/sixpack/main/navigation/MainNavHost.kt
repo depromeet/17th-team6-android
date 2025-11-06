@@ -31,6 +31,7 @@ import com.dpm.sixpack.presentation.routes.terms.navigation.navigateTerms
 internal fun MainNavHost(
     appState: SixPackAppState,
     onShowSnackbar: suspend (String, String?) -> Boolean,
+    setFullScreenLoading: (Boolean) -> Unit,
     onBottomBarVisibilityChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -112,6 +113,7 @@ internal fun MainNavHost(
                 onNavigateToBack = navigator::popBackStack,
                 onBottomBarVisibilityChange = onBottomBarVisibilityChange,
                 navigateToSessionReport = navigator::navigateToSessionReport,
+                showFullScreenLoading = setFullScreenLoading,
             )
 
             addSessionReportNavGraph(

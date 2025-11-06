@@ -1,9 +1,10 @@
 package com.dpm.sixpack.data.source.remote.dto.response
 
-import com.dpm.sixpack.domain.model.RunningSessionResult
+import android.annotation.SuppressLint
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class FinishRunningResponseDto(
     @SerialName("id")
@@ -12,29 +13,24 @@ data class FinishRunningResponseDto(
     val createdAt: String,
     @SerialName("updatedAt")
     val updatedAt: String,
-    @SerialName("finalGoalId")
-    val finalGoalId: Long,
-    @SerialName("clearedAt")
-    val clearedAt: String? = null,
-    @SerialName("roundCount")
-    val roundCount: Int,
-    @SerialName("totalDistance")
-    val totalDistance: Long,
-    @SerialName("totalDuration")
-    val totalDuration: Long,
-    @SerialName("avgPace")
-    val avgPace: Long,
-    @SerialName("avgCadence")
-    val avgCadence: Int,
-    @SerialName("maxCadence")
-    val maxCadence: Int,
-) {
-    fun toRunningSessionResult() =
-        RunningSessionResult(
-            totalDistanceMeter = totalDistance.toInt(),
-            totalDurationSec = totalDuration,
-            avgPace = avgPace.toInt(),
-            avgCadence = avgCadence,
-            maxCadence = maxCadence,
-        )
-}
+    @SerialName("finishedAt")
+    val finishedAt: String,
+    @SerialName("distanceTotal")
+    val distanceTotal: Int,
+    @SerialName("durationTotal")
+    val durationTotal: Int,
+    @SerialName("paceAvg")
+    val paceAvg: Int,
+    @SerialName("paceMax")
+    val paceMax: Int,
+    @SerialName("paceMaxLatitude")
+    val paceMaxLatitude: Double,
+    @SerialName("paceMaxLongitude")
+    val paceMaxLongitude: Double,
+    @SerialName("cadenceAvg")
+    val cadenceAvg: Int,
+    @SerialName("cadenceMax")
+    val cadenceMax: Int,
+    @SerialName("mapImage")
+    val mapImage: String,
+)

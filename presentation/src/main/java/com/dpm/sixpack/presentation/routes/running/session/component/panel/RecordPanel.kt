@@ -17,7 +17,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
-import com.dpm.sixpack.presentation.routes.running.session.contract.RunningSessionIntent
 import com.dpm.sixpack.presentation.routes.running.session.contract.RunningSessionUiState
 import com.dpm.sixpack.presentation.routes.running.session.contract.state.RecordState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
@@ -25,12 +24,12 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 @Composable
 internal fun RunningRecordPanel(
     sessionState: RunningSessionUiState.HasRecord,
-    onPauseClick: (RunningSessionIntent.RunningPause) -> Unit,
-    onResumeClick: (RunningSessionIntent.RunningResume) -> Unit,
-    onStopClick: (RunningSessionIntent.RunningStop) -> Unit,
     modifier: Modifier = Modifier,
+    onPauseClick: () -> Unit = {},
+    onResumeClick: () -> Unit = {},
+    onStopClick: () -> Unit = {},
 ) {
-    val panelRoundedShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
+    val panelRoundedShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
 
     Surface(
         modifier =
@@ -51,15 +50,22 @@ internal fun RunningRecordPanel(
                 is RunningSessionUiState.Running -> {
                     MainRunningRecordGrid(recordState = sessionState.recordState)
                     Spacer(modifier = Modifier.height(32.dp))
-                    RunningButton(onPauseClick = { onPauseClick(RunningSessionIntent.RunningPause) })
+                    DoRunDefaultButton(
+                        onClick = onPauseClick,
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(56.dp),
+                        text = stringResource(R.string.panel_record_pause),
+                    )
                 }
 
                 is RunningSessionUiState.Pause -> {
                     MainRunningRecordGrid(recordState = sessionState.recordState)
                     Spacer(modifier = Modifier.height(32.dp))
                     PausedButtons(
-                        onResumeClick = { onResumeClick(RunningSessionIntent.RunningResume) },
-                        onStopClick = { onStopClick(RunningSessionIntent.RunningStop) },
+                        onResumeClick = onResumeClick,
+                        onStopClick = onStopClick,
                     )
                 }
             }
@@ -120,8 +126,6 @@ private fun PreviewMainRunningStatsPanel() {
                         cadence = 154,
                     ),
             ),
-//        primaryInfo = "러닝",
-//        secondaryInfo = "5.0km",
         onPauseClick = {},
         onResumeClick = {},
         onStopClick = {},
@@ -142,8 +146,6 @@ private fun PreviewMainRunningStatsPanelPause() {
                         cadence = 154,
                     ),
             ),
-//        primaryInfo = "러닝",
-//        secondaryInfo = "5.0km",
         onPauseClick = {},
         onResumeClick = {},
         onStopClick = {},
