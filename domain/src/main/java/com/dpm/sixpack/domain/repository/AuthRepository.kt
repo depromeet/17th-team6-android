@@ -18,6 +18,10 @@ interface AuthRepository {
         nickname: String,
         phoneNumber: String,
         profileImage: File?,
+        marketingConsentAt: String?,
+        locationConsentAt: String?,
+        personalConsentAt: String,
+        deviceToken: String?,
     ): DoRunResult<SignUpResult>
 
     suspend fun refreshToken(refreshToken: String): DoRunResult<AuthToken>

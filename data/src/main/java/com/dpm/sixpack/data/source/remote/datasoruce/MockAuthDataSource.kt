@@ -73,6 +73,10 @@ class MockAuthDataSource @Inject constructor() : AuthDataSource {
         nickname: String,
         phoneNumber: String,
         profileImage: File?,
+        marketingConsentAt: String?,
+        locationConsentAt: String?,
+        personalConsentAt: String,
+        deviceToken: String?,
     ): BaseResponse<SignUpResponseDto> {
         delay(1000L)
         // 회원가입 성공 응답

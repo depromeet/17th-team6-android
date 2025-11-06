@@ -17,8 +17,21 @@ class SignUpUseCase
             nickname: String,
             phoneNumber: String,
             profileImage: File?,
+            marketingConsentAt: String?,
+            locationConsentAt: String?,
+            personalConsentAt: String,
+            deviceToken: String?,
         ): DoRunResult<SignUpResult> {
-            val result = authRepository.signUp(nickname, phoneNumber, profileImage)
+            val result =
+                authRepository.signUp(
+                    nickname = nickname,
+                    phoneNumber = phoneNumber,
+                    profileImage = profileImage,
+                    marketingConsentAt = marketingConsentAt,
+                    locationConsentAt = locationConsentAt,
+                    personalConsentAt = personalConsentAt,
+                    deviceToken = deviceToken,
+                )
 
             // 회원가입 성공 시 userId, token 저장
             result.onSuccess { signUpResult ->

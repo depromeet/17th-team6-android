@@ -104,10 +104,23 @@ class AuthRepositoryImpl @Inject constructor(
         nickname: String,
         phoneNumber: String,
         profileImage: File?,
+        marketingConsentAt: String?,
+        locationConsentAt: String?,
+        personalConsentAt: String,
+        deviceToken: String?,
     ): DoRunResult<SignUpResult> =
         withContext(Dispatchers.IO) {
             try {
-                val response = authDataSource.signUp(nickname, phoneNumber, profileImage)
+                val response =
+                    authDataSource.signUp(
+                        nickname = nickname,
+                        phoneNumber = phoneNumber,
+                        profileImage = profileImage,
+                        marketingConsentAt = marketingConsentAt,
+                        locationConsentAt = locationConsentAt,
+                        personalConsentAt = personalConsentAt,
+                        deviceToken = deviceToken,
+                    )
 
                 val signUpResult =
                     response.data?.toSignUpResult()
