@@ -1,5 +1,7 @@
 package com.dpm.sixpack.data.source.remote.dto.response
 
+import com.dpm.sixpack.domain.model.MaxPaceData
+import com.dpm.sixpack.domain.model.RunningSessionResult
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -31,4 +33,19 @@ data class FinishRunningResponseDto(
     val cadenceMax: Int,
     @SerialName("mapImage")
     val mapImage: String,
-)
+) {
+    fun toRunningSessionResult() =
+        RunningSessionResult(
+            totalDistanceMeter = distanceTotal,
+            totalDurationSec = durationTotal,
+            avgPace = paceAvg,
+            maxPace =
+                MaxPaceData(
+                    value = paceMax,
+                    latitude = paceMaxLatitude,
+                    longitude = paceMaxLongitude,
+                ),
+            avgCadence = cadenceAvg,
+            maxCadence = cadenceMax,
+        )
+}

@@ -1,6 +1,9 @@
 package com.dpm.sixpack.data.source.remote.dto.response
 
 import android.annotation.SuppressLint
+import com.dpm.sixpack.domain.model.Friend
+import com.dpm.sixpack.domain.model.LastRunInfo
+import com.dpm.sixpack.domain.model.User
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -34,7 +37,31 @@ data class FriendsRunningStatusDto(
     val longitude: Double?,
     @SerialName("address")
     val address: String?,
-)
+) {
+    fun toFriend() =
+        Friend(
+            userInfo =
+                User(
+                    userId = userId,
+                    nickName = nickname,
+                    isMe = isMe,
+                    profileImgUrl = profileImage,
+                ),
+            latestCheeredAt = latestCheeredAt,
+            lastRunInfo =
+                if (latestRanAt == null) {
+                    null
+                } else {
+                    LastRunInfo(
+                        lastestRunAt = latestRanAt,
+                        distanceInMeter = distance!!,
+                        latitude = latitude!!,
+                        longitude = longitude!!,
+                        address = address!!,
+                    )
+                },
+        )
+}
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable

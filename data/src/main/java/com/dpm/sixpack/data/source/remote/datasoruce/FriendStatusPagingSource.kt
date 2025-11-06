@@ -2,7 +2,6 @@ package com.dpm.sixpack.data.source.remote.datasoruce
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.dpm.sixpack.data.source.remote.dto.response.toFriend
 import com.dpm.sixpack.domain.model.Friend
 import retrofit2.HttpException
 import java.io.IOException

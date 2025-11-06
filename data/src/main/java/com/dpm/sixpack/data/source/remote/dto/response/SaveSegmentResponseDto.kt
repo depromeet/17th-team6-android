@@ -1,5 +1,6 @@
 package com.dpm.sixpack.data.source.remote.dto.response
 
+import com.dpm.sixpack.domain.usecase.running.SaveRealtimeRunningDataResult
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -9,4 +10,10 @@ data class SaveSegmentResponseDto(
     val segmentId: Long,
     @SerialName("savedCount")
     val savedCount: Int,
-)
+) {
+    fun toSyncResult() =
+        SaveRealtimeRunningDataResult.SyncResult(
+            segmentId = segmentId,
+            savedCount = savedCount,
+        )
+}

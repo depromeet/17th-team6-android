@@ -6,6 +6,7 @@ import com.dpm.sixpack.data.source.remote.dto.request.FinishRunningRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.SaveSegmentDataRequestsDto
 import com.dpm.sixpack.data.source.remote.dto.response.FinishRunningResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.SaveSegmentResponseDto
+import com.dpm.sixpack.data.source.remote.dto.response.SessionDetailResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.StartRunningResponseDto
 import com.dpm.sixpack.data.source.remote.service.RunningServiceApi
 import com.dpm.sixpack.data.source.remote.util.base.BaseResponse
@@ -57,6 +58,9 @@ class RunningSessionDataSource @Inject constructor(
     ): BaseResponse<SaveSegmentResponseDto> = runningServiceApi.postSegmentData(sessionId, saveSegmentDataRequestsDto)
 
     suspend fun postStartSession(): BaseResponse<StartRunningResponseDto> = runningServiceApi.postStartSession()
+
+    suspend fun getSessionDetail(sessionId: Long): BaseResponse<SessionDetailResponseDto> =
+        runningServiceApi.getSessionDetail(sessionId)
 
     /**
      * Bitmap을 임시 파일로 변환하고 MultipartBody.Part를 생성합니다.

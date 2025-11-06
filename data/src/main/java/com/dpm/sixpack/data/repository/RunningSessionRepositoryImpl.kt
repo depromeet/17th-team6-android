@@ -9,7 +9,6 @@ import com.dpm.sixpack.data.source.remote.dto.request.FinishRunningRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.SaveSegmentDataRequestsDto
 import com.dpm.sixpack.data.source.remote.dto.request.toDto
 import com.dpm.sixpack.data.source.remote.dto.request.toSegmentDataDto
-import com.dpm.sixpack.data.source.remote.dto.response.toSyncResult
 import com.dpm.sixpack.domain.exception.DoRunException
 import com.dpm.sixpack.domain.model.MaxPaceData
 import com.dpm.sixpack.domain.model.RealtimeRunningData
