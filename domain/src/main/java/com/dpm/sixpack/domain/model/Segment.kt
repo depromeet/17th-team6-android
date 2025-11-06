@@ -1,5 +1,9 @@
 package com.dpm.sixpack.domain.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Segment(
     val latitude: Double,
     val longitude: Double,
@@ -9,4 +13,4 @@ data class Segment(
     val cadence: Int,
     val distance: Int,
     val time: String,
-)
+) : Parcelable

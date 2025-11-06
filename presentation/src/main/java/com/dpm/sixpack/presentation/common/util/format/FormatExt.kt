@@ -1,6 +1,7 @@
 package com.dpm.sixpack.presentation.common.util.format
 
 import timber.log.Timber
+import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -57,5 +58,18 @@ fun String.toKoreanFeedTimeStringOrNull(): String? =
             .format(KOREAN_FEED_TIME_FORMATTER)
     }.onFailure { error ->
         // ⬇️ 실패 시 로그 찍기
+        Timber.e("파싱 실패! 에러: ${error.message}")
+    }.getOrNull()
+
+fun String.toKoreanFeedTimeStringOrNullInstant(): String? =
+    runCatching {
+        // 1. LocalDateTime.parse 대신 Instant.parse 사용
+        val instant = Instant.parse(this)
+
+        // 2. atZone(ASIA_ZONE_ID)으로 바로 변환
+        instant
+            .atZone(ASIA_ZONE_ID) // 'atZone(UTC)' 및 'withZoneSameInstant' 불필요
+            .format(KOREAN_FEED_TIME_FORMATTER)
+    }.onFailure { error ->
         Timber.e("파싱 실패! 에러: ${error.message}")
     }.getOrNull()

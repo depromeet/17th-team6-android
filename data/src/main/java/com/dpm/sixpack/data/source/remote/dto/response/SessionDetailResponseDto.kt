@@ -35,7 +35,7 @@ data class SessionDetailResponseDto(
     @SerialName("mapImage")
     val mapImage: String,
     @SerialName("feed")
-    val feed: SessionDetailFeedDto,
+    val feed: SessionDetailFeedDto?,
     @SerialName("segments")
     val segments: List<List<SegmentDataDto>>,
 ) {
@@ -54,7 +54,7 @@ data class SessionDetailResponseDto(
             cadenceAvg = cadenceAvg,
             cadenceMax = cadenceMax,
             mapImage = mapImage,
-            feed = feed.toDomain(),
+            feed = feed?.toDomain(),
             segments = segments.map { it.map { segment -> segment.toDomain() } },
         )
 }

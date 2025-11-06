@@ -51,8 +51,9 @@ class MainNavigator(
         navController.popBackStack()
     }
 
-    fun navigateToSessionReport() {
+    fun navigateToSessionReport(sessionId: Long) {
         navController.navigateSessionReport(
+            sessionId,
             navOptions {
                 popUpTo(MainRoute.Running) {
                     inclusive = false

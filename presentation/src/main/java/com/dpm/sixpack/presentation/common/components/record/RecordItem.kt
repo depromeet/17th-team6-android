@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.running.session.component.panel
+package com.dpm.sixpack.presentation.common.components.record
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
