@@ -114,7 +114,7 @@ internal fun SettingsScreen(
             cancelButtonText = stringResource(R.string.settings_logout_dialog_cancel),
             confirmButtonText = stringResource(R.string.settings_logout_dialog_confirm),
             onConfirmClick = { onIntent(SettingsIntent.OnLogoutConfirm) },
-            confirmButtonType = DialogButtonType.Primary,
+            confirmButtonType = DialogButtonType.Destructive,
         )
     }
 

@@ -1,6 +1,9 @@
 package com.dpm.sixpack.presentation.routes.settings
 
 import androidx.lifecycle.SavedStateHandle
+import com.dpm.sixpack.core.configs.BuildConfigProvider
+import com.dpm.sixpack.domain.usecase.LogoutUseCase
+import com.dpm.sixpack.domain.usecase.WithdrawUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.routes.settings.contract.SettingsIntent
 import com.dpm.sixpack.presentation.routes.settings.contract.SettingsSideEffect
@@ -15,12 +18,13 @@ class SettingsViewModel
     @Inject
     constructor(
         savedStateHandle: SavedStateHandle,
-        private val logoutUseCase: com.dpm.sixpack.domain.usecase.LogoutUseCase,
-        private val withdrawUseCase: com.dpm.sixpack.domain.usecase.WithdrawUseCase,
+        private val logoutUseCase: LogoutUseCase,
+        private val withdrawUseCase: WithdrawUseCase,
+        private val buildConfigProvider: BuildConfigProvider,
     ) : BaseViewModel<SettingsState, SettingsIntent, SettingsSideEffect>() {
         override val initialState: SettingsState =
             SettingsState(
-                appVersion = "3.13.0", // TODO: 실제 버전 정보로 변경
+                appVersion = buildConfigProvider.getAppVersion(),
             )
 
         override val container: Container<SettingsState, SettingsSideEffect> =

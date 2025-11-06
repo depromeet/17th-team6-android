@@ -23,7 +23,7 @@ fun SettingsDivider(modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .height(1.dp)
                 .background(SixpackTheme.colors.gray100)
-                .padding(vertical = 8.dp)
+                .padding(vertical = 8.dp),
     )
 }
 
