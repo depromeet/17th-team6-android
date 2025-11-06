@@ -5,7 +5,7 @@ import com.dpm.sixpack.presentation.common.base.UiState
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class MyPageFeedTabState(
+data class MyPagePostTabState(
     val isLoading: Boolean = false,
     val error: String? = null,
 ) : UiState,

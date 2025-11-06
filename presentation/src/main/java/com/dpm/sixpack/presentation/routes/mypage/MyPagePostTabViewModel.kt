@@ -11,9 +11,9 @@ import com.dpm.sixpack.domain.repository.FeedListItem
 import com.dpm.sixpack.domain.usecase.GetMyUserFeedsUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.routes.mypage.contract.GridItemType
-import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageFeedTabIntent
-import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageFeedTabSideEffect
-import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageFeedTabState
+import com.dpm.sixpack.presentation.routes.mypage.contract.MyPagePostTabIntent
+import com.dpm.sixpack.presentation.routes.mypage.contract.MyPagePostTabSideEffect
+import com.dpm.sixpack.presentation.routes.mypage.contract.MyPagePostTabState
 import com.dpm.sixpack.presentation.routes.mypage.contract.Post
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -25,15 +25,15 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
-class MyPageFeedTabViewModel
+class MyPagePostTabViewModel
     @Inject
     constructor(
         savedStateHandle: SavedStateHandle,
         getMyUserFeedsUseCase: GetMyUserFeedsUseCase,
-    ) : BaseViewModel<MyPageFeedTabState, MyPageFeedTabIntent, MyPageFeedTabSideEffect>() {
-        override val initialState: MyPageFeedTabState = MyPageFeedTabState()
+    ) : BaseViewModel<MyPagePostTabState, MyPagePostTabIntent, MyPagePostTabSideEffect>() {
+        override val initialState: MyPagePostTabState = MyPagePostTabState()
 
-        override val container: Container<MyPageFeedTabState, MyPageFeedTabSideEffect> =
+        override val container: Container<MyPagePostTabState, MyPagePostTabSideEffect> =
             container(initialState = initialState, savedStateHandle = savedStateHandle)
 
         val postsPagingFlow: Flow<PagingData<GridItemType>> =
@@ -88,10 +88,10 @@ class MyPageFeedTabViewModel
                 is GridItemType.MonthLabel -> null
             }
 
-        override fun onIntent(intent: MyPageFeedTabIntent) {
+        override fun onIntent(intent: MyPagePostTabIntent) {
             when (intent) {
-                is MyPageFeedTabIntent.OnPostClick -> handlePostClick(intent.postId)
-                is MyPageFeedTabIntent.OnRetryClick -> {
+                is MyPagePostTabIntent.OnPostClick -> handlePostClick(intent.postId)
+                is MyPagePostTabIntent.OnRetryClick -> {
                     // Paging handles retry through LazyPagingItems.retry() in UI
                     // No action needed in ViewModel
                 }
@@ -100,6 +100,6 @@ class MyPageFeedTabViewModel
 
         private fun handlePostClick(postId: Long) =
             intent {
-                postSideEffect(MyPageFeedTabSideEffect.NavigateToPostDetail(postId))
+                postSideEffect(MyPagePostTabSideEffect.NavigateToPostDetail(postId))
             }
     }

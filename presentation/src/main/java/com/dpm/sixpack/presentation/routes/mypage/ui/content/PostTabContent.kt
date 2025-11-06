@@ -7,16 +7,16 @@ import androidx.compose.ui.Modifier
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.dpm.sixpack.presentation.routes.mypage.contract.GridItemType
-import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageFeedTabIntent
+import com.dpm.sixpack.presentation.routes.mypage.contract.MyPagePostTabIntent
 import com.dpm.sixpack.presentation.routes.mypage.ui.component.EmptyState
 import com.dpm.sixpack.presentation.routes.mypage.ui.component.ErrorState
-import com.dpm.sixpack.presentation.routes.mypage.ui.component.FeedTabLoadingState
 import com.dpm.sixpack.presentation.routes.mypage.ui.component.PostGrid
+import com.dpm.sixpack.presentation.routes.mypage.ui.component.PostTabLoadingState
 
 @Composable
-internal fun FeedTabContent(
+internal fun PostTabContent(
     gridItemsPagingItems: LazyPagingItems<GridItemType>,
-    onIntent: (MyPageFeedTabIntent) -> Unit,
+    onIntent: (MyPagePostTabIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val refreshLoadState = gridItemsPagingItems.loadState.refresh
@@ -28,7 +28,7 @@ internal fun FeedTabContent(
     Column(modifier = modifier) {
         when {
             refreshLoadState is LoadState.Loading -> {
-                FeedTabLoadingState(modifier = Modifier.fillMaxSize())
+                PostTabLoadingState(modifier = Modifier.fillMaxSize())
             }
 
             refreshLoadState is LoadState.Error -> {
@@ -51,7 +51,7 @@ internal fun FeedTabContent(
                 PostGrid(
                     gridItemsPagingItems = gridItemsPagingItems,
                     onPostClick = { postId ->
-                        onIntent(MyPageFeedTabIntent.OnPostClick(postId))
+                        onIntent(MyPagePostTabIntent.OnPostClick(postId))
                     },
                     modifier = Modifier.fillMaxSize(),
                 )

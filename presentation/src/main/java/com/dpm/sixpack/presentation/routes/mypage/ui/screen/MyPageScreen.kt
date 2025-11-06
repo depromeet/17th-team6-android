@@ -32,8 +32,8 @@ import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrappe
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunTopBarSlot
 import com.dpm.sixpack.presentation.routes.mypage.contract.CertificationStatus
 import com.dpm.sixpack.presentation.routes.mypage.contract.GridItemType
-import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageFeedTabIntent
 import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageIntent
+import com.dpm.sixpack.presentation.routes.mypage.contract.MyPagePostTabIntent
 import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageRecordTabIntent
 import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageRecordTabState
 import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageState
@@ -43,7 +43,7 @@ import com.dpm.sixpack.presentation.routes.mypage.contract.ProfileInfo
 import com.dpm.sixpack.presentation.routes.mypage.contract.RecordItem
 import com.dpm.sixpack.presentation.routes.mypage.ui.component.MyPageTabText
 import com.dpm.sixpack.presentation.routes.mypage.ui.component.ProfileSection
-import com.dpm.sixpack.presentation.routes.mypage.ui.content.FeedTabContent
+import com.dpm.sixpack.presentation.routes.mypage.ui.content.PostTabContent
 import com.dpm.sixpack.presentation.routes.mypage.ui.content.RecordTabContent
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 import kotlinx.coroutines.flow.flowOf
@@ -54,7 +54,7 @@ fun MyPageScreen(
     recordTabState: MyPageRecordTabState,
     gridItemsPagingItems: LazyPagingItems<GridItemType>,
     onIntent: (MyPageIntent) -> Unit,
-    onFeedTabIntent: (MyPageFeedTabIntent) -> Unit,
+    onPostTabIntent: (MyPagePostTabIntent) -> Unit,
     onRecordTabIntent: (MyPageRecordTabIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -135,9 +135,9 @@ fun MyPageScreen(
         ) { page ->
             when (page) {
                 0 ->
-                    FeedTabContent(
+                    PostTabContent(
                         gridItemsPagingItems = gridItemsPagingItems,
-                        onIntent = onFeedTabIntent,
+                        onIntent = onPostTabIntent,
                         modifier = Modifier.fillMaxSize(),
                     )
 
@@ -212,7 +212,7 @@ private fun MyPageScreenPreview() {
             recordTabState = MyPageRecordTabState(),
             gridItemsPagingItems = gridItemsPagingItems,
             onIntent = {},
-            onFeedTabIntent = {},
+            onPostTabIntent = {},
             onRecordTabIntent = {},
         )
     }
@@ -255,7 +255,7 @@ private fun MyPageScreenRecordTabPreview() {
                 ),
             gridItemsPagingItems = gridItemsPagingItems,
             onIntent = {},
-            onFeedTabIntent = {},
+            onPostTabIntent = {},
             onRecordTabIntent = {},
         )
     }
@@ -282,7 +282,7 @@ private fun MyPageScreenEmptyPreview() {
             recordTabState = MyPageRecordTabState(),
             gridItemsPagingItems = gridItemsPagingItems,
             onIntent = {},
-            onFeedTabIntent = {},
+            onPostTabIntent = {},
             onRecordTabIntent = {},
         )
     }

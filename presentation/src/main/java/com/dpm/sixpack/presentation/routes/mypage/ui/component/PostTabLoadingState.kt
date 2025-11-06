@@ -14,13 +14,13 @@ import com.dpm.sixpack.presentation.common.components.skeleton.ShimmerBox
 import com.dpm.sixpack.presentation.common.util.compose.rememberAdaptiveGridMinSize
 
 /**
- * Loading state for the feed tab showing a grid of shimmer skeleton items.
+ * Loading state for the post tab showing a grid of shimmer skeleton items.
  *
  * @param modifier Modifier to be applied to the loading state
- * @param itemCount Number of skeleton items to display (default: 12)
+ * @param itemCount Number of skeleton items to display (default: 36)
  */
 @Composable
-internal fun FeedTabLoadingState(
+internal fun PostTabLoadingState(
     modifier: Modifier = Modifier,
     itemCount: Int = 36,
 ) {
@@ -49,8 +49,8 @@ internal fun FeedTabLoadingState(
 
 @Preview()
 @Composable
-private fun FeedTabLoadingStatePreview() {
+private fun PostTabLoadingStatePreview() {
     DoRunPreviewWrapper {
-        FeedTabLoadingState()
+        PostTabLoadingState()
     }
 }

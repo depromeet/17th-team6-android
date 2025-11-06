@@ -2,10 +2,10 @@ package com.dpm.sixpack.presentation.routes.mypage.contract
 
 import com.dpm.sixpack.presentation.common.base.UiIntent
 
-sealed interface MyPageFeedTabIntent : UiIntent {
+sealed interface MyPagePostTabIntent : UiIntent {
     data class OnPostClick(
         val postId: Long,
-    ) : MyPageFeedTabIntent
+    ) : MyPagePostTabIntent
 
-    data object OnRetryClick : MyPageFeedTabIntent
+    data object OnRetryClick : MyPagePostTabIntent
 }
