@@ -22,4 +22,8 @@ sealed interface SettingsIntent : UiIntent {
     data object OnLogoutConfirm : SettingsIntent
 
     data object OnWithdrawConfirm : SettingsIntent
+
+    data object OnDismissLogoutDialog : SettingsIntent
+
+    data object OnDismissWithdrawDialog : SettingsIntent
 }

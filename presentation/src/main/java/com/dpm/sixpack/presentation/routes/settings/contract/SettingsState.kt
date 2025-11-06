@@ -7,4 +7,6 @@ import kotlinx.parcelize.Parcelize
 data class SettingsState(
     val appVersion: String = "",
     val isLoading: Boolean = false,
+    val showLogoutDialog: Boolean = false,
+    val showWithdrawDialog: Boolean = false,
 ) : UiState

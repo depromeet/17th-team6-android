@@ -15,10 +15,6 @@ sealed interface SettingsSideEffect : SideEffect {
         val url: String,
     ) : SettingsSideEffect
 
-    data object ShowLogoutDialog : SettingsSideEffect
-
-    data object ShowWithdrawDialog : SettingsSideEffect
-
     data object LogoutSuccess : SettingsSideEffect
 
     data object LogoutFailed : SettingsSideEffect

@@ -772,6 +772,122 @@ private fun FeatureScreenErrorPreview() {
 }
 ```
 
+## Dialog State Management
+
+**IMPORTANT**: Dialogs should be managed as **UI State**, NOT as **SideEffects**.
+
+### ❌ DON'T: Use SideEffects for dialog visibility
+
+```kotlin
+// BAD: Dialog state in SideEffect
+sealed interface FeatureSideEffect : SideEffect {
+    data object ShowLogoutDialog : FeatureSideEffect
+    data object ShowWithdrawDialog : FeatureSideEffect
+}
+
+// BAD: Managing dialog with local state in Route
+@Composable
+fun FeatureRoute(...) {
+    var showLogoutDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        viewModel.container.sideEffectFlow.collect { sideEffect ->
+            when (sideEffect) {
+                FeatureSideEffect.ShowLogoutDialog -> showLogoutDialog = true
+            }
+        }
+    }
+}
+```
+
+### ✅ DO: Use UI State for dialog visibility
+
+```kotlin
+// GOOD: Dialog state in State
+@Parcelize
+data class FeatureState(
+    val isLoading: Boolean = false,
+    val showLogoutDialog: Boolean = false,
+    val showWithdrawDialog: Boolean = false,
+) : UiState
+
+// GOOD: Intents for dialog control
+sealed interface FeatureIntent : UiIntent {
+    data object OnLogoutClick : FeatureIntent
+    data object OnDismissLogoutDialog : FeatureIntent
+    data object OnLogoutConfirm : FeatureIntent
+}
+
+// GOOD: Handle in ViewModel
+private fun handleLogoutClick() = intent {
+    reduce { state.copy(showLogoutDialog = true) }
+}
+
+private fun handleDismissLogoutDialog() = intent {
+    reduce { state.copy(showLogoutDialog = false) }
+}
+
+private fun handleLogoutConfirm() = intent {
+    reduce { state.copy(isLoading = true) }
+
+    logoutUseCase()
+        .onSuccess {
+            reduce {
+                state.copy(
+                    isLoading = false,
+                    showLogoutDialog = false, // Close dialog on success
+                )
+            }
+            postSideEffect(FeatureSideEffect.LogoutSuccess)
+        }
+        .onError {
+            reduce {
+                state.copy(
+                    isLoading = false,
+                    showLogoutDialog = false, // Close dialog on error
+                )
+            }
+            postSideEffect(FeatureSideEffect.LogoutFailed)
+        }
+}
+
+// GOOD: Use state in Screen
+@Composable
+internal fun FeatureScreen(
+    state: FeatureState,
+    onIntent: (FeatureIntent) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    // Screen content...
+
+    if (state.showLogoutDialog) {
+        DoRunDefaultDialog(
+            title = stringResource(R.string.logout_dialog_title),
+            subtitle = stringResource(R.string.logout_dialog_subtitle),
+            onDismissRequest = { onIntent(FeatureIntent.OnDismissLogoutDialog) },
+            onCancelClick = { onIntent(FeatureIntent.OnDismissLogoutDialog) },
+            onConfirmClick = { onIntent(FeatureIntent.OnLogoutConfirm) },
+            confirmButtonType = DialogButtonType.Primary,
+        )
+    }
+}
+```
+
+### Why State over SideEffect?
+
+**Use State when**:
+- The value represents current UI state
+- It can be derived from other state
+- It needs to survive configuration changes
+- User can interact with it (dialogs, bottom sheets, etc.)
+- Examples: `showDialog`, `isBottomSheetOpen`, `expandedSectionId`
+
+**Use SideEffect when**:
+- It's a one-time event
+- It shouldn't be repeated on recomposition
+- It triggers external actions (navigation, toast, snackbar)
+- Examples: `NavigateToNextScreen`, `ShowSuccessMessage`, `ScrollToTop`
+
 ## Common Mistakes to Avoid
 
 ### ❌ DON'T: Hardcode strings

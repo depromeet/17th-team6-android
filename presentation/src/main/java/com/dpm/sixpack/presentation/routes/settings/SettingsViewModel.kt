@@ -38,6 +38,8 @@ class SettingsViewModel
                 SettingsIntent.OnWithdrawClick -> handleWithdrawClick()
                 SettingsIntent.OnLogoutConfirm -> handleLogoutConfirm()
                 SettingsIntent.OnWithdrawConfirm -> handleWithdrawConfirm()
+                SettingsIntent.OnDismissLogoutDialog -> handleDismissLogoutDialog()
+                SettingsIntent.OnDismissWithdrawDialog -> handleDismissWithdrawDialog()
             }
         }
 
@@ -75,12 +77,22 @@ class SettingsViewModel
 
         private fun handleLogoutClick() =
             intent {
-                postSideEffect(SettingsSideEffect.ShowLogoutDialog)
+                reduce { state.copy(showLogoutDialog = true) }
             }
 
         private fun handleWithdrawClick() =
             intent {
-                postSideEffect(SettingsSideEffect.ShowWithdrawDialog)
+                reduce { state.copy(showWithdrawDialog = true) }
+            }
+
+        private fun handleDismissLogoutDialog() =
+            intent {
+                reduce { state.copy(showLogoutDialog = false) }
+            }
+
+        private fun handleDismissWithdrawDialog() =
+            intent {
+                reduce { state.copy(showWithdrawDialog = false) }
             }
 
         private fun handleLogoutConfirm() =
@@ -89,10 +101,20 @@ class SettingsViewModel
 
                 logoutUseCase()
                     .onSuccess {
-                        reduce { state.copy(isLoading = false) }
+                        reduce {
+                            state.copy(
+                                isLoading = false,
+                                showLogoutDialog = false,
+                            )
+                        }
                         postSideEffect(SettingsSideEffect.LogoutSuccess)
                     }.onError {
-                        reduce { state.copy(isLoading = false) }
+                        reduce {
+                            state.copy(
+                                isLoading = false,
+                                showLogoutDialog = false,
+                            )
+                        }
                         postSideEffect(SettingsSideEffect.LogoutFailed)
                     }
             }
@@ -103,10 +125,20 @@ class SettingsViewModel
 
                 withdrawUseCase()
                     .onSuccess {
-                        reduce { state.copy(isLoading = false) }
+                        reduce {
+                            state.copy(
+                                isLoading = false,
+                                showWithdrawDialog = false,
+                            )
+                        }
                         postSideEffect(SettingsSideEffect.WithdrawSuccess)
                     }.onError {
-                        reduce { state.copy(isLoading = false) }
+                        reduce {
+                            state.copy(
+                                isLoading = false,
+                                showWithdrawDialog = false,
+                            )
+                        }
                         postSideEffect(SettingsSideEffect.WithdrawFailed)
                     }
             }
