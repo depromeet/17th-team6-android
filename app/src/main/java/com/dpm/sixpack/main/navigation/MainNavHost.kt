@@ -141,7 +141,10 @@ internal fun MainNavHost(
                 onNavigateToSettings = {
                     // TODO: Navigate to settings
                 },
-                onNavigateToRecordDetail = { recordId ->
+                onNavigateToPostDetail = { id ->
+                    // TODO: Navigate to post detail
+                },
+                onNavigateToRecordDetail = { id ->
                     // TODO: Navigate to record detail
                 },
             )

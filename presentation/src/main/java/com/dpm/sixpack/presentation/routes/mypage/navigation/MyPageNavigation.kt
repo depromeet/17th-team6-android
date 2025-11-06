@@ -13,11 +13,13 @@ fun NavController.navigateMyPage(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.addMyPageNavGraph(
     onNavigateToSettings: () -> Unit,
+    onNavigateToPostDetail: (Long) -> Unit,
     onNavigateToRecordDetail: (Long) -> Unit,
 ) {
     composable<MainRoute.MyPage> {
         MyPageRoute(
             onNavigateToSettings = onNavigateToSettings,
+            onNavigateToPostDetail = onNavigateToPostDetail,
             onNavigateToRecordDetail = onNavigateToRecordDetail,
         )
     }
