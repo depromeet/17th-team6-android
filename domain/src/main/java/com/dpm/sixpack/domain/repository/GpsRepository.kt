@@ -5,5 +5,5 @@ import com.dpm.sixpack.domain.util.DoRunResult
 import kotlinx.coroutines.flow.Flow
 
 interface GpsRepository {
-    fun getLocationFlow(): Flow<DoRunResult<Location>>
+    val locationFlow: Flow<DoRunResult<Location>>
 }

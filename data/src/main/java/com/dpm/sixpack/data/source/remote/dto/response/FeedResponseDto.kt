@@ -3,6 +3,7 @@ package com.dpm.sixpack.data.source.remote.dto.response
 import com.dpm.sixpack.domain.model.Feed
 import com.dpm.sixpack.domain.model.FeedContent
 import com.dpm.sixpack.domain.model.FeedPage
+import com.dpm.sixpack.domain.model.MaxPaceData
 import com.dpm.sixpack.domain.model.Meta
 import com.dpm.sixpack.domain.model.ReactingUser
 import com.dpm.sixpack.domain.model.Reaction
@@ -102,8 +103,9 @@ data class FeedDto(
             runningSessionResult =
                 RunningSessionResult(
                     totalDistanceMeter = totalDistance.toInt(),
-                    totalDurationSec = totalRunTime,
+                    totalDurationSec = totalRunTime.toInt(),
                     avgPace = averagePace.toInt(),
+                    maxPace = MaxPaceData.default,
                     avgCadence = cadence,
                 ),
             imageUrl = imageUrl,

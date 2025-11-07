@@ -4,7 +4,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,13 +27,12 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.common.util.calculateSecDiff
 import com.dpm.sixpack.presentation.common.util.convertTimeDiffToString
 import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
+import com.dpm.sixpack.presentation.routes.running.map.component.FriendAwakeButton
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
-// TODO SK: Typo 적용
 @Composable
 fun FriendListItem(
     nickName: String,
@@ -44,7 +41,7 @@ fun FriendListItem(
     lastestRunAt: String,
     distanceInMeter: Int,
     modifier: Modifier = Modifier,
-    onCheerClick: () -> Unit = {},
+    onAwakeClick: () -> Unit = {},
 ) {
     val secDiff = calculateSecDiff(lastestRunAt)
     val isOutdated = secDiff == null || secDiff > 48 * 60 * 60
@@ -101,7 +98,7 @@ fun FriendListItem(
                 Text(
                     text = nickName,
                     color = SixpackTheme.colors.gray900,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = SixpackTheme.typography.t2Bold,
                     fontWeight = FontWeight.Bold,
                 )
                 // '나' 태그
@@ -115,7 +112,7 @@ fun FriendListItem(
                             modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp),
                             text = "나",
                             color = SixpackTheme.colors.gray0,
-                            style = MaterialTheme.typography.labelSmall,
+                            style = SixpackTheme.typography.c1Medium,
                         )
                     }
                 }
@@ -125,24 +122,22 @@ fun FriendListItem(
                 // 마지막 러닝 시간
                 Text(
                     text = if (secDiff != null) convertTimeDiffToString(LocalContext.current, secDiff) else "",
-                    style = MaterialTheme.typography.bodySmall,
+                    style = SixpackTheme.typography.b2Regular,
                     color = SixpackTheme.colors.gray500,
                 )
             }
-            // 최근 러닝 거리
+            // 최근 러닝 거리 / 장소
             Text(
                 text = if (!isOutdated) formatDistanceToKm(distanceInMeter) else "최근 러닝 기록이 없어요",
-                style = MaterialTheme.typography.bodyMedium,
+                style = SixpackTheme.typography.b2Medium,
                 color = SixpackTheme.colors.gray700,
             )
         }
 
         // 응원하기
         if (showInactive) {
-            DoRunDefaultButton(
-                text = "응원하기",
-                onClick = onCheerClick,
-                buttonContentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+            FriendAwakeButton(
+                onClick = onAwakeClick,
             )
         }
     }

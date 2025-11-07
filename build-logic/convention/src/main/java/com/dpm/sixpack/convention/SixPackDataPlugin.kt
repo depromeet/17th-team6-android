@@ -23,7 +23,6 @@ class SixPackDataPlugin : Plugin<Project> {
                 implementation(libs.getLibrary("kotlinx-serialization-json"))
                 implementation(libs.getBundle("network"))
                 implementation(libs.getLibrary("androidx-datastore-preferences"))
-                implementation(libs.getLibrary("androidx-room"))
             }
         }
     }
