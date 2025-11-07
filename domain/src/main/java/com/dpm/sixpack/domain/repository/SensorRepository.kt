@@ -4,5 +4,5 @@ import com.dpm.sixpack.domain.util.DoRunResult
 import kotlinx.coroutines.flow.Flow
 
 interface SensorRepository {
-    fun getTotalStep(): Flow<DoRunResult<Int>>
+    val totalStep: Flow<DoRunResult<Int>>
 }

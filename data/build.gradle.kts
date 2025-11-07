@@ -10,6 +10,10 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":core"))
 
+    implementation(libs.androidx.room)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+
     testImplementation(libs.junit)
     implementation(libs.bundles.paging)
     androidTestImplementation(libs.bundles.android.test)

@@ -37,7 +37,7 @@ internal fun BaseReadyOverlay(
         modifier
             .fillMaxSize()
             .background(
-                color = Color.Black.copy(alpha = 0.7f),
+                color = Color.Black.copy(alpha = 0.6f),
             ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,

@@ -7,14 +7,6 @@ import kotlinx.serialization.Serializable
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class FinishRunningRequestDto(
-    @SerialName("totalDistance")
-    val totalDistance: Int,
-    @SerialName("totalDuration")
-    val totalDuration: Int,
-    @SerialName("avgPace")
-    val avgPace: Int,
-    @SerialName("avgCadence")
-    val avgCadence: Long,
-    @SerialName("maxCadence")
-    val maxCadence: Int,
+    @SerialName("data")
+    val data: RunningSessionResultDto,
 )

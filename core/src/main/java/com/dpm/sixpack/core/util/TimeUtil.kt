@@ -29,6 +29,9 @@ object TimeUtil {
         }
     }
 
+    /*
+     * ISO 8601 형식의 시간 문자열 (예: "2025-09-13T19:57:13Z") -> Epoch 초
+     */
     fun isoStringToEpochSeconds(timestamp: String): Long? =
         try {
             val instant = Instant.parse(timestamp)
@@ -38,4 +41,9 @@ object TimeUtil {
             e.printStackTrace()
             null
         }
+
+    /*
+     * Epoch 밀리초 -> ISO 8601 형식의 시간 문자열 (예: "2025-09-13T19:57:13Z")
+     */
+    fun formatMillisToIsoUtc(timestamp: Long): String = Instant.ofEpochMilli(timestamp).toString()
 }

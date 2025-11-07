@@ -10,15 +10,16 @@ class StartRunningUseCase @Inject constructor(
     private val runningSessionRepository: RunningSessionRepository,
     private val userPreferenceRepository: UserPreferenceRepository,
 ) {
-    suspend operator fun invoke(goalPlanId: Long): DoRunResult<Long> {
+    suspend operator fun invoke(): DoRunResult<Long> {
         val localSessionId = userPreferenceRepository.getSessionId()
 
         return if (localSessionId == null) {
-            runningSessionRepository.start(goalPlanId).onSuccess { newSessionId ->
+            runningSessionRepository.startSession().onSuccess { newSessionId ->
                 userPreferenceRepository.updateSessionId(newSessionId)
             }
         } else {
             Timber.d("기존 러닝을 다시 시작합니다.")
+            // TODO sk: 기존 러닝 재시작 하기
             DoRunResult.Success(localSessionId)
         }
     }

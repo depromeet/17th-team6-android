@@ -13,11 +13,3 @@ data class RecordState(
     // 180
     val cadence: Int = 0,
 ) : Parcelable
-
-internal val INITIAL_RECORD_STATE =
-    RecordState(
-        currentDistance = 0,
-        currentDuration = 0,
-        avgPace = 0,
-        cadence = 0,
-    )

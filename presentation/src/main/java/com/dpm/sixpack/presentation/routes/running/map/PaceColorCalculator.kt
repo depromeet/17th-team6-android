@@ -15,7 +15,7 @@ object PaceColorCalculator {
             PaceColorPoint(300, Color(0xFF4751FF)), // 5:00
             PaceColorPoint(360, Color(0xFF26FF00)), // 6:00
             PaceColorPoint(420, Color(0xFFFFD700)), // 7:00
-            PaceColorPoint(480, Color(0xFFFF7B00)), // 8:00
+            PaceColorPoint(480, Color(0xFFFF8000)), // 8:00
             PaceColorPoint(540, Color(0xFFFF0000)), // 9:00
         ).sortedBy { it.paceInSeconds }
 

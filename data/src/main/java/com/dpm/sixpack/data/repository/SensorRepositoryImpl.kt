@@ -12,15 +12,16 @@ import javax.inject.Inject
 class SensorRepositoryImpl @Inject constructor(
     private val sensorDataSource: SensorDataSource,
 ) : SensorRepository {
-    override fun getTotalStep(): Flow<DoRunResult<Int>> =
-        sensorDataSource
-            .getTotalStepsFlow()
+    override val totalStep: Flow<DoRunResult<Int>> =
+        sensorDataSource.totalStepsFlow
             .map { stepCount ->
-                DoRunResult.Success(stepCount)
+                DoRunResult.Success(stepCount) as DoRunResult<Int>
             }.catch { throwable ->
-                DoRunResult.Failure(
-                    DoRunException.DataError(
-                        throwable.message ?: " repository : totalStep이 존재하지 않습니다.",
+                emit(
+                    DoRunResult.Failure(
+                        DoRunException.DataError(
+                            throwable.message ?: " repository : totalStep이 존재하지 않습니다.",
+                        ),
                     ),
                 )
             }

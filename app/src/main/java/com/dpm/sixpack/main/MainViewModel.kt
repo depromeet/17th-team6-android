@@ -31,8 +31,11 @@ class MainViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
-    private val _startDestination = MutableStateFlow<Route>(OnboardingRoute)
+    private val _startDestination = MutableStateFlow<Route>(MainRoute.Running)
     val startDestination: StateFlow<Route> = _startDestination.asStateFlow()
+
+    private val _showFullScreenLoading = MutableStateFlow(false)
+    val showFullScreenLoading: StateFlow<Boolean> = _showFullScreenLoading.asStateFlow()
 
     init {
         initializeStartDestination()
@@ -41,6 +44,10 @@ class MainViewModel @Inject constructor(
 
     override fun onIntent(intent: MainIntent) {
         // MainViewModel은 현재 UI Intent를 처리하지 않음
+    }
+
+    fun setFullScreenLoading(show: Boolean) {
+        _showFullScreenLoading.value = show
     }
 
     private fun initializeStartDestination() =

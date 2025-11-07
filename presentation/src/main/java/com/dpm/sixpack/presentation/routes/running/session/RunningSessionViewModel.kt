@@ -9,7 +9,6 @@ import android.os.IBinder
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dpm.sixpack.domain.model.RealtimeRunningData
-import com.dpm.sixpack.domain.usecase.FinishRunningSessionUseCase
 import com.dpm.sixpack.domain.usecase.StartRunningUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.common.util.MockLocationClient
@@ -18,7 +17,6 @@ import com.dpm.sixpack.presentation.routes.running.session.contract.RunningSessi
 import com.dpm.sixpack.presentation.routes.running.session.contract.RunningSessionSideEffect
 import com.dpm.sixpack.presentation.routes.running.session.contract.RunningSessionUiState
 import com.dpm.sixpack.presentation.routes.running.session.contract.RunningSessionUiState.Companion.INITIAL_COUNTDOWN
-import com.dpm.sixpack.presentation.routes.running.session.contract.state.INITIAL_RECORD_STATE
 import com.dpm.sixpack.presentation.routes.running.session.contract.state.PathState
 import com.dpm.sixpack.presentation.routes.running.session.contract.state.RecordState
 import com.dpm.sixpack.runningservice.RunningActions
@@ -44,8 +42,7 @@ class RunningSessionViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     @ApplicationContext private val context: Context,
     private val startRunningUseCase: StartRunningUseCase,
-    private val finishRunningSessionUseCase: FinishRunningSessionUseCase,
-    private val fusedLocationProviderClient: FusedLocationProviderClient,
+    fusedLocationProviderClient: FusedLocationProviderClient,
 ) : BaseViewModel<RunningSessionUiState, RunningSessionIntent, RunningSessionSideEffect>() {
     // FIXME: 프리런칭 시뮬레이션용
     val mockLocationClient = MockLocationClient(fusedLocationProviderClient, viewModelScope)
@@ -74,14 +71,11 @@ class RunningSessionViewModel @Inject constructor(
             }
         }
 
-    init {
-        bindToService()
-        handleSessionStart()
-    }
-
     @SuppressLint("MissingPermission")
     override fun onIntent(intent: RunningSessionIntent) {
         when (intent) {
+            is RunningSessionIntent.SessionStart -> handleSessionStart()
+
             is RunningSessionIntent.RunningResume -> {
                 handleMainRunningResume()
                 startObservingRealtimeData()
@@ -92,11 +86,7 @@ class RunningSessionViewModel @Inject constructor(
                 pauseObservingRealtimeData()
             }
 
-            is RunningSessionIntent.RunningStopConfirm -> {
-                mockLocationClient.stop()
-                sendCommandToService(context, RunningActions.STOP)
-                handleMainRunningStopConfirm()
-            }
+            is RunningSessionIntent.RunningStopConfirm -> handleMainRunningStopConfirm()
 
             RunningSessionIntent.RunningStop -> handleStopDialog(true)
             RunningSessionIntent.RunningStopCancel -> handleStopDialog(false)
@@ -116,7 +106,7 @@ class RunningSessionViewModel @Inject constructor(
                             getNewPathState(
                                 currentState,
                                 LatLng(realtimeData.latitude, realtimeData.longitude),
-                                realtimeData.pace,
+                                realtimeData.avgPace,
                             )
                         val newRecordState = getNewRecordUiState(realtimeData)
 
@@ -127,7 +117,6 @@ class RunningSessionViewModel @Inject constructor(
                             )
                         }
 
-                        // FIXME SK: SideEffect로 처리하는게 옳을지
                         postSideEffect(
                             RunningSessionSideEffect.UpdateRunningPath(newPathState),
                         )
@@ -138,7 +127,6 @@ class RunningSessionViewModel @Inject constructor(
 
     @SuppressLint("MissingPermission")
     private fun startObservingRealtimeData() {
-        // 테스트
         if (mockLocationClient.isRunning) {
             mockLocationClient.resume()
         } else {
@@ -153,30 +141,34 @@ class RunningSessionViewModel @Inject constructor(
         sendCommandToService(context, RunningActions.PAUSE)
     }
 
-    // region session start
-
-    // Initial 상태에서 러닝 시작
     private fun handleSessionStart() {
+        bindToService()
         intent {
             viewModelScope.launch {
-                startRunningUseCase(goalPlanId = 123214214L) // TODO: 세션아이디
-                    .onSuccess { }
-                    .onError { }
+                // TODO SK: 성공 실패 처리 제대로
+                startRunningUseCase()
+                    .onSuccess { sessionId ->
+                        Timber.d("session start success: sessionId = $sessionId")
+                        handleReadyState(RunningSessionUiState.Ready())
+
+                        reduce {
+                            RunningSessionUiState.Running()
+                        }
+
+                        startObservingRealtimeData()
+                    }.onError {
+                        Timber.d("session start failed: ${it.message}")
+
+                        reduce {
+                            RunningSessionUiState.Initial
+                        }
+
+                        postSideEffect(RunningSessionSideEffect.SessionFinish)
+                    }
             }
-
-            handleReadyState(RunningSessionUiState.Ready())
-
-            reduce {
-                RunningSessionUiState.Running(
-                    recordState = INITIAL_RECORD_STATE,
-                )
-            }
-
-            startObservingRealtimeData()
         }
     }
 
-    // Ready 상태에서 보여지는 카운트 업데이트
     private suspend fun RunningSessionSyntax.handleReadyState(readyState: RunningSessionUiState.Ready) {
         repeat(INITIAL_COUNTDOWN - 1) { index ->
             val countdown = INITIAL_COUNTDOWN - (index + 1)
@@ -187,7 +179,6 @@ class RunningSessionViewModel @Inject constructor(
         }
     }
 
-    // 새로운 좌표가 추가된 갱신된 Path 생성 -> 오직 본러닝 중에만
     private fun getNewPathState(
         sessionState: RunningSessionUiState.Running,
         newPoint: LatLng,
@@ -202,17 +193,14 @@ class RunningSessionViewModel @Inject constructor(
     private fun getNewRecordUiState(realtimeRunningData: RealtimeRunningData): RecordState {
         val newRecord =
             RecordState(
-                currentDistance = realtimeRunningData.totalDistanceMeter,
-                currentDuration = realtimeRunningData.duration,
-                avgPace = realtimeRunningData.pace,
-                cadence = realtimeRunningData.cadence,
+                currentDistance = realtimeRunningData.distanceInMeter,
+                currentDuration = realtimeRunningData.durationInSec,
+                avgPace = realtimeRunningData.avgPace,
+                cadence = realtimeRunningData.avgCadence,
             )
         return newRecord
     }
 
-// endregion
-
-    // 일시정지 상태에서 종료 다이얼로그 show 상태 관리
     private fun handleStopDialog(showStopConfirmDialog: Boolean) =
         intent {
             val currentState = state
@@ -255,15 +243,20 @@ class RunningSessionViewModel @Inject constructor(
             }
         }
 
-    // 메인러닝 중단 -> 결과화면
     private fun handleMainRunningStopConfirm() =
         intent {
-            finishRunningSessionUseCase()
+            if (state is RunningSessionUiState.Pause) {
+                mockLocationClient.stop()
+                sendCommandToService(context, RunningActions.STOP)
 
-            postSideEffect(RunningSessionSideEffect.SessionFinish)
+                reduce {
+                    RunningSessionUiState.Initial
+                }
+
+                postSideEffect(RunningSessionSideEffect.SessionFinish)
+            }
         }
 
-    // region Service
     private fun sendCommandToService(
         context: Context,
         action: String,
@@ -280,8 +273,6 @@ class RunningSessionViewModel @Inject constructor(
             context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         }
     }
-
-    // endregion
 
     override fun onCleared() {
         mockLocationClient.stop()

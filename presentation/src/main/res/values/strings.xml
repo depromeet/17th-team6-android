@@ -241,6 +241,8 @@
     <string name="button_default_next">다음</string>
 
     <!-- region Friend List -->
+    <string name="friend_status_title">친구 현황</string>
+    <string name="friend_awake_btn">깨우기</string>
     <string name="minutes_before">%1$d분 전</string>
     <string name="hours_before">%1$d시간 전</string>
     <string name="days_before">%1$d일 전</string>
