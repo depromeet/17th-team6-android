@@ -14,7 +14,7 @@ import org.gradle.kotlin.dsl.dependencies
 import java.io.FileInputStream
 import java.util.Properties
 
-/* For app module */
+// For app module
 class AndroidApplicationPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
@@ -36,8 +36,18 @@ class AndroidApplicationPlugin : Plugin<Project> {
                 defaultConfig {
                     applicationId = "com.dpm.sixpack"
 
-                    targetSdk = libs.findVersion("targetSdk").get().toString().toInt()
-                    versionCode = libs.findVersion("versionCode").get().toString().toInt()
+                    targetSdk =
+                        libs
+                            .findVersion("targetSdk")
+                            .get()
+                            .toString()
+                            .toInt()
+                    versionCode =
+                        libs
+                            .findVersion("versionCode")
+                            .get()
+                            .toString()
+                            .toInt()
                     versionName = libs.findVersion("versionName").get().toString()
 
                     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -63,7 +73,7 @@ class AndroidApplicationPlugin : Plugin<Project> {
                 // Additional release configuration
                 buildTypes {
                     getByName("debug") {
-                        applicationIdSuffix = ".dev"
+//                        applicationIdSuffix = ".dev"
                     }
                     getByName("release") {
                         signingConfig = signingConfigs.getByName("release")

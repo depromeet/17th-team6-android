@@ -9,7 +9,8 @@ import android.os.IBinder
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dpm.sixpack.domain.model.RealtimeRunningData
-import com.dpm.sixpack.domain.usecase.StartRunningUseCase
+import com.dpm.sixpack.domain.usecase.running.StartRunningUseCase
+import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.common.util.MockLocationClient
 import com.dpm.sixpack.presentation.common.util.Sungsoo
@@ -157,12 +158,14 @@ class RunningSessionViewModel @Inject constructor(
 
                         startObservingRealtimeData()
                     }.onError {
+                        // TODO SK: 실패 처리
                         Timber.d("session start failed: ${it.message}")
 
                         reduce {
                             RunningSessionUiState.Initial
                         }
 
+                        postSideEffect(RunningSessionSideEffect.ShowToast(R.string.running_start_failed_toast))
                         postSideEffect(RunningSessionSideEffect.SessionFinish)
                     }
             }

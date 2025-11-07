@@ -9,21 +9,22 @@ import com.dpm.sixpack.data.source.remote.dto.request.FinishRunningRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.SaveSegmentDataRequestsDto
 import com.dpm.sixpack.data.source.remote.dto.request.toDto
 import com.dpm.sixpack.data.source.remote.dto.request.toSegmentDataDto
-import com.dpm.sixpack.data.source.remote.dto.response.toSyncResult
 import com.dpm.sixpack.domain.exception.DoRunException
 import com.dpm.sixpack.domain.model.MaxPaceData
 import com.dpm.sixpack.domain.model.RealtimeRunningData
 import com.dpm.sixpack.domain.model.RunSession
 import com.dpm.sixpack.domain.model.RunningSessionResult
 import com.dpm.sixpack.domain.repository.RunningSessionRepository
-import com.dpm.sixpack.domain.usecase.SaveRealtimeRunningDataResult
+import com.dpm.sixpack.domain.usecase.running.SaveRealtimeRunningDataResult
 import com.dpm.sixpack.domain.util.DoRunResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RunningSessionRepositoryImpl @Inject constructor(
     private val runningSessionDataSource: RunningSessionDataSource,
     private val localRunningDataSource: LocalRunningDataSource,

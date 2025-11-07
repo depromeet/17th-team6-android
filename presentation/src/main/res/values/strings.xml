@@ -11,6 +11,10 @@
     <string name="common_find_account">계정찾기</string>
     <string name="common_recommended_duration">권장 러닝 시간</string>
     <string name="common_recommended_pace">권장 페이스</string>
+    <string name="request_retry">재시도</string>
+    <string name="clipboard_copy">클립보드에 내 코드가 복사되었어요!</string>
+    <string name="data_load_failed">데이터를 불러오는 데 실패했습니다.</string>
+
 
     <!-- endregion -->
 
@@ -103,44 +107,6 @@
     <string name="signup_button_resend">재전송</string>
     <!-- endregion-->
 
-
-    <!-- region Home -->
-    <string name="home_title">홈</string>
-    <string name="home_goal_list">목표 목록</string>
-    <string name="home_goal_distance">목표 거리</string>
-    <string name="home_goal_session_count">%d회차 목표</string>
-    <string name="home_goal_run_again_title_condition">한 번 달린 목표로 달리고 싶다면,</string>
-    <string name="home_goal_run_again_title">이전 목표로 달리기</string>
-    <string name="home_goal_run">러닝하러 가기</string>
-    <string name="home_goal_achieve">목표 달성! 꾸준함이 모인 멋진 결과네요!!</string>
-    <string name="home_goal_edit_description">또 다른 도전을 원한다면?\n새로운 목표로 변경해요!</string>
-    <string name="home_goal_edit">목표 변경하기</string>
-
-    <string name="home_goal_list_title">목표 목록</string>
-    <string name="home_goal_list_run_again">이 목표로 다시 러닝</string>
-    <string name="home_goal_list_start_condition">이전 회차를 끝내야 도전할 수 있어요.</string>
-
-    <string name="home_goal_edit_title">목표 변경</string>
-    <string name="home_goal_edit_question_title">어떤 목표로 도전할까요?</string>
-    <string name="home_goal_edit_question_description">목표를 변경하면, 이전 기록은 리셋됩니다.</string>
-    <string name="home_goal_edit_result_title">나에게 꼭 맞는\n목표가 준비되었어요!</string>
-    <string name="home_goal_edit_recommend">추천</string>
-    <string name="home_goal_edit_total_session_count">추천</string>
-    <string name="home_goal_edit_for_marathon_title">마라톤에 도전할래요</string>
-    <string name="home_goal_edit_for_marathon_description">10km · 21km · 42km</string>
-    <string name="home_goal_edit_for_stamina_title">체력을 키울래요</string>
-    <string name="home_goal_edit_for_stamina_description">30분 달리기</string>
-    <string name="home_goal_edit_for_endurance_title">지구력을 키울래요</string>
-    <string name="home_goal_edit_for_endurance_description">Zone2 러닝</string>
-
-    <string name="home_goal_cheer_up_0_1">시작이 반이에요! 같이 달려볼까요?</string>
-    <string name="home_goal_cheer_up_1_25">몸이 점점 풀리고 있어요! 힘차게 달려볼까요?</string>
-    <string name="home_goal_cheer_up_26_50">지금처럼만 달리면 충분해요!</string>
-    <string name="home_goal_cheer_up_51_75">목표까지 얼마 남지 않았어요!</string>
-    <string name="home_goal_cheer_up_76_100">거의 다 왔어요. 끝까지 함께 달려요!</string>
-
-    <!-- endregion-->
-    
     <!-- region Post Upload -->
     <string name="post_upload_certifiable_record_submit_button">불러오기</string>
     <string name="post_upload_certifiable_record_title">이전 러닝 내역</string>
@@ -197,56 +163,60 @@
     <string name="certified_users_title">인증목록</string>
     <!--endregion -->
 
-    <!--region Screen Selection Tab-->
+    <!--region Running -->
     <string name="screen_tab_goal_title">목표</string>
     <string name="screen_tab_map_title">지도</string>
-    <!--endregion -->
-
-    <!--region Running Phase-->
     <string name="running_phase_warmup_title">웜업</string>
     <string name="running_phase_main_title">러닝</string>
     <string name="running_phase_cooldown_title">쿨다운</string>
-    <!--endregion-->
-
-    <!--region Running Record-->
     <string name="record_current_distance">현재 거리</string>
     <string name="record_running_duration">러닝 시간</string>
     <string name="record_average_pace">평균 페이스</string>
     <string name="record_cadence">케이던스</string>
-    <!--endregion-->
-
-    <!--region Running Record Panel-->
     <string name="panel_skip">건너뛰기</string>
     <string name="panel_target_distance">목표거리</string>
     <string name="panel_record_pause">기록 중지</string>
     <string name="panel_record_resume">계속 운동하기</string>
     <string name="panel_record_terminate">기록 종료</string>
-    <!--endregion-->
-
-    <!--region RunningDialog -->
     <string name="dialog_cancel">취소</string>
     <string name="dialog_running_stop_title">러닝기록 종료</string>
     <string name="dialog_running_stop_content">이대로 기록을 종료하시겠어요?</string>
-    <!--endregion-->
-
-    <!--region Ready Loading -->
     <string name="ready_main_primary">잠시 후 러닝 시작</string>
-    <!--endregion-->
-
-    <!--region RunningSessionScreen -->
     <string name="session_start_running_button">오늘의 러닝 시작</string>
-    <!--endregion-->
+    <string name="running_permission_toast">러닝 시작에 필요한 권한이 없어요</string>
+    <string name="running_start_failed_toast">러닝 시작 실패</string>
+
 
     <!-- Button Default Text -->
     <string name="button_default_next">다음</string>
 
     <!-- region Friend List -->
+    <string name="friend_no_recent_running">최신 러닝 기록이 없어요..</string>
     <string name="friend_status_title">친구 현황</string>
     <string name="friend_awake_btn">깨우기</string>
     <string name="minutes_before">%1$d분 전</string>
     <string name="hours_before">%1$d시간 전</string>
     <string name="days_before">%1$d일 전</string>
+    <string name="years_before">%1$d년 전</string>
     <string name="inactive_label_text">zzz</string>
+    <string name="friend_awake_toast">잠자는 %s 님을 깨웠어요</string>
+    <string name="friend_empty">친구가 없어요..</string>
+    <string name="friend_add_suggestion">친구를 초대해 함께 달려보세요!</string>
+    <!--endregion-->
+
+    <!-- region Add Friend -->
+    <string name="friend_list_screen_title">친구</string>
+    <string name="friend_list">친구목록</string>
+    <string name="add_friend_screen_title">친구 코드 입력</string>
+    <string name="friend_code_no_exist">존재하지 않는 코드에요. 다시 입력해주세요</string>
+    <string name="friend_code_invalid">코드가 올바르지 않아요. 다시 입력해주세요</string>
+    <string name="friend_add_success">%s 친구가 추가되었어요.</string>
+    <string name="friend_delete">친구 삭제하기</string>
+    <string name="friend_code_enter_button">친구 코드 입력하기</string>
+    <string name="friend_code_enter_done_button">입력 완료</string>
+    <string name="my_friend_code_copy">내 코드 복사하기</string>
+    <string name="friend_code_input_title">추가할 친구의 친구 코드를 입력해주세요</string>
+    <string name="friend_code_input_description">친구코드 8자리 입력</string>
     <!--endregion-->
 
     <!-- region MyPage -->

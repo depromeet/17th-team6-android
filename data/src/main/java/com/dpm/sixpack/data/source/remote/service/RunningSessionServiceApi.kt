@@ -4,6 +4,7 @@ import com.dpm.sixpack.data.source.remote.dto.request.SaveSegmentDataRequestsDto
 import com.dpm.sixpack.data.source.remote.dto.response.FinishRunningResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.RunSessionListResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.SaveSegmentResponseDto
+import com.dpm.sixpack.data.source.remote.dto.response.SessionDetailResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.StartRunningResponseDto
 import com.dpm.sixpack.data.source.remote.util.base.BaseResponse
 import com.dpm.sixpack.data.source.remote.util.constant.ApiConstants.API
@@ -42,4 +43,9 @@ interface RunningSessionServiceApi {
         @Query("isSelfied") isSelfied: Boolean? = null,
         @Query("startDateTime") startDateTime: String? = null,
     ): BaseResponse<List<RunSessionListResponseDto>>
+
+    @POST("$API/$RUNS/$SESSIONS/{sessionId}")
+    suspend fun getSessionDetail(
+        @Path("sessionId") sessionId: Long,
+    ): BaseResponse<SessionDetailResponseDto>
 }

@@ -5,15 +5,13 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
-import android.telecom.VideoProfile.isPaused
 import androidx.core.app.NotificationCompat
-import androidx.core.app.ServiceCompat.stopForeground
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.dpm.sixpack.core.util.TimeUtil
 import com.dpm.sixpack.domain.model.RealtimeRunningData
-import com.dpm.sixpack.domain.usecase.CollectAndSaveRunningDataUseCase
-import com.dpm.sixpack.domain.usecase.SyncRunningDataUseCase
+import com.dpm.sixpack.domain.usecase.running.CollectAndSaveRunningDataUseCase
+import com.dpm.sixpack.domain.usecase.running.SyncRunningDataUseCase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

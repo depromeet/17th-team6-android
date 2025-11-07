@@ -12,8 +12,8 @@ import com.dpm.sixpack.presentation.navigation.MainNavTab
 import com.dpm.sixpack.presentation.routes.feed.navigation.addFeedNavGraph
 import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToCertifiableRecord
 import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToCertifiedUsers
-import com.dpm.sixpack.presentation.routes.friend.navigation.addFriendAddNavGraph
-import com.dpm.sixpack.presentation.routes.friend.navigation.addFriendProfileNavGraph
+import com.dpm.sixpack.presentation.routes.friend.navigation.addFriendNavGraph
+import com.dpm.sixpack.presentation.routes.friend.navigation.navigateToFriendGraph
 import com.dpm.sixpack.presentation.routes.mypage.navigation.addMyPageNavGraph
 import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
 import com.dpm.sixpack.presentation.routes.postdetail.navigation.addPostDetailNavGraph
@@ -24,8 +24,8 @@ import com.dpm.sixpack.presentation.routes.postupload.navigation.addPostUploadNa
 import com.dpm.sixpack.presentation.routes.postupload.navigation.navigateToPostUpload
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.addProfileCreationNavGraph
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.navigateProfileCreation
-import com.dpm.sixpack.presentation.routes.running.navigation.addRunningSessionNavGraph
-import com.dpm.sixpack.presentation.routes.running.navigation.navigateRunningSession
+import com.dpm.sixpack.presentation.routes.running.navigation.addRunningNavGraph
+import com.dpm.sixpack.presentation.routes.running.navigation.navigateRunning
 import com.dpm.sixpack.presentation.routes.sessionreport.navigation.addSessionReportNavGraph
 import com.dpm.sixpack.presentation.routes.settings.navigation.addSettingsNavGraph
 import com.dpm.sixpack.presentation.routes.settings.navigation.navigateToSettings
@@ -39,7 +39,7 @@ import com.dpm.sixpack.presentation.routes.terms.navigation.navigateTerms
 @Composable
 internal fun MainNavHost(
     appState: SixPackAppState,
-    onShowSnackbar: suspend (String, String?) -> Boolean,
+    onShowSnackBar: (String, String?) -> Unit,
     setFullScreenLoading: (Boolean) -> Unit,
     onBottomBarVisibilityChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -78,7 +78,7 @@ internal fun MainNavHost(
 
             addProfileCreationNavGraph(
                 onNavigateToHome = {
-                    navigator.navController.navigateRunningSession(
+                    navigator.navController.navigateRunning(
                         navOptions {
                             popUpTo(navigator.navController.graph.id) {
                                 inclusive = true
@@ -94,7 +94,7 @@ internal fun MainNavHost(
 
             addSignInNavGraph(
                 onNavigateToHome = {
-                    navigator.navController.navigateRunningSession(
+                    navController.navigateRunning(
                         navOptions {
                             popUpTo(navigator.navController.graph.id) {
                                 inclusive = true
@@ -118,10 +118,12 @@ internal fun MainNavHost(
                 onNavigateBack = navigator::popBackStack,
             )
 
-            addRunningSessionNavGraph(
-                onNavigateToBack = navigator::popBackStack,
+            addRunningNavGraph(
+                onShowSnackBar = onShowSnackBar,
                 onBottomBarVisibilityChange = onBottomBarVisibilityChange,
                 navigateToSessionReport = navigator::navigateToSessionReport,
+                navigateToBack = navigator::popBackStack,
+                navigateToFriendList = navController::navigateToFriendGraph,
                 showFullScreenLoading = setFullScreenLoading,
             )
 
@@ -168,17 +170,23 @@ internal fun MainNavHost(
 
             addSettingsNavGraph(
                 onNavigateBack = navigator::popBackStack,
-                onShowSnackbar = onShowSnackbar,
+                onShowSnackbar = onShowSnackBar,
                 navController = navController,
             )
 
             // Friend 관련 딥링크 지원을 위한 NavGraph 추가
-            addFriendProfileNavGraph(
-                navigateToBack = navigator::popBackStack,
-            )
+//            addFriendProfileNavGraph(
+//                navigateToBack = navigator::popBackStack,
+//            )
 
-            addFriendAddNavGraph(
+//            addFriendAddNavGraph(
+//                navigateToBack = navigator::popBackStack,
+//            )
+
+            addFriendNavGraph(
+                navController = navigator.navController,
                 navigateToBack = navigator::popBackStack,
+                onShowSnackBar = onShowSnackBar,
             )
         }
     }

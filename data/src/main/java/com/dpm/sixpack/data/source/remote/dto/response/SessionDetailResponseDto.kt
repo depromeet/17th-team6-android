@@ -1,11 +1,11 @@
 package com.dpm.sixpack.data.source.remote.dto.response
 
-import android.annotation.SuppressLint
 import com.dpm.sixpack.data.source.remote.dto.request.SegmentDataDto
+import com.dpm.sixpack.domain.model.SessionDetail
+import com.dpm.sixpack.domain.model.SessionDetailFeed
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class SessionDetailResponseDto(
     @SerialName("id")
@@ -35,12 +35,30 @@ data class SessionDetailResponseDto(
     @SerialName("mapImage")
     val mapImage: String,
     @SerialName("feed")
-    val feed: SessionDetailFeedDto,
+    val feed: SessionDetailFeedDto?,
     @SerialName("segments")
     val segments: List<List<SegmentDataDto>>,
-)
+) {
+    fun toDomain() =
+        SessionDetail(
+            id = id,
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+            finishedAt = finishedAt,
+            distanceTotal = distanceTotal,
+            durationTotal = durationTotal,
+            paceAvg = paceAvg,
+            paceMax = paceMax,
+            paceMaxLatitude = paceMaxLatitude,
+            paceMaxLongitude = paceMaxLongitude,
+            cadenceAvg = cadenceAvg,
+            cadenceMax = cadenceMax,
+            mapImage = mapImage,
+            feed = feed?.toDomain(),
+            segments = segments.map { it.map { segment -> segment.toDomain() } },
+        )
+}
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class SessionDetailFeedDto(
     @SerialName("id")
@@ -53,4 +71,13 @@ data class SessionDetailFeedDto(
     val content: String,
     @SerialName("createdAt")
     val createdAt: String,
-)
+) {
+    fun toDomain() =
+        SessionDetailFeed(
+            id = id,
+            mapImage = mapImage,
+            selfieImage = selfieImage,
+            content = content,
+            createdAt = createdAt,
+        )
+}

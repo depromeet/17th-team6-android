@@ -2,8 +2,8 @@ package com.dpm.sixpack.runningservice.di
 
 import android.content.Context
 import androidx.core.app.NotificationCompat
+import com.dpm.sixpack.background.R
 import com.dpm.sixpack.runningservice.NOTIFICATION_CHANNEL_ID
-import com.dpm.sixpack.runningservice.R
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

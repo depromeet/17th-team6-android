@@ -4,6 +4,7 @@ import com.dpm.sixpack.data.source.remote.dto.request.SaveSegmentDataRequestsDto
 import com.dpm.sixpack.data.source.remote.dto.response.FinishRunningResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.RunSessionListResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.SaveSegmentResponseDto
+import com.dpm.sixpack.data.source.remote.dto.response.SessionDetailResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.StartRunningResponseDto
 import com.dpm.sixpack.data.source.remote.util.base.BaseResponse
 import kotlinx.coroutines.delay
@@ -121,6 +122,10 @@ class MockRunningSessionServiceApi
                 timestamp = getCurrentTimestamp(),
                 data = mockSessions,
             )
+        }
+
+        override suspend fun getSessionDetail(sessionId: Long): BaseResponse<SessionDetailResponseDto> {
+            TODO("Not yet implemented")
         }
 
         /**

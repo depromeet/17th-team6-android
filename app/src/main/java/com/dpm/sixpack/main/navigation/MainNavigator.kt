@@ -8,7 +8,6 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.NavOptions
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.dpm.sixpack.presentation.destinations.MainRoute
@@ -16,9 +15,8 @@ import com.dpm.sixpack.presentation.destinations.Route
 import com.dpm.sixpack.presentation.navigation.MainNavTab
 import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToFeed
 import com.dpm.sixpack.presentation.routes.mypage.navigation.navigateMyPage
-import com.dpm.sixpack.presentation.routes.running.navigation.navigateRunningSession
+import com.dpm.sixpack.presentation.routes.running.navigation.navigateRunning
 import com.dpm.sixpack.presentation.routes.sessionreport.navigation.navigateSessionReport
-import com.dpm.sixpack.presentation.routes.signup.navigation.navigateSignUp
 
 class MainNavigator(
     val navController: NavHostController,
@@ -53,17 +51,6 @@ class MainNavigator(
         navController.popBackStack()
     }
 
-    fun navigateToHome(navOptions: NavOptions? = null) {
-    }
-
-    fun navigateToSignUp() {
-        navController.navigateSignUp()
-    }
-
-    fun navigateToRunningSession() {
-        navController.navigateRunningSession()
-    }
-
     fun navigateToSessionReport() {
         navController.navigateSessionReport(
             navOptions {
@@ -86,7 +73,7 @@ class MainNavigator(
 
         when (tab) {
             MainNavTab.RUNNING -> {
-                navController.navigateRunningSession(navOptions)
+                navController.navigateRunning(navOptions)
             }
 
             MainNavTab.FEED -> {
