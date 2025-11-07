@@ -1,7 +1,6 @@
 package com.dpm.sixpack.presentation.routes.feed.certifiedusers
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dpm.sixpack.presentation.routes.feed.certifiedusers.contract.CertifiedUsersSideEffect

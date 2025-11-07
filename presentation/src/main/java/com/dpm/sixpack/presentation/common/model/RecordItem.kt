@@ -2,8 +2,14 @@ package com.dpm.sixpack.presentation.common.model
 
 import android.os.Parcelable
 import androidx.compose.runtime.Immutable
+import com.dpm.sixpack.domain.model.UncertifiedRunSession
+import com.dpm.sixpack.presentation.common.util.format.formatCadence
+import com.dpm.sixpack.presentation.common.util.format.formatPace
+import com.dpm.sixpack.presentation.common.util.format.formatSecondsToTimeInFeed
 import com.dpm.sixpack.presentation.common.util.format.toDateWithDayOfWeekOrNull
+import com.dpm.sixpack.presentation.common.util.format.toPostTimeStringOrNull
 import com.dpm.sixpack.presentation.common.util.format.toTimeOnlyOrNull
+import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
 import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
 
@@ -21,3 +27,21 @@ data class RecordItem(
     val formattedDate: String
         get() = postTime.toDateWithDayOfWeekOrNull() ?: LocalDate.now().toString()
 }
+
+fun UncertifiedRunSession.toRecordItem(): RecordItem =
+    RecordItem(
+        sessionId = runSessionId,
+        runningSummary =
+            RunningSummary(
+                totalDistance = formatDistanceToKm(distanceTotal),
+                totalTime = formatSecondsToTimeInFeed(durationTotal),
+                averagePace = formatPace(paceAvg),
+                cadence = formatCadence(cadenceAvg),
+                recordDateTime = finishedAt.toPostTimeStringOrNull() ?: LocalDate.now().toString(),
+            ),
+        mapImageUrl = mapImage,
+        isPosted = isSelfied,
+        postTime = finishedAt,
+    )
+
+fun List<UncertifiedRunSession>.toRecordItems(): List<RecordItem> = map { it.toRecordItem() }

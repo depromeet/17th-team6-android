@@ -28,4 +28,4 @@ data class CertifiedUsers(
 ) : MainFeedRoute
 
 @Serializable
-data object CertifiableRecord: MainFeedRoute
+data object CertifiableRecord : MainFeedRoute

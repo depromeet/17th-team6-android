@@ -1,5 +1,6 @@
 package com.dpm.sixpack.presentation.common.components.record
 
+import android.R.attr.onClick
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -26,25 +27,23 @@ import com.dpm.sixpack.presentation.common.model.RecordItem
 import com.dpm.sixpack.presentation.common.model.RunningSummary
 import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.theme.SixpackTheme
+
 @Immutable
 data class DateGroupedRecords(
     val date: String,
     val records: List<RecordItem>,
 ) {
     companion object {
-        fun fromRecords(records: List<RecordItem>): List<DateGroupedRecords> {
-            return records
+        fun fromRecords(records: List<RecordItem>): List<DateGroupedRecords> =
+            records
                 .groupBy { record ->
                     record.formattedDate
-                }
-                .map { (date, items) ->
+                }.map { (date, items) ->
                     DateGroupedRecords(
                         date = date,
                         records = items.sortedByDescending { it.postTime },
                     )
-                }
-                .sortedByDescending { it.date }
-        }
+                }.sortedByDescending { it.date }
     }
 }
 
@@ -87,7 +86,6 @@ fun LazyListScope.dateGroupedRecordItems(
     }
 }
 
-
 @Composable
 private fun DateHeaderItem(
     date: String,
@@ -97,7 +95,7 @@ private fun DateHeaderItem(
         text = date,
         style = SixpackTheme.typography.b2Medium,
         color = SixpackTheme.colors.gray500,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -116,7 +114,7 @@ private fun RecordCard(
                 .background(SixpackTheme.colors.gray0)
                 .border(width = 1.dp, color = borderColor, shape = SixpackTheme.shapes.round16)
                 .noRippleClickable(onClick = onClick)
-                .padding(horizontal = 20.dp, vertical = 16.dp)
+                .padding(horizontal = 20.dp, vertical = 16.dp),
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -232,25 +230,26 @@ private fun DateGroupedRecordListPreview() {
 
         Column {
             DateHeaderItem(
-                date = "2025.10.15"
+                date = "2025.10.15",
             )
 
             Spacer(Modifier.height(12.dp))
 
             RecordCard(
-                record = RecordItem(
-                    sessionId = 2,
-                    runningSummary =
-                        RunningSummary(
-                            totalDistance = "8.02km",
-                            totalTime = "01:12:03",
-                            averagePace = "6'74\"",
-                            cadence = "128",
-                            recordDateTime = "2025.10.14 · 오후 11:12",
-                        ),
-                    mapImageUrl = "",
-                    postTime = "2025-10-14T11:12:00",
-                ),
+                record =
+                    RecordItem(
+                        sessionId = 2,
+                        runningSummary =
+                            RunningSummary(
+                                totalDistance = "8.02km",
+                                totalTime = "01:12:03",
+                                averagePace = "6'74\"",
+                                cadence = "128",
+                                recordDateTime = "2025.10.14 · 오후 11:12",
+                            ),
+                        mapImageUrl = "",
+                        postTime = "2025-10-14T11:12:00",
+                    ),
                 isSelected = true,
                 onClick = { /* Handle click event */ },
             )

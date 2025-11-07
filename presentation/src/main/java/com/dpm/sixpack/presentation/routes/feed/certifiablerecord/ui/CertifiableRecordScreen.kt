@@ -43,9 +43,10 @@ fun CertifiableRecordScreen(
     modifier: Modifier = Modifier,
 ) {
     val isEmpty = state.records.isEmpty()
-    val groupedRecords = remember(state.records) {
-        DateGroupedRecords.fromRecords(state.records)
-    }
+    val groupedRecords =
+        remember(state.records) {
+            DateGroupedRecords.fromRecords(state.records)
+        }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -58,19 +59,19 @@ fun CertifiableRecordScreen(
             DoRunDefaultButton(
                 text = stringResource(id = R.string.post_upload_certifiable_record_submit_button),
                 enabled = state.selectedRecord != null,
-                onClick = {onIntent(CertifiableRecordIntent.OnUploadClick) },
-                modifier = Modifier.fillMaxWidth().padding(20.dp)
-                )
+                onClick = { onIntent(CertifiableRecordIntent.OnUploadClick) },
+                modifier = Modifier.fillMaxWidth().padding(20.dp),
+            )
         },
         containerColor = SixpackTheme.colors.gray0,
-        contentWindowInsets = WindowInsets(0)
+        contentWindowInsets = WindowInsets(0),
     ) { paddingValues ->
         Column(
             modifier =
                 Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
-                    .padding(horizontal = 20.dp)
+                    .padding(horizontal = 20.dp),
         ) {
             Text(
                 text = stringResource(id = R.string.post_upload_certifiable_record_title),
@@ -88,8 +89,7 @@ fun CertifiableRecordScreen(
                 modifier = Modifier,
             )
 
-
-            if(!isEmpty) {
+            if (!isEmpty) {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -102,11 +102,11 @@ fun CertifiableRecordScreen(
                         },
                     )
                 }
-            }else{
+            } else {
                 EmptyRecord()
+            }
         }
     }
-}
 }
 
 @Composable
@@ -145,6 +145,7 @@ private fun EmptyRecord(modifier: Modifier = Modifier) {
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun CertifiableRecordScreenPreview() {

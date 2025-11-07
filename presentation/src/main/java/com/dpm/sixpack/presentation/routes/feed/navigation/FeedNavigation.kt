@@ -31,8 +31,8 @@ fun NavGraphBuilder.addFeedNavGraph(
     navigateToUserProfile: (Long) -> Unit = {},
     navigateToMyPage: () -> Unit = {},
     navigateToPostDetail: (Long) -> Unit = {},
-    navigateToCertifiableRecord : () -> Unit = {},
-    navigateToPostUpload: (Long, String, RunningSummary) -> Unit = { _, _, _ ->},
+    navigateToCertifiableRecord: () -> Unit = {},
+    navigateToPostUpload: (Long, String, RunningSummary) -> Unit = { _, _, _ -> },
     navigateToPostEdit: (Long) -> Unit = {},
     navigateToCertifiedUsers: (String) -> Unit = {},
 ) {
@@ -57,10 +57,10 @@ fun NavGraphBuilder.addFeedNavGraph(
         )
     }
 
-     composable<CertifiableRecord> {
-         CertifiableRecordRoute(
-             navigateToBack =  navigateToBack,
-             navigateToPostUpload = navigateToPostUpload
-         )
-     }
+    composable<CertifiableRecord> {
+        CertifiableRecordRoute(
+            navigateToBack = navigateToBack,
+            navigateToPostUpload = navigateToPostUpload,
+        )
+    }
 }

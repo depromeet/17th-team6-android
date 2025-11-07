@@ -35,7 +35,6 @@ fun CertifiableRecordRoute(
         }
     }
 
-
     if (state.isLoading) {
         Box(
             modifier =
@@ -53,5 +52,3 @@ fun CertifiableRecordRoute(
         onIntent = viewModel::onIntent,
     )
 }
-
-
