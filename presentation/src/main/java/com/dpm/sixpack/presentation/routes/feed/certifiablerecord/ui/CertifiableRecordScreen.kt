@@ -88,6 +88,8 @@ fun CertifiableRecordScreen(
                 )
 
                 if (!isEmpty) {
+                    Spacer(Modifier.height(32.dp))
+
                     LazyColumn(
                         modifier =
                             Modifier

@@ -3,6 +3,7 @@ package com.dpm.sixpack.presentation.routes.feed.certifiablerecord
 import androidx.lifecycle.SavedStateHandle
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.common.model.RecordItem
+import com.dpm.sixpack.presentation.common.model.RunningSummary
 import com.dpm.sixpack.presentation.routes.feed.certifiablerecord.contract.CertifiableRecordIntent
 import com.dpm.sixpack.presentation.routes.feed.certifiablerecord.contract.CertifiableRecordSideEffect
 import com.dpm.sixpack.presentation.routes.feed.certifiablerecord.contract.CertifiableRecordUiState
@@ -47,7 +48,47 @@ class CertifiableRecordViewModel @Inject constructor(
             // Mock data for now
             reduce {
                 state.copy(
-                    records = emptyList(),
+                    records = listOf(
+                        RecordItem(
+                            sessionId = 1L,
+                            runningSummary = RunningSummary(
+                                totalDistance = "10.50 km",
+                                totalTime = "00:55:12",
+                                averagePace = "5'15''",
+                                cadence = "170",
+                                recordDateTime = "2025.11.08 09:00"
+                            ),
+                            mapImageUrl = "https://picsum.photos/id/237/200/300",
+                            isPosted = false,
+                            postTime = "2025-11-08T09:00:15Z" // ISO 8601 형식
+                        ),
+                        RecordItem(
+                            sessionId = 2L,
+                            runningSummary = RunningSummary(
+                                totalDistance = "5.30 km",
+                                totalTime = "00:28:45",
+                                averagePace = "5'25''",
+                                cadence = "168",
+                                recordDateTime = "2025.11.07 18:30"
+                            ),
+                            mapImageUrl = "https://picsum.photos/id/237/200/300",
+                            isPosted = false,
+                            postTime = "2025-11-07T18:30:00Z"
+                        ),
+                        RecordItem(
+                            sessionId = 3L,
+                            runningSummary = RunningSummary(
+                                totalDistance = "3.00 km",
+                                totalTime = "00:17:30",
+                                averagePace = "5'50''",
+                                cadence = "172",
+                                recordDateTime = "2025.11.05 07:15"
+                            ),
+                            mapImageUrl = "https://picsum.photos/id/237/200/300",
+                            isPosted = false,
+                            postTime = "2025-11-05T07:15:20Z"
+                        ),
+                    ),
                     isLoading = false,
                 )
             }
