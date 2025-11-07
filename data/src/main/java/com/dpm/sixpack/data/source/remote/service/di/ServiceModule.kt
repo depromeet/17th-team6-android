@@ -2,6 +2,8 @@ package com.dpm.sixpack.data.source.remote.service.di
 
 import com.dpm.sixpack.data.source.remote.service.AuthService
 import com.dpm.sixpack.data.source.remote.service.FeedService
+import com.dpm.sixpack.data.source.remote.service.MockFeedService
+import com.dpm.sixpack.data.source.remote.service.MockRunningSessionServiceApi
 import com.dpm.sixpack.data.source.remote.service.RunningSessionServiceApi
 import dagger.Module
 import dagger.Provides
@@ -17,25 +19,25 @@ object ServiceModule {
     @Singleton
     fun provideAuthService(retrofit: Retrofit): AuthService = retrofit.create(AuthService::class.java)
 
-    @Provides
-    @Singleton
-    fun provideRunningSessionServiceApi(retrofit: Retrofit): RunningSessionServiceApi =
-        retrofit.create(RunningSessionServiceApi::class.java)
+//    @Provides
+//    @Singleton
+//    fun provideRunningSessionServiceApi(retrofit: Retrofit): RunningSessionServiceApi =
+//        retrofit.create(RunningSessionServiceApi::class.java)
 
-    @Provides
-    @Singleton
-    fun provideFeedService(retrofit: Retrofit): FeedService = retrofit.create(FeedService::class.java)
+//    @Provides
+//    @Singleton
+//    fun provideFeedService(retrofit: Retrofit): FeedService = retrofit.create(FeedService::class.java)
 
     // region 모킹 서비스.
 
-//    @Provides
-//    @Singleton
-//    fun provideRunningSessionServiceApi(mock: MockRunningSessionServiceApi): RunningSessionServiceApi =
-//        mockRunningSessionServiceApi
+    @Provides
+    @Singleton
+    fun provideRunningSessionServiceApi(mock: MockRunningSessionServiceApi): RunningSessionServiceApi =
+        mock
 
-//    @Provides
-//    @Singleton
-//    fun provideFeedService(mock: MockFeedService): FeedService = mock
+    @Provides
+    @Singleton
+    fun provideFeedService(mock: MockFeedService): FeedService = mock
 
     // endregion
 }
