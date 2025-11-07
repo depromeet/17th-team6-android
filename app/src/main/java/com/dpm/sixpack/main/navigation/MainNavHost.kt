@@ -146,7 +146,7 @@ internal fun MainNavHost(
             )
 
             addPostEditNavGraph(
-                navigateBack = { navController.popBackStack() },
+                navigateToBack = { navController.popBackStack() },
             )
 
             addPostUploadNavGraph(
