@@ -4,7 +4,7 @@ import com.dpm.sixpack.data.cache.TokenMemoryCache
 import com.dpm.sixpack.data.source.remote.util.constant.ApiConstants.TOKEN_REFRESH_PATH
 import com.dpm.sixpack.domain.model.AuthEvent
 import com.dpm.sixpack.domain.repository.AuthRepository
-import com.dpm.sixpack.domain.repository.UserPreferenceRepository
+import com.dpm.sixpack.domain.repository.UserRepository
 import com.dpm.sixpack.domain.util.DoRunResult
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
@@ -23,7 +23,7 @@ import javax.inject.Inject
  * 3. synchronized 블록으로 동시 요청 제어
  *    - 첫 번째 요청: 실제 토큰 갱신 API 호출
  *    - 나머지 요청: 대기 후 갱신된 토큰으로 재시도 또는 취소
- * 4. UserPreferenceRepository에서 RefreshToken 가져오기
+ * 4. UserRepository에서 RefreshToken 가져오기
  * 5. AuthRepository로 토큰 갱신 API 호출
  * 6. 성공 시: DataStore와 메모리 캐시 모두 업데이트, 새 AccessToken으로 요청 재시도
  * 7. 실패 시: 토큰 삭제 및 AuthEvent 발행, 로그인 화면 리다이렉트
@@ -32,7 +32,7 @@ class TokenAuthenticator
     @Inject
     constructor(
         private val tokenMemoryCache: TokenMemoryCache,
-        private val userPreferenceRepository: UserPreferenceRepository,
+        private val userPreferenceRepository: UserRepository,
         private val authRepository: AuthRepository,
     ) : Authenticator {
         // 동시 토큰 갱신 요청 방지를 위한 lock

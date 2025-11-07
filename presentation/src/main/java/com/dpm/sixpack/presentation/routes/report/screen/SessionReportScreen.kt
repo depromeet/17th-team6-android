@@ -38,8 +38,8 @@ import com.dpm.sixpack.presentation.common.components.DoRunDefaultAsyncImage
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.components.record.RecordItem
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
-import com.dpm.sixpack.presentation.common.util.format.toKoreanFeedTimeStringOrNull
-import com.dpm.sixpack.presentation.common.util.format.toKoreanFeedTimeStringOrNullInstant
+import com.dpm.sixpack.presentation.common.util.format.toPostTimeStringOrNullInstant
+import com.dpm.sixpack.presentation.common.util.format.toPostTimeStringOrNull
 import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
 import com.dpm.sixpack.presentation.common.util.formatPaceToString
 import com.dpm.sixpack.presentation.common.util.formatSecondsToTime
@@ -110,8 +110,8 @@ internal fun SessionReportScreen(
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text =
-                                sessionDetail.finishedAt.toKoreanFeedTimeStringOrNullInstant()
-                                    ?: sessionDetail.finishedAt.toKoreanFeedTimeStringOrNull() ?: "",
+                                sessionDetail.finishedAt.toPostTimeStringOrNullInstant()
+                                    ?: sessionDetail.finishedAt.toPostTimeStringOrNull() ?: "",
                             style = SixpackTheme.typography.b2Medium,
                             color = SixpackTheme.colors.gray700,
                         )

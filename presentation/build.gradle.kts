@@ -13,6 +13,9 @@ dependencies {
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.google.firebase.messaging.ktx)
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
+
     implementation(libs.bundles.navermap)
     implementation(libs.bundles.coil)
     implementation(libs.bundles.paging)

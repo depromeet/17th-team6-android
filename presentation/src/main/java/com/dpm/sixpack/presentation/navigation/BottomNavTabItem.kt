@@ -51,7 +51,7 @@ fun RowScope.BottomNavTabItem(
             painter = painterResource(id = tab.iconResId),
             contentDescription = stringResource(tab.titleResId),
             tint = if (isSelected) selectedColor else unselectedColor,
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(24.dp),
         )
 
         Text(

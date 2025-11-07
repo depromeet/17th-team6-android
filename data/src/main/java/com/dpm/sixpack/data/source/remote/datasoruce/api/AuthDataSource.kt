@@ -19,7 +19,15 @@ interface AuthDataSource {
         nickname: String,
         phoneNumber: String,
         profileImage: File?,
+        marketingConsentAt: String?,
+        locationConsentAt: String?,
+        personalConsentAt: String,
+        deviceToken: String?,
     ): BaseResponse<SignUpResponseDto>
 
     suspend fun refreshToken(refreshToken: String): BaseResponse<RefreshTokenResponseDto>
+
+    suspend fun logout(): BaseResponse<Unit>
+
+    suspend fun withdraw(): BaseResponse<Unit>
 }

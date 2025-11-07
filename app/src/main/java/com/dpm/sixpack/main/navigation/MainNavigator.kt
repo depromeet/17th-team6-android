@@ -14,9 +14,9 @@ import com.dpm.sixpack.presentation.destinations.MainRoute
 import com.dpm.sixpack.presentation.destinations.Route
 import com.dpm.sixpack.presentation.navigation.MainNavTab
 import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToFeed
+import com.dpm.sixpack.presentation.routes.mypage.navigation.navigateMyPage
 import com.dpm.sixpack.presentation.routes.report.navigation.navigateSessionReport
 import com.dpm.sixpack.presentation.routes.running.navigation.navigateRunning
-import timber.log.Timber
 
 class MainNavigator(
     val navController: NavHostController,
@@ -82,8 +82,7 @@ class MainNavigator(
             }
 
             MainNavTab.MY_PAGE -> {
-                // TODO
-                Timber.d("Navigate to MyPage Screen")
+                navController.navigateMyPage(navOptions)
             }
         }
     }

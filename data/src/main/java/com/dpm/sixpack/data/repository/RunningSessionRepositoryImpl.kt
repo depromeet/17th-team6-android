@@ -12,6 +12,7 @@ import com.dpm.sixpack.data.source.remote.dto.request.toSegmentDataDto
 import com.dpm.sixpack.domain.exception.DoRunException
 import com.dpm.sixpack.domain.model.MaxPaceData
 import com.dpm.sixpack.domain.model.RealtimeRunningData
+import com.dpm.sixpack.domain.model.RunSession
 import com.dpm.sixpack.domain.model.RunningSessionResult
 import com.dpm.sixpack.domain.repository.RunningSessionRepository
 import com.dpm.sixpack.domain.usecase.running.SaveRealtimeRunningDataResult
@@ -221,4 +222,28 @@ class RunningSessionRepositoryImpl @Inject constructor(
             data = runningSessionResultDto,
         )
     }
+
+    override suspend fun finish(sessionId: Long): DoRunResult<RunningSessionResult> =
+        withContext(Dispatchers.IO) {
+            // TODO: mapImage 파라미터 없이 finish를 구현하거나, finishSession을 사용하도록 변경 필요
+            // TODO: MockRequestDataFactory 구현 필요
+            throw NotImplementedError("finish 메서드는 아직 구현되지 않았습니다. finishSession을 사용하세요.")
+        }
+
+    override suspend fun getRunSessions(
+        isSelfied: Boolean?,
+        startDateTime: String?,
+    ): DoRunResult<List<RunSession>> =
+        withContext(Dispatchers.IO) {
+            try {
+                val response = runningSessionDataSource.getRunSessions(isSelfied, startDateTime)
+                val runSessions =
+                    response.data?.map { it.toRunSession() }
+                        ?: throw DoRunException.DataError("서버 응답 데이터가 비어 있습니다.")
+
+                DoRunResult.Success(runSessions)
+            } catch (e: Exception) {
+                DoRunResult.Failure(DoRunException.DataError("네트워크 요청에 실패했습니다: ${e.message}"))
+            }
+        }
 }

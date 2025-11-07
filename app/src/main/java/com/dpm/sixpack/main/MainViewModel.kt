@@ -2,7 +2,7 @@ package com.dpm.sixpack.main
 
 import androidx.lifecycle.viewModelScope
 import com.dpm.sixpack.domain.model.AuthEvent
-import com.dpm.sixpack.domain.repository.UserPreferenceRepository
+import com.dpm.sixpack.domain.repository.UserRepository
 import com.dpm.sixpack.domain.usecase.CheckUserLoggedInUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.destinations.MainRoute
@@ -21,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val checkUserLoggedInUseCase: CheckUserLoggedInUseCase,
-    private val userPreferenceRepository: UserPreferenceRepository,
+    private val userPreferenceRepository: UserRepository,
 ) : BaseViewModel<MainState, MainIntent, MainSideEffect>() {
     override val initialState: MainState = MainState()
 

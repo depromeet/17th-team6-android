@@ -2,7 +2,7 @@ package com.dpm.sixpack.domain.usecase.running
 
 import com.dpm.sixpack.domain.exception.DoRunException
 import com.dpm.sixpack.domain.repository.RunningSessionRepository
-import com.dpm.sixpack.domain.repository.UserPreferenceRepository
+import com.dpm.sixpack.domain.repository.UserRepository
 import com.dpm.sixpack.domain.util.DoRunResult
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -10,7 +10,7 @@ import javax.inject.Singleton
 @Singleton
 class SyncRunningDataUseCase @Inject constructor(
     private val runningSessionRepository: RunningSessionRepository,
-    private val userPreferenceRepository: UserPreferenceRepository,
+    private val userPreferenceRepository: UserRepository,
 ) {
     suspend operator fun invoke(isPaused: Boolean): DoRunResult<SaveRealtimeRunningDataResult.SyncResult> {
         val sessionId =

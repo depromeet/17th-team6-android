@@ -1,14 +1,14 @@
 package com.dpm.sixpack.domain.usecase.running
 
 import com.dpm.sixpack.domain.repository.RunningSessionRepository
-import com.dpm.sixpack.domain.repository.UserPreferenceRepository
+import com.dpm.sixpack.domain.repository.UserRepository
 import com.dpm.sixpack.domain.util.DoRunResult
 import timber.log.Timber
 import javax.inject.Inject
 
 class StartRunningUseCase @Inject constructor(
     private val runningSessionRepository: RunningSessionRepository,
-    private val userPreferenceRepository: UserPreferenceRepository,
+    private val userPreferenceRepository: UserRepository,
 ) {
     suspend operator fun invoke(): DoRunResult<Long> {
         val localSessionId = userPreferenceRepository.getSessionId()
