@@ -19,9 +19,9 @@ import com.dpm.sixpack.presentation.routes.postedit.navigation.addPostDetailNavG
 import com.dpm.sixpack.presentation.routes.postedit.navigation.navigateToPostEdit
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.addProfileCreationNavGraph
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.navigateProfileCreation
+import com.dpm.sixpack.presentation.routes.report.navigation.addSessionReportNavGraph
 import com.dpm.sixpack.presentation.routes.running.navigation.addRunningNavGraph
 import com.dpm.sixpack.presentation.routes.running.navigation.navigateRunning
-import com.dpm.sixpack.presentation.routes.sessionreport.navigation.addSessionReportNavGraph
 import com.dpm.sixpack.presentation.routes.signin.navigation.addSignInNavGraph
 import com.dpm.sixpack.presentation.routes.signin.navigation.navigateSignIn
 import com.dpm.sixpack.presentation.routes.signup.navigation.addSignUpNavGraph

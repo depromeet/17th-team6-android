@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.sessionreport.component
+package com.dpm.sixpack.presentation.routes.report.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,7 +27,7 @@ import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrappe
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
-internal fun SessionDetailBottomBar(
+internal fun ReportBottomBar(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
 ) {
@@ -87,6 +87,6 @@ internal fun SessionDetailBottomBar(
 @Composable
 private fun PreviewSessionDetailBottomBar() {
     DoRunPreviewWrapper {
-        SessionDetailBottomBar()
+        ReportBottomBar()
     }
 }

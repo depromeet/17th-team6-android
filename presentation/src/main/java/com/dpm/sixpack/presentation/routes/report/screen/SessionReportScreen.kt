@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.sessionreport.screen
+package com.dpm.sixpack.presentation.routes.report.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.Refresh
@@ -28,7 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,33 +43,33 @@ import com.dpm.sixpack.presentation.common.util.format.toKoreanFeedTimeStringOrN
 import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
 import com.dpm.sixpack.presentation.common.util.formatPaceToString
 import com.dpm.sixpack.presentation.common.util.formatSecondsToTime
-import com.dpm.sixpack.presentation.routes.sessionreport.component.SessionDetailBottomBar
-import com.dpm.sixpack.presentation.routes.sessionreport.contract.SessionDetailIntent
-import com.dpm.sixpack.presentation.routes.sessionreport.contract.SessionDetailState
+import com.dpm.sixpack.presentation.routes.report.component.ReportBottomBar
+import com.dpm.sixpack.presentation.routes.report.contract.ReportIntent
+import com.dpm.sixpack.presentation.routes.report.contract.ReportState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
-internal fun SessionDetailScreen(
+internal fun SessionReportScreen(
     sessionId: Long,
-    state: SessionDetailState,
-    onIntent: (SessionDetailIntent) -> Unit,
+    state: ReportState,
+    onIntent: (ReportIntent) -> Unit,
 ) {
     Scaffold(
         topBar = {
             DoRunNavigationTopBar(
                 navigateToBack = {
-                    onIntent(SessionDetailIntent.NavigateBack)
+                    onIntent(ReportIntent.NavigateBack)
                 },
                 titleContent = {
                 },
             )
         },
         bottomBar = {
-            if (state is SessionDetailState.Success) {
-                SessionDetailBottomBar(
+            if (state is ReportState.Success) {
+                ReportBottomBar(
                     modifier = Modifier.padding(all = 24.dp),
                     onClick = {
-                        onIntent(SessionDetailIntent.NavigateToCertification(sessionId))
+                        onIntent(ReportIntent.NavigateToPostEdit(sessionId))
                     },
                 )
             }
@@ -79,13 +77,13 @@ internal fun SessionDetailScreen(
         containerColor = SixpackTheme.colors.gray0,
     ) { paddingValues ->
         when (state) {
-            SessionDetailState.Loading -> {
+            ReportState.Loading -> {
 //                FullScreenLoadingIndicator(
 //                    alpha = 0.3f,
 //                )
             }
 
-            is SessionDetailState.Success -> {
+            is ReportState.Success -> {
                 val sessionDetail = state.sessionDetail
                 Column(
                     modifier =
@@ -189,7 +187,7 @@ internal fun SessionDetailScreen(
                 }
             }
 
-            SessionDetailState.Error -> {
+            ReportState.Error -> {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
@@ -203,7 +201,7 @@ internal fun SessionDetailScreen(
 
                     TextButton(
                         onClick = {
-                            onIntent(SessionDetailIntent.LoadSessionDetail(sessionId))
+                            onIntent(ReportIntent.LoadSessionDetail(sessionId))
                         },
                         colors =
                             ButtonDefaults.textButtonColors(
@@ -279,10 +277,10 @@ fun RunningRecordDetailScreenPreview() {
 //                onNavigateToCertification = {},
 //            )
 //            Spacer(modifier = Modifier.height(20.dp))
-            SessionDetailScreen(
+            SessionReportScreen(
                 sessionId = 123,
                 state =
-                    SessionDetailState.Success(
+                    ReportState.Success(
                         sessionDetail = sampleSessionDetailWithFeed,
                     ),
                 onIntent = { /* Handle intents */ },

@@ -1,4 +1,4 @@
-package com.dpm.sixpack.presentation.routes.sessionreport.navigation
+package com.dpm.sixpack.presentation.routes.report.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -6,7 +6,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.dpm.sixpack.presentation.destinations.SessionReportRoute
-import com.dpm.sixpack.presentation.routes.sessionreport.SessionDetailRoute
+import com.dpm.sixpack.presentation.routes.report.ReportRoute
 
 fun NavController.navigateSessionReport(
     sessionId: Long,
@@ -23,7 +23,7 @@ fun NavGraphBuilder.addSessionReportNavGraph(
     composable<SessionReportRoute> { backStackEntry ->
         val sessionId: Long = backStackEntry.toRoute<SessionReportRoute>().sessionId
 
-        SessionDetailRoute(
+        ReportRoute(
             sessionId = sessionId,
             navigateToBack = navigateToBack,
             navigateToCertification = {

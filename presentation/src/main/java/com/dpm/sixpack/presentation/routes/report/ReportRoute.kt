@@ -1,19 +1,19 @@
-package com.dpm.sixpack.presentation.routes.sessionreport
+package com.dpm.sixpack.presentation.routes.report
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.dpm.sixpack.presentation.routes.sessionreport.contract.SessionDetailIntent
-import com.dpm.sixpack.presentation.routes.sessionreport.contract.SessionDetailSideEffect
-import com.dpm.sixpack.presentation.routes.sessionreport.screen.SessionDetailScreen
+import com.dpm.sixpack.presentation.routes.report.contract.ReportIntent
+import com.dpm.sixpack.presentation.routes.report.contract.ReportSideEffect
+import com.dpm.sixpack.presentation.routes.report.screen.SessionReportScreen
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
-fun SessionDetailRoute(
+fun ReportRoute(
     sessionId: Long,
-    viewModel: SessionDetailViewModel = hiltViewModel(),
+    viewModel: SessionReportViewModel = hiltViewModel(),
     navigateToBack: () -> Unit = {},
     navigateToCertification: () -> Unit = {},
     onShowSnackBar: (String, String?) -> Unit = { _, _ -> },
@@ -23,9 +23,9 @@ fun SessionDetailRoute(
 
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
-            SessionDetailSideEffect.NavigateBack -> navigateToBack()
-            is SessionDetailSideEffect.NavigateToCertification -> navigateToCertification()
-            is SessionDetailSideEffect.ShowToast -> {
+            ReportSideEffect.NavigateBack -> navigateToBack()
+            is ReportSideEffect.NavigateToPostEdit -> navigateToCertification()
+            is ReportSideEffect.ShowToast -> {
                 val message = context.getString(sideEffect.resId)
                 onShowSnackBar(message, null)
             }
@@ -33,10 +33,10 @@ fun SessionDetailRoute(
     }
 
     LaunchedEffect(sessionId) {
-        viewModel.onIntent(SessionDetailIntent.LoadSessionDetail(sessionId))
+        viewModel.onIntent(ReportIntent.LoadSessionDetail(sessionId))
     }
 
-    SessionDetailScreen(
+    SessionReportScreen(
         sessionId = sessionId,
         state = state.value,
         onIntent = viewModel::onIntent,

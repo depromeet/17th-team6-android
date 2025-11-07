@@ -14,8 +14,8 @@ import com.dpm.sixpack.presentation.destinations.MainRoute
 import com.dpm.sixpack.presentation.destinations.Route
 import com.dpm.sixpack.presentation.navigation.MainNavTab
 import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToFeed
+import com.dpm.sixpack.presentation.routes.report.navigation.navigateSessionReport
 import com.dpm.sixpack.presentation.routes.running.navigation.navigateRunning
-import com.dpm.sixpack.presentation.routes.sessionreport.navigation.navigateSessionReport
 import timber.log.Timber
 
 class MainNavigator(
