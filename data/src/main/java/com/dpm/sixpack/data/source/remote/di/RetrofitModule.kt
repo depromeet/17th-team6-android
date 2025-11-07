@@ -53,18 +53,6 @@ object RetrofitModule {
                 connectTimeout(10, TimeUnit.SECONDS)
                 writeTimeout(10, TimeUnit.SECONDS)
                 readTimeout(10, TimeUnit.SECONDS)
-
-                addInterceptor(
-                    Interceptor { chain ->
-                        val originalRequest = chain.request()
-                        val newRequest =
-                            originalRequest
-                                .newBuilder()
-                                .header("Authorization", "Bearer 1")
-                                .build()
-                        chain.proceed(newRequest)
-                    },
-                )
                 if (DEBUG) addInterceptor(loggingInterceptor)
                 addInterceptor(authInterceptor)
                 authenticator(tokenAuthenticator)

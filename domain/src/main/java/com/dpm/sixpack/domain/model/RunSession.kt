@@ -10,5 +10,5 @@ data class RunSession(
     val paceAvg: Int,
     val cadenceAvg: Int,
     val isSelfied: Boolean,
-    val mapImage: String?,
+    val mapImage: String,
 )

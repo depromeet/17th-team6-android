@@ -6,7 +6,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.dpm.sixpack.domain.repository.FeedRepository
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
+import com.dpm.sixpack.presentation.common.model.RunningSummary
 import com.dpm.sixpack.presentation.destinations.PostUpload
+import com.dpm.sixpack.presentation.navigation.util.serializableType
 import com.dpm.sixpack.presentation.routes.postupload.contract.PostUploadIntent
 import com.dpm.sixpack.presentation.routes.postupload.contract.PostUploadSideEffect
 import com.dpm.sixpack.presentation.routes.postupload.contract.PostUploadUiState
@@ -15,6 +17,7 @@ import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
+import kotlin.reflect.typeOf
 
 @HiltViewModel
 class PostUploadViewModel @Inject constructor(
@@ -32,7 +35,13 @@ class PostUploadViewModel @Inject constructor(
 
     private fun initializeState() =
         intent {
-            val route = savedStateHandle.toRoute<PostUpload>()
+            val route = savedStateHandle.toRoute<PostUpload>(
+                typeMap = mapOf(
+                    typeOf<Long>() to serializableType<Long>(),
+                    typeOf<String>() to serializableType<String>(),
+                    typeOf<RunningSummary>() to serializableType<RunningSummary>()
+                )
+            )
 
             reduce {
                 state.copy(

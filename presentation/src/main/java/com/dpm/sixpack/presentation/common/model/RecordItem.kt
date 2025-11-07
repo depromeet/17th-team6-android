@@ -2,7 +2,7 @@ package com.dpm.sixpack.presentation.common.model
 
 import android.os.Parcelable
 import androidx.compose.runtime.Immutable
-import com.dpm.sixpack.domain.model.UncertifiedRunSession
+import com.dpm.sixpack.domain.model.RunSession
 import com.dpm.sixpack.presentation.common.util.format.formatCadence
 import com.dpm.sixpack.presentation.common.util.format.formatPace
 import com.dpm.sixpack.presentation.common.util.format.formatSecondsToTimeInFeed
@@ -28,13 +28,13 @@ data class RecordItem(
         get() = postTime.toDateWithDayOfWeekOrNull() ?: LocalDate.now().toString()
 }
 
-fun UncertifiedRunSession.toRecordItem(): RecordItem =
+fun RunSession.toRecordItem(): RecordItem =
     RecordItem(
         sessionId = runSessionId,
         runningSummary =
             RunningSummary(
                 totalDistance = formatDistanceToKm(distanceTotal),
-                totalTime = formatSecondsToTimeInFeed(durationTotal),
+                totalTime = formatSecondsToTimeInFeed(durationTotal.toLong()),
                 averagePace = formatPace(paceAvg),
                 cadence = formatCadence(cadenceAvg),
                 recordDateTime = finishedAt.toPostTimeStringOrNull() ?: LocalDate.now().toString(),
@@ -44,4 +44,4 @@ fun UncertifiedRunSession.toRecordItem(): RecordItem =
         postTime = finishedAt,
     )
 
-fun List<UncertifiedRunSession>.toRecordItems(): List<RecordItem> = map { it.toRecordItem() }
+fun List<RunSession>.toRecordItems(): List<RecordItem> = map { it.toRecordItem() }

@@ -17,6 +17,7 @@ fun NavController.navigateToPostUpload(
     navigate(PostUpload(sessionId = sessionId, mapImageUrl = mapImgUrl, runningSummary = runningSummary))
 }
 
+
 fun NavGraphBuilder.addPostUploadNavGraph(
     navigateBack: () -> Unit = {},
     navigateToFeed: () -> Unit = {},
@@ -24,6 +25,8 @@ fun NavGraphBuilder.addPostUploadNavGraph(
     composable<PostUpload>(
         typeMap =
             mapOf(
+                typeOf<Long>() to serializableType<Long>(),
+                typeOf<String>() to serializableType<String>(),
                 typeOf<RunningSummary>() to serializableType<RunningSummary>(),
             ),
     ) {

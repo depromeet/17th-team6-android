@@ -12,7 +12,7 @@ data class PostUploadUiState(
     val mapImageUrl: String = "",
     val runningSummary: RunningSummary = RunningSummary(),
     val selectedImageUri: Uri? = null,
-    val isLoading: Boolean = true,
+    val isLoading: Boolean = false,
     val hasImagePermission: Boolean = false,
 ) : UiState,
     Parcelable

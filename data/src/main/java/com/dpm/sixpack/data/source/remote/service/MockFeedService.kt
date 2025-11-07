@@ -128,7 +128,7 @@ class MockFeedService @Inject constructor() : FeedService {
         )
     }
 
-    override suspend fun deleteFeed(feedId: Long): BaseResponse<Unit> {
+    override suspend fun deletePost(feedId: Long): BaseResponse<Unit> {
         delay(300L)
         return BaseResponse(
             status = "200",
@@ -164,7 +164,7 @@ class MockFeedService @Inject constructor() : FeedService {
         )
     }
 
-    override suspend fun getSelfieWeek(
+    override suspend fun getWeeklyPostCount(
         startDate: String,
         endDate: String,
     ): BaseResponse<SelfieCountsDto> {
@@ -177,7 +177,7 @@ class MockFeedService @Inject constructor() : FeedService {
         )
     }
 
-    override suspend fun getFeedDetail(feedId: Long): BaseResponse<FeedDto> {
+    override suspend fun getPostDetail(feedId: Long): BaseResponse<FeedDto> {
         delay(300L)
         val mockFeed =
             FeedDto(
@@ -202,7 +202,14 @@ class MockFeedService @Inject constructor() : FeedService {
         )
     }
 
-    override suspend fun updateSelfie(
+    override suspend fun uploadPost(
+        data: RequestBody,
+        selfieImage: MultipartBody.Part?
+    ): BaseResponse<Unit> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updatePost(
         feedId: Long,
         data: RequestBody,
         selfieImage: MultipartBody.Part?,
