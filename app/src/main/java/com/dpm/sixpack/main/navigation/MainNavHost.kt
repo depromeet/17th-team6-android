@@ -12,6 +12,8 @@ import com.dpm.sixpack.presentation.navigation.MainNavTab
 import com.dpm.sixpack.presentation.routes.feed.navigation.addFeedNavGraph
 import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToCertifiableRecord
 import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToCertifiedUsers
+import com.dpm.sixpack.presentation.routes.friend.navigation.addFriendAddNavGraph
+import com.dpm.sixpack.presentation.routes.friend.navigation.addFriendProfileNavGraph
 import com.dpm.sixpack.presentation.routes.mypage.navigation.addMyPageNavGraph
 import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
 import com.dpm.sixpack.presentation.routes.postdetail.navigation.addPostDetailNavGraph
@@ -168,6 +170,15 @@ internal fun MainNavHost(
                 onNavigateBack = navigator::popBackStack,
                 onShowSnackbar = onShowSnackbar,
                 navController = navController,
+            )
+
+            // Friend 관련 딥링크 지원을 위한 NavGraph 추가
+            addFriendProfileNavGraph(
+                navigateToBack = navigator::popBackStack,
+            )
+
+            addFriendAddNavGraph(
+                navigateToBack = navigator::popBackStack,
             )
         }
     }
