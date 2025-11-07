@@ -2,7 +2,7 @@ package com.dpm.sixpack.data.source.remote.di
 
 import com.dpm.sixpack.core.BuildConfig
 import com.dpm.sixpack.core.BuildConfig.DEBUG
-import com.dpm.sixpack.data.source.remote.interceptor.AuthorizationInterceptor
+import com.dpm.sixpack.data.source.remote.interceptor.AuthInterceptor
 import com.dpm.sixpack.data.source.remote.interceptor.TokenAuthenticator
 import dagger.Module
 import dagger.Provides
@@ -43,7 +43,7 @@ object RetrofitModule {
     @Singleton
     fun providesOkHttpClient(
         loggingInterceptor: HttpLoggingInterceptor,
-        authorizationInterceptor: AuthorizationInterceptor,
+        authInterceptor: AuthInterceptor,
         tokenAuthenticator: TokenAuthenticator,
     ): Call.Factory =
         OkHttpClient
@@ -53,7 +53,7 @@ object RetrofitModule {
                 writeTimeout(10, TimeUnit.SECONDS)
                 readTimeout(10, TimeUnit.SECONDS)
                 if (DEBUG) addInterceptor(loggingInterceptor)
-                addInterceptor(authorizationInterceptor)
+                addInterceptor(authInterceptor)
                 authenticator(tokenAuthenticator)
             }.build()
 

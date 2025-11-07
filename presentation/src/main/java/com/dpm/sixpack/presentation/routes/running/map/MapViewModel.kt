@@ -201,6 +201,7 @@ class MapViewModel @Inject constructor(
             finishRunningSessionUseCase(mapImage)
                 .onSuccess { id ->
                     Timber.d("session finish success, sessionId : $id")
+                    postSideEffect(MapSideEffect.NavigateToReport(id))
                 }.onError {
                     Timber.d("session finish failed: ${it.message}")
                 }
@@ -210,8 +211,6 @@ class MapViewModel @Inject constructor(
                     mapViewState = MapViewState.Friend(),
                 )
             }
-            // TODO SK: 리포트 화면 세션ID 전달
-//            postSideEffect(MapSideEffect.NavigateToReport())
         }
 
     private fun updateRunningMapPath(newPathState: PathState) =

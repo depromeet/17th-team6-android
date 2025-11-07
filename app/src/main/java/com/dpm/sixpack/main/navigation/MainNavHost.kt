@@ -114,14 +114,16 @@ internal fun MainNavHost(
             addRunningNavGraph(
                 onShowSnackBar = onShowSnackBar,
                 onBottomBarVisibilityChange = onBottomBarVisibilityChange,
-                navigateToSessionReport = navigator::navigateToSessionReport,
+                navigateToReport = navigator::navigateToSessionReport,
                 navigateToBack = navigator::popBackStack,
                 navigateToFriendList = navController::navigateToFriendGraph,
                 showFullScreenLoading = setFullScreenLoading,
             )
 
             addSessionReportNavGraph(
-                onNavigateToBack = { navigator::popBackStack },
+                navigateToBack = navigator::popBackStack,
+                onShowSnackBar = onShowSnackBar,
+                navigateToCertification = { },
             )
 
             addFeedNavGraph(

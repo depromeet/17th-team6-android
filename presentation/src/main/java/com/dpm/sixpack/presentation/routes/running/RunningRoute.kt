@@ -13,7 +13,7 @@ import com.naver.maps.map.compose.rememberFusedLocationSource
 @Composable
 fun RunningRoute(
     navigateToBack: () -> Unit,
-    navigateToReport: () -> Unit,
+    navigateToReport: (Long) -> Unit,
     navigateToFriendList: () -> Unit,
     onShowSnackBar: (String, String?) -> Unit,
     setFullScreenLoading: (Boolean) -> Unit,

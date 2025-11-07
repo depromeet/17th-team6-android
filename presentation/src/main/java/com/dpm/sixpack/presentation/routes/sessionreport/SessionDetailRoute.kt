@@ -14,8 +14,8 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 fun SessionDetailRoute(
     sessionId: Long,
     viewModel: SessionDetailViewModel = hiltViewModel(),
-    onNavigateBack: () -> Unit = {},
-    onNavigateToCertification: () -> Unit = {},
+    navigateToBack: () -> Unit = {},
+    navigateToCertification: () -> Unit = {},
     onShowSnackBar: (String, String?) -> Unit = { _, _ -> },
 ) {
     val context = LocalContext.current
@@ -23,8 +23,8 @@ fun SessionDetailRoute(
 
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
-            SessionDetailSideEffect.NavigateBack -> onNavigateBack()
-            is SessionDetailSideEffect.NavigateToCertification -> onNavigateToCertification()
+            SessionDetailSideEffect.NavigateBack -> navigateToBack()
+            is SessionDetailSideEffect.NavigateToCertification -> navigateToCertification()
             is SessionDetailSideEffect.ShowToast -> {
                 val message = context.getString(sideEffect.resId)
                 onShowSnackBar(message, null)
