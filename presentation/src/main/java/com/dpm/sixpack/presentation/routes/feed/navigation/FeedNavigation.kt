@@ -4,9 +4,12 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.dpm.sixpack.presentation.common.model.RunningSummary
+import com.dpm.sixpack.presentation.destinations.CertifiableRecord
 import com.dpm.sixpack.presentation.destinations.CertifiedUsers
 import com.dpm.sixpack.presentation.destinations.MainRoute
 import com.dpm.sixpack.presentation.routes.feed.FeedRoute
+import com.dpm.sixpack.presentation.routes.feed.certifiablerecord.CertifiableRecordRoute
 import com.dpm.sixpack.presentation.routes.feed.certifiedusers.CertifiedUsersRoute
 
 fun NavController.navigateToFeed(navOptions: NavOptions? = null) {
@@ -17,6 +20,10 @@ fun NavController.navigateToCertifiedUsers(date: String) {
     navigate(CertifiedUsers(date = date))
 }
 
+fun NavController.navigateToCertifiableRecord() {
+    navigate(CertifiableRecord)
+}
+
 fun NavGraphBuilder.addFeedNavGraph(
     navigateToBack: () -> Unit = {},
     navigateToGroup: () -> Unit = {},
@@ -24,7 +31,8 @@ fun NavGraphBuilder.addFeedNavGraph(
     navigateToUserProfile: (Long) -> Unit = {},
     navigateToMyPage: () -> Unit = {},
     navigateToPostDetail: (Long) -> Unit = {},
-    navigateToUpload: () -> Unit = {},
+    navigateToCertifiableRecord : () -> Unit = {},
+    navigateToPostUpload: (Long, String, RunningSummary) -> Unit = { _, _, _ ->},
     navigateToPostEdit: (Long) -> Unit = {},
     navigateToCertifiedUsers: (String) -> Unit = {},
 ) {
@@ -36,7 +44,7 @@ fun NavGraphBuilder.addFeedNavGraph(
             navigateToUserProfile = navigateToUserProfile,
             navigateToMyPage = navigateToMyPage,
             navigateToPostDetail = navigateToPostDetail,
-            navigateToPostUpload = navigateToUpload,
+            navigateToCertifiableRecord = navigateToCertifiableRecord,
             navigateToPostEdit = navigateToPostEdit,
         )
     }
@@ -48,4 +56,11 @@ fun NavGraphBuilder.addFeedNavGraph(
             navigateToMyPage = navigateToMyPage,
         )
     }
+
+     composable<CertifiableRecord> {
+         CertifiableRecordRoute(
+             navigateToBack =  navigateToBack,
+             navigateToPostUpload = navigateToPostUpload
+         )
+     }
 }
