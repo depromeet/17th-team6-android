@@ -70,12 +70,7 @@ class CertifiableRecordViewModel @Inject constructor(
         intent {
             reduce {
                 state.copy(
-                    selectedRecord =
-                        if (state.selectedRecord == record) {
-                            null
-                        } else {
-                            record
-                        },
+                    selectedRecord = record,
                 )
             }
         }

@@ -2,6 +2,7 @@ package com.dpm.sixpack.presentation.routes.feed.certifiablerecord.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -55,56 +56,70 @@ fun CertifiableRecordScreen(
                 navigateToBack = { onIntent(CertifiableRecordIntent.OnBackClick) },
             )
         },
-        bottomBar = {
+        containerColor = SixpackTheme.colors.gray0,
+        contentWindowInsets = WindowInsets(0),
+    ) { paddingValues ->
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
+        ) {
+            Column(
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 20.dp),
+            ) {
+                Text(
+                    text = stringResource(id = R.string.post_upload_certifiable_record_title),
+                    style = SixpackTheme.typography.t1Bold,
+                    color = SixpackTheme.colors.gray900,
+                    modifier = Modifier,
+                )
+
+                Spacer(Modifier.height(8.dp))
+
+                Text(
+                    text = stringResource(id = R.string.post_upload_certifiable_record_subtitle),
+                    style = SixpackTheme.typography.b2Regular,
+                    color = SixpackTheme.colors.gray900,
+                    modifier = Modifier,
+                )
+
+                if (!isEmpty) {
+                    LazyColumn(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                    ) {
+                        dateGroupedRecordItems(
+                            groupedRecords = groupedRecords,
+                            selectedRecordId = state.selectedRecord?.sessionId,
+                            onRecordClick = { record ->
+                                onIntent(CertifiableRecordIntent.OnRecordClick(record))
+                            },
+                        )
+                    }
+                } else {
+                    Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                        EmptyRecord()
+                    }
+                }
+            }
+
             DoRunDefaultButton(
                 text = stringResource(id = R.string.post_upload_certifiable_record_submit_button),
                 enabled = state.selectedRecord != null,
                 onClick = { onIntent(CertifiableRecordIntent.OnUploadClick) },
-                modifier = Modifier.fillMaxWidth().padding(20.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.BottomCenter)
+                        .padding(start = 20.dp, end = 20.dp, bottom = 20.dp),
             )
-        },
-        containerColor = SixpackTheme.colors.gray0,
-        contentWindowInsets = WindowInsets(0),
-    ) { paddingValues ->
-        Column(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(horizontal = 20.dp),
-        ) {
-            Text(
-                text = stringResource(id = R.string.post_upload_certifiable_record_title),
-                style = SixpackTheme.typography.t1Bold,
-                color = SixpackTheme.colors.gray900,
-                modifier = Modifier,
-            )
-
-            Spacer(Modifier.height(8.dp))
-
-            Text(
-                text = stringResource(id = R.string.post_upload_certifiable_record_subtitle),
-                style = SixpackTheme.typography.b2Regular,
-                color = SixpackTheme.colors.gray900,
-                modifier = Modifier,
-            )
-
-            if (!isEmpty) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-                    dateGroupedRecordItems(
-                        groupedRecords = groupedRecords,
-                        selectedRecordId = state.selectedRecord?.sessionId,
-                        onRecordClick = { record ->
-                            onIntent(CertifiableRecordIntent.OnRecordClick(record))
-                        },
-                    )
-                }
-            } else {
-                EmptyRecord()
-            }
         }
     }
 }
