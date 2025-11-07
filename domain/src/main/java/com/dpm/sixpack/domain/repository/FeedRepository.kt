@@ -25,6 +25,8 @@ interface FeedRepository {
 
     suspend fun getFeedDetail(feedId: Long): DoRunResult<Feed>
 
+    suspend fun getUserSummary(userId: Long?): DoRunResult<UserSummary>
+
     suspend fun postReaction(
         selfieId: Long,
         emojiType: String,

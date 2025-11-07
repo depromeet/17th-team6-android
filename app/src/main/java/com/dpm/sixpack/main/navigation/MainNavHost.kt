@@ -12,6 +12,7 @@ import com.dpm.sixpack.presentation.navigation.MainNavTab
 import com.dpm.sixpack.presentation.routes.feed.navigation.addFeedNavGraph
 import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToCertifiableRecord
 import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToCertifiedUsers
+import com.dpm.sixpack.presentation.routes.mypage.navigation.addMyPageNavGraph
 import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
 import com.dpm.sixpack.presentation.routes.postdetail.navigation.addPostDetailNavGraph
 import com.dpm.sixpack.presentation.routes.postdetail.navigation.navigateToPostDetail
@@ -147,6 +148,18 @@ internal fun MainNavHost(
             addPostUploadNavGraph(
                 navigateBack = { navController.popBackStack() },
                 navigateToFeed = { navigator.navigate(MainNavTab.FEED) },
+            )
+
+            addMyPageNavGraph(
+                onNavigateToSettings = {
+                    // TODO: Navigate to settings
+                },
+                onNavigateToPostDetail = { id ->
+                    // TODO: Navigate to post detail
+                },
+                onNavigateToRecordDetail = { id ->
+                    // TODO: Navigate to record detail
+                },
             )
         }
     }

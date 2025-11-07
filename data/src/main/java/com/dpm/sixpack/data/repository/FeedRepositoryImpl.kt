@@ -18,6 +18,7 @@ import com.dpm.sixpack.domain.model.CertifiedUser
 import com.dpm.sixpack.domain.model.Feed
 import com.dpm.sixpack.domain.model.ReactionResult
 import com.dpm.sixpack.domain.model.SelfieCounts
+import com.dpm.sixpack.domain.model.UserSummary
 import com.dpm.sixpack.domain.repository.FeedListItem
 import com.dpm.sixpack.domain.repository.FeedRepository
 import com.dpm.sixpack.domain.repository.FeedType
@@ -106,6 +107,26 @@ class FeedRepositoryImpl @Inject constructor(
                 DoRunResult.Success(Unit)
             } catch (e: Exception) {
                 DoRunResult.Failure(DoRunException.DataError("게시물 업로드에 실패했습니다: ${e.message}"))
+            }
+        }
+
+    override suspend fun getUserSummary(userId: Long?): DoRunResult<UserSummary> =
+        withContext(Dispatchers.IO) {
+            try {
+                val response =
+                    feedDataSource.getFeeds(
+                        currentDate = null,
+                        userId = userId,
+                        page = 0,
+                        size = 1,
+                    )
+                val userSummary =
+                    response.data?.userSummary?.toDomain() ?: throw DoRunException.DataError("데이터 변환에 실패했습니다")
+                DoRunResult.Success(userSummary)
+            } catch (e: DoRunException) {
+                DoRunResult.Failure(e)
+            } catch (e: Exception) {
+                DoRunResult.Failure(DoRunException.NetworkError("유저 요약 정보 조회에 실패했습니다: ${e.message}"))
             }
         }
 
