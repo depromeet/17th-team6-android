@@ -2,6 +2,7 @@ package com.dpm.sixpack.presentation.routes.running.session
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -51,6 +52,12 @@ fun ConstraintLayoutScope.RunningSessionScreen(
 
     LaunchedEffect(Unit) {
         sessionViewModel.onIntent(RunningSessionIntent.SessionStart)
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            setFullScreenLoading(false)
+        }
     }
 
     when (sessionState) {

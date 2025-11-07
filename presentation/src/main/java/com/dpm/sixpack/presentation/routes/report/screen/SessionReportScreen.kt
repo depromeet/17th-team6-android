@@ -1,10 +1,11 @@
-package com.dpm.sixpack.presentation.routes.sessionreport.screen
+package com.dpm.sixpack.presentation.routes.report.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,8 +25,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,7 +35,6 @@ import com.dpm.sixpack.domain.model.SessionDetail
 import com.dpm.sixpack.domain.model.SessionDetailFeed
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultAsyncImage
-import com.dpm.sixpack.presentation.common.components.FullScreenLoadingIndicator
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.components.record.RecordItem
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
@@ -43,33 +43,33 @@ import com.dpm.sixpack.presentation.common.util.format.toPostTimeStringOrNull
 import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
 import com.dpm.sixpack.presentation.common.util.formatPaceToString
 import com.dpm.sixpack.presentation.common.util.formatSecondsToTime
-import com.dpm.sixpack.presentation.routes.sessionreport.component.SessionDetailBottomBar
-import com.dpm.sixpack.presentation.routes.sessionreport.contract.SessionDetailIntent
-import com.dpm.sixpack.presentation.routes.sessionreport.contract.SessionDetailState
+import com.dpm.sixpack.presentation.routes.report.component.ReportBottomBar
+import com.dpm.sixpack.presentation.routes.report.contract.ReportIntent
+import com.dpm.sixpack.presentation.routes.report.contract.ReportState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
-internal fun SessionDetailScreen(
+internal fun SessionReportScreen(
     sessionId: Long,
-    state: SessionDetailState,
-    onIntent: (SessionDetailIntent) -> Unit,
+    state: ReportState,
+    onIntent: (ReportIntent) -> Unit,
 ) {
     Scaffold(
         topBar = {
             DoRunNavigationTopBar(
                 navigateToBack = {
-                    onIntent(SessionDetailIntent.NavigateBack)
+                    onIntent(ReportIntent.NavigateBack)
                 },
                 titleContent = {
                 },
             )
         },
         bottomBar = {
-            if (state is SessionDetailState.Success) {
-                SessionDetailBottomBar(
+            if (state is ReportState.Success) {
+                ReportBottomBar(
                     modifier = Modifier.padding(all = 24.dp),
                     onClick = {
-                        onIntent(SessionDetailIntent.NavigateToCertification(sessionId))
+                        onIntent(ReportIntent.NavigateToPostEdit(sessionId))
                     },
                 )
             }
@@ -77,13 +77,13 @@ internal fun SessionDetailScreen(
         containerColor = SixpackTheme.colors.gray0,
     ) { paddingValues ->
         when (state) {
-            SessionDetailState.Loading -> {
-                FullScreenLoadingIndicator(
-                    alpha = 0.3f,
-                )
+            ReportState.Loading -> {
+//                FullScreenLoadingIndicator(
+//                    alpha = 0.3f,
+//                )
             }
 
-            is SessionDetailState.Success -> {
+            is ReportState.Success -> {
                 val sessionDetail = state.sessionDetail
                 Column(
                     modifier =
@@ -138,7 +138,7 @@ internal fun SessionDetailScreen(
                                 horizontalAlignment = Alignment.Start,
                             ) {
                                 RecordItem(
-                                    label = stringResource(R.string.record_current_distance),
+                                    label = stringResource(R.string.record_total_distance),
                                     recordValue = formatDistanceToKm(sessionDetail.distanceTotal),
                                     emphasize = true,
                                 )
@@ -154,38 +154,32 @@ internal fun SessionDetailScreen(
                                 horizontalAlignment = Alignment.Start,
                             ) {
                                 RecordItem(
-                                    label = stringResource(R.string.record_running_duration),
+                                    label = stringResource(R.string.record_total_duration),
                                     recordValue = formatSecondsToTime(sessionDetail.durationTotal),
                                     emphasize = true,
                                 )
                                 Spacer(modifier = Modifier.height(20.dp))
                                 RecordItem(
-                                    label = stringResource(R.string.record_cadence),
+                                    label = stringResource(R.string.record_average_cadence),
                                     recordValue = "${sessionDetail.cadenceAvg} spm",
                                 )
                             }
                         }
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
 
                     // 지도 이미지
-                    Card(
+                    DoRunDefaultAsyncImage(
+                        model = sessionDetail.mapImage,
+                        contentDescription = "러닝 경로 지도",
                         modifier =
                             Modifier
                                 .fillMaxWidth()
-                                .height(250.dp)
-                                .background(Color.Transparent),
-                        shape = RectangleShape,
-                        colors = CardDefaults.cardColors(containerColor = SixpackTheme.colors.gray0),
-                        elevation = CardDefaults.cardElevation(0.dp),
-                    ) {
-                        DoRunDefaultAsyncImage(
-                            model = sessionDetail.mapImage,
-                            contentDescription = "러닝 경로 지도",
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop,
-                        )
-                    }
+                                .aspectRatio(
+                                    ratio = 1.0f,
+                                ).clip(SixpackTheme.shapes.round16),
+                        contentScale = ContentScale.Crop,
+                    )
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // 빠름 <-> 느림 그라데이션 바 (주석 처리)
@@ -193,7 +187,7 @@ internal fun SessionDetailScreen(
                 }
             }
 
-            SessionDetailState.Error -> {
+            ReportState.Error -> {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
@@ -207,7 +201,7 @@ internal fun SessionDetailScreen(
 
                     TextButton(
                         onClick = {
-                            onIntent(SessionDetailIntent.LoadSessionDetail(sessionId))
+                            onIntent(ReportIntent.LoadSessionDetail(sessionId))
                         },
                         colors =
                             ButtonDefaults.textButtonColors(
@@ -283,10 +277,10 @@ fun RunningRecordDetailScreenPreview() {
 //                onNavigateToCertification = {},
 //            )
 //            Spacer(modifier = Modifier.height(20.dp))
-            SessionDetailScreen(
+            SessionReportScreen(
                 sessionId = 123,
                 state =
-                    SessionDetailState.Success(
+                    ReportState.Success(
                         sessionDetail = sampleSessionDetailWithFeed,
                     ),
                 onIntent = { /* Handle intents */ },

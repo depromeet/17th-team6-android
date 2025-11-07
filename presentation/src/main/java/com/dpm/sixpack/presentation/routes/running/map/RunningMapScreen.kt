@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -90,7 +91,7 @@ internal fun RunningMapScreen(
     setFullScreenLoading: (Boolean) -> Unit,
     onBottomBarVisibilityChange: (Boolean) -> Unit,
     onShowSnackBar: (String, String?) -> Unit,
-    navigateToReport: () -> Unit,
+    navigateToReport: (Long) -> Unit,
     navigateToFriendList: () -> Unit,
 ) {
     val mapState by mapViewModel.collectAsState()
@@ -110,7 +111,7 @@ internal fun RunningMapScreen(
             is MapSideEffect.NavigateToReport -> {
                 val sessionId = sideEffect.sessionId
                 onBottomBarVisibilityChange(true)
-                navigateToReport()
+                navigateToReport(sessionId)
             }
 
             is MapSideEffect.NavigateToFriendList -> {
@@ -176,6 +177,12 @@ private fun RunningMapScreenContent(
         val reason = cameraPositionState.cameraUpdateReason
         if (reason == CameraUpdateReason.GESTURE) {
             onMapIntent(MapIntent.FollowingModeOff)
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            setFullScreenLoading(false)
         }
     }
 

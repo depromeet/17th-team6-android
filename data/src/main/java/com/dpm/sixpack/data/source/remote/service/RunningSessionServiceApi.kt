@@ -44,7 +44,7 @@ interface RunningSessionServiceApi {
         @Query("startDateTime") startDateTime: String? = null,
     ): BaseResponse<List<RunSessionListResponseDto>>
 
-    @POST("$API/$RUNS/$SESSIONS/{sessionId}")
+    @GET("$API/$RUNS/$SESSIONS/{sessionId}")
     suspend fun getSessionDetail(
         @Path("sessionId") sessionId: Long,
     ): BaseResponse<SessionDetailResponseDto>

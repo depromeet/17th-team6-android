@@ -15,8 +15,8 @@ import com.dpm.sixpack.presentation.destinations.Route
 import com.dpm.sixpack.presentation.navigation.MainNavTab
 import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToFeed
 import com.dpm.sixpack.presentation.routes.mypage.navigation.navigateMyPage
+import com.dpm.sixpack.presentation.routes.report.navigation.navigateSessionReport
 import com.dpm.sixpack.presentation.routes.running.navigation.navigateRunning
-import com.dpm.sixpack.presentation.routes.sessionreport.navigation.navigateSessionReport
 
 class MainNavigator(
     val navController: NavHostController,
@@ -51,8 +51,9 @@ class MainNavigator(
         navController.popBackStack()
     }
 
-    fun navigateToSessionReport() {
+    fun navigateToSessionReport(sessionId: Long) {
         navController.navigateSessionReport(
+            sessionId,
             navOptions {
                 popUpTo(MainRoute.Running) {
                     inclusive = false

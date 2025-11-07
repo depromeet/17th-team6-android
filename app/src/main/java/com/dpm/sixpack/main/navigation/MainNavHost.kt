@@ -24,9 +24,9 @@ import com.dpm.sixpack.presentation.routes.postupload.navigation.addPostUploadNa
 import com.dpm.sixpack.presentation.routes.postupload.navigation.navigateToPostUpload
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.addProfileCreationNavGraph
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.navigateProfileCreation
+import com.dpm.sixpack.presentation.routes.report.navigation.addSessionReportNavGraph
 import com.dpm.sixpack.presentation.routes.running.navigation.addRunningNavGraph
 import com.dpm.sixpack.presentation.routes.running.navigation.navigateRunning
-import com.dpm.sixpack.presentation.routes.sessionreport.navigation.addSessionReportNavGraph
 import com.dpm.sixpack.presentation.routes.settings.navigation.addSettingsNavGraph
 import com.dpm.sixpack.presentation.routes.settings.navigation.navigateToSettings
 import com.dpm.sixpack.presentation.routes.signin.navigation.addSignInNavGraph
@@ -121,14 +121,16 @@ internal fun MainNavHost(
             addRunningNavGraph(
                 onShowSnackBar = onShowSnackBar,
                 onBottomBarVisibilityChange = onBottomBarVisibilityChange,
-                navigateToSessionReport = navigator::navigateToSessionReport,
+                navigateToReport = navigator::navigateToSessionReport,
                 navigateToBack = navigator::popBackStack,
                 navigateToFriendList = navController::navigateToFriendGraph,
                 showFullScreenLoading = setFullScreenLoading,
             )
 
             addSessionReportNavGraph(
-                onNavigateToBack = { navigator::popBackStack },
+                navigateToBack = navigator::popBackStack,
+                onShowSnackBar = onShowSnackBar,
+                navigateToCertification = { },
             )
 
             addFeedNavGraph(

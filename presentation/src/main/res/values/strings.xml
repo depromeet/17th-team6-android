@@ -170,9 +170,12 @@
     <string name="running_phase_main_title">러닝</string>
     <string name="running_phase_cooldown_title">쿨다운</string>
     <string name="record_current_distance">현재 거리</string>
+    <string name="record_total_distance">전체 거리</string>
     <string name="record_running_duration">러닝 시간</string>
+    <string name="record_total_duration">달린 시간</string>
     <string name="record_average_pace">평균 페이스</string>
     <string name="record_cadence">케이던스</string>
+    <string name="record_average_cadence">케이던스</string>
     <string name="panel_skip">건너뛰기</string>
     <string name="panel_target_distance">목표거리</string>
     <string name="panel_record_pause">기록 중지</string>
