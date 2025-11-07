@@ -22,14 +22,14 @@ object ServiceModule {
     @Singleton
     fun provideAuthService(retrofit: Retrofit): AuthService = retrofit.create(AuthService::class.java)
 
-//    @Provides
-//    @Singleton
-//    fun provideRunningSessionServiceApi(retrofit: Retrofit): RunningSessionServiceApi =
-//        retrofit.create(RunningSessionServiceApi::class.java)
-
     @Provides
     @Singleton
-    fun provideRunningSessionServiceApi(mock: MockRunningSessionServiceApi): RunningSessionServiceApi = mock
+    fun provideRunningSessionServiceApi(retrofit: Retrofit): RunningSessionServiceApi =
+        retrofit.create(RunningSessionServiceApi::class.java)
+
+//    @Provides
+//    @Singleton
+//    fun provideRunningSessionServiceApi(mock: MockRunningSessionServiceApi): RunningSessionServiceApi = mock
 
     @Provides
     @Singleton
