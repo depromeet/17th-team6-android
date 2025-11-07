@@ -17,7 +17,6 @@ fun NavController.navigateToPostUpload(
     navigate(PostUpload(sessionId = sessionId, mapImageUrl = mapImgUrl, runningSummary = runningSummary))
 }
 
-
 fun NavGraphBuilder.addPostUploadNavGraph(
     navigateBack: () -> Unit = {},
     navigateToFeed: () -> Unit = {},

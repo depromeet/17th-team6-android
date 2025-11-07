@@ -2,7 +2,6 @@ package com.dpm.sixpack.domain.usecase
 
 import android.graphics.Bitmap
 import com.dpm.sixpack.domain.exception.DoRunException
-import com.dpm.sixpack.domain.model.RunningSessionResult
 import com.dpm.sixpack.domain.repository.RunningSessionRepository
 import com.dpm.sixpack.domain.repository.UserPreferenceRepository
 import com.dpm.sixpack.domain.util.DoRunResult

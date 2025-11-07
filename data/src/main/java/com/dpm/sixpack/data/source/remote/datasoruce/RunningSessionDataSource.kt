@@ -96,6 +96,5 @@ class RunningSessionDataSource @Inject constructor(
     suspend fun getRunSessions(
         isSelfied: Boolean?,
         startDateTime: String?,
-    ): BaseResponse<List<RunSessionListResponseDto>> =
-        runningSessionServiceApi.getRunSessions(isSelfied, startDateTime)
+    ): BaseResponse<List<RunSessionListResponseDto>> = runningSessionServiceApi.getRunSessions(isSelfied, startDateTime)
 }

@@ -204,7 +204,7 @@ class MockFeedService @Inject constructor() : FeedService {
 
     override suspend fun uploadPost(
         data: RequestBody,
-        selfieImage: MultipartBody.Part?
+        selfieImage: MultipartBody.Part?,
     ): BaseResponse<Unit> {
         TODO("Not yet implemented")
     }
