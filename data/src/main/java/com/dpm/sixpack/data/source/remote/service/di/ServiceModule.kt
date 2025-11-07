@@ -32,8 +32,7 @@ object ServiceModule {
 
     @Provides
     @Singleton
-    fun provideRunningSessionServiceApi(mock: MockRunningSessionServiceApi): RunningSessionServiceApi =
-        mock
+    fun provideRunningSessionServiceApi(mock: MockRunningSessionServiceApi): RunningSessionServiceApi = mock
 
     @Provides
     @Singleton

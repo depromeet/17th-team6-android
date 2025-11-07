@@ -69,7 +69,7 @@ class MockRunningSessionServiceApi
                         paceMaxLongitude = 126.9780 + (Math.random() * 0.01 - 0.005),
                         cadenceAvg = (150..180).random(),
                         cadenceMax = (180..200).random(),
-                        mapImage = "https://picsum.photos/800/600?random=${sessionId}",
+                        mapImage = "https://picsum.photos/800/600?random=$sessionId",
                     ),
             )
         }
