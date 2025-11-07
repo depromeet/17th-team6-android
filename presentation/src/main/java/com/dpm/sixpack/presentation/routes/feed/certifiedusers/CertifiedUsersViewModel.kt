@@ -2,9 +2,11 @@ package com.dpm.sixpack.presentation.routes.feed.certifiedusers
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.dpm.sixpack.domain.repository.FeedRepository
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.common.model.toPostingUserInfo
+import com.dpm.sixpack.presentation.destinations.CertifiedUsers
 import com.dpm.sixpack.presentation.routes.feed.certifiedusers.contract.CertifiedUsersIntent
 import com.dpm.sixpack.presentation.routes.feed.certifiedusers.contract.CertifiedUsersSideEffect
 import com.dpm.sixpack.presentation.routes.feed.certifiedusers.contract.CertifiedUsersUiState
@@ -24,7 +26,17 @@ class CertifiedUsersViewModel @Inject constructor(
     override val container: Container<CertifiedUsersUiState, CertifiedUsersSideEffect> =
         container(initialState = initialState, savedStateHandle = savedStateHandle)
 
-    fun loadCertifiedUsers(date: String) =
+    init {
+        initializeState()
+    }
+
+    private fun initializeState() {
+        val route = savedStateHandle.toRoute<CertifiedUsers>()
+
+        loadCertifiedUsers(route.date)
+    }
+
+    private fun loadCertifiedUsers(date: String) =
         intent {
             reduce { state.copy(isLoading = true) }
 

@@ -18,7 +18,7 @@ fun FeedRoute(
     navigateToUserProfile: (Long) -> Unit,
     navigateToMyPage: () -> Unit,
     navigateToPostDetail: (Long) -> Unit,
-    navigateToPostUpload: () -> Unit,
+    navigateToCertifiableRecord: () -> Unit,
     navigateToPostEdit: (Long) -> Unit,
 ) {
     val state by viewModel.collectAsState()
@@ -32,7 +32,7 @@ fun FeedRoute(
             is FeedSideEffect.NavigateToMyPage -> navigateToMyPage()
             is FeedSideEffect.NavigateToUserPage -> navigateToUserProfile(sideEffect.userId)
             is FeedSideEffect.NavigateToPostDetail -> navigateToPostDetail(sideEffect.post.feedId)
-            is FeedSideEffect.NavigateToPostUpload -> navigateToPostUpload()
+            is FeedSideEffect.NavigateToPostUpload -> navigateToCertifiableRecord()
             is FeedSideEffect.NavigateToPostEdit -> navigateToPostEdit(sideEffect.feedId)
             is FeedSideEffect.ShowToast -> {
                 // TODO: Show toast

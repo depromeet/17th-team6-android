@@ -25,7 +25,6 @@ fun NavGraphBuilder.addPostDetailNavGraph(
         )
     ) { backStackEntry ->
         val route = backStackEntry.toRoute<PostDetail>()
-
         PostDetailRoute(
             feedId = route.feedId,
             navigateToMyPage = navigateToMyPage,

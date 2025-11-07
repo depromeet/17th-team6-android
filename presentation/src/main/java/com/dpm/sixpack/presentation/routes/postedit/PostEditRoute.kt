@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -37,16 +36,10 @@ import java.io.IOException
 
 @Composable
 fun PostEditRoute(
-    feedId: Long,
     viewModel: PostEditViewModel = hiltViewModel(),
-    onNavigateBack: () -> Unit,
+    navigateBack: () -> Unit,
 ) {
     val state by viewModel.collectAsState()
-
-    // Post 데이터 로드
-    LaunchedEffect(feedId) {
-        viewModel.loadPost(feedId)
-    }
 
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -85,7 +78,7 @@ fun PostEditRoute(
     // SideEffect 처리
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
-            PostEditSideEffect.NavigateBack -> onNavigateBack()
+            PostEditSideEffect.NavigateBack -> navigateBack()
 
             PostEditSideEffect.OpenImagePicker -> {
                 imagePickerLauncher.launch(

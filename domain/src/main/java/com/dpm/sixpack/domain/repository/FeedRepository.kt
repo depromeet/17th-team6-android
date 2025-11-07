@@ -32,8 +32,6 @@ interface FeedRepository {
         emojiType: String,
     ): DoRunResult<ReactionResult>
 
-    suspend fun deleteFeed(feedId: Long): DoRunResult<Unit>
-
     suspend fun getCertifiedUsers(date: String): DoRunResult<List<CertifiedUser>>
 
     suspend fun getSelfieCalendar(
@@ -41,12 +39,20 @@ interface FeedRepository {
         endDate: String,
     ): DoRunResult<SelfieCounts>
 
-    suspend fun updateSelfie(
+    suspend fun uploadPost(
+        sessionId: Long,
+        content: String?,
+        imageUri: Uri?,
+    ): DoRunResult<Unit>
+
+    suspend fun updatePost(
         feedId: Long,
         content: String,
         imageUri: Uri?,
         deleteSelfieImage: Boolean?,
     ): DoRunResult<Unit>
+
+    suspend fun deletePost(feedId: Long): DoRunResult<Unit>
 }
 
 sealed interface FeedListItem {
