@@ -107,10 +107,19 @@
     <string name="signup_button_resend">재전송</string>
     <!-- endregion-->
 
+    <!-- region Post Upload -->
+    <string name="post_upload_certifiable_record_submit_button">불러오기</string>
+    <string name="post_upload_certifiable_record_title">이전 러닝 내역</string>
+    <string name="post_upload_certifiable_record_subtitle">이틀 이내 달린 기록을 인증할 수 있어요.</string>
+    <string name="post_upload_certifiable_record_empty_title">인증 가능한 기록이 없어요..</string>
+    <string name="post_upload_certifiable_record_empty_subtitle">지금 바로 러닝을 시작해봐요!</string>
+    <string name="post_upload_certifiable_record_empty_image_description">인증 가능한 기록 없음</string>
+    <!-- endregion-->
 
     <!--region Feed-->
     <string name="feed_post_edit_change_background_button">배경사진 변경</string>
     <string name="feed_post_edit_submit_button">수정하기</string>
+    <string name="feed_post_upload_submit_button">게시물 올리기</string>
     <string name="feed_floating_action_button_description">피드 추가</string>
     <string name="feed_load_state_error_message">오류: %1$s</string>
     <string name="feed_load_state_retry_button">재시도</string>
@@ -210,4 +219,22 @@
     <string name="friend_code_input_description">친구코드 8자리 입력</string>
     <!--endregion-->
 
+    <!-- region MyPage -->
+    <string name="mypage_title">마이</string>
+    <string name="mypage_friend_count">친구 %d명</string>
+    <string name="mypage_total_distance">누적 거리</string>
+    <string name="mypage_distance_km">%dkm</string>
+    <string name="mypage_certification_count_label">인증 횟수</string>
+    <string name="mypage_certification_count">%d회</string>
+    <string name="mypage_tab_certification">인증</string>
+    <string name="mypage_tab_record">기록</string>
+    <string name="mypage_certification_empty_title">아직 완료한 인증이 없어요...</string>
+    <string name="mypage_certification_empty_description">러닝을 완료하면 인증할 수 있어요!</string>
+    <string name="mypage_record_empty_title">아직 러닝 기록이 없어요...</string>
+    <string name="mypage_record_empty_description">지금 바로 러닝을 시작해봐요!</string>
+    <string name="mypage_record_distance">%.2fkm</string>
+    <string name="mypage_record_cadence">%d spm</string>
+    <string name="mypage_certification_available">인증 가능</string>
+    <string name="mypage_certification_completed">인증 완료</string>
+    <!-- endregion-->
 </resources>
