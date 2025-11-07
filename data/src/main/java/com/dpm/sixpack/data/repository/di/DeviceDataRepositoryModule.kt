@@ -4,7 +4,7 @@ import com.dpm.sixpack.core.BuildConfig
 import com.dpm.sixpack.data.repository.GpsRepositoryImpl
 import com.dpm.sixpack.data.repository.SensorRepositoryImpl
 import com.dpm.sixpack.data.repository.mock.MockSensorRepository
-import com.dpm.sixpack.data.source.local.gps.LocationDataSource
+import com.dpm.sixpack.data.source.local.gps.GpsDataSource
 import com.dpm.sixpack.data.source.local.sensor.SensorDataSource
 import com.dpm.sixpack.domain.repository.GpsRepository
 import com.dpm.sixpack.domain.repository.SensorRepository
@@ -19,8 +19,7 @@ import javax.inject.Singleton
 object DeviceDataRepositoryModule {
     @Provides
     @Singleton
-    fun provideGpsRepository(locationDataSource: LocationDataSource): GpsRepository =
-        GpsRepositoryImpl(locationDataSource)
+    fun provideGpsRepository(gpsDataSource: GpsDataSource): GpsRepository = GpsRepositoryImpl(gpsDataSource)
 //        if (BuildConfig.DEBUG) {
 //            MockGpsRepository()
 //        } else {

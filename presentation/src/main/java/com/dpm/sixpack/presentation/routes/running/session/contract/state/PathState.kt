@@ -1,10 +1,12 @@
 package com.dpm.sixpack.presentation.routes.running.session.contract.state
 
 import android.os.Parcelable
+import androidx.compose.runtime.Immutable
 import com.naver.maps.geometry.LatLng
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
+@Immutable
 data class PathState(
     val paths: List<List<LatLng>> = listOf(),
     val paces: List<List<Int>> = listOf(),

@@ -14,6 +14,7 @@ import com.naver.maps.map.compose.rememberFusedLocationSource
 fun RunningRoute(
     onNavigateToBack: () -> Unit,
     navigateToReport: () -> Unit,
+    setFullScreenLoading: (Boolean) -> Unit,
     onBottomBarVisibilityChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -32,5 +33,6 @@ fun RunningRoute(
         cameraPositionState = cameraPositionState,
         onBottomBarVisibilityChange = onBottomBarVisibilityChange,
         navigateToReport = navigateToReport,
+        setFullScreenLoading = setFullScreenLoading,
     )
 }

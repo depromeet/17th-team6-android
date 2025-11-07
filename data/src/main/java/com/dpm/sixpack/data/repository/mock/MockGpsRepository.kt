@@ -9,13 +9,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
+// 현재 사용 X
 class MockGpsRepository @Inject constructor() : GpsRepository {
-    // --- 시뮬레이션 설정값 ---
     companion object {
         private const val UPDATE_INTERVAL_MS = 1000L // 1초 간격으로 좌표 방출
     }
 
-    override fun getLocationFlow(): Flow<DoRunResult<Location>> =
+    override val locationFlow: Flow<DoRunResult<Location>> =
         flow {
             var lastLocation: Location? = null
 

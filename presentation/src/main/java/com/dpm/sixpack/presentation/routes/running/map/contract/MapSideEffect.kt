@@ -12,5 +12,7 @@ sealed interface MapSideEffect : RunningRouteSideEffect {
         val isVisible: Boolean,
     ) : MapSideEffect
 
-    data object NavigateToReport : MapSideEffect
+    data class NavigateToReport(
+        val sessionId: Long,
+    ) : MapSideEffect
 }

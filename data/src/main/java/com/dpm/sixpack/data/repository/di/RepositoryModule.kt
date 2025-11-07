@@ -33,10 +33,6 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindRunningRepository(runningRepository: RunningRepositoryImpl): RunningRepository
-
-    @Binds
-    @Singleton
     abstract fun bindsRunningSessionRepository(repositoryImpl: RunningSessionRepositoryImpl): RunningSessionRepository
 
     @Binds
