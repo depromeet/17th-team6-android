@@ -2,9 +2,7 @@ package com.dpm.sixpack.presentation.routes.terms.ui.component.model
 
 import androidx.annotation.StringRes
 import com.dpm.sixpack.presentation.R
-
-// TODO SR-N url 변경
-private const val DEFAULT_TERM_URL = "https://depromeet.notion.site/29645b4338b380658ea4d47294188129?pvs=74"
+import com.dpm.sixpack.presentation.common.util.constant.Url.DEFAULT_TERM_URL
 
 enum class TermType(
     @StringRes val title: Int,
