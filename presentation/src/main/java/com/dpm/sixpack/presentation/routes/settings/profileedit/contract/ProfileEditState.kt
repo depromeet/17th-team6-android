@@ -7,6 +7,7 @@ import kotlinx.parcelize.Parcelize
 data class ProfileEditState(
     val profileName: String = "",
     val profileImageUri: String? = null,
+    val originalProfileImageUrl: String? = null, // 기존 프로필 이미지 URL (이미지 삭제 판단용)
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
 ) : UiState {

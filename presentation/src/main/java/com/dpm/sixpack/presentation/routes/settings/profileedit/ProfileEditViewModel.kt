@@ -1,12 +1,17 @@
 package com.dpm.sixpack.presentation.routes.settings.profileedit
 
 import androidx.lifecycle.SavedStateHandle
+import com.dpm.sixpack.domain.model.ProfileImageOption
+import com.dpm.sixpack.domain.usecase.ConvertUriToFileUseCase
+import com.dpm.sixpack.domain.usecase.user.GetUserProfileUseCase
+import com.dpm.sixpack.domain.usecase.user.UpdateProfileUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.routes.settings.profileedit.contract.ProfileEditIntent
 import com.dpm.sixpack.presentation.routes.settings.profileedit.contract.ProfileEditSideEffect
 import com.dpm.sixpack.presentation.routes.settings.profileedit.contract.ProfileEditState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
+import org.orbitmvi.orbit.syntax.Syntax
 import org.orbitmvi.orbit.viewmodel.container
 import timber.log.Timber
 import javax.inject.Inject
@@ -16,25 +21,47 @@ class ProfileEditViewModel
     @Inject
     constructor(
         savedStateHandle: SavedStateHandle,
-        // TODO: 프로필 수정 관련 UseCase 주입
-        // private val getUserProfileUseCase: GetUserProfileUseCase,
-        // private val updateUserProfileUseCase: UpdateUserProfileUseCase,
-        // private val convertUriToFileUseCase: ConvertUriToFileUseCase,
+        private val getUserProfileUseCase: GetUserProfileUseCase,
+        private val updateProfileUseCase: UpdateProfileUseCase,
+        private val convertUriToFileUseCase: ConvertUriToFileUseCase,
     ) : BaseViewModel<ProfileEditState, ProfileEditIntent, ProfileEditSideEffect>() {
-        override val initialState: ProfileEditState =
-            ProfileEditState(
-                // TODO: 실제 사용자 프로필로 초기화
-                profileName = "홍길동",
-                profileImageUri = null,
-            )
+        override val initialState: ProfileEditState = ProfileEditState()
 
         override val container: Container<ProfileEditState, ProfileEditSideEffect> =
             container(initialState = initialState, savedStateHandle = savedStateHandle)
 
         init {
-            // TODO: 실제 사용자 프로필 로드
-            // loadUserProfile()
+            loadUserProfile()
         }
+
+        /**
+         * 사용자 프로필 로드
+         */
+        private fun loadUserProfile() =
+            intent {
+                reduce { state.copy(isLoading = true) }
+
+                getUserProfileUseCase()
+                    .onSuccess { userProfile ->
+                        reduce {
+                            state.copy(
+                                isLoading = false,
+                                profileName = userProfile.nickname,
+                                profileImageUri = userProfile.profileImageUrl,
+                                originalProfileImageUrl = userProfile.profileImageUrl,
+                            )
+                        }
+                    }
+                    .onError { exception ->
+                        Timber.e(exception, "Failed to load user profile")
+                        reduce {
+                            state.copy(
+                                isLoading = false,
+                                errorMessage = exception.message ?: "프로필을 불러오는데 실패했습니다.",
+                            )
+                        }
+                    }
+            }
 
         override fun onIntent(intent: ProfileEditIntent) {
             when (intent) {
@@ -87,27 +114,39 @@ class ProfileEditViewModel
 
                 reduce { state.copy(isLoading = true) }
 
-                // TODO: 실제 프로필 업데이트 로직
-                // val profileImageFile = state.profileImageUri?.let { convertUriToFileUseCase(it).getOrNull() }
-                // updateUserProfileUseCase(nickname = state.profileName, profileImage = profileImageFile)
-                //     .onSuccess {
-                //         reduce { state.copy(isLoading = false) }
-                //         postSideEffect(ProfileEditSideEffect.ShowSuccessMessage)
-                //         postSideEffect(ProfileEditSideEffect.NavigateBack)
-                //     }
-                //     .onError { exception ->
-                //         reduce {
-                //             state.copy(
-                //                 isLoading = false,
-                //                 errorMessage = exception.message ?: "프로필 수정에 실패했습니다."
-                //             )
-                //         }
-                //     }
+                // Uri를 File로 변환
+                val profileImageFile =
+                    state.profileImageUri?.let { uriString ->
+                        convertUriToFileUseCase(uriString).getOrNull()
+                    }
 
-                // Mock 성공 처리
-                Timber.d("Profile updated: ${state.profileName}")
-                reduce { state.copy(isLoading = false) }
-                postSideEffect(ProfileEditSideEffect.ProfileEditCompleted)
-                postSideEffect(ProfileEditSideEffect.NavigateBack)
+                // imageOption 결정
+                val imageOption =
+                    when {
+                        profileImageFile != null -> ProfileImageOption.SET
+                        state.profileImageUri == null && state.originalProfileImageUrl != null -> ProfileImageOption.REMOVE
+                        else -> ProfileImageOption.KEEP
+                    }
+
+                // 프로필 업데이트 API 호출
+                updateProfileUseCase(
+                    nickname = state.profileName,
+                    imageOption = imageOption,
+                    profileImage = profileImageFile,
+                ).onSuccess { response ->
+                    Timber.d("Profile updated successfully: ${response.profileImageUrl}")
+                    reduce { state.copy(isLoading = false) }
+                    postSideEffect(ProfileEditSideEffect.ShowSuccessMessage)
+                    postSideEffect(ProfileEditSideEffect.NavigateBack)
+                }.onError { exception ->
+                    Timber.e(exception, "Failed to update profile")
+                    reduce {
+                        state.copy(
+                            isLoading = false,
+                            errorMessage = exception.message ?: "프로필 수정에 실패했습니다.",
+                        )
+                    }
+                    postSideEffect(ProfileEditSideEffect.ShowErrorMessage)
+                }
             }
     }

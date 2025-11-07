@@ -274,6 +274,8 @@
     <string name="settings_account_join_date">가입일자</string>
     <!-- 프로필 수정 -->
     <string name="settings_profile_edit_completed_snackbar">프로필이 수정되었어요.</string>
+    <string name="settings_profile_edit_success_message">프로필이 성공적으로 수정되었습니다.</string>
+    <string name="settings_profile_edit_error_message">프로필 수정에 실패했습니다.</string>
 
     <!-- 푸시 알림 설정 -->
     <string name="settings_push_marketing">마케팅 푸시</string>

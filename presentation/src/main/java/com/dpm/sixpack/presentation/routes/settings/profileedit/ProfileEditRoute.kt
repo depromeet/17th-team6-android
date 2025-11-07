@@ -25,6 +25,8 @@ fun ProfileEditRoute(
     val state by viewModel.container.stateFlow.collectAsState()
 
     val profileEditCompletedMessage = stringResource(R.string.settings_profile_edit_completed_snackbar)
+    val profileEditSuccessMessage = stringResource(R.string.settings_profile_edit_success_message)
+    val profileEditErrorMessage = stringResource(R.string.settings_profile_edit_error_message)
 
     // 이미지 선택 런처
     val imagePicker =
@@ -47,6 +49,12 @@ fun ProfileEditRoute(
                 }
                 ProfileEditSideEffect.ProfileEditCompleted -> {
                     onShowSnackbar(profileEditCompletedMessage, null)
+                }
+                ProfileEditSideEffect.ShowSuccessMessage -> {
+                    onShowSnackbar(profileEditSuccessMessage, null)
+                }
+                ProfileEditSideEffect.ShowErrorMessage -> {
+                    onShowSnackbar(profileEditErrorMessage, null)
                 }
             }
         }

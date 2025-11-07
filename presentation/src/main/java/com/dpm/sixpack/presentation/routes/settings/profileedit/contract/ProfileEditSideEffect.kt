@@ -8,4 +8,8 @@ sealed interface ProfileEditSideEffect : SideEffect {
     data object LaunchImagePicker : ProfileEditSideEffect
 
     data object ProfileEditCompleted : ProfileEditSideEffect
+
+    data object ShowSuccessMessage : ProfileEditSideEffect
+
+    data object ShowErrorMessage : ProfileEditSideEffect
 }

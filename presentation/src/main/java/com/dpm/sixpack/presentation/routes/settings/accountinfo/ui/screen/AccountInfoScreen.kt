@@ -1,11 +1,13 @@
 package com.dpm.sixpack.presentation.routes.settings.accountinfo.ui.screen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,23 +40,50 @@ internal fun AccountInfoScreen(
         },
         containerColor = SixpackTheme.colors.gray0,
     ) { paddingValues ->
-        Column(
+        Box(
             modifier =
                 Modifier
                     .fillMaxSize()
                     .padding(paddingValues),
         ) {
-            // 가입 휴대폰 번호
-            AccountInfoItem(
-                label = stringResource(R.string.settings_account_phone_number),
-                value = state.phoneNumber,
-            )
+            when {
+                state.isLoading -> {
+                    // 로딩 중
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center),
+                        color = SixpackTheme.colors.blue600,
+                    )
+                }
 
-            // 가입일자
-            AccountInfoItem(
-                label = stringResource(R.string.settings_account_join_date),
-                value = state.joinDate,
-            )
+                state.errorMessage != null -> {
+                    // 에러 발생
+                    Text(
+                        text = state.errorMessage,
+                        style = SixpackTheme.typography.b2Regular,
+                        color = SixpackTheme.colors.red,
+                        modifier = Modifier.align(Alignment.Center),
+                    )
+                }
+
+                else -> {
+                    // 정상 데이터 표시
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                    ) {
+                        // 가입 휴대폰 번호
+                        AccountInfoItem(
+                            label = stringResource(R.string.settings_account_phone_number),
+                            value = state.phoneNumber,
+                        )
+
+                        // 가입일자
+                        AccountInfoItem(
+                            label = stringResource(R.string.settings_account_join_date),
+                            value = state.joinDate,
+                        )
+                    }
+                }
+            }
         }
     }
 }
