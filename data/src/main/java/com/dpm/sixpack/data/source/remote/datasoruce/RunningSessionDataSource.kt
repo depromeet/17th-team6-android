@@ -93,13 +93,9 @@ class RunningSessionDataSource @Inject constructor(
         return Pair(tempFile, part)
     }
 
-    suspend fun postStartRunning(
-        startRunningRequestDto: StartRunningRequestDto,
-    ): BaseResponse<StartRunningResponseDto> = runningSessionService.postStartRunning(startRunningRequestDto)
-
     suspend fun getRunSessions(
         isSelfied: Boolean?,
         startDateTime: String?,
     ): BaseResponse<List<RunSessionListResponseDto>> =
-        runningSessionService.getRunSessions(isSelfied, startDateTime)
+        runningSessionServiceApi.getRunSessions(isSelfied, startDateTime)
 }

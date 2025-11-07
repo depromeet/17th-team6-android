@@ -224,20 +224,9 @@ class RunningSessionRepositoryImpl @Inject constructor(
 
     override suspend fun finish(sessionId: Long): DoRunResult<RunningSessionResult> =
         withContext(Dispatchers.IO) {
-            try {
-                val response =
-                    runningSessionDataSource.postFinishRunning(
-                        sessionId,
-                        MockRequestDataFactory.createMockFinishRunningRequest(),
-                    )
-                val runningSessionResult =
-                    response.data?.toRunningSessionResult()
-                        ?: throw DoRunException.DataError("서버 응답 데이터가 비어 있습니다.")
-
-                DoRunResult.Success(runningSessionResult)
-            } catch (e: Exception) {
-                DoRunResult.Failure(DoRunException.DataError("네트워크 요청에 실패했습니다: ${e.message}"))
-            }
+            // TODO: mapImage 파라미터 없이 finish를 구현하거나, finishSession을 사용하도록 변경 필요
+            // TODO: MockRequestDataFactory 구현 필요
+            throw NotImplementedError("finish 메서드는 아직 구현되지 않았습니다. finishSession을 사용하세요.")
         }
 
     override suspend fun getRunSessions(

@@ -3,10 +3,6 @@ package com.dpm.sixpack.data.source.remote.service.di
 import com.dpm.sixpack.data.source.remote.service.AuthService
 import com.dpm.sixpack.data.source.remote.service.FeedService
 import com.dpm.sixpack.data.source.remote.service.RunningSessionServiceApi
-import com.dpm.sixpack.data.source.remote.service.MockFeedService
-import com.dpm.sixpack.data.source.remote.service.MockRunningSessionService
-import com.dpm.sixpack.data.source.remote.service.RunningGoalService
-import com.dpm.sixpack.data.source.remote.service.RunningSessionService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,29 +19,23 @@ object ServiceModule {
 
     @Provides
     @Singleton
-    fun provideRunningSessionService(retrofit: Retrofit): RunningSessionServiceApi =
+    fun provideRunningSessionServiceApi(retrofit: Retrofit): RunningSessionServiceApi =
         retrofit.create(RunningSessionServiceApi::class.java)
 
-    fun provideRunningGoalService(retrofit: Retrofit): RunningGoalService =
-        retrofit.create(RunningGoalService::class.java)
-
     @Provides
     @Singleton
-    fun provideRunningSessionService(mockRunningSessionService: MockRunningSessionService): RunningSessionService =
-        mockRunningSessionService
+    fun provideFeedService(retrofit: Retrofit): FeedService = retrofit.create(FeedService::class.java)
 
-//     TODO: Switch to real RunningSessionService when API is stable
-    // @Provides
-    // @Singleton
-    // fun provideRunningSessionService(retrofit: Retrofit): RunningSessionService =
-    //     retrofit.create(RunningSessionService::class.java)
+    // region 모킹 서비스.
 
-    @Provides
-    @Singleton
-    fun provideFeedService(mockFeedService: MockFeedService): FeedService = mockFeedService
+//    @Provides
+//    @Singleton
+//    fun provideRunningSessionServiceApi(mock: MockRunningSessionServiceApi): RunningSessionServiceApi =
+//        mockRunningSessionServiceApi
 
-//     TODO: Switch to real FeedService when API is stable
-    // @Provides
-    // @Singleton
-    // fun provideFeedService(retrofit: Retrofit): FeedService = retrofit.create(FeedService::class.java)
+//    @Provides
+//    @Singleton
+//    fun provideFeedService(mock: MockFeedService): FeedService = mock
+
+    // endregion
 }

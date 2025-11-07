@@ -12,8 +12,8 @@ import com.dpm.sixpack.data.source.remote.util.constant.ApiConstants.SESSIONS
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Body
-import retrofit2.http.Multipart
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
@@ -36,11 +36,6 @@ interface RunningSessionServiceApi {
         @Path("sessionId") sessionId: Long,
         @Body saveSegmentDataRequestsDto: SaveSegmentDataRequestsDto,
     ): BaseResponse<SaveSegmentResponseDto>
-
-    @POST("$API/$RUNS/$SESSIONS/start")
-    suspend fun postStartRunning(
-        @Body startRunningRequestDto: StartRunningRequestDto,
-    ): BaseResponse<StartRunningResponseDto>
 
     @GET("$API/$RUNS/$SESSIONS")
     suspend fun getRunSessions(
