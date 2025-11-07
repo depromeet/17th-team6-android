@@ -2,6 +2,7 @@ package com.dpm.sixpack.presentation.routes.postdetail
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.dpm.sixpack.domain.repository.FeedRepository
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.common.components.post.PostDropDownActionType
@@ -10,6 +11,7 @@ import com.dpm.sixpack.presentation.common.model.PostReaction
 import com.dpm.sixpack.presentation.common.model.PostResource
 import com.dpm.sixpack.presentation.common.model.ReactingUserInfo
 import com.dpm.sixpack.presentation.common.model.toPostResource
+import com.dpm.sixpack.presentation.destinations.PostDetail
 import com.dpm.sixpack.presentation.routes.feed.contract.uistate.FeedBottomSheetState
 import com.dpm.sixpack.presentation.routes.feed.contract.uistate.FeedDialogState
 import com.dpm.sixpack.presentation.routes.feed.contract.uistate.ReactionDetailsUiState
@@ -39,6 +41,42 @@ class PostDetailViewModel @Inject constructor(
             initialState = initialState,
             savedStateHandle = savedStateHandle,
         )
+
+    init {
+        initializeState()
+    }
+
+    private fun initializeState() {
+        val route = savedStateHandle.toRoute<PostDetail>()
+
+        loadPost(route.feedId)
+    }
+
+    private fun loadPost(feedId: Long) =
+        intent {
+            reduce { state.copy(isLoading = true, error = null) }
+
+            viewModelScope.launch {
+                feedRepository
+                    .getFeedDetail(feedId)
+                    .onSuccess { feed ->
+                        reduce {
+                            state.copy(
+                                post = feed.toPostResource(),
+                                isLoading = false,
+                                error = null,
+                            )
+                        }
+                    }.onError { error ->
+                        reduce {
+                            state.copy(
+                                isLoading = false,
+                                error = error.message ?: "게시물을 불러올 수 없습니다.",
+                            )
+                        }
+                    }
+            }
+        }
 
     // 리액션별로 독립적인 debounce Job 관리
     private val reactionDebounceJobs = ConcurrentHashMap<Pair<Long, Emoji>, Job>()
@@ -71,32 +109,6 @@ class PostDetailViewModel @Inject constructor(
             PostDetailIntent.OnDialogConfirmClick -> handleDialogConfirmClick()
         }
     }
-
-    fun loadPost(feedId: Long) =
-        intent {
-            reduce { state.copy(isLoading = true, error = null) }
-
-            viewModelScope.launch {
-                feedRepository
-                    .getFeedDetail(feedId)
-                    .onSuccess { feed ->
-                        reduce {
-                            state.copy(
-                                post = feed.toPostResource(),
-                                isLoading = false,
-                                error = null,
-                            )
-                        }
-                    }.onError { error ->
-                        reduce {
-                            state.copy(
-                                isLoading = false,
-                                error = error.message ?: "게시물을 불러올 수 없습니다.",
-                            )
-                        }
-                    }
-            }
-        }
 
     private fun handleBackClick() =
         intent {
@@ -249,7 +261,7 @@ class PostDetailViewModel @Inject constructor(
         intent {
             viewModelScope.launch {
                 feedRepository
-                    .deleteFeed(feedId)
+                    .deletePost(feedId)
                     .onSuccess {
                         postSideEffect(PostDetailSideEffect.ShowToast("게시물이 삭제되었습니다."))
                         postSideEffect(PostDetailSideEffect.NavigateToBack)

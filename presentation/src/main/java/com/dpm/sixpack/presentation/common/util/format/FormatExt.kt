@@ -23,6 +23,8 @@ fun formatPace(paceInSeconds: Int): String {
     return String.format("%d'%02d\"", minutes, seconds)
 }
 
+fun formatCadence(cadence: Int) = "$cadence spm"
+
 fun formatSecondsToTimeInFeed(totalSeconds: Long): String {
     val seconds = abs(totalSeconds)
     val hours = seconds / 3600
@@ -43,19 +45,46 @@ fun formatPace(paceInSeconds: Long): String {
     return String.format("%d'%02d\"", minutes, seconds)
 }
 
-private val KOREAN_FEED_TIME_FORMATTER =
+private val POST_TIME_FORMATTER =
     DateTimeFormatter.ofPattern("yyyy.MM.dd '·' a h:mm", Locale.KOREAN)
+private val DATE_WITH_DAY_FORMATTER =
+    DateTimeFormatter.ofPattern("yyyy.MM.dd (E)", Locale.KOREAN)
+private val AM_PM_TIME_FORMATTER =
+    DateTimeFormatter.ofPattern("a h:mm", Locale.KOREAN)
 private val ASIA_ZONE_ID = ZoneId.of("Asia/Seoul")
 
-fun String.toKoreanFeedTimeStringOrNull(): String? =
+fun String.toPostTimeStringOrNull(): String? =
     runCatching {
         val localDateTime = LocalDateTime.parse(this, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
 
         localDateTime
             .atZone(ZoneId.of("UTC"))
             .withZoneSameInstant(ASIA_ZONE_ID)
-            .format(KOREAN_FEED_TIME_FORMATTER)
+            .format(POST_TIME_FORMATTER)
     }.onFailure { error ->
-        // ⬇️ 실패 시 로그 찍기
         Timber.e("파싱 실패! 에러: ${error.message}")
+    }.getOrNull()
+
+fun String.toDateWithDayOfWeekOrNull(): String? =
+    runCatching {
+        val localDateTime = LocalDateTime.parse(this, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+
+        localDateTime
+            .atZone(ZoneId.of("UTC"))
+            .withZoneSameInstant(ASIA_ZONE_ID)
+            .format(AM_PM_TIME_FORMATTER)
+    }.onFailure { error ->
+        Timber.e("날짜 파싱 실패! 에러: ${error.message}")
+    }.getOrNull()
+
+fun String.toTimeOnlyOrNull(): String? =
+    runCatching {
+        val localDateTime = LocalDateTime.parse(this, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+
+        localDateTime
+            .atZone(ZoneId.of("UTC"))
+            .withZoneSameInstant(ASIA_ZONE_ID)
+            .format(AM_PM_TIME_FORMATTER)
+    }.onFailure { error ->
+        Timber.e("시간 파싱 실패! 에러: ${error.message}")
     }.getOrNull()

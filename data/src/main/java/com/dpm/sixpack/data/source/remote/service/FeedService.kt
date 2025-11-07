@@ -31,18 +31,22 @@ interface FeedService {
 
     // 인증피드 상세 조회
     @GET("/api/selfie/feeds/{feedId}")
-    suspend fun getFeedDetail(
+    suspend fun getPostDetail(
         @Path("feedId") feedId: Long,
     ): BaseResponse<FeedDto>
 
-    // 2. 인증피드 업로드 (TODO: 구현 필요 - multipart/form-data)
-    // @POST("/api/selfie/feeds")
-    // suspend fun uploadFeed(...)
+    // 인증피드 업로드
+    @Multipart
+    @POST("/api/selfie/feeds")
+    suspend fun uploadPost(
+        @Part("data") data: RequestBody,
+        @Part selfieImage: MultipartBody.Part?,
+    ): BaseResponse<Unit>
 
     // 인증피드 수정
     @Multipart
     @PUT("/api/selfie/feeds/{feedId}")
-    suspend fun updateSelfie(
+    suspend fun updatePost(
         @Path("feedId") feedId: Long,
         @Part("data") data: RequestBody,
         @Part selfieImage: MultipartBody.Part?,
@@ -50,7 +54,7 @@ interface FeedService {
 
     // 인증피드 삭제
     @DELETE("/api/selfie/feeds/{feedId}")
-    suspend fun deleteFeed(
+    suspend fun deletePost(
         @Path("feedId") feedId: Long,
     ): BaseResponse<Unit>
 
@@ -68,7 +72,7 @@ interface FeedService {
 
     // 주차별 친구들의 인증수 조회 (캘린더용)
     @GET("/api/selfie/week")
-    suspend fun getSelfieWeek(
+    suspend fun getWeeklyPostCount(
         @Query("startDate") startDate: String,
         @Query("endDate") endDate: String,
     ): BaseResponse<SelfieCountsDto>

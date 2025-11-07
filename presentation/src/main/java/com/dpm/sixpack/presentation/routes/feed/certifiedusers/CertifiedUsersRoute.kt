@@ -1,7 +1,6 @@
 package com.dpm.sixpack.presentation.routes.feed.certifiedusers
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dpm.sixpack.presentation.routes.feed.certifiedusers.contract.CertifiedUsersSideEffect
@@ -11,17 +10,12 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 fun CertifiedUsersRoute(
-    date: String,
     navigateToBack: () -> Unit,
     navigateToUserProfile: (Long) -> Unit,
     navigateToMyPage: () -> Unit,
     viewModel: CertifiedUsersViewModel = hiltViewModel(),
 ) {
     val state by viewModel.collectAsState()
-
-    LaunchedEffect(Unit) {
-        viewModel.loadCertifiedUsers(date)
-    }
 
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {

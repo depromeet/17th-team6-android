@@ -9,6 +9,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.dpm.sixpack.data.paging.FeedPagingSource
 import com.dpm.sixpack.data.source.remote.datasoruce.FeedDataSource
+import com.dpm.sixpack.data.source.remote.dto.request.CreateSelfieRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.UpdateSelfieRequestDto
 import com.dpm.sixpack.data.source.remote.util.ContentUriRequestBody
 import com.dpm.sixpack.domain.event.FeedUpdateEvent
@@ -69,11 +70,43 @@ class FeedRepositoryImpl @Inject constructor(
     override suspend fun getFeedDetail(feedId: Long): DoRunResult<Feed> =
         withContext(Dispatchers.IO) {
             try {
-                val response = feedDataSource.getFeedDetail(feedId)
+                val response = feedDataSource.getPostDetail(feedId)
                 val feed = response.data?.toDomain() ?: throw DoRunException.DataError("데이터 변환에 실패했습니다")
                 DoRunResult.Success(feed)
             } catch (e: Exception) {
                 DoRunResult.Failure(DoRunException.DataError("피드 상세 조회에 실패했습니다: ${e.message}"))
+            }
+        }
+
+    @RequiresApi(Build.VERSION_CODES.P)
+    override suspend fun uploadPost(
+        sessionId: Long,
+        content: String?,
+        imageUri: Uri?,
+    ): DoRunResult<Unit> =
+        withContext(Dispatchers.IO) {
+            try {
+                val requestDto =
+                    CreateSelfieRequestDto(
+                        runSessionId = sessionId,
+                        content = content,
+                    )
+
+                val json = Json.encodeToString(requestDto)
+                val dataRequestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
+
+                // 이미지 URI를 MultipartBody.Part로 변환 (자동 압축)
+                val imagePart =
+                    imageUri?.let { uri ->
+                        ContentUriRequestBody(contentResolver, uri).toFormData("selfieImage")
+                    }
+
+                // API 호출
+                feedDataSource.uploadPost(dataRequestBody, imagePart)
+
+                DoRunResult.Success(Unit)
+            } catch (e: Exception) {
+                DoRunResult.Failure(DoRunException.DataError("게시물 업로드에 실패했습니다: ${e.message}"))
             }
         }
 
@@ -112,10 +145,10 @@ class FeedRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun deleteFeed(feedId: Long): DoRunResult<Unit> =
+    override suspend fun deletePost(feedId: Long): DoRunResult<Unit> =
         withContext(Dispatchers.IO) {
             try {
-                feedDataSource.deleteFeed(feedId)
+                feedDataSource.deletePost(feedId)
                 DoRunResult.Success(Unit)
             } catch (e: Exception) {
                 DoRunResult.Failure(DoRunException.DataError("피드 삭제에 실패했습니다: ${e.message}"))
@@ -140,7 +173,7 @@ class FeedRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             try {
                 val response =
-                    feedDataSource.getSelfieWeek(startDate, endDate)
+                    feedDataSource.getWeeklyPostCount(startDate, endDate)
 
                 val selfieCounts = response.data?.toDomain() ?: throw DoRunException.DataError("데이터 변환에 실패했습니다")
                 DoRunResult.Success(selfieCounts)
@@ -150,7 +183,7 @@ class FeedRepositoryImpl @Inject constructor(
         }
 
     @RequiresApi(Build.VERSION_CODES.P)
-    override suspend fun updateSelfie(
+    override suspend fun updatePost(
         feedId: Long,
         content: String,
         imageUri: Uri?,
@@ -175,7 +208,7 @@ class FeedRepositoryImpl @Inject constructor(
                     }
 
                 // API 호출
-                feedDataSource.updateSelfie(feedId, dataRequestBody, imagePart)
+                feedDataSource.updatePost(feedId, dataRequestBody, imagePart)
 
                 // 수정 성공 이벤트 발생
                 _feedUpdateEvents.emit(FeedUpdateEvent.Updated(feedId))
