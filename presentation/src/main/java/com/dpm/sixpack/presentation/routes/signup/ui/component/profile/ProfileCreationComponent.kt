@@ -47,7 +47,7 @@ fun ProfileCreationComponent(
             modifier = Modifier.size(97.dp),
             contentAlignment = Alignment.Center,
         ) {
-            if (profileImageUri != null) {
+            if (!profileImageUri.isNullOrBlank()) {
                 AsyncImage(
                     model = profileImageUri,
                     contentDescription = "Profile image",

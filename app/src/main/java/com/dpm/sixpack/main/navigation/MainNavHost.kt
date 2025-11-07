@@ -27,6 +27,8 @@ import com.dpm.sixpack.presentation.routes.profilecreation.navigation.navigatePr
 import com.dpm.sixpack.presentation.routes.running.navigation.addRunningNavGraph
 import com.dpm.sixpack.presentation.routes.running.navigation.navigateRunning
 import com.dpm.sixpack.presentation.routes.sessionreport.navigation.addSessionReportNavGraph
+import com.dpm.sixpack.presentation.routes.settings.navigation.addSettingsNavGraph
+import com.dpm.sixpack.presentation.routes.settings.navigation.navigateToSettings
 import com.dpm.sixpack.presentation.routes.signin.navigation.addSignInNavGraph
 import com.dpm.sixpack.presentation.routes.signin.navigation.navigateSignIn
 import com.dpm.sixpack.presentation.routes.signup.navigation.addSignUpNavGraph
@@ -156,7 +158,7 @@ internal fun MainNavHost(
 
             addMyPageNavGraph(
                 onNavigateToSettings = {
-                    // TODO: Navigate to settings
+                    navController.navigateToSettings()
                 },
                 onNavigateToPostDetail = { id ->
                     // TODO: Navigate to post detail
@@ -165,6 +167,21 @@ internal fun MainNavHost(
                     // TODO: Navigate to record detail
                 },
             )
+
+            addSettingsNavGraph(
+                onNavigateBack = navigator::popBackStack,
+                onShowSnackbar = onShowSnackbar,
+                navController = navController,
+            )
+
+            // Friend 관련 딥링크 지원을 위한 NavGraph 추가
+//            addFriendProfileNavGraph(
+//                navigateToBack = navigator::popBackStack,
+//            )
+
+//            addFriendAddNavGraph(
+//                navigateToBack = navigator::popBackStack,
+//            )
 
             addFriendNavGraph(
                 navController = navigator.navController,

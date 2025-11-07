@@ -1,6 +1,6 @@
 package com.dpm.sixpack.domain.usecase
 
-import com.dpm.sixpack.domain.repository.UserPreferenceRepository
+import com.dpm.sixpack.domain.repository.UserRepository
 import javax.inject.Inject
 
 /**
@@ -9,7 +9,7 @@ import javax.inject.Inject
  * @return 로그인 상태 (true: 로그인됨, false: 미로그인)
  */
 class CheckUserLoggedInUseCase @Inject constructor(
-    private val userPreferenceRepository: UserPreferenceRepository,
+    private val userPreferenceRepository: UserRepository,
 ) {
     suspend operator fun invoke(): Boolean {
         val userId = userPreferenceRepository.getUserId()

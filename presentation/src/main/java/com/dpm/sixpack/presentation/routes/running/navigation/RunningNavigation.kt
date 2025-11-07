@@ -4,6 +4,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
+import com.dpm.sixpack.presentation.common.util.constant.DeepLinks
 import com.dpm.sixpack.presentation.destinations.MainRoute
 import com.dpm.sixpack.presentation.routes.running.RunningRoute
 
@@ -19,7 +21,11 @@ fun NavGraphBuilder.addRunningNavGraph(
     navigateToSessionReport: () -> Unit,
     navigateToFriendList: () -> Unit,
 ) {
-    composable<MainRoute.Running> {
+    composable<MainRoute.Running>(
+        deepLinks = listOf(
+            navDeepLink<MainRoute.Running>(basePath = DeepLinks.Running.START)
+        )
+    ) {
         RunningRoute(
             onShowSnackBar = onShowSnackBar,
             onBottomBarVisibilityChange = onBottomBarVisibilityChange,

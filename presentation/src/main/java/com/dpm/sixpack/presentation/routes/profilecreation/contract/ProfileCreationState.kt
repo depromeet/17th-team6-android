@@ -9,6 +9,7 @@ data class ProfileCreationState(
     val phoneNumber: String = "",
     val profileName: String = "",
     val profileImageUri: String? = null,
+    val deviceToken: String? = null,
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
 ) : UiState,

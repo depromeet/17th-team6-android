@@ -3,6 +3,8 @@ package com.dpm.sixpack.data.source.remote.service.di
 import com.dpm.sixpack.data.source.remote.service.AuthService
 import com.dpm.sixpack.data.source.remote.service.FeedService
 import com.dpm.sixpack.data.source.remote.service.FriendServiceApi
+import com.dpm.sixpack.data.source.remote.service.MockFeedService
+import com.dpm.sixpack.data.source.remote.service.MockRunningSessionServiceApi
 import com.dpm.sixpack.data.source.remote.service.RunningSessionServiceApi
 import dagger.Module
 import dagger.Provides
@@ -18,14 +20,10 @@ object ServiceModule {
     @Singleton
     fun provideAuthService(retrofit: Retrofit): AuthService = retrofit.create(AuthService::class.java)
 
-    @Provides
-    @Singleton
-    fun provideRunningSessionService(retrofit: Retrofit): RunningSessionServiceApi =
-        retrofit.create(RunningSessionServiceApi::class.java)
-
 //    @Provides
 //    @Singleton
-//    fun provideRunningSessionServiceApi(mock: MockRunningSessionServiceApi): RunningSessionServiceApi = mock
+//    fun provideRunningSessionServiceApi(retrofit: Retrofit): RunningSessionServiceApi =
+//        retrofit.create(RunningSessionServiceApi::class.java)
 
     @Provides
     @Singleton

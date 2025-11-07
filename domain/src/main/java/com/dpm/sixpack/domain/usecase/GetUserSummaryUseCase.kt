@@ -2,7 +2,7 @@ package com.dpm.sixpack.domain.usecase
 
 import com.dpm.sixpack.domain.model.UserSummary
 import com.dpm.sixpack.domain.repository.FeedRepository
-import com.dpm.sixpack.domain.repository.UserPreferenceRepository
+import com.dpm.sixpack.domain.repository.UserRepository
 import com.dpm.sixpack.domain.util.DoRunResult
 import javax.inject.Inject
 
@@ -16,7 +16,7 @@ class GetUserSummaryUseCase
     @Inject
     constructor(
         private val feedRepository: FeedRepository,
-        private val userPreferenceRepository: UserPreferenceRepository,
+        private val userPreferenceRepository: UserRepository,
     ) {
         /**
          * Retrieves the user summary for the current logged-in user.

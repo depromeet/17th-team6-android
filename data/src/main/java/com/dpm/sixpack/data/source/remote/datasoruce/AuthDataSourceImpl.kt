@@ -1,6 +1,7 @@
 package com.dpm.sixpack.data.source.remote.datasoruce
 
 import com.dpm.sixpack.data.source.remote.datasoruce.api.AuthDataSource
+import com.dpm.sixpack.data.source.remote.dto.request.ConsentDto
 import com.dpm.sixpack.data.source.remote.dto.request.RefreshTokenRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.SendSmsRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.SignUpRequestDto
@@ -47,16 +48,27 @@ class AuthDataSourceImpl @Inject constructor(
         nickname: String,
         phoneNumber: String,
         profileImage: File?,
+        marketingConsentAt: String?,
+        locationConsentAt: String?,
+        personalConsentAt: String,
+        deviceToken: String?,
     ): BaseResponse<SignUpResponseDto> {
         // Construct SignUpRequestDto internally
         val signUpData =
             SignUpRequestDto(
-                nickname = nickname,
                 phoneNumber = phoneNumber,
+                nickname = nickname,
+                consent =
+                    ConsentDto(
+                        marketingConsentAt = marketingConsentAt,
+                        locationConsentAt = locationConsentAt,
+                        personalConsentAt = personalConsentAt,
+                    ),
+                deviceToken = deviceToken,
             )
 
         // Convert DTO to JSON string and create RequestBody
-        val jsonString = json.encodeToString(signUpData)
+        val jsonString = json.encodeToString(SignUpRequestDto.serializer(), signUpData)
         val dataRequestBody = jsonString.toRequestBody("application/json".toMediaTypeOrNull())
 
         // Create MultipartBody.Part for profile image if exists
@@ -79,4 +91,8 @@ class AuthDataSourceImpl @Inject constructor(
             )
         return authService.refreshToken(request = requestDto)
     }
+
+    override suspend fun logout(): BaseResponse<Unit> = authService.logout()
+
+    override suspend fun withdraw(): BaseResponse<Unit> = authService.withdraw()
 }
