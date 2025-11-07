@@ -3,7 +3,7 @@ package com.dpm.sixpack.presentation.routes.mypage.util
 import com.dpm.sixpack.domain.model.RunSession
 import com.dpm.sixpack.presentation.routes.mypage.contract.CertificationStatus
 import com.dpm.sixpack.presentation.routes.mypage.contract.RecordItem
-import java.time.ZonedDateTime
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -20,7 +20,7 @@ object RunSessionMapper {
         )
 
     fun RunSession.toRecordItem(): RecordItem {
-        val finishedDateTime = ZonedDateTime.parse(finishedAt)
+        val finishedDateTime = LocalDateTime.parse(finishedAt)
 
         // Format: "2025.09.30 (화)"
         val dateFormatted =

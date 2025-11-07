@@ -24,25 +24,25 @@ object ServiceModule {
     @Singleton
     fun provideUserService(retrofit: Retrofit): UserService = retrofit.create(UserService::class.java)
 
-//    @Provides
-//    @Singleton
-//    fun provideRunningSessionServiceApi(retrofit: Retrofit): RunningSessionServiceApi =
-//        retrofit.create(RunningSessionServiceApi::class.java)
+    @Provides
+    @Singleton
+    fun provideRunningSessionServiceApi(retrofit: Retrofit): RunningSessionServiceApi =
+        retrofit.create(RunningSessionServiceApi::class.java)
 
-//    @Provides
-//    @Singleton
-//    fun provideFeedService(retrofit: Retrofit): FeedService = retrofit.create(FeedService::class.java)
+    @Provides
+    @Singleton
+    fun provideFeedService(retrofit: Retrofit): FeedService = retrofit.create(FeedService::class.java)
 
     // region 모킹 서비스.
 
-    @Provides
-    @Singleton
-    fun provideRunningSessionServiceApi(mock: MockRunningSessionServiceApi): RunningSessionServiceApi =
-        mock
-
-    @Provides
-    @Singleton
-    fun provideFeedService(mock: MockFeedService): FeedService = mock
+//    @Provides
+//    @Singleton
+//    fun provideRunningSessionServiceApi(mock: MockRunningSessionServiceApi): RunningSessionServiceApi =
+//        mock
+//
+//    @Provides
+//    @Singleton
+//    fun provideFeedService(mock: MockFeedService): FeedService = mock
 
     // endregion
 }
