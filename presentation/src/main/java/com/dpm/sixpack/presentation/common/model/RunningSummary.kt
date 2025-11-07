@@ -3,12 +3,15 @@ package com.dpm.sixpack.presentation.common.model
 import android.os.Parcelable
 import androidx.compose.runtime.Immutable
 import com.dpm.sixpack.domain.model.RunningSessionResult
+import com.dpm.sixpack.presentation.common.util.format.formatCadence
 import com.dpm.sixpack.presentation.common.util.format.formatPace
 import com.dpm.sixpack.presentation.common.util.format.formatSecondsToTimeInFeed
-import com.dpm.sixpack.presentation.common.util.format.toKoreanFeedTimeStringOrNull
+import com.dpm.sixpack.presentation.common.util.format.toPostTimeStringOrNull
 import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Parcelize
 @Immutable
 data class RunningSummary(
@@ -24,6 +27,6 @@ fun RunningSessionResult.toRunningSummary(postTime: String): RunningSummary =
         totalDistance = formatDistanceToKm(totalDistanceMeter),
         totalTime = formatSecondsToTimeInFeed(totalDurationSec.toLong()),
         averagePace = formatPace(avgPace),
-        cadence = avgCadence.toString(),
-        recordDateTime = postTime.toKoreanFeedTimeStringOrNull() ?: "날짜를 알 수 없음",
+        cadence = formatCadence(avgCadence),
+        recordDateTime = postTime.toPostTimeStringOrNull() ?: "날짜를 알 수 없음",
     )

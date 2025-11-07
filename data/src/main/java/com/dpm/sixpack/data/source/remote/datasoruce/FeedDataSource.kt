@@ -28,9 +28,18 @@ class FeedDataSource @Inject constructor(
             size = size,
         )
 
-    suspend fun getFeedDetail(feedId: Long): BaseResponse<FeedDto> =
-        feedService.getFeedDetail(
+    suspend fun getPostDetail(feedId: Long): BaseResponse<FeedDto> =
+        feedService.getPostDetail(
             feedId = feedId,
+        )
+
+    suspend fun uploadPost(
+        data: RequestBody,
+        selfieImage: MultipartBody.Part?,
+    ): BaseResponse<Unit> =
+        feedService.uploadPost(
+            data = data,
+            selfieImage = selfieImage,
         )
 
     suspend fun postReaction(
@@ -45,8 +54,8 @@ class FeedDataSource @Inject constructor(
                 ),
         )
 
-    suspend fun deleteFeed(feedId: Long): BaseResponse<Unit> =
-        feedService.deleteFeed(
+    suspend fun deletePost(feedId: Long): BaseResponse<Unit> =
+        feedService.deletePost(
             feedId = feedId,
         )
 
@@ -55,21 +64,21 @@ class FeedDataSource @Inject constructor(
             date = date,
         )
 
-    suspend fun getSelfieWeek(
+    suspend fun getWeeklyPostCount(
         startDate: String,
         endDate: String,
     ): BaseResponse<SelfieCountsDto> =
-        feedService.getSelfieWeek(
+        feedService.getWeeklyPostCount(
             startDate = startDate,
             endDate = endDate,
         )
 
-    suspend fun updateSelfie(
+    suspend fun updatePost(
         feedId: Long,
         data: RequestBody,
         selfieImage: MultipartBody.Part?,
     ): BaseResponse<Unit> =
-        feedService.updateSelfie(
+        feedService.updatePost(
             feedId = feedId,
             data = data,
             selfieImage = selfieImage,

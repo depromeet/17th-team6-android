@@ -9,7 +9,7 @@ import androidx.paging.map
 import com.dpm.sixpack.domain.event.FeedUpdateEvent
 import com.dpm.sixpack.domain.repository.FeedListItem
 import com.dpm.sixpack.domain.repository.FeedRepository
-import com.dpm.sixpack.domain.usecase.GetFeedsByDateUseCase
+import com.dpm.sixpack.domain.usecase.feed.GetFeedsByDateUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.common.components.post.PostDropDownActionType
 import com.dpm.sixpack.presentation.common.model.Emoji
@@ -504,7 +504,7 @@ class FeedViewModel @Inject constructor(
 
             viewModelScope.launch {
                 feedRepository
-                    .deleteFeed(feedId)
+                    .deletePost(feedId)
                     .onSuccess {
                         postSideEffect(FeedSideEffect.ShowToast("게시물이 삭제되었습니다."))
                     }.onError { exception ->

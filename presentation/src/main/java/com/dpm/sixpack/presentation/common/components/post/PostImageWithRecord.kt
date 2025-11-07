@@ -115,7 +115,7 @@ private fun RunningSummaryOverlay(
             )
             SummaryItem(
                 title = stringResource(id = R.string.feed_post_image_record_cadence),
-                record = "$cadence spm",
+                record = cadence,
                 recordTextStyle = SixpackTheme.typography.t1Bold,
                 modifier = Modifier.weight(1f),
             )

@@ -22,3 +22,6 @@ data class PostEdit(
 data class CertifiedUsers(
     val date: String,
 ) : MainFeedRoute
+
+@Serializable
+data object CertifiableRecord : MainFeedRoute

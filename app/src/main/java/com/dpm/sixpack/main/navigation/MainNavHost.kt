@@ -8,7 +8,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.dpm.sixpack.SixPackAppState
 import com.dpm.sixpack.presentation.destinations.SignInRoute
+import com.dpm.sixpack.presentation.navigation.MainNavTab
 import com.dpm.sixpack.presentation.routes.feed.navigation.addFeedNavGraph
+import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToCertifiableRecord
 import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToCertifiedUsers
 import com.dpm.sixpack.presentation.routes.friend.navigation.addFriendAddNavGraph
 import com.dpm.sixpack.presentation.routes.friend.navigation.addFriendProfileNavGraph
@@ -16,8 +18,10 @@ import com.dpm.sixpack.presentation.routes.mypage.navigation.addMyPageNavGraph
 import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
 import com.dpm.sixpack.presentation.routes.postdetail.navigation.addPostDetailNavGraph
 import com.dpm.sixpack.presentation.routes.postdetail.navigation.navigateToPostDetail
-import com.dpm.sixpack.presentation.routes.postedit.navigation.addPostDetailNavGraph
+import com.dpm.sixpack.presentation.routes.postedit.navigation.addPostEditNavGraph
 import com.dpm.sixpack.presentation.routes.postedit.navigation.navigateToPostEdit
+import com.dpm.sixpack.presentation.routes.postupload.navigation.addPostUploadNavGraph
+import com.dpm.sixpack.presentation.routes.postupload.navigation.navigateToPostUpload
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.addProfileCreationNavGraph
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.navigateProfileCreation
 import com.dpm.sixpack.presentation.routes.running.navigation.addRunningSessionNavGraph
@@ -130,6 +134,8 @@ internal fun MainNavHost(
                 navigateToCertifiedUsers = navController::navigateToCertifiedUsers,
                 navigateToPostDetail = navController::navigateToPostDetail,
                 navigateToPostEdit = navController::navigateToPostEdit,
+                navigateToCertifiableRecord = navController::navigateToCertifiableRecord,
+                navigateToPostUpload = navController::navigateToPostUpload,
             )
 
             addPostDetailNavGraph(
@@ -139,8 +145,13 @@ internal fun MainNavHost(
                 navigateToMyPage = {},
             )
 
-            addPostDetailNavGraph(
-                navigateToBack = { navController.popBackStack() },
+            addPostEditNavGraph(
+                navigateBack = { navController.popBackStack() },
+            )
+
+            addPostUploadNavGraph(
+                navigateBack = { navController.popBackStack() },
+                navigateToFeed = { navigator.navigate(MainNavTab.FEED) },
             )
 
             addMyPageNavGraph(

@@ -15,7 +15,7 @@ data class RunSessionListResponseDto(
     @SerialName("paceAvg") val paceAvg: Int,
     @SerialName("cadenceAvg") val cadenceAvg: Int,
     @SerialName("isSelfied") val isSelfied: Boolean,
-    @SerialName("mapImage") val mapImage: String? = null,
+    @SerialName("mapImage") val mapImage: String,
 ) {
     fun toRunSession() =
         RunSession(
