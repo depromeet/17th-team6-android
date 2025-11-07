@@ -199,7 +199,9 @@ fabric.properties
 
 # End of https://www.toptal.com/developers/gitignore/api/java,androidstudio,android,kotlin
 
-# Claude
-.claude
+
+# Claude Code MCP configuration (contains API tokens)
 CLAUDE.md
+TASKS.md
+.claude
 .mcp.json

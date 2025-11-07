@@ -3,11 +3,13 @@ package com.dpm.sixpack.data.repository.di
 import com.dpm.sixpack.data.repository.AuthRepositoryImpl
 import com.dpm.sixpack.data.repository.FeedRepositoryImpl
 import com.dpm.sixpack.data.repository.FileRepositoryImpl
+import com.dpm.sixpack.data.repository.MockPostRepository
 import com.dpm.sixpack.data.repository.RunningSessionRepositoryImpl
 import com.dpm.sixpack.data.repository.UserPreferenceRepositoryImpl
 import com.dpm.sixpack.domain.repository.AuthRepository
 import com.dpm.sixpack.domain.repository.FeedRepository
 import com.dpm.sixpack.domain.repository.FileRepository
+import com.dpm.sixpack.domain.repository.PostRepository
 import com.dpm.sixpack.domain.repository.RunningSessionRepository
 import com.dpm.sixpack.domain.repository.UserPreferenceRepository
 import dagger.Binds
@@ -34,6 +36,10 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindsUserPreferenceRepository(repositoryImpl: UserPreferenceRepositoryImpl): UserPreferenceRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindPostRepository(mockPostRepository: MockPostRepository): PostRepository
 
     @Binds
     @Singleton

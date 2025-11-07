@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import com.dpm.sixpack.data.source.remote.dto.request.FinishRunningRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.SaveSegmentDataRequestsDto
 import com.dpm.sixpack.data.source.remote.dto.response.FinishRunningResponseDto
+import com.dpm.sixpack.data.source.remote.dto.response.RunSessionListResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.SaveSegmentResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.StartRunningResponseDto
 import com.dpm.sixpack.data.source.remote.service.RunningSessionServiceApi
@@ -91,4 +92,10 @@ class RunningSessionDataSource @Inject constructor(
 
         return Pair(tempFile, part)
     }
+
+    suspend fun getRunSessions(
+        isSelfied: Boolean?,
+        startDateTime: String?,
+    ): BaseResponse<List<RunSessionListResponseDto>> =
+        runningSessionServiceApi.getRunSessions(isSelfied, startDateTime)
 }
