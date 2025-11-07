@@ -104,10 +104,23 @@ class AuthRepositoryImpl @Inject constructor(
         nickname: String,
         phoneNumber: String,
         profileImage: File?,
+        marketingConsentAt: String?,
+        locationConsentAt: String?,
+        personalConsentAt: String,
+        deviceToken: String?,
     ): DoRunResult<SignUpResult> =
         withContext(Dispatchers.IO) {
             try {
-                val response = authDataSource.signUp(nickname, phoneNumber, profileImage)
+                val response =
+                    authDataSource.signUp(
+                        nickname = nickname,
+                        phoneNumber = phoneNumber,
+                        profileImage = profileImage,
+                        marketingConsentAt = marketingConsentAt,
+                        locationConsentAt = locationConsentAt,
+                        personalConsentAt = personalConsentAt,
+                        deviceToken = deviceToken,
+                    )
 
                 val signUpResult =
                     response.data?.toSignUpResult()
@@ -142,6 +155,40 @@ class AuthRepositoryImpl @Inject constructor(
                 DoRunResult.Failure(
                     DoRunException.NetworkError(
                         message = "토큰 갱신에 실패했습니다: ${e.message}",
+                        cause = e,
+                    ),
+                )
+            }
+        }
+
+    override suspend fun logout(): DoRunResult<Unit> =
+        withContext(Dispatchers.IO) {
+            try {
+                authDataSource.logout()
+                DoRunResult.Success(Unit)
+            } catch (e: DoRunException) {
+                DoRunResult.Failure(e)
+            } catch (e: Exception) {
+                DoRunResult.Failure(
+                    DoRunException.NetworkError(
+                        message = "로그아웃에 실패했습니다: ${e.message}",
+                        cause = e,
+                    ),
+                )
+            }
+        }
+
+    override suspend fun withdraw(): DoRunResult<Unit> =
+        withContext(Dispatchers.IO) {
+            try {
+                authDataSource.withdraw()
+                DoRunResult.Success(Unit)
+            } catch (e: DoRunException) {
+                DoRunResult.Failure(e)
+            } catch (e: Exception) {
+                DoRunResult.Failure(
+                    DoRunException.NetworkError(
+                        message = "회원 탈퇴에 실패했습니다: ${e.message}",
                         cause = e,
                     ),
                 )

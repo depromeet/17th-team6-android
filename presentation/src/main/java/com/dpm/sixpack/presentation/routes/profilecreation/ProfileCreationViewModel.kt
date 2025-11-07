@@ -86,11 +86,18 @@ class ProfileCreationViewModel @Inject constructor(
                     }
             }
 
+            // Generate current timestamp in ISO 8601 UTC format (e.g., "2025-11-06T15:02:32.187Z")
+            val currentTimestamp = java.time.Instant.now().toString()
+
             val result =
                 signUpUseCase(
                     nickname = state.profileName,
                     phoneNumber = state.phoneNumber,
                     profileImage = profileImageFile,
+                    marketingConsentAt = currentTimestamp, // TODO 제거
+                    locationConsentAt = currentTimestamp, // TODO 제거
+                    personalConsentAt = currentTimestamp, // TODO 제거
+                    deviceToken = state.deviceToken ?: "fcm_token_example_123", // TODO 진짜로 바꾸기
                 )
 
             result

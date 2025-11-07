@@ -3,13 +3,13 @@ package com.dpm.sixpack.domain.usecase
 import android.graphics.Bitmap
 import com.dpm.sixpack.domain.exception.DoRunException
 import com.dpm.sixpack.domain.repository.RunningSessionRepository
-import com.dpm.sixpack.domain.repository.UserPreferenceRepository
+import com.dpm.sixpack.domain.repository.UserRepository
 import com.dpm.sixpack.domain.util.DoRunResult
 import javax.inject.Inject
 
 class FinishRunningSessionUseCase @Inject constructor(
     private val runningSessionRepository: RunningSessionRepository,
-    private val userPreferenceRepository: UserPreferenceRepository,
+    private val userPreferenceRepository: UserRepository,
 ) {
     suspend operator fun invoke(mapImage: Bitmap): DoRunResult<Long> {
         val sessionId =

@@ -25,6 +25,8 @@ import com.dpm.sixpack.presentation.routes.profilecreation.navigation.navigatePr
 import com.dpm.sixpack.presentation.routes.running.navigation.addRunningSessionNavGraph
 import com.dpm.sixpack.presentation.routes.running.navigation.navigateRunningSession
 import com.dpm.sixpack.presentation.routes.sessionreport.navigation.addSessionReportNavGraph
+import com.dpm.sixpack.presentation.routes.settings.navigation.addSettingsNavGraph
+import com.dpm.sixpack.presentation.routes.settings.navigation.navigateToSettings
 import com.dpm.sixpack.presentation.routes.signin.navigation.addSignInNavGraph
 import com.dpm.sixpack.presentation.routes.signin.navigation.navigateSignIn
 import com.dpm.sixpack.presentation.routes.signup.navigation.addSignUpNavGraph
@@ -152,7 +154,7 @@ internal fun MainNavHost(
 
             addMyPageNavGraph(
                 onNavigateToSettings = {
-                    // TODO: Navigate to settings
+                    navController.navigateToSettings()
                 },
                 onNavigateToPostDetail = { id ->
                     // TODO: Navigate to post detail
@@ -160,6 +162,12 @@ internal fun MainNavHost(
                 onNavigateToRecordDetail = { id ->
                     // TODO: Navigate to record detail
                 },
+            )
+
+            addSettingsNavGraph(
+                onNavigateBack = navigator::popBackStack,
+                onShowSnackbar = onShowSnackbar,
+                navController = navController,
             )
         }
     }

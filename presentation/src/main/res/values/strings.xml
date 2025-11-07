@@ -267,4 +267,52 @@
     <string name="mypage_certification_available">인증 가능</string>
     <string name="mypage_certification_completed">인증 완료</string>
     <!-- endregion-->
+
+    <!-- region Settings -->
+    <string name="settings_title">설정</string>
+    <string name="settings_profile_edit">프로필 수정</string>
+    <string name="settings_account_info">가입 정보</string>
+    <string name="settings_push_notification">푸시 알림 설정</string>
+    <string name="settings_privacy_policy">개인정보처리방침</string>
+    <string name="settings_terms">약관 및 정책</string>
+    <string name="settings_version">버전 정보</string>
+    <string name="settings_logout">로그아웃</string>
+    <string name="settings_withdraw">탈퇴하기</string>
+
+    <!-- 가입 정보 -->
+    <string name="settings_account_phone_number">가입 휴대폰 번호</string>
+    <string name="settings_account_join_date">가입일자</string>
+    <!-- 프로필 수정 -->
+    <string name="settings_profile_edit_completed_snackbar">프로필이 수정되었어요.</string>
+    <string name="settings_profile_edit_success_message">프로필이 성공적으로 수정되었습니다.</string>
+    <string name="settings_profile_edit_error_message">프로필 수정에 실패했습니다.</string>
+
+    <!-- 푸시 알림 설정 -->
+    <string name="settings_push_marketing">마케팅 푸시</string>
+    <string name="settings_push_marketing_description">마케팅 정보를 받습니다.</string>
+    <string name="settings_push_marketing_consent_date">마케팅 정보 수신 동의 %s</string>
+    <string name="settings_push_notification_enable">알림 받기</string>
+    <string name="settings_push_notification_enable_description">다양한 알림을 실시간으로 받아요.</string>
+    <!-- 푸시 알림 스낵바 메시지 -->
+    <string name="settings_push_marketing_enabled_snackbar">마케팅 정보 수신에 동의했어요.</string>
+    <string name="settings_push_marketing_disabled_snackbar">마케팅 정보 수신 동의가 해제되었어요.</string>
+    <string name="settings_push_notification_enabled_snackbar">알림이 켜졌어요.</string>
+    <string name="settings_push_notification_disabled_snackbar">알림이 꺼졌어요.</string>
+
+    <!-- 로그아웃 다이얼로그 -->
+    <string name="settings_logout_dialog_title">로그아웃 하시겠어요?</string>
+    <string name="settings_logout_dialog_subtitle">로그아웃 후 다시 로그인해야 해요.</string>
+    <string name="settings_logout_dialog_cancel">취소</string>
+    <string name="settings_logout_dialog_confirm">로그아웃</string>
+    <string name="settings_logout_success_snackbar">로그아웃 되었습니다.</string>
+    <string name="settings_logout_error_snackbar">로그아웃에 실패했습니다.</string>
+
+    <!-- 회원 탈퇴 다이얼로그 -->
+    <string name="settings_withdraw_dialog_title">정말 탈퇴하시겠어요?</string>
+    <string name="settings_withdraw_dialog_subtitle">탈퇴 시 모든 데이터가 삭제되며\n복구할 수 없어요.</string>
+    <string name="settings_withdraw_dialog_cancel">취소</string>
+    <string name="settings_withdraw_dialog_confirm">탈퇴하기</string>
+    <string name="settings_withdraw_success_snackbar">회원 탈퇴가 완료되었습니다.</string>
+    <string name="settings_withdraw_error_snackbar">회원 탈퇴에 실패했습니다.</string>
+    <!-- endregion-->
 </resources>
