@@ -18,7 +18,7 @@ import com.dpm.sixpack.presentation.routes.settings.profileedit.ui.screen.Profil
 @Composable
 fun ProfileEditRoute(
     onNavigateBack: () -> Unit,
-    onShowSnackbar: suspend (String, String?) -> Boolean,
+    onShowSnackbar: (String, String?) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ProfileEditViewModel = hiltViewModel(),
 ) {
@@ -47,12 +47,15 @@ fun ProfileEditRoute(
                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly),
                     )
                 }
+
                 ProfileEditSideEffect.ProfileEditCompleted -> {
                     onShowSnackbar(profileEditCompletedMessage, null)
                 }
+
                 ProfileEditSideEffect.ShowSuccessMessage -> {
                     onShowSnackbar(profileEditSuccessMessage, null)
                 }
+
                 ProfileEditSideEffect.ShowErrorMessage -> {
                     onShowSnackbar(profileEditErrorMessage, null)
                 }

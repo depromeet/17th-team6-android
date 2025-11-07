@@ -31,7 +31,7 @@ fun NavController.navigateToSettingsPushNotification(navOptions: NavOptions? = n
 
 fun NavGraphBuilder.addSettingsNavGraph(
     onNavigateBack: () -> Unit,
-    onShowSnackbar: suspend (String, String?) -> Boolean,
+    onShowSnackbar: (String, String?) -> Unit,
     navController: NavController,
 ) {
     composable<SettingsRoute> {

@@ -148,7 +148,7 @@ internal fun MainNavHost(
             )
 
             addPostEditNavGraph(
-                navigateBack = { navController.popBackStack() },
+                navigateToBack = { navController.popBackStack() },
             )
 
             addPostUploadNavGraph(
@@ -170,7 +170,7 @@ internal fun MainNavHost(
 
             addSettingsNavGraph(
                 onNavigateBack = navigator::popBackStack,
-                onShowSnackbar = onShowSnackbar,
+                onShowSnackbar = onShowSnackBar,
                 navController = navController,
             )
 

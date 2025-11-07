@@ -14,7 +14,7 @@ import com.dpm.sixpack.presentation.routes.settings.pushnotification.ui.screen.P
 @Composable
 fun PushNotificationRoute(
     onNavigateBack: () -> Unit,
-    onShowSnackbar: suspend (String, String?) -> Boolean,
+    onShowSnackbar: (String, String?) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: PushNotificationViewModel = hiltViewModel(),
 ) {
@@ -32,12 +32,15 @@ fun PushNotificationRoute(
                 PushNotificationSideEffect.MarketingPushEnabled -> {
                     onShowSnackbar(marketingEnabledMessage, null)
                 }
+
                 PushNotificationSideEffect.MarketingPushDisabled -> {
                     onShowSnackbar(marketingDisabledMessage, null)
                 }
+
                 PushNotificationSideEffect.NotificationEnabled -> {
                     onShowSnackbar(notificationEnabledMessage, null)
                 }
+
                 PushNotificationSideEffect.NotificationDisabled -> {
                     onShowSnackbar(notificationDisabledMessage, null)
                 }
