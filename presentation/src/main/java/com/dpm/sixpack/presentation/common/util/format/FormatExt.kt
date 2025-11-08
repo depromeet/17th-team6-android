@@ -86,7 +86,7 @@ fun String.toDateWithDayOfWeekOrNull(): String? =
         localDateTime
             .atZone(ZoneId.of("UTC"))
             .withZoneSameInstant(ASIA_ZONE_ID)
-            .format(AM_PM_TIME_FORMATTER)
+            .format(DATE_WITH_DAY_FORMATTER)
     }.onFailure { error ->
         Timber.e("날짜 파싱 실패! 에러: ${error.message}")
     }.getOrNull()
