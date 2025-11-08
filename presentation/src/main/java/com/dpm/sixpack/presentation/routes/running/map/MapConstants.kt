@@ -1,6 +1,7 @@
 package com.dpm.sixpack.presentation.routes.running.map
 
-import com.dpm.sixpack.core.permission.SixPackPermissions
+import com.dpm.sixpack.core.permission.SixPackPermissions.Companion.LocationPermissions
+import com.dpm.sixpack.core.permission.SixPackPermissions.Companion.SensorPermissions
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 
@@ -18,5 +19,5 @@ object MapConstants {
             DEFAULT_ZOOM,
         )
 
-    val MAP_PERMISSIONS = SixPackPermissions.Companion.LocationPermissions
+    val MAP_PERMISSIONS = LocationPermissions + SensorPermissions
 }

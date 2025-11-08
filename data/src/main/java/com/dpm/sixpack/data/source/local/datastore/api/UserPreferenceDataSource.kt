@@ -4,16 +4,16 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserPreferenceDataSource {
     val userId: Flow<Long>
-
     val sessionId: Flow<Long?>
-
+    val fcmDeviceToken: Flow<String?>
     val accessToken: Flow<String?>
-
     val refreshToken: Flow<String?>
 
     suspend fun updateUserId(userId: Long)
 
     suspend fun updateSessionId(sessionId: Long)
+
+    suspend fun updateFcmDeviceToken(token: String)
 
     suspend fun clearSessionId()
 

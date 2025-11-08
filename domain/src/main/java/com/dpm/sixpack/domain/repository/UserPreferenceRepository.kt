@@ -16,15 +16,19 @@ interface UserPreferenceRepository {
 
     suspend fun getSessionId(): Long?
 
-    suspend fun getAccessToken(): String?
-
-    suspend fun getRefreshToken(): String?
-
     suspend fun updateUserId(userId: Long)
 
     suspend fun updateSessionId(sessionId: Long)
 
     suspend fun clearSessionId()
+
+    suspend fun getFcmDeviceToken(): String?
+
+    suspend fun getAccessToken(): String?
+
+    suspend fun getRefreshToken(): String?
+
+    suspend fun updateFcmDeviceToken(token: String)
 
     suspend fun updateAccessToken(token: String)
 

@@ -21,7 +21,7 @@ fun SettingsRoute(
     onNavigateToProfileEdit: () -> Unit,
     onNavigateToAccountInfo: () -> Unit,
     onNavigateToPushNotification: () -> Unit,
-    onShowSnackbar: suspend (String, String?) -> Boolean,
+    onShowSnackbar: (String, String?) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
@@ -47,15 +47,19 @@ fun SettingsRoute(
                         }
                     context.startActivity(intent)
                 }
+
                 SettingsSideEffect.LogoutSuccess -> {
                     onShowSnackbar(logoutSuccessMessage, null)
                 }
+
                 SettingsSideEffect.LogoutFailed -> {
                     onShowSnackbar(logoutErrorMessage, null)
                 }
+
                 SettingsSideEffect.WithdrawSuccess -> {
                     onShowSnackbar(withdrawSuccessMessage, null)
                 }
+
                 SettingsSideEffect.WithdrawFailed -> {
                     onShowSnackbar(withdrawErrorMessage, null)
                 }

@@ -4,12 +4,14 @@ import com.dpm.sixpack.data.source.remote.dto.request.SaveSegmentDataRequestsDto
 import com.dpm.sixpack.data.source.remote.dto.response.FinishRunningResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.RunSessionListResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.SaveSegmentResponseDto
+import com.dpm.sixpack.data.source.remote.dto.response.SessionDetailResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.StartRunningResponseDto
 import com.dpm.sixpack.data.source.remote.util.base.BaseResponse
 import kotlinx.coroutines.delay
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
@@ -20,10 +22,13 @@ import javax.inject.Inject
 class MockRunningSessionServiceApi
     @Inject
     constructor() : RunningSessionServiceApi {
+        /**
+         * 현재 타임스탬프를 ISO_DATE_TIME 형식으로 반환 (타임존 정보 포함)
+         */
         private fun getCurrentTimestamp(): String =
-            LocalDateTime
-                .now()
-                .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+            ZonedDateTime
+                .now(ZoneId.systemDefault())
+                .format(DateTimeFormatter.ISO_DATE_TIME)
 
         override suspend fun postStartSession(): BaseResponse<StartRunningResponseDto> {
             delay(300L) // 네트워크 지연 시뮬레이션
@@ -97,20 +102,20 @@ class MockRunningSessionServiceApi
             val targetMonth =
                 startDateTime?.let {
                     try {
-                        LocalDateTime.parse(it, DateTimeFormatter.ISO_LOCAL_DATE_TIME).monthValue
+                        ZonedDateTime.parse(it, DateTimeFormatter.ISO_DATE_TIME).monthValue
                     } catch (e: Exception) {
-                        LocalDateTime.now().monthValue
+                        ZonedDateTime.now(ZoneId.systemDefault()).monthValue
                     }
-                } ?: LocalDateTime.now().monthValue
+                } ?: ZonedDateTime.now(ZoneId.systemDefault()).monthValue
 
             val targetYear =
                 startDateTime?.let {
                     try {
-                        LocalDateTime.parse(it, DateTimeFormatter.ISO_LOCAL_DATE_TIME).year
+                        ZonedDateTime.parse(it, DateTimeFormatter.ISO_DATE_TIME).year
                     } catch (e: Exception) {
-                        LocalDateTime.now().year
+                        ZonedDateTime.now(ZoneId.systemDefault()).year
                     }
-                } ?: LocalDateTime.now().year
+                } ?: ZonedDateTime.now(ZoneId.systemDefault()).year
 
             // Mock 세션 데이터 생성
             val mockSessions = generateMockSessions(targetYear, targetMonth, isSelfied)
@@ -121,6 +126,10 @@ class MockRunningSessionServiceApi
                 timestamp = getCurrentTimestamp(),
                 data = mockSessions,
             )
+        }
+
+        override suspend fun getSessionDetail(sessionId: Long): BaseResponse<SessionDetailResponseDto> {
+            TODO("Not yet implemented")
         }
 
         /**
@@ -150,16 +159,14 @@ class MockRunningSessionServiceApi
                 val minute = (0..59).random()
 
                 val createdAt =
-                    LocalDateTime
-                        .of(year, month, day, hour, minute)
-                        .atZone(java.time.ZoneOffset.UTC)
+                    ZonedDateTime
+                        .of(year, month, day, hour, minute, 0, 0, ZoneId.systemDefault())
                         .format(DateTimeFormatter.ISO_DATE_TIME)
 
                 val finishedAt =
-                    LocalDateTime
-                        .of(year, month, day, hour, minute)
+                    ZonedDateTime
+                        .of(year, month, day, hour, minute, 0, 0, ZoneId.systemDefault())
                         .plusMinutes((30..90).random().toLong())
-                        .atZone(java.time.ZoneOffset.UTC)
                         .format(DateTimeFormatter.ISO_DATE_TIME)
 
                 val distanceTotal = (3000..15000).random() // 3km ~ 15km (미터)

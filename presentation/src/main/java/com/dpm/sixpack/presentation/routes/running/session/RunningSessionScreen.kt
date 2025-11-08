@@ -2,8 +2,10 @@ package com.dpm.sixpack.presentation.routes.running.session
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.constraintlayout.compose.ConstrainScope
 import androidx.constraintlayout.compose.ConstrainedLayoutReference
 import androidx.constraintlayout.compose.ConstraintLayoutScope
@@ -26,15 +28,21 @@ fun ConstraintLayoutScope.RunningSessionScreen(
     panelRef: ConstrainedLayoutReference,
     updateNewRunningPath: (PathState) -> Unit,
     onSessionFinish: () -> Unit,
+    onShowSnackBar: (String, String?) -> Unit,
     setFullScreenLoading: (Boolean) -> Unit,
     sessionViewModel: RunningSessionViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
     val sessionState = sessionViewModel.collectAsState().value
 
     sessionViewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
             is RunningSessionSideEffect.SessionFinish -> onSessionFinish()
             is RunningSessionSideEffect.UpdateRunningPath -> updateNewRunningPath(sideEffect.newPathState)
+            is RunningSessionSideEffect.ShowToast -> {
+                val message = context.getString(sideEffect.resId)
+                onShowSnackBar(message, null)
+            }
         }
     }
 
@@ -44,6 +52,12 @@ fun ConstraintLayoutScope.RunningSessionScreen(
 
     LaunchedEffect(Unit) {
         sessionViewModel.onIntent(RunningSessionIntent.SessionStart)
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            setFullScreenLoading(false)
+        }
     }
 
     when (sessionState) {

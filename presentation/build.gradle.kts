@@ -11,6 +11,8 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":background"))
 
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.google.firebase.messaging.ktx)
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
 

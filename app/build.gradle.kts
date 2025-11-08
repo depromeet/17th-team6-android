@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.sixpack.android.application)
+    alias(libs.plugins.google.services)
     id("kotlin-parcelize")
 }
 
@@ -16,11 +17,14 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
     implementation(project(":core"))
+    implementation(project(":background"))
 
     implementation(libs.bundles.androidx.core)
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)
 
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.google.firebase.messaging.ktx)
     implementation(libs.bundles.navigation)
     implementation(libs.bundles.coil)
     implementation(libs.kotlinx.datetime)

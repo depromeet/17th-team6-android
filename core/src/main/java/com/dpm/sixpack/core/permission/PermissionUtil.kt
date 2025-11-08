@@ -14,20 +14,6 @@ import timber.log.Timber
  */
 object PermissionUtil {
     private const val PREFS_NAME = "PermissionPrefs"
-    private const val KEY_LOCATION_PERMISSION_REQUESTED = "location_permission_requested"
-    private const val KEY_NOTIFICATION_PERMISSION_REQUESTED = "notification_permission_requested"
-
-    private const val KEY_IMAGE_PERMISSION_REQUESTED = "image_permission_requested"
-
-    private fun mapPermissionToKey(permission: SixPackPermissions): String =
-        when (permission) {
-            is SixPackPermissions.FineLocationPermission -> KEY_LOCATION_PERMISSION_REQUESTED
-            is SixPackPermissions.CourseLocationPermission -> KEY_LOCATION_PERMISSION_REQUESTED
-            is SixPackPermissions.NotificationPermission -> KEY_NOTIFICATION_PERMISSION_REQUESTED
-            is SixPackPermissions.ReadMediaImagesPermission -> KEY_IMAGE_PERMISSION_REQUESTED
-            is SixPackPermissions.ReadExternalStoragePermission -> KEY_IMAGE_PERMISSION_REQUESTED
-            else -> throw IllegalArgumentException("Invalid permission: $permission")
-        }
 
     private fun getPreferences(context: Context): SharedPreferences =
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -36,7 +22,7 @@ object PermissionUtil {
         context: Context,
         permission: SixPackPermissions,
     ) {
-        val key = mapPermissionToKey(permission)
+        val key = permission.prefKey
         Timber.d("king : $key")
         getPreferences(context).edit { putBoolean(key, true) }
     }
@@ -51,7 +37,7 @@ object PermissionUtil {
             savePermissionRequested(context, permission)
             true
         } else {
-            getPreferences(context).getBoolean(mapPermissionToKey(permission), false)
+            getPreferences(context).getBoolean(permission.prefKey, false)
         }
 
     fun hasPermissions(

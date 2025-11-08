@@ -1,5 +1,6 @@
 package com.dpm.sixpack.presentation.routes.running.map.contract
 
+import androidx.annotation.StringRes
 import com.dpm.sixpack.presentation.routes.running.RunningRouteSideEffect
 import com.naver.maps.geometry.LatLng
 
@@ -15,4 +16,10 @@ sealed interface MapSideEffect : RunningRouteSideEffect {
     data class NavigateToReport(
         val sessionId: Long,
     ) : MapSideEffect
+
+    data class ShowToast(
+        @StringRes val resId: Int,
+    ) : MapSideEffect
+
+    data object NavigateToFriendList : MapSideEffect
 }
