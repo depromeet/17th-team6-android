@@ -163,10 +163,10 @@ internal fun MainNavHost(
                     navController.navigateToSettings()
                 },
                 onNavigateToPostDetail = { id ->
-                    // TODO: Navigate to post detail
+                    navController.navigateToPostDetail(id)
                 },
                 onNavigateToRecordDetail = { id ->
-                    // TODO: Navigate to record detail
+                    navController.navigateToPostDetail(id)
                 },
             )
 
