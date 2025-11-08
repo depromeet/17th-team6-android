@@ -239,7 +239,6 @@ fun FeedScreen(
                     }
 
                     FeedFTAButton(
-                        enabled = state.feedDateState != FeedDateUiState.NoPostsAndExpired,
                         onFTAButtonClick = { onIntent(FeedIntent.OnFloatingActionButtonClick) },
                         modifier = Modifier.align(Alignment.BottomEnd),
                     )

@@ -1,6 +1,5 @@
 package com.dpm.sixpack.data.source.remote.service
 
-import com.dpm.sixpack.data.source.remote.dto.response.StartRunningResponseDto
 import com.dpm.sixpack.data.source.remote.util.base.BaseResponse
 import com.dpm.sixpack.data.source.remote.util.constant.ApiConstants.API
 import com.dpm.sixpack.data.source.remote.util.constant.ApiConstants.AUTH

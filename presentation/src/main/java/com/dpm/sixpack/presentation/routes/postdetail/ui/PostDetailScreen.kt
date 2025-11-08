@@ -1,6 +1,5 @@
 package com.dpm.sixpack.presentation.routes.postdetail.ui
 
-import android.graphics.Bitmap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -17,7 +16,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -55,30 +53,10 @@ fun PostDetailScreen(
         topBar = {
             DoRunNavigationTopBar(
                 navigateToBack = { onIntent(PostDetailIntent.OnBackClick) },
-                trailingIcon = {
-                    if (uiState.post != null) {
-                        PostDropDownMenuIcon(
-                            modifier = Modifier.padding(10.dp),
-                            isMyPost = uiState.post.user.user.isMe,
-                            isMenuExpanded = uiState.isMenuExpanded,
-                            onMenuClick = { onIntent(PostDetailIntent.OnMenuClick(!uiState.isMenuExpanded)) },
-                            onDropDownMenuClick = { action ->
-                                if (action == PostDropDownActionType.SAVE_IMAGE) {
-                                    coroutineScope.launch {
-                                        captureController.captureHighQuality()?.let { bitmap ->
-                                            onSavePostImage(bitmap)
-                                        }
-                                    }
-                                } else {
-                                    onIntent(PostDetailIntent.OnDropDownMenuClick(uiState.post, action))
-                                }
-                            },
-                        )
-                    }
-                },
+                isDarkTheme = true
             )
         },
-        containerColor = SixpackTheme.colors.gray0,
+        containerColor = SixpackTheme.colors.gray900,
     ) { innerPadding ->
         Box(
             modifier =
@@ -199,7 +177,6 @@ private fun ErrorContent(
 private fun PostDetailContent(
     uiState: PostDetailUiState,
     onIntent: (PostDetailIntent) -> Unit,
-    captureController: com.dpm.sixpack.presentation.common.util.capture.CaptureController,
     modifier: Modifier = Modifier,
 ) {
     val post = uiState.post ?: return
@@ -209,22 +186,47 @@ private fun PostDetailContent(
         modifier =
             modifier
                 .fillMaxSize()
-                .background(SixpackTheme.colors.gray0)
+                .background(SixpackTheme.colors.gray900)
                 .verticalScroll(rememberScrollState()),
     ) {
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(80.dp))
 
         Column {
-            PostUserInfo(
-                modifier = Modifier.padding(horizontal = 20.dp),
-                userImageUrl = post.user.user.profileImageUrl,
-                userName = post.user.user.name,
-                postingTime = post.user.postingTime.toTimeAgoString(context),
-                isMyPost = post.user.user.isMe,
-                onPostUserProfileClick = {
-                    onIntent(PostDetailIntent.OnUserProfileClick(post.user.user.id, post.user.user.isMe))
-                },
-            )
+            Row(
+                modifier = modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                PostUserInfo(
+                    userImageUrl = post.user.user.profileImageUrl,
+                    userName = post.user.user.name,
+                    postingTime = post.user.postingTime.toTimeAgoString(context),
+                    isMyPost = post.user.user.isMe,
+                    onPostUserProfileClick = {
+                        onIntent(PostDetailIntent.OnUserProfileClick(post.user.user.id, post.user.user.isMe))
+                    },
+                    isDarkTheme = true
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                PostDropDownMenuIcon(
+                    isMyPost = uiState.post.user.user.isMe,
+                    isMenuExpanded = uiState.isMenuExpanded,
+                    onMenuClick = { onIntent(PostDetailIntent.OnMenuClick(!uiState.isMenuExpanded)) },
+                    onDropDownMenuClick = { action ->
+                        if (action == PostDropDownActionType.SAVE_IMAGE) {
+                            coroutineScope.launch {
+                                captureController.captureHighQuality()?.let { bitmap ->
+                                    onSavePostImage(bitmap)
+                                }
+                            }
+                        } else {
+                            onIntent(PostDetailIntent.OnDropDownMenuClick(uiState.post, action))
+                        }
+                    },
+                    isDarkTheme = true
+                )
+            }
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -233,6 +235,7 @@ private fun PostDetailContent(
                 runningSummary = post.runningInfo,
                 onPostImageClick = {},
                 captureController = captureController,
+                modifier = Modifier.padding(horizontal = 20.dp),
             )
 
             Spacer(modifier = Modifier.height(12.dp))

@@ -24,8 +24,6 @@ fun NavGraphBuilder.addPostUploadNavGraph(
     composable<PostUpload>(
         typeMap =
             mapOf(
-                typeOf<Long>() to serializableType<Long>(),
-                typeOf<String>() to serializableType<String>(),
                 typeOf<RunningSummary>() to serializableType<RunningSummary>(),
             ),
     ) {

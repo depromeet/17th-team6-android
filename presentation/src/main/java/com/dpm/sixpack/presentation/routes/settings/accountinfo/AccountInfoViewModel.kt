@@ -70,8 +70,7 @@ class AccountInfoViewModel
                                 errorMessage = null,
                             )
                         }
-                    }
-                    .onError { exception ->
+                    }.onError { exception ->
                         Timber.e(exception, "Failed to load user profile")
                         reduce {
                             state.copy(

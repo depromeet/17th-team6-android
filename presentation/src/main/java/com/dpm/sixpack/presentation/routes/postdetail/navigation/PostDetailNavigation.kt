@@ -23,7 +23,7 @@ fun NavGraphBuilder.addPostDetailNavGraph(
         deepLinks = listOf(
             navDeepLink<PostDetail>(basePath = DeepLinks.Feed.DETAIL)
         )
-    ) {
+    ) { backStackEntry ->
         PostDetailRoute(
             navigateToMyPage = navigateToMyPage,
             navigateToBack = navigateToBack,

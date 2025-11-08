@@ -3,6 +3,8 @@ package com.dpm.sixpack.presentation.routes.mypage.util
 import com.dpm.sixpack.domain.model.RunSession
 import com.dpm.sixpack.presentation.routes.mypage.contract.CertificationStatus
 import com.dpm.sixpack.presentation.routes.mypage.contract.RecordItem
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -19,8 +21,22 @@ object RunSessionMapper {
             7 to "일",
         )
 
+    /**
+     * 날짜 문자열을 ZonedDateTime으로 파싱
+     * ISO_DATE_TIME 형식(타임존 포함) 또는 ISO_LOCAL_DATE_TIME 형식(타임존 없음) 모두 지원
+     */
+    private fun parseDateTime(dateTimeString: String): ZonedDateTime =
+        try {
+            // 타임존 정보가 있는 경우 (예: 2025-11-07T15:39:31+09:00)
+            ZonedDateTime.parse(dateTimeString)
+        } catch (e: Exception) {
+            // 타임존 정보가 없는 경우 (예: 2025-11-07T15:39:31.764631)
+            // 시스템 기본 타임존으로 변환
+            LocalDateTime.parse(dateTimeString).atZone(ZoneId.systemDefault())
+        }
+
     fun RunSession.toRecordItem(): RecordItem {
-        val finishedDateTime = ZonedDateTime.parse(finishedAt)
+        val finishedDateTime = parseDateTime(finishedAt)
 
         // Format: "2025.09.30 (화)"
         val dateFormatted =

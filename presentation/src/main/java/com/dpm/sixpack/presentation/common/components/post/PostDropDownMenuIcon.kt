@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
-import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
+import com.dpm.sixpack.presentation.common.util.modifier.crop
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 enum class PostDropDownActionType {
@@ -48,7 +50,9 @@ fun PostDropDownMenuIcon(
     onMenuClick: (Boolean) -> Unit,
     onDropDownMenuClick: (PostDropDownActionType) -> Unit,
     modifier: Modifier = Modifier,
+    isDarkTheme: Boolean = false,
 ) {
+    val iconColor = if (isDarkTheme) SixpackTheme.colors.gray0 else SixpackTheme.colors.gray800
     Box(
         modifier = modifier.wrapContentSize(Alignment.TopEnd),
     ) {
@@ -59,7 +63,7 @@ fun PostDropDownMenuIcon(
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_meatball_menu),
                 contentDescription = stringResource(id = R.string.feed_post_card_options_menu_description),
-                tint = SixpackTheme.colors.gray800,
+                tint = iconColor,
             )
         }
 
@@ -70,6 +74,9 @@ fun PostDropDownMenuIcon(
             shape = SixpackTheme.shapes.round12,
             containerColor = SixpackTheme.colors.gray0,
             shadowElevation = 8.dp,
+            modifier = Modifier
+                .crop(vertical = 8.dp)
+                .clip(RoundedCornerShape(12.dp)),
             properties =
                 PopupProperties(
                     usePlatformDefaultWidth = false,
@@ -99,42 +106,65 @@ private fun MyPostMenuItems(
     onMenuClick: () -> Unit,
     onDropDownMenuClick: (PostDropDownActionType) -> Unit,
 ) {
-    CustomDropdownMenuItem(
-        text = stringResource(id = R.string.feed_post_dropdown_menu_edit),
+    DropdownMenuItem(
+        text = {
+            Text(
+                text = stringResource(id = R.string.feed_post_dropdown_menu_edit),
+                style = SixpackTheme.typography.b2Regular,
+                modifier = Modifier.widthIn(min = 120.dp),
+            )
+        },
         onClick = {
             onMenuClick()
             onDropDownMenuClick(PostDropDownActionType.EDIT)
         },
-        modifier = Modifier.clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)),
+        colors = MenuDefaults.itemColors(
+            textColor = SixpackTheme.colors.gray900,
+        ),
     )
 
     HorizontalDivider(
         thickness = 1.dp,
-        modifier = Modifier.padding(vertical = 4.dp),
         color = SixpackTheme.colors.gray50,
     )
 
-    CustomDropdownMenuItem(
-        text = stringResource(id = R.string.feed_post_dropdown_menu_delete),
+    DropdownMenuItem(
+        text = {
+            Text(
+                text = stringResource(id = R.string.feed_post_dropdown_menu_delete),
+                style = SixpackTheme.typography.b2Regular,
+                modifier = Modifier.widthIn(min = 120.dp),
+            )
+        },
         onClick = {
             onMenuClick()
             onDropDownMenuClick(PostDropDownActionType.DELETE)
         },
+        colors = MenuDefaults.itemColors(
+            textColor = SixpackTheme.colors.gray900,
+        ),
     )
 
     HorizontalDivider(
         thickness = 1.dp,
-        modifier = Modifier.padding(vertical = 4.dp),
         color = SixpackTheme.colors.gray50,
     )
 
-    CustomDropdownMenuItem(
-        text = stringResource(id = R.string.feed_post_dropdown_menu_save_image),
+    DropdownMenuItem(
+        text = {
+            Text(
+                text = stringResource(id = R.string.feed_post_dropdown_menu_save_image),
+                style = SixpackTheme.typography.b2Regular,
+                modifier = Modifier.widthIn(min = 120.dp),
+            )
+        },
         onClick = {
             onMenuClick()
             onDropDownMenuClick(PostDropDownActionType.SAVE_IMAGE)
         },
-        modifier = Modifier.clip(RoundedCornerShape(bottomEnd = 12.dp, bottomStart = 12.dp)),
+        colors = MenuDefaults.itemColors(
+            textColor = SixpackTheme.colors.gray900,
+        ),
     )
 }
 
@@ -147,36 +177,21 @@ private fun FriendPostMenuItems(
     onMenuClick: () -> Unit,
     onDropDownMenuClick: (PostDropDownActionType) -> Unit,
 ) {
-    CustomDropdownMenuItem(
-        text = stringResource(id = R.string.feed_post_dropdown_menu_report),
+    DropdownMenuItem(
+        text = {
+            Text(
+                text = stringResource(id = R.string.feed_post_dropdown_menu_report),
+                style = SixpackTheme.typography.b2Regular,
+            )
+        },
         onClick = {
             onMenuClick()
             onDropDownMenuClick(PostDropDownActionType.REPORT)
         },
-        modifier = Modifier.clip(RoundedCornerShape(12.dp)),
+        colors = MenuDefaults.itemColors(
+            textColor = SixpackTheme.colors.gray900,
+        ),
     )
-}
-
-@Composable
-private fun CustomDropdownMenuItem(
-    text: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Box(
-        modifier =
-            modifier
-                .noRippleClickable(
-                    onClick = onClick,
-                ).padding(horizontal = 12.dp),
-    ) {
-        Text(
-            text = text,
-            color = SixpackTheme.colors.gray900,
-            style = SixpackTheme.typography.b2Regular,
-            modifier = Modifier.widthIn(min = 120.dp),
-        )
-    }
 }
 
 @Preview

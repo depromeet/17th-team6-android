@@ -15,7 +15,7 @@ import androidx.compose.ui.zIndex
 @Composable
 fun FullScreenLoadingIndicator(
     modifier: Modifier = Modifier,
-    alpha: Float = 0.5f
+    alpha: Float = 0.5f,
 ) {
     Box(
         modifier = modifier.fillMaxSize().zIndex(1f),

@@ -87,7 +87,10 @@ class ProfileCreationViewModel @Inject constructor(
             }
 
             // Generate current timestamp in ISO 8601 UTC format (e.g., "2025-11-06T15:02:32.187Z")
-            val currentTimestamp = java.time.Instant.now().toString()
+            val currentTimestamp =
+                java.time.Instant
+                    .now()
+                    .toString()
 
             val result =
                 signUpUseCase(
