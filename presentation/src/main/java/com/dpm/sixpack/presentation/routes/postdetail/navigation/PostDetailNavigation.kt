@@ -24,9 +24,7 @@ fun NavGraphBuilder.addPostDetailNavGraph(
             navDeepLink<PostDetail>(basePath = DeepLinks.Feed.DETAIL)
         )
     ) { backStackEntry ->
-        val route = backStackEntry.toRoute<PostDetail>()
         PostDetailRoute(
-            feedId = route.feedId,
             navigateToMyPage = navigateToMyPage,
             navigateToBack = navigateToBack,
             navigateToUserProfile = navigateToUserProfile,
