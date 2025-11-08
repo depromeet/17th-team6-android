@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
+import androidx.navigation.toRoute
 import com.dpm.sixpack.presentation.common.util.constant.DeepLinks
 import com.dpm.sixpack.presentation.destinations.PostDetail
 import com.dpm.sixpack.presentation.routes.postdetail.PostDetailRoute
@@ -19,11 +20,10 @@ fun NavGraphBuilder.addPostDetailNavGraph(
     navigateToPostEdit: (Long) -> Unit = {},
 ) {
     composable<PostDetail>(
-        deepLinks =
-            listOf(
-                navDeepLink<PostDetail>(basePath = DeepLinks.Feed.DETAIL),
-            ),
-    ) {
+        deepLinks = listOf(
+            navDeepLink<PostDetail>(basePath = DeepLinks.Feed.DETAIL)
+        )
+    ) { backStackEntry ->
         PostDetailRoute(
             navigateToMyPage = navigateToMyPage,
             navigateToBack = navigateToBack,

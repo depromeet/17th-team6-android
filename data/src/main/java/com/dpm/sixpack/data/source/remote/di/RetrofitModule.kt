@@ -52,9 +52,9 @@ object RetrofitModule {
                 connectTimeout(10, TimeUnit.SECONDS)
                 writeTimeout(10, TimeUnit.SECONDS)
                 readTimeout(10, TimeUnit.SECONDS)
-                addInterceptor(authInterceptor) // 먼저 헤더 추가
+                addInterceptor(authInterceptor)
+                if (DEBUG) addInterceptor(loggingInterceptor)
                 authenticator(tokenAuthenticator)
-                if (DEBUG) addInterceptor(loggingInterceptor) // 그 다음 로깅
             }.build()
 
     @OptIn(ExperimentalSerializationApi::class)
