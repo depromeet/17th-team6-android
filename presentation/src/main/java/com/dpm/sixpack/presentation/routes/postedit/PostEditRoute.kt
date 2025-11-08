@@ -23,6 +23,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.dpm.sixpack.core.permission.SixPackPermissions
 import com.dpm.sixpack.presentation.common.util.PermissionHandler
+import com.dpm.sixpack.presentation.common.util.capture.ImageSaver
+import com.dpm.sixpack.presentation.common.util.capture.rememberCaptureController
 import com.dpm.sixpack.presentation.routes.postedit.contract.PostEditIntent
 import com.dpm.sixpack.presentation.routes.postedit.contract.PostEditSideEffect
 import com.dpm.sixpack.presentation.routes.postedit.ui.PostEditScreen
@@ -44,6 +46,7 @@ fun PostEditRoute(
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val coroutineScope = rememberCoroutineScope()
+    val captureController = rememberCaptureController()
 
     // 이미지 선택 Launcher
     val imagePickerLauncher =
@@ -111,11 +114,42 @@ fun PostEditRoute(
         true -> {
             PostEditScreen(
                 state = state,
+                captureController = captureController,
                 onBackButtonClick = {
                     viewModel.onIntent(PostEditIntent.OnBackClick)
                 },
                 onSaveIconClick = {
-                    viewModel.onIntent(PostEditIntent.OnSaveClick)
+                    // 캡처 및 저장 처리
+                    coroutineScope.launch {
+                        val bitmap = captureController.captureAsync()
+                        if (bitmap != null) {
+                            val fileName = "sixpack_${System.currentTimeMillis()}"
+                            ImageSaver
+                                .saveToGallery(context, bitmap, fileName)
+                                .onSuccess { uri ->
+                                    Toast
+                                        .makeText(
+                                            context,
+                                            "이미지가 갤러리에 저장되었습니다.",
+                                            Toast.LENGTH_SHORT,
+                                        ).show()
+                                }.onFailure { exception ->
+                                    Toast
+                                        .makeText(
+                                            context,
+                                            "이미지 저장 실패: ${exception.message}",
+                                            Toast.LENGTH_SHORT,
+                                        ).show()
+                                }
+                        } else {
+                            Toast
+                                .makeText(
+                                    context,
+                                    "이미지 캡처에 실패했습니다.",
+                                    Toast.LENGTH_SHORT,
+                                ).show()
+                        }
+                    }
                 },
                 onImageEditButtonClick = {
                     viewModel.onIntent(PostEditIntent.OnImageEditButtonClick)

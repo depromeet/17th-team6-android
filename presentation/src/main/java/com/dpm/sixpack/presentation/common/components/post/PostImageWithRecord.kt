@@ -24,6 +24,8 @@ import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultAsyncImage
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.model.RunningSummary
+import com.dpm.sixpack.presentation.common.util.capture.CaptureController
+import com.dpm.sixpack.presentation.common.util.capture.capturable
 import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
@@ -33,6 +35,7 @@ fun PostImageWithRecord(
     runningSummary: RunningSummary,
     onPostImageClick: () -> Unit,
     modifier: Modifier = Modifier,
+    captureController: CaptureController? = null,
 ) {
     Box(
         modifier =
@@ -40,7 +43,13 @@ fun PostImageWithRecord(
                 .fillMaxWidth()
                 .aspectRatio(1f)
                 .clip(RoundedCornerShape(12.dp))
-                .noRippleClickable(onClick = onPostImageClick),
+                .then(
+                    if (captureController != null) {
+                        Modifier.capturable(captureController)
+                    } else {
+                        Modifier
+                    },
+                ).noRippleClickable(onClick = onPostImageClick),
     ) {
         DoRunDefaultAsyncImage(
             model = postImageUrl,

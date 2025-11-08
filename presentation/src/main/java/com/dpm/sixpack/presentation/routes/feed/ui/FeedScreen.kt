@@ -1,5 +1,6 @@
 package com.dpm.sixpack.presentation.routes.feed.ui
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -73,6 +74,7 @@ fun FeedScreen(
     feedPagingItems: LazyPagingItems<PostResource>,
     modifier: Modifier = Modifier,
     onIntent: (FeedIntent) -> Unit = {},
+    onSaveFeedImage: (PostResource, Bitmap) -> Unit = { _, _ -> },
 ) {
     val lazyListState = rememberLazyListState()
     val pullToRefreshState = rememberPullToRefreshState()
@@ -229,6 +231,7 @@ fun FeedScreen(
                                         onIntent(FeedIntent.OnPostReactionLongClick(reactions, emoji))
                                     },
                                     onAddReactionClick = { post -> onIntent(FeedIntent.OnPostAddReactionClick(post)) },
+                                    onSaveFeedImage = onSaveFeedImage,
                                 )
                             }
                             else -> {}

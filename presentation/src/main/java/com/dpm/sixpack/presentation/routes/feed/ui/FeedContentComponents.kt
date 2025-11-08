@@ -1,5 +1,6 @@
 package com.dpm.sixpack.presentation.routes.feed.ui
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,6 +16,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -29,11 +31,13 @@ import com.dpm.sixpack.presentation.common.model.Emoji
 import com.dpm.sixpack.presentation.common.model.PostReaction
 import com.dpm.sixpack.presentation.common.model.PostResource
 import com.dpm.sixpack.presentation.common.model.PostingUserInfo
+import com.dpm.sixpack.presentation.common.util.capture.rememberCaptureController
 import com.dpm.sixpack.presentation.routes.feed.component.CertificationCountView
 import com.dpm.sixpack.presentation.routes.feed.component.FeedPostCardShimmer
 import com.dpm.sixpack.presentation.routes.feed.component.calender.FeedWeeklyCalendar
 import com.dpm.sixpack.presentation.routes.feed.contract.uistate.FeedCalenderUiState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 /**
@@ -142,6 +146,7 @@ internal fun LazyListScope.feedPostItems(
     onReactionClick: (PostResource, Emoji, Boolean) -> Unit,
     onReactionLongClick: (Long, List<PostReaction>, Emoji) -> Unit,
     onAddReactionClick: (PostResource) -> Unit,
+    onSaveFeedImage: (PostResource, Bitmap) -> Unit,
 ) {
     items(
         count = feedPagingItems.itemCount,
@@ -155,12 +160,28 @@ internal fun LazyListScope.feedPostItems(
                     selectedPostMenuId != null && selectedPostMenuId == post.feedId
                 }
 
+            // 각 포스트마다 독립적인 CaptureController 생성
+            val captureController = rememberCaptureController()
+            val coroutineScope = rememberCoroutineScope()
+
             FeedPostCard(
                 modifier = Modifier.padding(horizontal = 20.dp),
                 postDetail = post,
                 isMenuExpanded = isMenuExpanded,
+                captureController = captureController,
                 onMenuClick = { onPostMenuClick(post.feedId) },
-                onDropDownMenuClick = { action -> onDropDownMenuClick(post, action) },
+                onDropDownMenuClick = { action ->
+                    // SAVE_IMAGE 액션 처리
+                    if (action == PostDropDownActionType.SAVE_IMAGE) {
+                        coroutineScope.launch {
+                            captureController.captureHighQuality()?.let { bitmap ->
+                                onSaveFeedImage(post, bitmap)
+                            }
+                        }
+                    } else {
+                        onDropDownMenuClick(post, action)
+                    }
+                },
                 onPostImageClick = { onPostImageClick(post) },
                 onPostUserProfileClick = { userId, isMe ->
                     onPostUserProfileClick(userId, isMe)
@@ -272,7 +293,9 @@ internal fun LazyListScope.feedContentItems(
     onReactionClick: (PostResource, Emoji, Boolean) -> Unit,
     onReactionLongClick: (Long, List<PostReaction>, Emoji) -> Unit,
     onAddReactionClick: (PostResource) -> Unit,
-) {
+    onSaveFeedImage: (PostResource, Bitmap) -> Unit = { _, _ -> },
+
+    ) {
     if (isInitialLoad) {
         feedInitialLoadingItems()
     } else {
@@ -293,6 +316,8 @@ internal fun LazyListScope.feedContentItems(
             onReactionClick = onReactionClick,
             onReactionLongClick = onReactionLongClick,
             onAddReactionClick = onAddReactionClick,
+            onSaveFeedImage =  onSaveFeedImage
+
         )
 
         // LoadState 처리

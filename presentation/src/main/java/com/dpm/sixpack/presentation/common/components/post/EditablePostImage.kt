@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.common.model.RunningSummary
+import com.dpm.sixpack.presentation.common.util.capture.CaptureController
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 /**
@@ -29,6 +30,7 @@ fun EditablePostImage(
     runningSummary: RunningSummary,
     onImageEditClick: () -> Unit,
     modifier: Modifier = Modifier,
+    captureController: CaptureController? = null,
     onPostImageClick: () -> Unit = {},
     buttonText: String = "배경사진 변경",
     enabled: Boolean = true,
@@ -40,6 +42,7 @@ fun EditablePostImage(
             runningSummary = runningSummary,
             onPostImageClick = onPostImageClick,
             modifier = Modifier.fillMaxWidth(),
+            captureController = captureController,
         )
 
         Spacer(modifier = Modifier.height(12.dp))

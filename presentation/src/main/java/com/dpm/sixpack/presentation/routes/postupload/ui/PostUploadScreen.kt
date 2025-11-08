@@ -23,6 +23,8 @@ import com.dpm.sixpack.presentation.common.components.post.EditablePostImage
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
 import com.dpm.sixpack.presentation.common.model.RunningSummary
+import com.dpm.sixpack.presentation.common.util.capture.CaptureController
+import com.dpm.sixpack.presentation.common.util.capture.rememberCaptureController
 import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.routes.postupload.contract.PostUploadUiState
 import com.dpm.sixpack.presentation.theme.SixpackTheme

@@ -1,5 +1,6 @@
 package com.dpm.sixpack.presentation.routes.postdetail.ui
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -16,6 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -23,24 +25,31 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.common.components.bottomsheet.EmojiSelectionBottomSheet
 import com.dpm.sixpack.presentation.common.components.bottomsheet.ReactionUsersBottomSheet
+import com.dpm.sixpack.presentation.common.components.post.PostDropDownActionType
 import com.dpm.sixpack.presentation.common.components.post.PostDropDownMenuIcon
 import com.dpm.sixpack.presentation.common.components.post.PostImageWithRecord
 import com.dpm.sixpack.presentation.common.components.post.PostReactionRow
 import com.dpm.sixpack.presentation.common.components.post.PostUserInfo
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
+import com.dpm.sixpack.presentation.common.util.capture.rememberCaptureController
 import com.dpm.sixpack.presentation.common.util.toTimeAgoString
 import com.dpm.sixpack.presentation.routes.feed.component.dialog.PostDeleteDialog
 import com.dpm.sixpack.presentation.routes.feed.component.dialog.PostReportDialog
 import com.dpm.sixpack.presentation.routes.postdetail.contract.PostDetailIntent
 import com.dpm.sixpack.presentation.routes.postdetail.contract.PostDetailUiState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
+import kotlinx.coroutines.launch
 
 @Composable
 fun PostDetailScreen(
     uiState: PostDetailUiState,
     onIntent: (PostDetailIntent) -> Unit,
     modifier: Modifier = Modifier,
+    onSavePostImage: (Bitmap) -> Unit = {},
 ) {
+    val captureController = rememberCaptureController()
+    val coroutineScope = rememberCoroutineScope()
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -54,7 +63,15 @@ fun PostDetailScreen(
                             isMenuExpanded = uiState.isMenuExpanded,
                             onMenuClick = { onIntent(PostDetailIntent.OnMenuClick(!uiState.isMenuExpanded)) },
                             onDropDownMenuClick = { action ->
-                                onIntent(PostDetailIntent.OnDropDownMenuClick(uiState.post, action))
+                                if (action == PostDropDownActionType.SAVE_IMAGE) {
+                                    coroutineScope.launch {
+                                        captureController.captureHighQuality()?.let { bitmap ->
+                                            onSavePostImage(bitmap)
+                                        }
+                                    }
+                                } else {
+                                    onIntent(PostDetailIntent.OnDropDownMenuClick(uiState.post, action))
+                                }
                             },
                         )
                     }
@@ -93,6 +110,7 @@ fun PostDetailScreen(
                     PostDetailContent(
                         uiState = uiState,
                         onIntent = onIntent,
+                        captureController = captureController,
                     )
                 }
             }
@@ -181,6 +199,7 @@ private fun ErrorContent(
 private fun PostDetailContent(
     uiState: PostDetailUiState,
     onIntent: (PostDetailIntent) -> Unit,
+    captureController: com.dpm.sixpack.presentation.common.util.capture.CaptureController,
     modifier: Modifier = Modifier,
 ) {
     val post = uiState.post ?: return
@@ -213,6 +232,7 @@ private fun PostDetailContent(
                 postImageUrl = post.postImageUrl,
                 runningSummary = post.runningInfo,
                 onPostImageClick = {},
+                captureController = captureController,
             )
 
             Spacer(modifier = Modifier.height(12.dp))
