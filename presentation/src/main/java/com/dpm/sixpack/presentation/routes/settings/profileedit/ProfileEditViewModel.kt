@@ -11,7 +11,6 @@ import com.dpm.sixpack.presentation.routes.settings.profileedit.contract.Profile
 import com.dpm.sixpack.presentation.routes.settings.profileedit.contract.ProfileEditState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
-import org.orbitmvi.orbit.syntax.Syntax
 import org.orbitmvi.orbit.viewmodel.container
 import timber.log.Timber
 import javax.inject.Inject
@@ -51,8 +50,7 @@ class ProfileEditViewModel
                                 originalProfileImageUrl = userProfile.profileImageUrl,
                             )
                         }
-                    }
-                    .onError { exception ->
+                    }.onError { exception ->
                         Timber.e(exception, "Failed to load user profile")
                         reduce {
                             state.copy(

@@ -3,8 +3,6 @@ package com.dpm.sixpack.data.source.remote.service.di
 import com.dpm.sixpack.data.source.remote.service.AuthService
 import com.dpm.sixpack.data.source.remote.service.FeedService
 import com.dpm.sixpack.data.source.remote.service.FriendServiceApi
-import com.dpm.sixpack.data.source.remote.service.MockFeedService
-import com.dpm.sixpack.data.source.remote.service.MockRunningSessionServiceApi
 import com.dpm.sixpack.data.source.remote.service.RunningSessionServiceApi
 import com.dpm.sixpack.data.source.remote.service.UserService
 import dagger.Module

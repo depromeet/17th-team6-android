@@ -22,9 +22,10 @@ fun NavGraphBuilder.addRunningNavGraph(
     navigateToFriendList: () -> Unit,
 ) {
     composable<MainRoute.Running>(
-        deepLinks = listOf(
-            navDeepLink<MainRoute.Running>(basePath = DeepLinks.Running.START)
-        )
+        deepLinks =
+            listOf(
+                navDeepLink<MainRoute.Running>(basePath = DeepLinks.Running.START),
+            ),
     ) {
         RunningRoute(
             onShowSnackBar = onShowSnackBar,

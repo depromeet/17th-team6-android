@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import coil3.util.CoilUtils.result
 import com.dpm.sixpack.domain.exception.DoRunException
 import com.dpm.sixpack.domain.model.Friend
 import com.dpm.sixpack.domain.usecase.friend.AddFriendByCodeUseCase
