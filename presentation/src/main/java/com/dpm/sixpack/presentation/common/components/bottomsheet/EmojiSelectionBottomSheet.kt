@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.model.Emoji
+import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,7 +51,7 @@ fun EmojiSelectionBottomSheet(
                     modifier =
                         Modifier
                             .size(48.dp)
-                            .clickable {
+                            .noRippleClickable {
                                 onEmojiSelected(emoji)
                                 onDismissRequest()
                             },
