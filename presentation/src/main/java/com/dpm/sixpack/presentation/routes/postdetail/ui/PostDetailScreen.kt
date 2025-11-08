@@ -213,6 +213,7 @@ private fun PostDetailContent(
                 postImageUrl = post.postImageUrl,
                 runningSummary = post.runningInfo,
                 onPostImageClick = {},
+                modifier = Modifier.padding(horizontal = 20.dp),
             )
 
             Spacer(modifier = Modifier.height(12.dp))
