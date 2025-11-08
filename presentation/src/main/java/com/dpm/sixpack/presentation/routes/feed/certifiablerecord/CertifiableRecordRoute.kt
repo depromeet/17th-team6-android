@@ -28,7 +28,7 @@ fun CertifiableRecordRoute(
             CertifiableRecordSideEffect.NavigateBack -> navigateToBack()
             is CertifiableRecordSideEffect.NavigateToPostUpload -> {
                 val record = state.selectedRecord ?: return@collectSideEffect
-                navigateToPostUpload(record.sessionId, record.postTime, record.runningSummary)
+                navigateToPostUpload(record.sessionId, record.mapImageUrl, record.runningSummary)
             }
 
             CertifiableRecordSideEffect.ShowNoRecordSelectedError -> TODO()

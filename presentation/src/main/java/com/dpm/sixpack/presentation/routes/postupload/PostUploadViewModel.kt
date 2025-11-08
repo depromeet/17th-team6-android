@@ -13,6 +13,7 @@ import com.dpm.sixpack.presentation.routes.postupload.contract.PostUploadIntent
 import com.dpm.sixpack.presentation.routes.postupload.contract.PostUploadSideEffect
 import com.dpm.sixpack.presentation.routes.postupload.contract.PostUploadUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
@@ -39,8 +40,6 @@ class PostUploadViewModel @Inject constructor(
                 savedStateHandle.toRoute<PostUpload>(
                     typeMap =
                         mapOf(
-                            typeOf<Long>() to serializableType<Long>(),
-                            typeOf<String>() to serializableType<String>(),
                             typeOf<RunningSummary>() to serializableType<RunningSummary>(),
                         ),
                 )
@@ -103,6 +102,7 @@ class PostUploadViewModel @Inject constructor(
                         content = null,
                         imageUri = state.selectedImageUri,
                     ).onSuccess {
+                        delay(2000L)
                         reduce { state.copy(isLoading = false) }
                         postSideEffect(PostUploadSideEffect.ShowToast("게시물이 업로드되었습니다."))
                         postSideEffect(PostUploadSideEffect.NavigateToFeed)
