@@ -169,7 +169,7 @@ private fun RunningMapScreenContent(
     val draggableState =
         remember {
             AnchoredDraggableState(
-                initialValue = SheetDragState.Collapsed,
+                initialValue = SheetDragState.HalfExpanded,
             )
         }
 
