@@ -37,7 +37,9 @@ fun PostUserInfo(
     isMyPost: Boolean,
     onPostUserProfileClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isDarkTheme : Boolean  = false,
 ) {
+    val userNameTextColor = if(isDarkTheme) SixpackTheme.colors.gray0 else SixpackTheme.colors.gray900
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
@@ -66,7 +68,7 @@ fun PostUserInfo(
         Text(
             text = userName,
             style = SixpackTheme.typography.b1Medium,
-            color = SixpackTheme.colors.gray900,
+            color = userNameTextColor,
             overflow = TextOverflow.Ellipsis,
         )
 

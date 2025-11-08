@@ -5,8 +5,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -46,22 +48,10 @@ fun PostDetailScreen(
         topBar = {
             DoRunNavigationTopBar(
                 navigateToBack = { onIntent(PostDetailIntent.OnBackClick) },
-                trailingIcon = {
-                    if (uiState.post != null) {
-                        PostDropDownMenuIcon(
-                            modifier = Modifier.padding(10.dp),
-                            isMyPost = uiState.post.user.user.isMe,
-                            isMenuExpanded = uiState.isMenuExpanded,
-                            onMenuClick = { onIntent(PostDetailIntent.OnMenuClick(!uiState.isMenuExpanded)) },
-                            onDropDownMenuClick = { action ->
-                                onIntent(PostDetailIntent.OnDropDownMenuClick(uiState.post, action))
-                            },
-                        )
-                    }
-                },
+                isDarkTheme = true
             )
         },
-        containerColor = SixpackTheme.colors.gray0,
+        containerColor = SixpackTheme.colors.gray900,
     ) { innerPadding ->
         Box(
             modifier =
@@ -190,22 +180,39 @@ private fun PostDetailContent(
         modifier =
             modifier
                 .fillMaxSize()
-                .background(SixpackTheme.colors.gray0)
+                .background(SixpackTheme.colors.gray900)
                 .verticalScroll(rememberScrollState()),
     ) {
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(80.dp))
 
         Column {
-            PostUserInfo(
-                modifier = Modifier.padding(horizontal = 20.dp),
-                userImageUrl = post.user.user.profileImageUrl,
-                userName = post.user.user.name,
-                postingTime = post.user.postingTime.toTimeAgoString(context),
-                isMyPost = post.user.user.isMe,
-                onPostUserProfileClick = {
-                    onIntent(PostDetailIntent.OnUserProfileClick(post.user.user.id, post.user.user.isMe))
-                },
-            )
+            Row(
+                modifier = modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                PostUserInfo(
+                    userImageUrl = post.user.user.profileImageUrl,
+                    userName = post.user.user.name,
+                    postingTime = post.user.postingTime.toTimeAgoString(context),
+                    isMyPost = post.user.user.isMe,
+                    onPostUserProfileClick = {
+                        onIntent(PostDetailIntent.OnUserProfileClick(post.user.user.id, post.user.user.isMe))
+                    },
+                    isDarkTheme = true
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                PostDropDownMenuIcon(
+                    isMyPost = uiState.post.user.user.isMe,
+                    isMenuExpanded = uiState.isMenuExpanded,
+                    onMenuClick = { onIntent(PostDetailIntent.OnMenuClick(!uiState.isMenuExpanded)) },
+                    onDropDownMenuClick = { action ->
+                        onIntent(PostDetailIntent.OnDropDownMenuClick(uiState.post, action))
+                    },
+                    isDarkTheme = true
+                )
+            }
 
             Spacer(modifier = Modifier.height(12.dp))
 

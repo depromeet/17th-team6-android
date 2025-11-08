@@ -24,12 +24,14 @@ fun DoRunNavigationTopBar(
     modifier: Modifier = Modifier,
     titleContent: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
+    isDarkTheme: Boolean = false,
 ) {
     DoRunTopBarSlot(
         modifier = modifier,
         leadingContent = {
             NavigateBackButton(
                 onClick = navigateToBack,
+                isDarkTheme = isDarkTheme,
             )
         },
         content = titleContent,
@@ -66,6 +68,7 @@ fun DoRunTitleTopBar(
 fun NavigateBackButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isDarkTheme: Boolean = false,
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -78,7 +81,7 @@ fun NavigateBackButton(
             imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_left),
             contentDescription = null,
             modifier = Modifier.size(24.dp),
-            tint = SixpackTheme.colors.gray800,
+            tint = if (isDarkTheme) SixpackTheme.colors.gray0 else SixpackTheme.colors.gray800,
         )
     }
 }
