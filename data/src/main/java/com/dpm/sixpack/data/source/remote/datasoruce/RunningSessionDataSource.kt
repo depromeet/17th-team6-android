@@ -7,6 +7,7 @@ import com.dpm.sixpack.data.source.remote.dto.request.SaveSegmentDataRequestsDto
 import com.dpm.sixpack.data.source.remote.dto.response.FinishRunningResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.RunSessionListResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.SaveSegmentResponseDto
+import com.dpm.sixpack.data.source.remote.dto.response.SessionDetailResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.StartRunningResponseDto
 import com.dpm.sixpack.data.source.remote.service.RunningSessionServiceApi
 import com.dpm.sixpack.data.source.remote.util.base.BaseResponse
@@ -20,7 +21,9 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.io.FileOutputStream
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RunningSessionDataSource @Inject constructor(
     @ApplicationContext private val context: Context,
     private val runningSessionServiceApi: RunningSessionServiceApi,
@@ -57,6 +60,9 @@ class RunningSessionDataSource @Inject constructor(
         runningSessionServiceApi.postSegmentData(sessionId, saveSegmentDataRequestsDto)
 
     suspend fun postStartSession(): BaseResponse<StartRunningResponseDto> = runningSessionServiceApi.postStartSession()
+
+    suspend fun getSessionDetail(sessionId: Long): BaseResponse<SessionDetailResponseDto> =
+        runningSessionServiceApi.getSessionDetail(sessionId)
 
     /**
      * Bitmap을 임시 파일로 변환하고 MultipartBody.Part를 생성합니다.

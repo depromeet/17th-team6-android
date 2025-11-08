@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 import com.dpm.sixpack.domain.model.RealtimeRunningData
 import com.dpm.sixpack.domain.model.RunSession
 import com.dpm.sixpack.domain.model.RunningSessionResult
-import com.dpm.sixpack.domain.usecase.SaveRealtimeRunningDataResult
+import com.dpm.sixpack.domain.usecase.running.SaveRealtimeRunningDataResult
 import com.dpm.sixpack.domain.util.DoRunResult
 
 interface RunningSessionRepository {

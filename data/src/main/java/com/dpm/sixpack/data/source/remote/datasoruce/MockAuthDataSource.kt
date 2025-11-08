@@ -73,6 +73,10 @@ class MockAuthDataSource @Inject constructor() : AuthDataSource {
         nickname: String,
         phoneNumber: String,
         profileImage: File?,
+        marketingConsentAt: String?,
+        locationConsentAt: String?,
+        personalConsentAt: String,
+        deviceToken: String?,
     ): BaseResponse<SignUpResponseDto> {
         delay(1000L)
         // 회원가입 성공 응답
@@ -108,6 +112,28 @@ class MockAuthDataSource @Inject constructor() : AuthDataSource {
                     accessToken = "mock_new_access_token_${System.currentTimeMillis()}",
                     refreshToken = "mock_new_refresh_token_${System.currentTimeMillis()}",
                 ),
+        )
+    }
+
+    override suspend fun logout(): BaseResponse<Unit> {
+        delay(500L)
+        // 로그아웃 성공 응답
+        return BaseResponse(
+            status = "200",
+            message = "로그아웃 성공",
+            timestamp = getCurrentTimestamp(),
+            data = Unit,
+        )
+    }
+
+    override suspend fun withdraw(): BaseResponse<Unit> {
+        delay(500L)
+        // 회원 탈퇴 성공 응답
+        return BaseResponse(
+            status = "200",
+            message = "회원 탈퇴 성공",
+            timestamp = getCurrentTimestamp(),
+            data = Unit,
         )
     }
 }

@@ -7,7 +7,7 @@ import javax.inject.Singleton
 /**
  * 토큰을 메모리에 캐싱하여 매번 DataStore를 읽지 않도록 최적화
  * - 간단한 메모리 캐시 역할만 수행
- * - UserPreferenceRepository에서 DataStore 업데이트 시 함께 업데이트
+ * - UserRepository에서 DataStore 업데이트 시 함께 업데이트
  * - AuthInterceptor/TokenAuthenticator에서 빠르게 접근
  */
 @Singleton

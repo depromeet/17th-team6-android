@@ -5,6 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SignUpRequestDto(
-    @SerialName("nickname") val nickname: String,
     @SerialName("phoneNumber") val phoneNumber: String,
+    @SerialName("nickname") val nickname: String,
+    @SerialName("consent") val consent: ConsentDto,
+    @SerialName("deviceToken") val deviceToken: String?,
 )

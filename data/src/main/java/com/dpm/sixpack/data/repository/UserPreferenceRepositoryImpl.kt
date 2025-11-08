@@ -25,6 +25,7 @@ class UserPreferenceRepositoryImpl @Inject constructor(
 ) : UserPreferenceRepository {
     private val userId = userPreferenceDataSource.userId
     private val sessionId = userPreferenceDataSource.sessionId
+    private val fcmDeviceToken = userPreferenceDataSource.fcmDeviceToken
     private val accessToken = userPreferenceDataSource.accessToken
     private val refreshToken = userPreferenceDataSource.refreshToken
 
@@ -57,6 +58,8 @@ class UserPreferenceRepositoryImpl @Inject constructor(
 
     override suspend fun getRefreshToken(): String? = refreshToken.firstOrNull()
 
+    override suspend fun getFcmDeviceToken(): String? = fcmDeviceToken.firstOrNull()
+
     override suspend fun updateUserId(userId: Long) {
         userPreferenceDataSource.updateUserId(userId = userId)
         // 메모리 캐시에도 userId 업데이트
@@ -70,6 +73,10 @@ class UserPreferenceRepositoryImpl @Inject constructor(
 
     override suspend fun clearSessionId() {
         userPreferenceDataSource.clearSessionId()
+    }
+
+    override suspend fun updateFcmDeviceToken(token: String) {
+        userPreferenceDataSource.updateFcmDeviceToken(token = token)
     }
 
     override suspend fun updateAccessToken(token: String) {

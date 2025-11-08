@@ -1,13 +1,12 @@
 package com.dpm.sixpack.core.util
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.ConnectivityManager.NetworkCallback
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest.Builder
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
 import androidx.core.content.getSystemService
 import com.dpm.sixpack.core.network.Dispatcher
 import com.dpm.sixpack.core.network.SixPackDispatchers
@@ -24,6 +23,7 @@ internal class ConnectivityManagerNetworkMonitor @Inject constructor(
     @ApplicationContext private val context: Context,
     @Dispatcher(SixPackDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
 ) : NetworkMonitor {
+    @SuppressLint("MissingPermission")
     override val isOnline: Flow<Boolean> =
         callbackFlow {
             val connectivityManager = context.getSystemService<ConnectivityManager>()
@@ -62,14 +62,10 @@ internal class ConnectivityManagerNetworkMonitor @Inject constructor(
         }.flowOn(ioDispatcher)
             .conflate()
 
-    @Suppress("DEPRECATION")
+    @SuppressLint("MissingPermission")
     private fun ConnectivityManager.isCurrentlyConnected() =
-        when {
-            VERSION.SDK_INT >= VERSION_CODES.M ->
-                activeNetwork
-                    ?.let(::getNetworkCapabilities)
-                    ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-
-            else -> activeNetworkInfo?.isConnected
-        } ?: false
+        activeNetwork
+            ?.let(::getNetworkCapabilities)
+            ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            ?: false
 }

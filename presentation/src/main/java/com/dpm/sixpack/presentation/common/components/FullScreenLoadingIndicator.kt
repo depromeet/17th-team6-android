@@ -13,7 +13,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.zIndex
 
 @Composable
-fun FullScreenLoadingIndicator(modifier: Modifier = Modifier) {
+fun FullScreenLoadingIndicator(
+    modifier: Modifier = Modifier,
+    alpha: Float = 0.5f
+) {
     Box(
         modifier = modifier.fillMaxSize().zIndex(1f),
         contentAlignment = Alignment.Center,
@@ -22,7 +25,7 @@ fun FullScreenLoadingIndicator(modifier: Modifier = Modifier) {
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.5f)),
+                    .background(Color.Black.copy(alpha = alpha)),
         )
         CircularProgressIndicator(
             color = Color.White,

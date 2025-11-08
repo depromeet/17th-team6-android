@@ -6,7 +6,8 @@ import android.graphics.Bitmap
 import androidx.annotation.RequiresPermission
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.dpm.sixpack.domain.usecase.FinishRunningSessionUseCase
+import com.dpm.sixpack.domain.usecase.running.FinishRunningSessionUseCase
+import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapIntent
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapSideEffect
@@ -46,9 +47,15 @@ class MapViewModel @Inject constructor(
     override fun onIntent(intent: MapIntent) {
         when (intent) {
             MapIntent.SessionStartClick -> handleSessionStartButtonClick()
+            MapIntent.SessionStartFailed -> handleSessionStartFailed()
             MapIntent.ReadyToFinish -> handleSessionFinishReady()
             MapIntent.ToggleFollowingMode -> handleToggleFollowingMode()
             MapIntent.FollowingModeOff -> handleToggleFollowingModeOff()
+            MapIntent.FriendIconClick ->
+                intent {
+                    postSideEffect(MapSideEffect.NavigateToFriendList)
+                }
+
             is MapIntent.SessionFinish -> handleSessionFinish(intent.mapImage)
             is MapIntent.UpdateUserLocation -> handleUserLocationChange(intent.latLng)
             is MapIntent.UpdatePermission -> handlePermissionUpdate(intent.isGranted)
@@ -111,12 +118,22 @@ class MapViewModel @Inject constructor(
             loadLocationFromClient(
                 onSuccess = { latLng ->
                     intent {
+                        reduce {
+                            state.copy(
+                                isStartButtonEnabled = true,
+                            )
+                        }
                         postSideEffect(MapSideEffect.SetCameraPosition(latLng))
                     }
                 },
             )
         } else {
             intent {
+                reduce {
+                    state.copy(
+                        isStartButtonEnabled = false,
+                    )
+                }
                 postSideEffect(MapSideEffect.SetCameraPosition(MapConstants.DEFAULT_CAMERA_POSITION.target))
             }
         }
@@ -131,6 +148,17 @@ class MapViewModel @Inject constructor(
             }
 
             postSideEffect(MapSideEffect.SetBottomBarVisibility(false))
+        }
+
+    private fun handleSessionStartFailed() =
+        intent {
+            reduce {
+                state.copy(
+                    isStartButtonEnabled = false,
+                )
+            }
+            postSideEffect(MapSideEffect.SetBottomBarVisibility(true))
+            postSideEffect(MapSideEffect.ShowToast(R.string.running_permission_toast))
         }
 
     // 세션 종료 준비
@@ -164,6 +192,8 @@ class MapViewModel @Inject constructor(
                     }
                 }
             }
+
+            postSideEffect(MapSideEffect.SetBottomBarVisibility(true))
         }
 
     private fun handleSessionFinish(mapImage: Bitmap) =
@@ -171,6 +201,7 @@ class MapViewModel @Inject constructor(
             finishRunningSessionUseCase(mapImage)
                 .onSuccess { id ->
                     Timber.d("session finish success, sessionId : $id")
+                    postSideEffect(MapSideEffect.NavigateToReport(id))
                 }.onError {
                     Timber.d("session finish failed: ${it.message}")
                 }
@@ -180,9 +211,6 @@ class MapViewModel @Inject constructor(
                     mapViewState = MapViewState.Friend(),
                 )
             }
-
-            // TODO SK: 리포트 화면 세션ID 전달
-//            postSideEffect(MapSideEffect.NavigateToReport())
         }
 
     private fun updateRunningMapPath(newPathState: PathState) =
