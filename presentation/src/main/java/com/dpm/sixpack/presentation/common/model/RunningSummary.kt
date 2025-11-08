@@ -7,6 +7,7 @@ import com.dpm.sixpack.presentation.common.util.format.formatCadence
 import com.dpm.sixpack.presentation.common.util.format.formatPace
 import com.dpm.sixpack.presentation.common.util.format.formatSecondsToTimeInFeed
 import com.dpm.sixpack.presentation.common.util.format.toPostTimeStringOrNull
+import com.dpm.sixpack.presentation.common.util.format.toPostTimeStringOrNullInstant
 import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
@@ -28,5 +29,5 @@ fun RunningSessionResult.toRunningSummary(postTime: String): RunningSummary =
         totalTime = formatSecondsToTimeInFeed(totalDurationSec.toLong()),
         averagePace = formatPace(avgPace),
         cadence = formatCadence(avgCadence),
-        recordDateTime = postTime.toPostTimeStringOrNull() ?: "날짜를 알 수 없음",
+        recordDateTime = postTime.toPostTimeStringOrNullInstant() ?: "날짜를 알 수 없음",
     )
