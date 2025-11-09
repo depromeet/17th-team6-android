@@ -48,7 +48,7 @@ internal fun SessionReportScreen(
         },
         bottomBar = {
             if (state is ReportState.Success) {
-                if (state.sessionDetail.feed != null) {
+                if (state.sessionDetail.feed == null) {
                     ReportBottomBar(
                         modifier =
                             Modifier
