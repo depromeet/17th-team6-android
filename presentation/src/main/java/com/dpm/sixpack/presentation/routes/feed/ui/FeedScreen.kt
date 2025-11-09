@@ -160,7 +160,7 @@ fun FeedScreen(
                 isRefreshing = isRefreshing,
                 onRefresh = {
                     isRefreshing = true
-                    feedPagingItems.refresh()
+                    onIntent(FeedIntent.OnRefreshAll)
                 },
                 modifier = contentModifier,
                 state = pullToRefreshState,

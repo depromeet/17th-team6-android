@@ -6,9 +6,9 @@ import com.dpm.sixpack.domain.model.RunSession
 import com.dpm.sixpack.presentation.common.util.format.formatCadence
 import com.dpm.sixpack.presentation.common.util.format.formatPace
 import com.dpm.sixpack.presentation.common.util.format.formatSecondsToTimeInFeed
-import com.dpm.sixpack.presentation.common.util.format.toDateWithDayOfWeekOrNull
+import com.dpm.sixpack.presentation.common.util.format.toDateWithDayOfWeekOrNullInstant
 import com.dpm.sixpack.presentation.common.util.format.toPostTimeStringOrNull
-import com.dpm.sixpack.presentation.common.util.format.toTimeOnlyOrNull
+import com.dpm.sixpack.presentation.common.util.format.toTimeOnlyOrNullInstant
 import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
 import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
@@ -23,9 +23,9 @@ data class RecordItem(
     val postTime: String = "",
 ) : Parcelable {
     val formattedTime: String
-        get() = postTime.toTimeOnlyOrNull() ?: LocalDate.now().toString()
+        get() = postTime.toTimeOnlyOrNullInstant() ?: LocalDate.now().toString()
     val formattedDate: String
-        get() = postTime.toDateWithDayOfWeekOrNull() ?: LocalDate.now().toString()
+        get() = postTime.toDateWithDayOfWeekOrNullInstant() ?: LocalDate.now().toString()
 }
 
 fun RunSession.toRecordItem(): RecordItem =

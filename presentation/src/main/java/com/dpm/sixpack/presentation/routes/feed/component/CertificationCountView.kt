@@ -41,9 +41,9 @@ fun CertificationCountView(
 
     val text =
         if (isMeCertified) {
-            stringResource(id = R.string.feed_certification_count_view_me_certified, users.size - 1)
-        } else {
             stringResource(id = R.string.feed_certification_count_view_others_certified, users.size)
+        } else {
+            stringResource(id = R.string.feed_certification_count_view_me_certified, users.size)
         }
 
     Row(

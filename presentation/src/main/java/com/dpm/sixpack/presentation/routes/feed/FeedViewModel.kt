@@ -112,7 +112,7 @@ class FeedViewModel @Inject constructor(
 
     /**
      * Repository에서 발생하는 Feed 변경 이벤트를 구독
-     * 수정/업로드 시 자동으로 Paging을 갱신
+     * 수정/업로드 시 자동으로 Calendar, CertifiedUsers, Paging을 갱신
      */
     private fun observeFeedUpdateEvents() {
         // TODO Room 구현시 싹다 삭제
@@ -126,14 +126,12 @@ class FeedViewModel @Inject constructor(
 
                     lastProcessedTimestamp = event.timestamp
 
-                    intent {
-                        when (event) {
-                            is FeedUpdateEvent.Updated -> {
-                                postSideEffect(FeedSideEffect.RefreshPagingList)
-                            }
-                            is FeedUpdateEvent.Uploaded -> {
-                                postSideEffect(FeedSideEffect.RefreshPagingList)
-                            }
+                    when (event) {
+                        is FeedUpdateEvent.Updated -> {
+                            onIntent(FeedIntent.OnRefreshAll)
+                        }
+                        is FeedUpdateEvent.Uploaded -> {
+                            onIntent(FeedIntent.OnRefreshAll)
                         }
                     }
                 }
@@ -182,6 +180,9 @@ class FeedViewModel @Inject constructor(
 
             // FAB
             FeedIntent.OnFloatingActionButtonClick -> handleFloatingActionButtonClick()
+
+            // Refresh
+            FeedIntent.OnRefreshAll -> handleRefreshAll()
 
             // UI Observations (시스템 관찰 이벤트)
             is FeedIntent.Observed.VisibleWeeksChanged -> handleVisibleWeeksChanged(intent.startDate)
@@ -522,6 +523,54 @@ class FeedViewModel @Inject constructor(
         intent {
             val selectedDate = state.calendarState.selectedDate
             postSideEffect(FeedSideEffect.NavigateToPostUpload(selectedDate))
+        }
+
+    /**
+     * 전체 새로고침
+     * 1. 오늘부터 2일 전까지의 Calendar postCounts 업데이트
+     * 2. 현재 선택된 날짜의 certifiedUsers 업데이트
+     * 3. Paging data refresh
+     */
+    private fun handleRefreshAll() =
+        intent {
+            val today = LocalDate.now()
+            val twoDaysAgo = today.minusDays(2)
+            val selectedDate = state.calendarState.selectedDate
+
+            // 1. 오늘부터 2일 전까지의 Calendar postCounts 업데이트
+            feedRepository
+                .getSelfieCalendar(
+                    twoDaysAgo.toYyyyMmDdString(),
+                    today.toYyyyMmDdString(),
+                ).onSuccess { selfieCounts ->
+                    val newCountsMap =
+                        selfieCounts.counts
+                            .mapNotNull { selfieCount ->
+                                try {
+                                    LocalDate.parse(selfieCount.date) to selfieCount.selfieCount
+                                } catch (e: DateTimeParseException) {
+                                    null
+                                }
+                            }.toMap()
+
+                    val mergedCounts = state.calendarState.postCounts + newCountsMap
+
+                    reduce {
+                        state.copy(
+                            calendarState = state.calendarState.copy(postCounts = mergedCounts),
+                        )
+                    }
+
+                    val feedDateState = handleFeedDateState(selectedDate)
+                    reduce {
+                        state.copy(feedDateState = feedDateState)
+                    }
+                }.onError { exception ->
+                }
+
+            loadCertifiedUsers(selectedDate.toYyyyMmDdString())
+
+            postSideEffect(FeedSideEffect.RefreshPagingList)
         }
 
     private fun handlePagingDataEmpty() =
