@@ -9,6 +9,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dpm.sixpack.BuildConfig
 import com.dpm.sixpack.LocalTimeZone
@@ -38,6 +39,9 @@ class MainActivity : ComponentActivity() {
         splashScreen.setKeepOnScreenCondition { viewModel.isLoading.value }
 
         enableEdgeToEdge()
+
+        // 다크모드 여부에 따라 상태바 아이콘 색상 설정
+        setStatusBarIconColor()
 
         setContent {
             val startDestination by viewModel.startDestination.collectAsStateWithLifecycle()
@@ -81,6 +85,17 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * 상태바 아이콘 색상을 어두운 색으로 고정
+     * 현재 앱이 다크모드를 지원하지 않으므로 (항상 밝은 배경), 상태바 아이콘도 항상 어두운 색으로 설정
+     */
+    private fun setStatusBarIconColor() {
+        WindowCompat.getInsetsController(window, window.decorView).apply {
+            // isAppearanceLightStatusBars = true -> 어두운 아이콘 (검은색)
+            isAppearanceLightStatusBars = true
         }
     }
 }
