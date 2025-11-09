@@ -62,7 +62,7 @@ internal fun FriendListItem(
                 Modifier
                     .size(50.dp)
                     .clip(CircleShape)
-                    .border(1.dp, SixpackTheme.colors.blue600, shape = CircleShape),
+                    .border(1.dp, SixpackTheme.colors.gray200, shape = CircleShape),
             placeholder = ColorPainter(SixpackTheme.colors.gray50),
             error = painterResource(id = R.drawable.ill_profile_placeholder),
             contentScale = ContentScale.Crop,

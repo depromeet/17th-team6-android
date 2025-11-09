@@ -1,9 +1,11 @@
 package com.dpm.sixpack.presentation.routes.running.map.friendsheet
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,7 +41,9 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 internal fun FriendSheetListItem(
     friendItem: FriendUiItem,
     modifier: Modifier = Modifier,
+    itemPadding: PaddingValues = PaddingValues(),
     onAwakeClick: () -> Unit = {},
+    isSelected: Boolean = false,
 ) {
     val lastRunInfo = friendItem.lastRunInfo
     val hasLastRun = lastRunInfo != null
@@ -78,8 +82,9 @@ internal fun FriendSheetListItem(
     Row(
         modifier =
             modifier
+                .background(color = if (isSelected) SixpackTheme.colors.gray50 else SixpackTheme.colors.gray0)
                 .fillMaxWidth()
-                .padding(vertical = 12.dp),
+                .padding(itemPadding),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         // Profile Image
@@ -93,7 +98,11 @@ internal fun FriendSheetListItem(
                     Modifier
                         .size(50.dp)
                         .clip(CircleShape)
-                        .border(1.dp, SixpackTheme.colors.blue600, shape = CircleShape),
+                        .border(
+                            width = 1.dp,
+                            color = if (isSelected) SixpackTheme.colors.blue600 else SixpackTheme.colors.gray200,
+                            shape = CircleShape,
+                        ),
                 placeholder = ColorPainter(SixpackTheme.colors.gray50),
                 error = painterResource(id = R.drawable.ill_profile_placeholder),
                 contentScale = ContentScale.Crop,
@@ -292,6 +301,7 @@ private fun FriendListItemPreview() {
                     ),
                 latestCheeredAt = "2025-11-02T09:57:13Z",
             ),
+            isSelected = true,
         )
     }
 }

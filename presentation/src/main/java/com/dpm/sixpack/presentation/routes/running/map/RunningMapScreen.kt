@@ -37,13 +37,17 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.dpm.sixpack.core.permission.PermissionUtil
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
+import com.dpm.sixpack.presentation.common.model.FriendUiItem
 import com.dpm.sixpack.presentation.common.util.PermissionHandler
 import com.dpm.sixpack.presentation.routes.running.map.MapConstants.DEFAULT_ZOOM
 import com.dpm.sixpack.presentation.routes.running.map.MapConstants.FINAL_RESOLUTION
 import com.dpm.sixpack.presentation.routes.running.map.MapConstants.SNAPSHOT_PADDING
+import com.dpm.sixpack.presentation.routes.running.map.component.DoRunMarker
 import com.dpm.sixpack.presentation.routes.running.map.component.LocationTrackingButton
 import com.dpm.sixpack.presentation.routes.running.map.component.SheetDragState
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapIntent
@@ -65,8 +69,10 @@ import com.naver.maps.map.compose.MapEffect
 import com.naver.maps.map.compose.MapProperties
 import com.naver.maps.map.compose.MapType
 import com.naver.maps.map.compose.MapUiSettings
+import com.naver.maps.map.compose.MarkerState
 import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.PathOverlay
+import com.naver.maps.map.compose.rememberMarkerState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.first
@@ -87,16 +93,16 @@ internal fun RunningMapScreen(
     cameraPositionState: CameraPositionState,
     locationSource: LocationSource,
     modifier: Modifier = Modifier,
-    mapViewModel: MapViewModel = hiltViewModel(),
     setFullScreenLoading: (Boolean) -> Unit,
     onBottomBarVisibilityChange: (Boolean) -> Unit,
     onShowSnackBar: (String, String?) -> Unit,
     navigateToReport: (Long) -> Unit,
     navigateToFriendList: () -> Unit,
+    mapViewModel: MapViewModel = hiltViewModel(),
 ) {
-    val mapState by mapViewModel.collectAsState()
     val context = LocalContext.current
-    val showPermissionHandler = remember { mutableStateOf(false) }
+    val state by mapViewModel.collectAsState()
+    val pagingItems = mapViewModel.friendPagingFlow.collectAsLazyPagingItems()
 
     mapViewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
@@ -131,18 +137,18 @@ internal fun RunningMapScreen(
         permissionsToRequest = MapConstants.MAP_PERMISSIONS,
         onPermissionResult = { isGranted ->
             mapViewModel.onIntent(MapIntent.UpdatePermission(isGranted))
-            showPermissionHandler.value = !isGranted
         },
     )
 
     RunningMapScreenContent(
         modifier = modifier,
-        mapState = mapState,
+        mapState = state,
         cameraPositionState = cameraPositionState,
         locationSource = locationSource,
         setFullScreenLoading = setFullScreenLoading,
         onShowSnackBar = onShowSnackBar,
         onMapIntent = mapViewModel::onIntent,
+        pagingItems = pagingItems,
     )
 }
 
@@ -150,6 +156,7 @@ internal fun RunningMapScreen(
 @Composable
 private fun RunningMapScreenContent(
     mapState: MapUiState,
+    pagingItems: LazyPagingItems<FriendUiItem>,
     cameraPositionState: CameraPositionState,
     locationSource: LocationSource,
     setFullScreenLoading: (Boolean) -> Unit,
@@ -290,6 +297,21 @@ private fun RunningMapScreenContent(
                         }
                     }
                 }
+
+                (mapState.mapViewState as? MapViewState.Friend)?.selectedFriend?.let { selected ->
+                    selected.lastRunInfo?.let { lastRunInfo ->
+                        val newPosition = LatLng(lastRunInfo.latitude, lastRunInfo.longitude)
+
+                        DoRunMarker(
+                            userName = selected.nickName,
+                            state =
+                                MarkerState(
+                                    position = newPosition,
+                                ),
+                            profileImageUrl = selected.profileImgUrl,
+                        )
+                    }
+                }
             }
 
             when (mapState.mapViewState) {
@@ -312,7 +334,7 @@ private fun RunningMapScreenContent(
                         // 2. 카메라 이동
                         cameraPositionState.move(CameraUpdate.fitBounds(bounds, SNAPSHOT_PADDING))
 
-                        // 3. (핵심) 카메라가 멈출 때까지 대기
+                        // 3. 카메라가 멈출 때까지 대기
                         snapshotFlow { cameraPositionState.isMoving }
                             .filterNot { isMoving -> isMoving } // isMoving이 false가 될 때까지
                             .first() // false가 되면 통과
@@ -329,7 +351,6 @@ private fun RunningMapScreenContent(
                                 null
                             }
 
-                        // 결과 처리
                         if (bitmap != null) {
                             onMapIntent(MapIntent.SessionFinish(bitmap))
                         } else {
@@ -357,13 +378,12 @@ private fun RunningMapScreenContent(
                                         IntOffset(x = 0, y = yOffset.roundToInt())
                                     }
                                 },
+                        pagingItems = pagingItems,
                         draggableState = draggableState,
                         sheetHeight = sheetMaxHeight,
                         startButtonHeight = startButtonHeightDp,
-                        onShowSnackBar = onShowSnackBar,
-                        onFriendIconClick = {
-                            onMapIntent(MapIntent.FriendIconClick)
-                        },
+                        onIntent = onMapIntent,
+                        friendSheetState = mapState.mapViewState,
                     )
 
                     RunningStartButton(

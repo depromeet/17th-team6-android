@@ -6,9 +6,17 @@ import android.graphics.Bitmap
 import androidx.annotation.RequiresPermission
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.map
+import com.dpm.sixpack.domain.model.Friend
+import com.dpm.sixpack.domain.usecase.friend.GetFriendRunningStatusUseCase
+import com.dpm.sixpack.domain.usecase.friend.PostFriendNotificationUseCase
 import com.dpm.sixpack.domain.usecase.running.FinishRunningSessionUseCase
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
+import com.dpm.sixpack.presentation.common.model.FriendUiItem
+import com.dpm.sixpack.presentation.common.model.toUiItem
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapIntent
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapSideEffect
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapUiState
@@ -19,6 +27,10 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
@@ -35,27 +47,50 @@ import javax.inject.Inject
 @HiltViewModel
 class MapViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val finishRunningSessionUseCase: FinishRunningSessionUseCase,
     private val fusedLocationProviderClient: FusedLocationProviderClient,
+    private val finishRunningSessionUseCase: FinishRunningSessionUseCase,
+    private val getFriendRunningStatusUseCase: GetFriendRunningStatusUseCase,
+    private val postFriendNotificationUseCase: PostFriendNotificationUseCase,
 ) : BaseViewModel<MapUiState, MapIntent, MapSideEffect>() {
     override val initialState: MapUiState = MapUiState()
 
     override val container: Container<MapUiState, MapSideEffect> =
         container(initialState = initialState, savedStateHandle = savedStateHandle)
 
+    private val refreshTrigger = MutableStateFlow(0)
+
+    val friendPagingFlow: Flow<PagingData<FriendUiItem>> =
+        refreshTrigger
+            .flatMapLatest {
+                // 'refreshTrigger'의 값이 바뀔 때마다
+                //  flatMapLatest가 기존 Flow를 취소하고 getFriendRunningStatusUseCase()를 재호출합니다.
+                getFriendRunningStatusUseCase()
+            }.map { pagingData: PagingData<Friend> ->
+                pagingData.map { friend: Friend ->
+                    friend.toUiItem()
+                }
+            }.cachedIn(viewModelScope)
+
+    init {
+        intent {
+            delay(1000L)
+            reduce {
+                state.copy(
+                    mapViewState = MapViewState.Friend(),
+                )
+            }
+        }
+    }
+
     @SuppressLint("MissingPermission")
     override fun onIntent(intent: MapIntent) {
         when (intent) {
+            is MapIntent.FriendSheetIntent -> onFriendSheetIntent(intent)
             MapIntent.SessionStartClick -> handleSessionStartButtonClick()
             MapIntent.SessionStartFailed -> handleSessionStartFailed()
             MapIntent.ReadyToFinish -> handleSessionFinishReady()
             MapIntent.ToggleFollowingMode -> handleToggleFollowingMode()
             MapIntent.FollowingModeOff -> handleToggleFollowingModeOff()
-            MapIntent.FriendIconClick ->
-                intent {
-                    postSideEffect(MapSideEffect.NavigateToFriendList)
-                }
-
             is MapIntent.SessionFinish -> handleSessionFinish(intent.mapImage)
             is MapIntent.UpdateUserLocation -> handleUserLocationChange(intent.latLng)
             is MapIntent.UpdatePermission -> handlePermissionUpdate(intent.isGranted)
@@ -63,14 +98,14 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    init {
-        intent {
-            delay(2000L)
-            reduce {
-                state.copy(
-                    mapViewState = MapViewState.Friend(),
-                )
-            }
+    fun onFriendSheetIntent(intent: MapIntent.FriendSheetIntent) {
+        when (intent) {
+            is MapIntent.FriendSheetIntent.AwakeFriend -> handleAwakeFriend(intent.userId)
+            is MapIntent.FriendSheetIntent.ClickFriendItem -> handleClickUser(intent.friend)
+            MapIntent.FriendSheetIntent.FriendIconClick ->
+                intent {
+                    postSideEffect(MapSideEffect.NavigateToFriendList)
+                }
         }
     }
 
@@ -265,4 +300,48 @@ class MapViewModel @Inject constructor(
             LatLng(center.latitude + halfMaxDistance, center.longitude + halfMaxDistance), // NE (북동)
         )
     }
+
+    // region FriendSheet
+
+    private fun handleAwakeFriend(userId: Long) =
+        intent {
+            postFriendNotificationUseCase(userId)
+                .onSuccess { result ->
+                    postSideEffect(MapSideEffect.ShowToast(R.string.friend_awake_toast, result))
+                    refresh()
+                }.onError { e ->
+                    Timber.w("FriendSheetViewModel: Failed to post friend notification: ${e.message}")
+                }
+        }
+
+    private fun handleClickUser(friend: FriendUiItem) =
+        intent {
+            val friendState = state.mapViewState as? MapViewState.Friend ?: return@intent
+            reduce {
+                state.copy(
+                    isFollowingModeEnabled = false,
+                    mapViewState =
+                        friendState.copy(
+                            selectedFriend = friend,
+                        ),
+                )
+            }
+            friend.lastRunInfo?.let {
+                postSideEffect(
+                    MapSideEffect.SetCameraPosition(
+                        LatLng(
+                            it.latitude,
+                            it.longitude,
+                        ),
+                    ),
+                )
+            }
+        }
+
+    private fun refresh() =
+        intent {
+            refreshTrigger.value++
+        }
+
+    // endregion
 }

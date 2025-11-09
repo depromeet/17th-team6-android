@@ -79,14 +79,14 @@ sealed class SixPackPermissions(
             listOf(
                 FineLocationPermission,
                 CourseLocationPermission,
-            ) +
-                if (Build.VERSION.SDK_INT >=
-                    Build.VERSION_CODES.Q
-                ) {
-                    listOf(BackgroundLocationPermission)
-                } else {
-                    emptyList()
-                }
+            )
+//                if (Build.VERSION.SDK_INT >=
+//                    Build.VERSION_CODES.Q
+//                ) {
+//                    listOf(BackgroundLocationPermission)
+//                } else {
+//                    emptyList()
+//                }
         }
 
         val ForegroundServicePermissions by lazy {
