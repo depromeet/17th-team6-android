@@ -42,7 +42,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.dpm.sixpack.core.permission.PermissionUtil
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
-import com.dpm.sixpack.presentation.common.model.FriendUiItem
+import com.dpm.sixpack.presentation.common.model.FriendItem
 import com.dpm.sixpack.presentation.common.util.PermissionHandler
 import com.dpm.sixpack.presentation.routes.running.map.MapConstants.DEFAULT_ZOOM
 import com.dpm.sixpack.presentation.routes.running.map.MapConstants.FINAL_RESOLUTION
@@ -72,7 +72,6 @@ import com.naver.maps.map.compose.MapUiSettings
 import com.naver.maps.map.compose.MarkerState
 import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.PathOverlay
-import com.naver.maps.map.compose.rememberMarkerState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.first
@@ -156,7 +155,7 @@ internal fun RunningMapScreen(
 @Composable
 private fun RunningMapScreenContent(
     mapState: MapUiState,
-    pagingItems: LazyPagingItems<FriendUiItem>,
+    pagingItems: LazyPagingItems<FriendItem>,
     cameraPositionState: CameraPositionState,
     locationSource: LocationSource,
     setFullScreenLoading: (Boolean) -> Unit,

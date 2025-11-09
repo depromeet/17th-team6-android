@@ -12,7 +12,7 @@ sealed interface ReportIntent : UiIntent {
     /** 뒤로가기 버튼 클릭 */
     data object NavigateBack : ReportIntent
 
-    data class NavigateToPostEdit(
+    data class NavigateToPostUpload(
         val sessionId: Long,
     ) : ReportIntent
 }

@@ -15,7 +15,7 @@ import com.dpm.sixpack.domain.usecase.friend.PostFriendNotificationUseCase
 import com.dpm.sixpack.domain.usecase.running.FinishRunningSessionUseCase
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
-import com.dpm.sixpack.presentation.common.model.FriendUiItem
+import com.dpm.sixpack.presentation.common.model.FriendItem
 import com.dpm.sixpack.presentation.common.model.toUiItem
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapIntent
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapSideEffect
@@ -59,7 +59,7 @@ class MapViewModel @Inject constructor(
 
     private val refreshTrigger = MutableStateFlow(0)
 
-    val friendPagingFlow: Flow<PagingData<FriendUiItem>> =
+    val friendPagingFlow: Flow<PagingData<FriendItem>> =
         refreshTrigger
             .flatMapLatest {
                 // 'refreshTrigger'의 값이 바뀔 때마다
@@ -314,7 +314,7 @@ class MapViewModel @Inject constructor(
                 }
         }
 
-    private fun handleClickUser(friend: FriendUiItem) =
+    private fun handleClickUser(friend: FriendItem) =
         intent {
             val friendState = state.mapViewState as? MapViewState.Friend ?: return@intent
             reduce {

@@ -1,7 +1,7 @@
 package com.dpm.sixpack.presentation.routes.running.map.contract
 
 import android.graphics.Bitmap
-import com.dpm.sixpack.presentation.common.model.FriendUiItem
+import com.dpm.sixpack.presentation.common.model.FriendItem
 import com.dpm.sixpack.presentation.routes.running.RunningRouteIntent
 import com.dpm.sixpack.presentation.routes.running.session.contract.state.PathState
 import com.naver.maps.geometry.LatLng
@@ -35,7 +35,7 @@ sealed interface MapIntent : RunningRouteIntent {
 
     sealed interface FriendSheetIntent : MapIntent {
         data class ClickFriendItem(
-            val friend: FriendUiItem,
+            val friend: FriendItem,
         ) : FriendSheetIntent
 
         data class AwakeFriend(

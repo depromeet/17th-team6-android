@@ -37,18 +37,18 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import com.dpm.sixpack.presentation.R
-import com.dpm.sixpack.presentation.common.model.FriendUiItem
+import com.dpm.sixpack.presentation.common.model.FriendItem
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 import kotlinx.coroutines.delay
 
 @Composable
 internal fun FriendSheetLazyColumn(
-    pagingItems: LazyPagingItems<FriendUiItem>,
+    pagingItems: LazyPagingItems<FriendItem>,
     itemPadding: PaddingValues,
     modifier: Modifier = Modifier,
-    selected: FriendUiItem? = null,
+    selected: FriendItem? = null,
     onAwakeClick: (Long) -> Unit = {},
-    onItemClick: (FriendUiItem) -> Unit = {},
+    onItemClick: (FriendItem) -> Unit = {},
 ) {
     var isRefreshing by remember { mutableStateOf(false) }
     val pullRefreshState = rememberPullToRefreshState()

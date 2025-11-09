@@ -53,9 +53,9 @@ internal fun SessionReportScreen(
                         modifier =
                             Modifier
                                 .padding(horizontal = 24.dp)
-                                .padding(bottom = 24.dp),
+                                .padding(bottom = 12.dp),
                         onClick = {
-                            onIntent(ReportIntent.NavigateToPostEdit(sessionId))
+                            onIntent(ReportIntent.NavigateToPostUpload(sessionId))
                         },
                     )
                 }

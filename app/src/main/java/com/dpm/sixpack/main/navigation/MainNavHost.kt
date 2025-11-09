@@ -131,7 +131,9 @@ internal fun MainNavHost(
             addSessionReportNavGraph(
                 navigateToBack = navigator::popBackStack,
                 onShowSnackBar = onShowSnackBar,
-                navigateToCertification = { },
+                navigateToPostUpload = { sessionId, mapImageUrl, runningSummary ->
+                    navController.navigateToPostUpload(sessionId, mapImageUrl, runningSummary)
+                },
             )
 
             addFeedNavGraph(

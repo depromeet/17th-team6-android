@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material3.Card
@@ -40,12 +42,17 @@ import com.dpm.sixpack.presentation.routes.running.map.PaceColorCalculator.paceC
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
-fun SessionReportScreenSuccessContent(
+internal fun SessionReportScreenSuccessContent(
     sessionDetail: SessionDetail,
     modifier: Modifier = Modifier,
 ) {
+    val scrollState = rememberScrollState()
+
     Column(
-        modifier = modifier.background(SixpackTheme.colors.gray0), // 스크롤 시에도 배경색 유지
+        modifier =
+            modifier
+                .background(SixpackTheme.colors.gray0)
+                .verticalScroll(scrollState),
     ) {
         // 날짜 및 시간 정보
         Row(

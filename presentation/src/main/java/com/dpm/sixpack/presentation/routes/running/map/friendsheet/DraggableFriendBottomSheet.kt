@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
-import com.dpm.sixpack.presentation.common.model.FriendUiItem
+import com.dpm.sixpack.presentation.common.model.FriendItem
 import com.dpm.sixpack.presentation.routes.running.map.component.SheetDragState
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapIntent
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapViewState
@@ -39,7 +39,7 @@ internal fun DraggableFriendBottomSheet(
     startButtonHeight: Dp,
     modifier: Modifier = Modifier,
     onIntent: (MapIntent.FriendSheetIntent) -> Unit,
-    pagingItems: LazyPagingItems<FriendUiItem>,
+    pagingItems: LazyPagingItems<FriendItem>,
 ) {
     Surface(
         modifier =
