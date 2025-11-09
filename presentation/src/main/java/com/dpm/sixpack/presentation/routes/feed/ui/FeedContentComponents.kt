@@ -294,8 +294,7 @@ internal fun LazyListScope.feedContentItems(
     onReactionLongClick: (Long, List<PostReaction>, Emoji) -> Unit,
     onAddReactionClick: (PostResource) -> Unit,
     onSaveFeedImage: (PostResource, Bitmap) -> Unit = { _, _ -> },
-
-    ) {
+) {
     if (isInitialLoad) {
         feedInitialLoadingItems()
     } else {
@@ -316,8 +315,7 @@ internal fun LazyListScope.feedContentItems(
             onReactionClick = onReactionClick,
             onReactionLongClick = onReactionLongClick,
             onAddReactionClick = onAddReactionClick,
-            onSaveFeedImage =  onSaveFeedImage
-
+            onSaveFeedImage = onSaveFeedImage,
         )
 
         // LoadState 처리

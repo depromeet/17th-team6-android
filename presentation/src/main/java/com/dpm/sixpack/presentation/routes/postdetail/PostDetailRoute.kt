@@ -43,23 +43,26 @@ fun PostDetailRoute(
         onSavePostImage = { bitmap ->
             coroutineScope.launch {
                 val fileName = "sixpack_post_${state.post?.feedId ?: System.currentTimeMillis()}_${System.currentTimeMillis()}"
-                ImageSaver.saveToGallery(
-                    context = context,
-                    bitmap = bitmap,
-                    fileName = fileName,
-                ).onSuccess { uri ->
-                    Toast.makeText(
-                        context,
-                        "포스트 이미지가 저장되었습니다",
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                }.onFailure { exception ->
-                    Toast.makeText(
-                        context,
-                        "이미지 저장 실패: ${exception.message}",
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                }
+                ImageSaver
+                    .saveToGallery(
+                        context = context,
+                        bitmap = bitmap,
+                        fileName = fileName,
+                    ).onSuccess { uri ->
+                        Toast
+                            .makeText(
+                                context,
+                                "포스트 이미지가 저장되었습니다",
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                    }.onFailure { exception ->
+                        Toast
+                            .makeText(
+                                context,
+                                "이미지 저장 실패: ${exception.message}",
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                    }
             }
         },
     )

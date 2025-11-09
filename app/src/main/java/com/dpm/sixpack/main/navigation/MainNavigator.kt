@@ -62,14 +62,13 @@ class MainNavigator(
         )
     }
 
-    fun navigateToFeed(){
+    fun navigateToFeed() {
         navController.navigateToFeed(
             navOptions {
                 popUpTo(
-                    navController.graph.findStartDestination().id
+                    navController.graph.findStartDestination().id,
                 ) {
                     inclusive = false
-
                 }
                 launchSingleTop = true
                 restoreState = true

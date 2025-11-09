@@ -6,7 +6,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,26 +35,28 @@ fun MainBottomBar(
     currentTab: MainNavTab?,
     onTabSelected: (MainNavTab) -> Unit,
 ) {
-    val navigationAnimationSpec = tween<IntOffset>(
-        durationMillis = 300,
-        easing = LinearEasing
-    )
-    val fadeAnimationSpec = tween<Float>(
-        durationMillis = 300,
-        easing = LinearEasing
-    )
+    val navigationAnimationSpec =
+        tween<IntOffset>(
+            durationMillis = 300,
+            easing = LinearEasing,
+        )
+    val fadeAnimationSpec =
+        tween<Float>(
+            durationMillis = 300,
+            easing = LinearEasing,
+        )
     AnimatedVisibility(
         visible = visible,
         enter =
             slideInHorizontally(
                 initialOffsetX = { it },
-                animationSpec = navigationAnimationSpec
+                animationSpec = navigationAnimationSpec,
             ) + fadeIn(fadeAnimationSpec),
         exit =
             slideOutHorizontally(
                 targetOffsetX = { -it },
-                animationSpec =navigationAnimationSpec
-            ) + fadeOut(fadeAnimationSpec)
+                animationSpec = navigationAnimationSpec,
+            ) + fadeOut(fadeAnimationSpec),
     ) {
         val borderColor = SixpackTheme.colors.gray50
         BottomAppBar(

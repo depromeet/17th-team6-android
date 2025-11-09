@@ -25,42 +25,45 @@ fun NavGraphBuilder.addPostDetailNavGraph(
     navigateToMyPage: () -> Unit = {},
     navigateToPostEdit: (Long) -> Unit = {},
 ) {
-    val navigationAnimationSpec = tween<IntOffset>(
-        durationMillis = 300,
-        easing = LinearEasing
-    )
-    val fadeAnimationSpec = tween<Float>(
-        durationMillis = 300,
-        easing = LinearEasing
-    )
+    val navigationAnimationSpec =
+        tween<IntOffset>(
+            durationMillis = 300,
+            easing = LinearEasing,
+        )
+    val fadeAnimationSpec =
+        tween<Float>(
+            durationMillis = 300,
+            easing = LinearEasing,
+        )
     composable<PostDetail>(
-        deepLinks = listOf(
-            navDeepLink<PostDetail>(basePath = DeepLinks.Feed.DETAIL)
-        ),
+        deepLinks =
+            listOf(
+                navDeepLink<PostDetail>(basePath = DeepLinks.Feed.DETAIL),
+            ),
         enterTransition = {
             slideInHorizontally(
                 initialOffsetX = { it },
-                animationSpec = navigationAnimationSpec
+                animationSpec = navigationAnimationSpec,
             ) + fadeIn(fadeAnimationSpec)
         },
         exitTransition = {
             slideOutHorizontally(
                 targetOffsetX = { -it },
-                animationSpec =navigationAnimationSpec
+                animationSpec = navigationAnimationSpec,
             ) + fadeOut(fadeAnimationSpec)
         },
         popEnterTransition = {
             slideInHorizontally(
                 initialOffsetX = { it },
-                animationSpec = navigationAnimationSpec
+                animationSpec = navigationAnimationSpec,
             ) + fadeIn(fadeAnimationSpec)
         },
         popExitTransition = {
             slideOutHorizontally(
                 targetOffsetX = { -it },
-                animationSpec =navigationAnimationSpec
+                animationSpec = navigationAnimationSpec,
             ) + fadeOut(fadeAnimationSpec)
-        }
+        },
     ) { backStackEntry ->
         PostDetailRoute(
             navigateToMyPage = navigateToMyPage,

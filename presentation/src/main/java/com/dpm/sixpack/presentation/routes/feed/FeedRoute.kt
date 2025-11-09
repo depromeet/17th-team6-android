@@ -55,23 +55,26 @@ fun FeedRoute(
         onSaveFeedImage = { post, bitmap ->
             coroutineScope.launch {
                 val fileName = "sixpack_feed_${post.feedId}_${System.currentTimeMillis()}"
-                ImageSaver.saveToGallery(
-                    context = context,
-                    bitmap = bitmap,
-                    fileName = fileName,
-                ).onSuccess { uri ->
-                    Toast.makeText(
-                        context,
-                        "피드 이미지가 저장되었습니다",
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                }.onFailure { exception ->
-                    Toast.makeText(
-                        context,
-                        "이미지 저장 실패: ${exception.message}",
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                }
+                ImageSaver
+                    .saveToGallery(
+                        context = context,
+                        bitmap = bitmap,
+                        fileName = fileName,
+                    ).onSuccess { uri ->
+                        Toast
+                            .makeText(
+                                context,
+                                "피드 이미지가 저장되었습니다",
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                    }.onFailure { exception ->
+                        Toast
+                            .makeText(
+                                context,
+                                "이미지 저장 실패: ${exception.message}",
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                    }
             }
         },
     )

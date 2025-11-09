@@ -16,11 +16,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -173,13 +173,15 @@ private fun SummaryItem(
         )
         Text(
             text = record,
-            style = recordTextStyle.copy(
-                shadow = Shadow(
-                    color = Color(0xFF000000),
-                    offset = Offset(0f, 1f),
-                    blurRadius = 2f,
+            style =
+                recordTextStyle.copy(
+                    shadow =
+                        Shadow(
+                            color = Color(0xFF000000),
+                            offset = Offset(0f, 1f),
+                            blurRadius = 2f,
+                        ),
                 ),
-            ),
             color = SixpackTheme.colors.gray0,
         )
     }

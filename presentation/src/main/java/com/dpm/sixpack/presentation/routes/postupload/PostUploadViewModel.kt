@@ -2,7 +2,6 @@ package com.dpm.sixpack.presentation.routes.postupload
 
 import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.dpm.sixpack.domain.repository.FeedRepository
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
@@ -13,8 +12,6 @@ import com.dpm.sixpack.presentation.routes.postupload.contract.PostUploadIntent
 import com.dpm.sixpack.presentation.routes.postupload.contract.PostUploadSideEffect
 import com.dpm.sixpack.presentation.routes.postupload.contract.PostUploadUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject

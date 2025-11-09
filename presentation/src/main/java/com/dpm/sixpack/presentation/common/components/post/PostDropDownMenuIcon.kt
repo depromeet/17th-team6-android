@@ -3,7 +3,6 @@ package com.dpm.sixpack.presentation.common.components.post
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentSize
@@ -74,9 +73,10 @@ fun PostDropDownMenuIcon(
             shape = SixpackTheme.shapes.round12,
             containerColor = SixpackTheme.colors.gray0,
             shadowElevation = 8.dp,
-            modifier = Modifier
-                .crop(vertical = 8.dp)
-                .clip(RoundedCornerShape(12.dp)),
+            modifier =
+                Modifier
+                    .crop(vertical = 8.dp)
+                    .clip(RoundedCornerShape(12.dp)),
             properties =
                 PopupProperties(
                     usePlatformDefaultWidth = false,
@@ -118,9 +118,10 @@ private fun MyPostMenuItems(
             onMenuClick()
             onDropDownMenuClick(PostDropDownActionType.EDIT)
         },
-        colors = MenuDefaults.itemColors(
-            textColor = SixpackTheme.colors.gray900,
-        ),
+        colors =
+            MenuDefaults.itemColors(
+                textColor = SixpackTheme.colors.gray900,
+            ),
     )
 
     HorizontalDivider(
@@ -140,9 +141,10 @@ private fun MyPostMenuItems(
             onMenuClick()
             onDropDownMenuClick(PostDropDownActionType.DELETE)
         },
-        colors = MenuDefaults.itemColors(
-            textColor = SixpackTheme.colors.gray900,
-        ),
+        colors =
+            MenuDefaults.itemColors(
+                textColor = SixpackTheme.colors.gray900,
+            ),
     )
 
     HorizontalDivider(
@@ -162,9 +164,10 @@ private fun MyPostMenuItems(
             onMenuClick()
             onDropDownMenuClick(PostDropDownActionType.SAVE_IMAGE)
         },
-        colors = MenuDefaults.itemColors(
-            textColor = SixpackTheme.colors.gray900,
-        ),
+        colors =
+            MenuDefaults.itemColors(
+                textColor = SixpackTheme.colors.gray900,
+            ),
     )
 }
 
@@ -188,9 +191,10 @@ private fun FriendPostMenuItems(
             onMenuClick()
             onDropDownMenuClick(PostDropDownActionType.REPORT)
         },
-        colors = MenuDefaults.itemColors(
-            textColor = SixpackTheme.colors.gray900,
-        ),
+        colors =
+            MenuDefaults.itemColors(
+                textColor = SixpackTheme.colors.gray900,
+            ),
     )
 }
 

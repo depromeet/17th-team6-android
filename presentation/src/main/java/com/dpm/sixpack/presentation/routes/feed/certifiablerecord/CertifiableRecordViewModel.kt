@@ -19,7 +19,7 @@ import javax.inject.Inject
 class CertifiableRecordViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     // TODO: Repository 추가 시 주입
-     private val runningRepository: RunningSessionRepository,
+    private val runningRepository: RunningSessionRepository,
 ) : BaseViewModel<CertifiableRecordUiState, CertifiableRecordIntent, CertifiableRecordSideEffect>() {
     override val initialState: CertifiableRecordUiState = CertifiableRecordUiState()
 
@@ -38,21 +38,19 @@ class CertifiableRecordViewModel @Inject constructor(
             val fortyEightHoursAgo = now.minusHours(48)
             val startDateTime = fortyEightHoursAgo.format(formatter)
 
-             runningRepository.getRunSessions(isSelfied = false, startDateTime = startDateTime)
-                 .onSuccess { sessions ->
-                     reduce {
-                         state.copy(
-                             records = sessions.toRecordItems(),
-                             isLoading = false,
-                         )
-                     }
-                 }
-                 .onError { error ->
-                     reduce { state.copy(isLoading = false) }
-                 }
-
+            runningRepository
+                .getRunSessions(isSelfied = false, startDateTime = startDateTime)
+                .onSuccess { sessions ->
+                    reduce {
+                        state.copy(
+                            records = sessions.toRecordItems(),
+                            isLoading = false,
+                        )
+                    }
+                }.onError { error ->
+                    reduce { state.copy(isLoading = false) }
+                }
         }
-
 
     override fun onIntent(intent: CertifiableRecordIntent) {
         when (intent) {

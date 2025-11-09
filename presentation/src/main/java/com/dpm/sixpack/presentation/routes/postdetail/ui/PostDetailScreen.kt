@@ -1,12 +1,15 @@
 package com.dpm.sixpack.presentation.routes.postdetail.ui
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -16,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,6 +33,7 @@ import com.dpm.sixpack.presentation.common.components.post.PostImageWithRecord
 import com.dpm.sixpack.presentation.common.components.post.PostReactionRow
 import com.dpm.sixpack.presentation.common.components.post.PostUserInfo
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
+import com.dpm.sixpack.presentation.common.util.capture.CaptureController
 import com.dpm.sixpack.presentation.common.util.capture.rememberCaptureController
 import com.dpm.sixpack.presentation.common.util.toTimeAgoString
 import com.dpm.sixpack.presentation.routes.feed.component.dialog.PostDeleteDialog
@@ -36,6 +41,7 @@ import com.dpm.sixpack.presentation.routes.feed.component.dialog.PostReportDialo
 import com.dpm.sixpack.presentation.routes.postdetail.contract.PostDetailIntent
 import com.dpm.sixpack.presentation.routes.postdetail.contract.PostDetailUiState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -46,14 +52,13 @@ fun PostDetailScreen(
     onSavePostImage: (Bitmap) -> Unit = {},
 ) {
     val captureController = rememberCaptureController()
-    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
             DoRunNavigationTopBar(
                 navigateToBack = { onIntent(PostDetailIntent.OnBackClick) },
-                isDarkTheme = true
+                isDarkTheme = true,
             )
         },
         containerColor = SixpackTheme.colors.gray900,
@@ -88,6 +93,7 @@ fun PostDetailScreen(
                     PostDetailContent(
                         uiState = uiState,
                         onIntent = onIntent,
+                        onSavePostImage = onSavePostImage,
                         captureController = captureController,
                     )
                 }
@@ -178,9 +184,12 @@ private fun PostDetailContent(
     uiState: PostDetailUiState,
     onIntent: (PostDetailIntent) -> Unit,
     modifier: Modifier = Modifier,
+    onSavePostImage: (Bitmap) -> Unit = {},
+    captureController: CaptureController,
 ) {
     val post = uiState.post ?: return
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier =
@@ -193,7 +202,10 @@ private fun PostDetailContent(
 
         Column {
             Row(
-                modifier = modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                modifier =
+                    modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 PostUserInfo(
@@ -204,7 +216,7 @@ private fun PostDetailContent(
                     onPostUserProfileClick = {
                         onIntent(PostDetailIntent.OnUserProfileClick(post.user.user.id, post.user.user.isMe))
                     },
-                    isDarkTheme = true
+                    isDarkTheme = true,
                 )
 
                 Spacer(modifier = Modifier.weight(1f))
@@ -220,15 +232,14 @@ private fun PostDetailContent(
                                     onSavePostImage(bitmap)
                                 }
                             }
-                        } else {
-                            onIntent(PostDetailIntent.OnDropDownMenuClick(uiState.post, action))
                         }
+                        onIntent(PostDetailIntent.OnDropDownMenuClick(uiState.post, action))
                     },
-                    isDarkTheme = true
+                    isDarkTheme = true,
                 )
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             PostImageWithRecord(
                 postImageUrl = post.postImageUrl,
