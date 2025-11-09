@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,6 +17,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -58,6 +63,25 @@ fun PostImageWithRecord(
                 Modifier
                     .fillMaxSize(),
             contentScale = ContentScale.Crop,
+        )
+
+        // Gradient overlay at bottom 60%
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.6f)
+                    .align(Alignment.BottomCenter)
+                    .background(
+                        brush =
+                            Brush.verticalGradient(
+                                colors =
+                                    listOf(
+                                        Color.Transparent,
+                                        Color(0x99000000),
+                                    ),
+                            ),
+                    ),
         )
 
         PostTimeTextBox(
@@ -149,7 +173,13 @@ private fun SummaryItem(
         )
         Text(
             text = record,
-            style = recordTextStyle,
+            style = recordTextStyle.copy(
+                shadow = Shadow(
+                    color = Color(0xFF000000),
+                    offset = Offset(0f, 1f),
+                    blurRadius = 2f,
+                ),
+            ),
             color = SixpackTheme.colors.gray0,
         )
     }
