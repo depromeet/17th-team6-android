@@ -8,7 +8,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.dpm.sixpack.SixPackAppState
 import com.dpm.sixpack.presentation.destinations.SignInRoute
-import com.dpm.sixpack.presentation.navigation.MainNavTab
 import com.dpm.sixpack.presentation.routes.feed.navigation.addFeedNavGraph
 import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToCertifiableRecord
 import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToCertifiedUsers
@@ -155,7 +154,7 @@ internal fun MainNavHost(
 
             addPostUploadNavGraph(
                 navigateBack = { navController.popBackStack() },
-                navigateToFeed = { navigator.navigate(MainNavTab.FEED) },
+                navigateToFeed = { navigator.navigateToFeed() },
             )
 
             addMyPageNavGraph(
