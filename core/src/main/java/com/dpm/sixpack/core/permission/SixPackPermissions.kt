@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi
 
 private const val PREFS_NAME = "PermissionPrefs"
 private const val KEY_LOCATION_PERMISSION_REQUESTED = "location_permission_requested"
+private const val KEY_BACKGROUND_LOCATION_PERMISSION_REQUESTED = "background_location_permission_requested"
 private const val KEY_NOTIFICATION_PERMISSION_REQUESTED = "notification_permission_requested"
 private const val KEY_FOREGROUND_SERVICE_PERMISSION_REQUESTED = "foreground_service_permission_requested"
 private const val KEY_FOREGROUND_SERVICE_LOCATION_PERMISSION_REQUESTED =
@@ -67,12 +68,26 @@ sealed class SixPackPermissions(
         KEY_IMAGE_PERMISSION_REQUESTED,
     )
 
+    @RequiresApi(Build.VERSION_CODES.Q)
+    object BackgroundLocationPermission : SixPackPermissions(
+        Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+        KEY_BACKGROUND_LOCATION_PERMISSION_REQUESTED,
+    )
+
     companion object {
-        val LocationPermissions =
+        val LocationPermissions by lazy {
             listOf(
                 FineLocationPermission,
                 CourseLocationPermission,
-            )
+            ) +
+                if (Build.VERSION.SDK_INT >=
+                    Build.VERSION_CODES.Q
+                ) {
+                    listOf(BackgroundLocationPermission)
+                } else {
+                    emptyList()
+                }
+        }
 
         val ForegroundServicePermissions by lazy {
             mutableListOf<SixPackPermissions>().apply {
