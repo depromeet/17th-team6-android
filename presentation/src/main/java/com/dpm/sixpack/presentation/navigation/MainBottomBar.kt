@@ -1,8 +1,13 @@
 package com.dpm.sixpack.presentation.navigation
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.theme.SixpackTheme
@@ -30,10 +36,26 @@ fun MainBottomBar(
     currentTab: MainNavTab?,
     onTabSelected: (MainNavTab) -> Unit,
 ) {
+    val navigationAnimationSpec = tween<IntOffset>(
+        durationMillis = 300,
+        easing = LinearEasing
+    )
+    val fadeAnimationSpec = tween<Float>(
+        durationMillis = 300,
+        easing = LinearEasing
+    )
     AnimatedVisibility(
         visible = visible,
-        enter = fadeIn(),
-        exit = fadeOut(),
+        enter =
+            slideInHorizontally(
+                initialOffsetX = { it },
+                animationSpec = navigationAnimationSpec
+            ) + fadeIn(fadeAnimationSpec),
+        exit =
+            slideOutHorizontally(
+                targetOffsetX = { -it },
+                animationSpec =navigationAnimationSpec
+            ) + fadeOut(fadeAnimationSpec)
     ) {
         val borderColor = SixpackTheme.colors.gray50
         BottomAppBar(

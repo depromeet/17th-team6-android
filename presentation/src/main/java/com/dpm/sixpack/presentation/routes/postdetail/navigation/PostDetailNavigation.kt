@@ -1,10 +1,16 @@
 package com.dpm.sixpack.presentation.routes.postdetail.navigation
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.ui.unit.IntOffset
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
-import androidx.navigation.toRoute
 import com.dpm.sixpack.presentation.common.util.constant.DeepLinks
 import com.dpm.sixpack.presentation.destinations.PostDetail
 import com.dpm.sixpack.presentation.routes.postdetail.PostDetailRoute
@@ -19,10 +25,42 @@ fun NavGraphBuilder.addPostDetailNavGraph(
     navigateToMyPage: () -> Unit = {},
     navigateToPostEdit: (Long) -> Unit = {},
 ) {
+    val navigationAnimationSpec = tween<IntOffset>(
+        durationMillis = 300,
+        easing = LinearEasing
+    )
+    val fadeAnimationSpec = tween<Float>(
+        durationMillis = 300,
+        easing = LinearEasing
+    )
     composable<PostDetail>(
         deepLinks = listOf(
             navDeepLink<PostDetail>(basePath = DeepLinks.Feed.DETAIL)
-        )
+        ),
+        enterTransition = {
+            slideInHorizontally(
+                initialOffsetX = { it },
+                animationSpec = navigationAnimationSpec
+            ) + fadeIn(fadeAnimationSpec)
+        },
+        exitTransition = {
+            slideOutHorizontally(
+                targetOffsetX = { -it },
+                animationSpec =navigationAnimationSpec
+            ) + fadeOut(fadeAnimationSpec)
+        },
+        popEnterTransition = {
+            slideInHorizontally(
+                initialOffsetX = { it },
+                animationSpec = navigationAnimationSpec
+            ) + fadeIn(fadeAnimationSpec)
+        },
+        popExitTransition = {
+            slideOutHorizontally(
+                targetOffsetX = { -it },
+                animationSpec =navigationAnimationSpec
+            ) + fadeOut(fadeAnimationSpec)
+        }
     ) { backStackEntry ->
         PostDetailRoute(
             navigateToMyPage = navigateToMyPage,
