@@ -24,6 +24,7 @@ import com.dpm.sixpack.presentation.routes.postupload.navigation.navigateToPostU
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.addProfileCreationNavGraph
 import com.dpm.sixpack.presentation.routes.profilecreation.navigation.navigateProfileCreation
 import com.dpm.sixpack.presentation.routes.report.navigation.addSessionReportNavGraph
+import com.dpm.sixpack.presentation.routes.report.navigation.navigateSessionReport
 import com.dpm.sixpack.presentation.routes.running.navigation.addRunningNavGraph
 import com.dpm.sixpack.presentation.routes.running.navigation.navigateRunning
 import com.dpm.sixpack.presentation.routes.settings.navigation.addSettingsNavGraph
@@ -165,7 +166,7 @@ internal fun MainNavHost(
                     navController.navigateToPostDetail(id)
                 },
                 onNavigateToRecordDetail = { id ->
-                    navController.navigateToPostDetail(id)
+                    navController.navigateSessionReport(id)
                 },
             )
 
