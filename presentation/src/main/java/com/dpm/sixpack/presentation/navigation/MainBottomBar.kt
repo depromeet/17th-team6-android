@@ -6,7 +6,9 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -48,13 +50,13 @@ fun MainBottomBar(
     AnimatedVisibility(
         visible = visible,
         enter =
-            slideInHorizontally(
-                initialOffsetX = { it },
+            slideInVertically(
+                initialOffsetY = { it },
                 animationSpec = navigationAnimationSpec,
             ) + fadeIn(fadeAnimationSpec),
         exit =
-            slideOutHorizontally(
-                targetOffsetX = { -it },
+            slideOutVertically(
+                targetOffsetY = { it },
                 animationSpec = navigationAnimationSpec,
             ) + fadeOut(fadeAnimationSpec),
     ) {

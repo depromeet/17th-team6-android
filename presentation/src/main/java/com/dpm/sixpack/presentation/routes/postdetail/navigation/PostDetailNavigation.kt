@@ -47,20 +47,14 @@ fun NavGraphBuilder.addPostDetailNavGraph(
             ) + fadeIn(fadeAnimationSpec)
         },
         exitTransition = {
-            slideOutHorizontally(
-                targetOffsetX = { -it },
-                animationSpec = navigationAnimationSpec,
-            ) + fadeOut(fadeAnimationSpec)
+            fadeOut(animationSpec = fadeAnimationSpec)
         },
         popEnterTransition = {
-            slideInHorizontally(
-                initialOffsetX = { it },
-                animationSpec = navigationAnimationSpec,
-            ) + fadeIn(fadeAnimationSpec)
+            fadeIn(animationSpec = fadeAnimationSpec)
         },
         popExitTransition = {
             slideOutHorizontally(
-                targetOffsetX = { -it },
+                targetOffsetX = { it },
                 animationSpec = navigationAnimationSpec,
             ) + fadeOut(fadeAnimationSpec)
         },
