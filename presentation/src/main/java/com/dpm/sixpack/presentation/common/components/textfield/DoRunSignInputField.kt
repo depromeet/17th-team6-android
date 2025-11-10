@@ -48,6 +48,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
  * @param isError 에러 상태 여부
  * @param style "default" 또는 "id" 스타일
  * @param keyboardType 키보드 타입
+ * @param maxLength 최대 입력 길이 제한 (선택사항)
  * @param trailingIcon 우측 아이콘 컨텐츠 (선택사항)
  * @param bottomHelper 보조 텍스트 (선택사항)
  * @param modifier 레이아웃 모디파이어
@@ -64,6 +65,7 @@ fun DoRunSignInputField(
     style: String = "default",
     keyboardType: KeyboardType = KeyboardType.Text,
     singleLine: Boolean = true,
+    maxLength: Int? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: @Composable (() -> Unit)? = null,
     bottomHelper: @Composable (() -> Unit)? = null,
@@ -95,27 +97,17 @@ fun DoRunSignInputField(
                 else -> SixpackTheme.colors.gray900
             }
 
-        // TextFieldValue를 사용하여 커서 위치 제어
-        var textFieldValue by remember {
-            mutableStateOf(
-                TextFieldValue(
-                    text = value,
-                    selection = TextRange(value.length),
-                ),
-            )
+        // TextFieldValue로 관리하되 커서를 항상 맨 끝으로 강제
+        var textFieldValueState by remember {
+            mutableStateOf(TextFieldValue(text = value, selection = TextRange(value.length)))
         }
 
-        // value가 외부에서 변경될 때 textFieldValue 업데이트
-        LaunchedEffect(value) {
-            // 텍스트가 변경되었을 때만 업데이트
-            if (textFieldValue.text != value) {
-                // 커서를 항상 맨 끝으로 이동 (새로운 텍스트 길이 기준)
-                textFieldValue =
-                    TextFieldValue(
-                        text = value,
-                        selection = TextRange(value.length.coerceAtLeast(0)),
-                    )
-            }
+        // 외부 value와 내부 상태가 다르면 즉시 동기화 (composition 내에서 처리)
+        if (textFieldValueState.text != value) {
+            textFieldValueState = TextFieldValue(
+                text = value,
+                selection = TextRange(value.length),
+            )
         }
 
         val customTextSelectionColors =
@@ -126,20 +118,21 @@ fun DoRunSignInputField(
 
         CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
             BasicTextField(
-                value = textFieldValue,
-                onValueChange = { newTextFieldValue ->
-                    // 커서 위치가 텍스트 길이를 초과하지 않도록 보정
-                    val safeSelection =
-                        TextRange(
-                            newTextFieldValue.selection.start.coerceIn(0, newTextFieldValue.text.length),
-                            newTextFieldValue.selection.end.coerceIn(0, newTextFieldValue.text.length),
-                        )
+                value = textFieldValueState,
+                onValueChange = { newValue ->
 
-                    textFieldValue =
-                        newTextFieldValue.copy(
-                            selection = safeSelection,
-                        )
-                    onValueChange(newTextFieldValue.text)
+                    // 최대 길이 제한 적용
+                    val newText = if (maxLength != null) {
+                        newValue.text.take(maxLength)
+                    } else {
+                        newValue.text
+                    }
+                    val newLength = newText.length
+                    textFieldValueState = TextFieldValue(
+                        text = newText,
+                        selection = TextRange(newLength),
+                    )
+                    onValueChange(newText)
                 },
                 modifier =
                     Modifier
@@ -168,7 +161,7 @@ fun DoRunSignInputField(
                                 .padding(start = 16.dp, end = 12.dp),
                         contentAlignment = Alignment.CenterStart,
                     ) {
-                        if (textFieldValue.text.isEmpty() && placeholder != null) {
+                        if (textFieldValueState.text.isEmpty() && placeholder != null) {
                             Text(
                                 text = placeholder,
                                 style = SixpackTheme.typography.b2Regular,

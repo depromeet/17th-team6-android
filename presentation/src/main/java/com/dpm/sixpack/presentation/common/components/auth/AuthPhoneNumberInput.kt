@@ -37,8 +37,8 @@ fun AuthPhoneNumberInput(
     DoRunSignInputField(
         value = phoneNumber,
         onValueChange = { newValue ->
-            // 숫자만 필터링하여 전달 (최대 11자리)
-            val digitsOnly = newValue.filter { it.isDigit() }.take(11)
+            // 숫자만 필터링하여 전달
+            val digitsOnly = newValue.filter { it.isDigit() }
             onPhoneNumberChanged(digitsOnly)
         },
         topLabel = topLabel,
@@ -47,6 +47,7 @@ fun AuthPhoneNumberInput(
         enabled = enabled,
         keyboardType = KeyboardType.Number,
         singleLine = true,
+        maxLength = 11,
         visualTransformation = PhoneNumberVisualTransformation(),
         trailingIcon = {
             if (phoneNumber.isNotBlank() && onClickClear != null && enabled) {
