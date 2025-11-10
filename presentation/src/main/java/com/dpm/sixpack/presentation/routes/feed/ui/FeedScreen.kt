@@ -176,7 +176,7 @@ fun FeedScreen(
                 isRefreshing = true
                 onIntent(FeedIntent.OnRefreshAll)
             },
-            modifier = contentModifier,
+            modifier = contentModifier.padding(paddingValues),
             state = pullToRefreshState,
             indicator = {
                 PullToRefreshDefaults.Indicator(
@@ -190,10 +190,7 @@ fun FeedScreen(
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
                 LazyColumn(
-                    modifier =
-                        Modifier
-                            .padding(paddingValues)
-                            .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     state = lazyListState,
                 ) {
                     // Calendar
@@ -261,7 +258,6 @@ fun FeedScreen(
                 }
 
                 FeedFTAButton(
-                    enabled = state.feedDateState != FeedDateUiState.NoPostsAndExpired,
                     onFTAButtonClick = { onIntent(FeedIntent.OnFloatingActionButtonClick) },
                     modifier = Modifier.align(Alignment.BottomEnd),
                 )

@@ -514,6 +514,7 @@ class FeedViewModel @Inject constructor(
                     .deletePost(feedId)
                     .onSuccess {
                         postSideEffect(FeedSideEffect.ShowToast("게시물이 삭제되었습니다."))
+                        onIntent(FeedIntent.OnRefreshAll)
                     }.onError { exception ->
                         reduce {
                             state.copy(
