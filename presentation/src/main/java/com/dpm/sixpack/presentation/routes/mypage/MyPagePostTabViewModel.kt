@@ -59,33 +59,27 @@ class MyPagePostTabViewModel
                             val beforeYearMonth = before?.let { getYearMonthFromPost(it) }
                             val afterYearMonth = after?.let { getYearMonthFromPost(it) }
 
-                            val shouldInsertLabel =
-                                after != null &&
-                                    afterYearMonth != null &&
-                                    (before == null || beforeYearMonth != afterYearMonth)
-
-                            if (shouldInsertLabel) {
-                                GridItemType.MonthLabel(
-                                    year = afterYearMonth.first,
-                                    month = afterYearMonth.second,
-                                )
-                            } else {
-                                null
-                            }
+                        if (after != null && afterYearMonth != null && (before == null || beforeYearMonth != afterYearMonth)) {
+                            GridItemType.MonthLabel(
+                                year = afterYearMonth.first,
+                                month = afterYearMonth.second,
+                            )
+                        } else {
+                            null
                         }
-                }.cachedIn(viewModelScope)
-
-        private fun getYearMonthFromPost(gridItem: GridItemType): Pair<Int, Int>? =
-            when (gridItem) {
-                is GridItemType.PostItem -> {
-                    // TimeUtil의 공통 날짜 파싱 함수 사용
-                    TimeUtil.parseToLocalDateTime(gridItem.post.createdAt)?.let { dateTime ->
-                        Pair(dateTime.year, dateTime.monthValue)
                     }
-                }
+            }.cachedIn(viewModelScope)
 
-                is GridItemType.MonthLabel -> null
+    private fun getYearMonthFromPost(gridItem: GridItemType): Pair<Int, Int>? =
+        when (gridItem) {
+            is GridItemType.PostItem -> {
+                // TimeUtil의 공통 날짜 파싱 함수 사용
+                TimeUtil.parseToLocalDateTime(gridItem.post.createdAt)?.let { dateTime ->
+                    Pair(dateTime.year, dateTime.monthValue)
+                }
             }
+            is GridItemType.MonthLabel -> null
+        }
 
         override fun onIntent(intent: MyPagePostTabIntent) {
             when (intent) {

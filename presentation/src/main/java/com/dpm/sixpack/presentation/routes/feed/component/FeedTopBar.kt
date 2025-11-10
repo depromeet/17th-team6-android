@@ -28,7 +28,7 @@ fun FeedTopBar(
     modifier: Modifier = Modifier,
 ) {
     DoRunTopBarSlot(
-        modifier = modifier.padding(start = 20.dp, end = 10.dp),
+        modifier = modifier.padding(start = 10.dp),
         leadingContent = {
             Text(
                 text = "인증 피드",
@@ -38,12 +38,13 @@ fun FeedTopBar(
         },
         trailingContent = {
             Row(
-                modifier = Modifier.padding(10.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Box(
                     modifier =
                         Modifier
+                            .padding(vertical = 10.dp)
+                            .padding(start = 10.dp, end = 6.dp)
                             .noRippleClickable(onClick = onGroupIconClick),
                     contentAlignment = Alignment.Center,
                 ) {
@@ -54,10 +55,11 @@ fun FeedTopBar(
                     )
                 }
 
-                Spacer(modifier = Modifier.width(12.dp))
-
                 Box(
-                    modifier = Modifier.noRippleClickable(onClick = onAlarmIconClick),
+                    modifier = Modifier
+                        .padding(vertical = 10.dp)
+                        .padding(start = 6.dp, end = 10.dp)
+                        .noRippleClickable(onClick = onAlarmIconClick),
                     contentAlignment = Alignment.Center,
                 ) {
                     Image(

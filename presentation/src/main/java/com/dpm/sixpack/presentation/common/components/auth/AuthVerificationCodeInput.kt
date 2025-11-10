@@ -49,12 +49,17 @@ fun AuthVerificationCodeInput(
     Column(modifier = modifier) {
         DoRunSignInputField(
             value = verificationCode,
-            onValueChange = onVerificationCodeChanged,
+            onValueChange = { newValue ->
+                // 숫자만 필터링하여 전달
+                val digitsOnly = newValue.filter { it.isDigit() }
+                onVerificationCodeChanged(digitsOnly)
+            },
             topLabel = topLabel,
             placeholder = placeholder,
             enabled = enabled,
             keyboardType = KeyboardType.Number,
             singleLine = true,
+            maxLength = 6,
             trailingIcon = {
                 if (showResendButton && remainingTime != null && onResendClick != null) {
                     Row(

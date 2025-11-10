@@ -22,4 +22,6 @@ interface UserPreferenceDataSource {
     suspend fun updateRefreshToken(token: String)
 
     suspend fun clearTokens()
+
+    suspend fun clearUserId()
 }
