@@ -35,7 +35,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import com.dpm.sixpack.presentation.R
-import com.dpm.sixpack.presentation.common.model.FriendUiItem
+import com.dpm.sixpack.presentation.common.model.FriendItem
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 import kotlinx.coroutines.delay
 
@@ -43,7 +43,7 @@ import kotlinx.coroutines.delay
 internal fun FriendListLazyColumn(
     modifier: Modifier = Modifier,
     showOptionForUserId: Long? = null,
-    pagingItems: LazyPagingItems<FriendUiItem>,
+    pagingItems: LazyPagingItems<FriendItem>,
     onRefresh: () -> Unit = {},
     onOptionClick: (Long) -> Unit = {}, // (FriendListItem에 맞게 수정)
     onOptionDismiss: () -> Unit = {},

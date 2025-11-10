@@ -10,7 +10,7 @@ object PaceColorCalculator {
         val color: Color,
     )
 
-    private val paceColorPoints =
+    val paceColorPoints =
         listOf(
             PaceColorPoint(300, Color(0xFF4751FF)), // 5:00
             PaceColorPoint(360, Color(0xFF26FF00)), // 6:00

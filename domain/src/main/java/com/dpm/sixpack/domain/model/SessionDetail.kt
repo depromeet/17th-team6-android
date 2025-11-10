@@ -26,7 +26,7 @@ data class SessionDetail(
 data class SessionDetailFeed(
     val id: Long,
     val mapImage: String,
-    val selfieImage: String,
-    val content: String,
+    val selfieImage: String? = null,
+    val content: String? = null,
     val createdAt: String,
 ) : Parcelable

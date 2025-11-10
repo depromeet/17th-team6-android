@@ -22,7 +22,7 @@ import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.dialog.DialogButtonType
 import com.dpm.sixpack.presentation.common.components.dialog.DoRunDefaultDialog
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
-import com.dpm.sixpack.presentation.common.model.FriendUiItem
+import com.dpm.sixpack.presentation.common.model.FriendItem
 import com.dpm.sixpack.presentation.routes.friend.components.FriendBottomBar
 import com.dpm.sixpack.presentation.routes.friend.components.FriendListLazyColumn
 import com.dpm.sixpack.presentation.routes.friend.contract.FriendIntent
@@ -34,7 +34,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 @Composable
 internal fun FriendListScreen(
     state: FriendUiState.FriendList,
-    pagingItems: LazyPagingItems<FriendUiItem>,
+    pagingItems: LazyPagingItems<FriendItem>,
     onIntent: (FriendIntent) -> Unit,
 ) {
     Scaffold(

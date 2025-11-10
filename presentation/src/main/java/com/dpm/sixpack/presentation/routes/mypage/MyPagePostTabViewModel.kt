@@ -25,39 +25,39 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyPagePostTabViewModel
-@Inject
-constructor(
-    savedStateHandle: SavedStateHandle,
-    getMyUserFeedsUseCase: GetMyUserFeedsUseCase,
-) : BaseViewModel<MyPagePostTabState, MyPagePostTabIntent, MyPagePostTabSideEffect>() {
-    override val initialState: MyPagePostTabState = MyPagePostTabState()
+    @Inject
+    constructor(
+        savedStateHandle: SavedStateHandle,
+        getMyUserFeedsUseCase: GetMyUserFeedsUseCase,
+    ) : BaseViewModel<MyPagePostTabState, MyPagePostTabIntent, MyPagePostTabSideEffect>() {
+        override val initialState: MyPagePostTabState = MyPagePostTabState()
 
-    override val container: Container<MyPagePostTabState, MyPagePostTabSideEffect> =
-        container(initialState = initialState, savedStateHandle = savedStateHandle)
+        override val container: Container<MyPagePostTabState, MyPagePostTabSideEffect> =
+            container(initialState = initialState, savedStateHandle = savedStateHandle)
 
-    val postsPagingFlow: Flow<PagingData<GridItemType>> =
-        getMyUserFeedsUseCase()
-            .map { pagingData ->
-                pagingData
-                    .filter { feedListItem ->
-                        // Filter out UserSummaryItem, only keep PostItem
-                        feedListItem is FeedListItem.PostItem
-                    }.map { feedListItem ->
-                        val feed = (feedListItem as FeedListItem.PostItem).feed
-                        Post(
-                            id = feed.feedId,
-                            imageUrl = feed.imageUrl,
-                            createdAt = feed.date,
-                        )
-                    }
-            }.map { pagingData ->
-                pagingData
-                    .map<Post, GridItemType> { post ->
-                        GridItemType.PostItem(post)
-                    }.insertSeparators { before, after ->
-                        // 첫 번째 아이템이거나 월이 바뀔 때 MonthLabel 삽입
-                        val beforeYearMonth = before?.let { getYearMonthFromPost(it) }
-                        val afterYearMonth = after?.let { getYearMonthFromPost(it) }
+        val postsPagingFlow: Flow<PagingData<GridItemType>> =
+            getMyUserFeedsUseCase()
+                .map { pagingData ->
+                    pagingData
+                        .filter { feedListItem ->
+                            // Filter out UserSummaryItem, only keep PostItem
+                            feedListItem is FeedListItem.PostItem
+                        }.map { feedListItem ->
+                            val feed = (feedListItem as FeedListItem.PostItem).feed
+                            Post(
+                                id = feed.feedId,
+                                imageUrl = feed.imageUrl,
+                                createdAt = feed.date,
+                            )
+                        }
+                }.map { pagingData ->
+                    pagingData
+                        .map<Post, GridItemType> { post ->
+                            GridItemType.PostItem(post)
+                        }.insertSeparators { before, after ->
+                            // 첫 번째 아이템이거나 월이 바뀔 때 MonthLabel 삽입
+                            val beforeYearMonth = before?.let { getYearMonthFromPost(it) }
+                            val afterYearMonth = after?.let { getYearMonthFromPost(it) }
 
                         if (after != null && afterYearMonth != null && (before == null || beforeYearMonth != afterYearMonth)) {
                             GridItemType.MonthLabel(
@@ -81,18 +81,18 @@ constructor(
             is GridItemType.MonthLabel -> null
         }
 
-    override fun onIntent(intent: MyPagePostTabIntent) {
-        when (intent) {
-            is MyPagePostTabIntent.OnPostClick -> handlePostClick(intent.postId)
-            is MyPagePostTabIntent.OnRetryClick -> {
-                // Paging handles retry through LazyPagingItems.retry() in UI
-                // No action needed in ViewModel
+        override fun onIntent(intent: MyPagePostTabIntent) {
+            when (intent) {
+                is MyPagePostTabIntent.OnPostClick -> handlePostClick(intent.postId)
+                is MyPagePostTabIntent.OnRetryClick -> {
+                    // Paging handles retry through LazyPagingItems.retry() in UI
+                    // No action needed in ViewModel
+                }
             }
         }
-    }
 
-    private fun handlePostClick(postId: Long) =
-        intent {
-            postSideEffect(MyPagePostTabSideEffect.NavigateToPostDetail(postId))
-        }
-}
+        private fun handlePostClick(postId: Long) =
+            intent {
+                postSideEffect(MyPagePostTabSideEffect.NavigateToPostDetail(postId))
+            }
+    }

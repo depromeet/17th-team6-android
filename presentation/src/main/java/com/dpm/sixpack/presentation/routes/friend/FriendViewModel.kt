@@ -13,7 +13,7 @@ import com.dpm.sixpack.domain.usecase.friend.GetFriendRunningStatusUseCase
 import com.dpm.sixpack.domain.usecase.friend.GetMyFriendCodeUseCase
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
-import com.dpm.sixpack.presentation.common.model.FriendUiItem
+import com.dpm.sixpack.presentation.common.model.FriendItem
 import com.dpm.sixpack.presentation.common.model.toUiItem
 import com.dpm.sixpack.presentation.routes.friend.contract.AddFriendIntent
 import com.dpm.sixpack.presentation.routes.friend.contract.FriendIntent
@@ -47,7 +47,7 @@ class FriendViewModel @Inject constructor(
 
     private val refreshTrigger = MutableStateFlow(0)
 
-    val friendPagingFlow: Flow<PagingData<FriendUiItem>> =
+    val friendPagingFlow: Flow<PagingData<FriendItem>> =
         refreshTrigger
             .flatMapLatest {
                 getFriendListUseCase()

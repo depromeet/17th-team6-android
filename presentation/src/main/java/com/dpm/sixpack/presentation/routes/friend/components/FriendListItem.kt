@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.core.util.TimeUtil.isoStringToEpochSeconds
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultAsyncImage
-import com.dpm.sixpack.presentation.common.model.FriendUiItem
+import com.dpm.sixpack.presentation.common.model.FriendItem
 import com.dpm.sixpack.presentation.common.util.convertTimeDiffToString
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
@@ -41,7 +41,7 @@ private const val DROPDOWN_MENU_ITEM_HEIGHT_DP = 36
 
 @Composable
 internal fun FriendListItem(
-    friend: FriendUiItem,
+    friend: FriendItem,
     isOptionMenuExpanded: Boolean,
     onOptionClick: () -> Unit,
     onOptionDismiss: () -> Unit,
@@ -62,7 +62,7 @@ internal fun FriendListItem(
                 Modifier
                     .size(50.dp)
                     .clip(CircleShape)
-                    .border(1.dp, SixpackTheme.colors.blue600, shape = CircleShape),
+                    .border(1.dp, SixpackTheme.colors.gray200, shape = CircleShape),
             placeholder = ColorPainter(SixpackTheme.colors.gray50),
             error = painterResource(id = R.drawable.ill_profile_placeholder),
             contentScale = ContentScale.Crop,

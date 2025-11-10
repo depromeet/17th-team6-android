@@ -6,7 +6,6 @@ import com.dpm.sixpack.domain.model.RunningSessionResult
 import com.dpm.sixpack.presentation.common.util.format.formatCadence
 import com.dpm.sixpack.presentation.common.util.format.formatPace
 import com.dpm.sixpack.presentation.common.util.format.formatSecondsToTimeInFeed
-import com.dpm.sixpack.presentation.common.util.format.toPostTimeStringOrNull
 import com.dpm.sixpack.presentation.common.util.format.toPostTimeStringOrNullInstant
 import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
 import kotlinx.parcelize.Parcelize
