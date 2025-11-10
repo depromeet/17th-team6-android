@@ -98,16 +98,9 @@ fun DoRunSignInputField(
             }
 
         // TextFieldValue로 관리하되 커서를 항상 맨 끝으로 강제
-        var textFieldValueState by remember {
+        // value가 key이므로 value 변경 시 자동으로 새 TextFieldValue 생성
+        var textFieldValueState by remember(value) {
             mutableStateOf(TextFieldValue(text = value, selection = TextRange(value.length)))
-        }
-
-        // 외부 value와 내부 상태가 다르면 즉시 동기화 (composition 내에서 처리)
-        if (textFieldValueState.text != value) {
-            textFieldValueState = TextFieldValue(
-                text = value,
-                selection = TextRange(value.length),
-            )
         }
 
         val customTextSelectionColors =
