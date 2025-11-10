@@ -1,8 +1,8 @@
 package com.dpm.sixpack.presentation.routes.running.map.contract
 
 import android.os.Parcelable
+import com.dpm.sixpack.presentation.common.model.FriendItem
 import com.dpm.sixpack.presentation.routes.running.RunningRouteUiState
-import com.dpm.sixpack.presentation.routes.running.map.friendsheet.contract.FriendSheetUiState
 import com.naver.maps.geometry.LatLngBounds
 import kotlinx.parcelize.Parcelize
 
@@ -23,7 +23,7 @@ sealed interface MapViewState : Parcelable {
 
     @Parcelize
     data class Friend(
-        val friendState: FriendSheetUiState = FriendSheetUiState(),
+        val selectedFriend: FriendItem? = null,
     ) : MapViewState
 
     @Parcelize

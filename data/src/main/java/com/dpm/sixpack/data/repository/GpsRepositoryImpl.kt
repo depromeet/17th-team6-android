@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class GpsRepositoryImpl @Inject constructor(
-    private val gpsDataSource: GpsDataSource,
+    gpsDataSource: GpsDataSource,
 ) : GpsRepository {
     override val locationFlow: Flow<DoRunResult<Location>> =
         gpsDataSource.locationFlow

@@ -81,19 +81,19 @@ object TimeUtil {
      * @param dateString 파싱할 날짜 문자열
      * @return 파싱된 LocalDateTime 객체, 파싱 실패 시 null
      */
-    fun parseToLocalDateTime(dateString: String): LocalDateTime? {
-        return try {
+    fun parseToLocalDateTime(dateString: String): LocalDateTime? =
+        try {
             // 1. ISO_DATE_TIME 형식 시도 (예: "2025-11-09T10:30:00")
             try {
                 LocalDateTime.parse(dateString, DateTimeFormatter.ISO_DATE_TIME)
             } catch (_: DateTimeParseException) {
                 // 2. ISO_LOCAL_DATE 형식 시도 (예: "2025-11-09")
-                LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE)
+                LocalDate
+                    .parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE)
                     .atStartOfDay()
             }
         } catch (e: DateTimeParseException) {
             Timber.e(e, "날짜 파싱 실패: $dateString")
             null
         }
-    }
 }

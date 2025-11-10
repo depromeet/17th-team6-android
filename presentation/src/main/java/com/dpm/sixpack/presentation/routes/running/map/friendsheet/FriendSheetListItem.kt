@@ -1,9 +1,11 @@
 package com.dpm.sixpack.presentation.routes.running.map.friendsheet
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.core.util.TimeUtil.isoStringToEpochSeconds
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultAsyncImage
-import com.dpm.sixpack.presentation.common.model.FriendUiItem
+import com.dpm.sixpack.presentation.common.model.FriendItem
 import com.dpm.sixpack.presentation.common.model.LastRunInfoUi
 import com.dpm.sixpack.presentation.common.util.convertTimeDiffToString
 import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
@@ -37,9 +39,11 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 internal fun FriendSheetListItem(
-    friendItem: FriendUiItem,
+    friendItem: FriendItem,
     modifier: Modifier = Modifier,
+    itemPadding: PaddingValues = PaddingValues(),
     onAwakeClick: () -> Unit = {},
+    isSelected: Boolean = false,
 ) {
     val lastRunInfo = friendItem.lastRunInfo
     val hasLastRun = lastRunInfo != null
@@ -78,8 +82,9 @@ internal fun FriendSheetListItem(
     Row(
         modifier =
             modifier
+                .background(color = if (isSelected) SixpackTheme.colors.gray50 else SixpackTheme.colors.gray0)
                 .fillMaxWidth()
-                .padding(vertical = 12.dp),
+                .padding(itemPadding),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         // Profile Image
@@ -93,7 +98,11 @@ internal fun FriendSheetListItem(
                     Modifier
                         .size(50.dp)
                         .clip(CircleShape)
-                        .border(1.dp, SixpackTheme.colors.blue600, shape = CircleShape),
+                        .border(
+                            width = 1.dp,
+                            color = if (isSelected) SixpackTheme.colors.blue600 else SixpackTheme.colors.gray200,
+                            shape = CircleShape,
+                        ),
                 placeholder = ColorPainter(SixpackTheme.colors.gray50),
                 error = painterResource(id = R.drawable.ill_profile_placeholder),
                 contentScale = ContentScale.Crop,
@@ -202,7 +211,7 @@ private fun FriendListItemPreview() {
     Column {
         // 나
         FriendSheetListItem(
-            FriendUiItem(
+            FriendItem(
                 userId = 1234,
                 nickName = "승규",
                 isMe = true,
@@ -220,7 +229,7 @@ private fun FriendListItemPreview() {
 
         // 친구, 활성
         FriendSheetListItem(
-            FriendUiItem(
+            FriendItem(
                 userId = 2445895,
                 nickName = "소래",
                 isMe = false,
@@ -239,7 +248,7 @@ private fun FriendListItemPreview() {
 
         // 친구, 비활성, 깨우기 활성
         FriendSheetListItem(
-            FriendUiItem(
+            FriendItem(
                 userId = 24455,
                 nickName = "소래",
                 isMe = false,
@@ -258,7 +267,7 @@ private fun FriendListItemPreview() {
 
         // // 친구, 비활성, 깨우기 비활성
         FriendSheetListItem(
-            FriendUiItem(
+            FriendItem(
                 userId = 9767886,
                 nickName = "승범",
                 isMe = false,
@@ -277,7 +286,7 @@ private fun FriendListItemPreview() {
 
         // // 친구, 비활성, 깨우기 비활성
         FriendSheetListItem(
-            FriendUiItem(
+            FriendItem(
                 userId = 9213786,
                 nickName = "승범",
                 isMe = false,
@@ -292,6 +301,7 @@ private fun FriendListItemPreview() {
                     ),
                 latestCheeredAt = "2025-11-02T09:57:13Z",
             ),
+            isSelected = true,
         )
     }
 }

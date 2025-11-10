@@ -48,7 +48,7 @@ fun PostDetailScreen(
         topBar = {
             DoRunNavigationTopBar(
                 navigateToBack = { onIntent(PostDetailIntent.OnBackClick) },
-                isDarkTheme = true
+                isDarkTheme = true,
             )
         },
         containerColor = SixpackTheme.colors.gray900,
@@ -198,7 +198,7 @@ private fun PostDetailContent(
                     onPostUserProfileClick = {
                         onIntent(PostDetailIntent.OnUserProfileClick(post.user.user.id, post.user.user.isMe))
                     },
-                    isDarkTheme = true
+                    isDarkTheme = true,
                 )
 
                 Spacer(modifier = Modifier.weight(1f))
@@ -210,7 +210,7 @@ private fun PostDetailContent(
                     onDropDownMenuClick = { action ->
                         onIntent(PostDetailIntent.OnDropDownMenuClick(uiState.post, action))
                     },
-                    isDarkTheme = true
+                    isDarkTheme = true,
                 )
             }
 

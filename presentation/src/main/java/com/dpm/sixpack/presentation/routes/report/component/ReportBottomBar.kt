@@ -35,7 +35,6 @@ internal fun ReportBottomBar(
         modifier =
             modifier
                 .background(color = SixpackTheme.colors.gray50, shape = SixpackTheme.shapes.round16)
-                .padding(all = 16.dp)
                 .clickable {
                     onClick()
                 },

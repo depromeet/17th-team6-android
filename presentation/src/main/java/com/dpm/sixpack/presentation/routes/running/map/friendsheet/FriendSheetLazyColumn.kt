@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,16 +37,18 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import com.dpm.sixpack.presentation.R
-import com.dpm.sixpack.presentation.common.model.FriendUiItem
+import com.dpm.sixpack.presentation.common.model.FriendItem
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 import kotlinx.coroutines.delay
 
 @Composable
 internal fun FriendSheetLazyColumn(
+    pagingItems: LazyPagingItems<FriendItem>,
+    itemPadding: PaddingValues,
     modifier: Modifier = Modifier,
-    pagingItems: LazyPagingItems<FriendUiItem>,
+    selected: FriendItem? = null,
     onAwakeClick: (Long) -> Unit = {},
-    onItemClick: (Long) -> Unit = {},
+    onItemClick: (FriendItem) -> Unit = {},
 ) {
     var isRefreshing by remember { mutableStateOf(false) }
     val pullRefreshState = rememberPullToRefreshState()
@@ -87,7 +90,9 @@ internal fun FriendSheetLazyColumn(
             is LoadState.Loading -> {
                 if (pagingItems.itemCount == 0) {
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator()
+                        CircularProgressIndicator(
+                            color = SixpackTheme.colors.gray400,
+                        )
                     }
                 }
             }
@@ -137,22 +142,24 @@ internal fun FriendSheetLazyColumn(
             }
 
             is LoadState.NotLoading -> {
+                // 친구 없고 나만 있을때
                 if (pagingItems.itemCount == 1 && pagingItems[0]?.isMe == true) {
                     Column(
                         modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
-                        val me = pagingItems[0]
-                        me?.let {
+                        pagingItems[0]?.let {
                             FriendSheetListItem(
                                 friendItem = it,
                                 onAwakeClick = {
                                     onAwakeClick(it.userId)
                                 },
                                 modifier =
-                                    Modifier.clickable {
-                                        onItemClick(it.userId)
-                                    },
+                                    Modifier
+                                        .clickable {
+                                            onItemClick(it)
+                                        },
+                                itemPadding = itemPadding,
+                                isSelected = (it.userId == selected?.userId),
                             )
                         }
 
@@ -177,7 +184,6 @@ internal fun FriendSheetLazyColumn(
                 } else {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
                         items(
                             pagingItems.itemCount,
@@ -191,9 +197,12 @@ internal fun FriendSheetLazyColumn(
                                         onAwakeClick(it.userId)
                                     },
                                     modifier =
-                                        Modifier.clickable {
-                                            onItemClick(it.userId)
-                                        },
+                                        Modifier
+                                            .clickable {
+                                                onItemClick(it)
+                                            },
+                                    itemPadding = itemPadding,
+                                    isSelected = (it.userId == selected?.userId),
                                 )
                             }
                         }

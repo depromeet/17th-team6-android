@@ -5,7 +5,7 @@ import com.dpm.sixpack.domain.model.Friend
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class FriendUiItem(
+data class FriendItem(
     val userId: Long, // 123
     val nickName: String,
     val isMe: Boolean, // true
@@ -24,7 +24,7 @@ data class LastRunInfoUi(
 ) : Parcelable
 
 fun Friend.toUiItem() =
-    FriendUiItem(
+    FriendItem(
         userId = userInfo.userId,
         nickName = userInfo.nickName,
         isMe = userInfo.isMe,
