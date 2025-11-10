@@ -156,6 +156,14 @@ private fun PostGridItem(
             modifier = Modifier.fillMaxSize(),
         )
 
+        // Dim layer
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(SixpackTheme.colors.gray900.copy(alpha = 0.3f)),
+        )
+
         // Day label overlay
         if (day.isNotEmpty()) {
             Text(
