@@ -6,10 +6,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,7 +27,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 fun DoRunErrorScreen(
     modifier: Modifier = Modifier,
     title: String,
-    subtitle: String,
+    description: String,
     confirmButtonText: String,
     onConfirmClick: () -> Unit,
 ) {
@@ -59,7 +59,7 @@ fun DoRunErrorScreen(
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = subtitle,
+                text = description,
                 style = SixpackTheme.typography.b2Regular,
                 textAlign = TextAlign.Center,
                 color = SixpackTheme.colors.gray700,
@@ -70,7 +70,7 @@ fun DoRunErrorScreen(
             DoRunDefaultButton(
                 modifier =
                     Modifier
-                        .fillMaxWidth(fraction = 0.33f)
+                        .wrapContentWidth()
                         .height(56.dp),
                 text = confirmButtonText,
                 onClick = onConfirmClick,
@@ -88,8 +88,8 @@ private fun DoRunErrorScreenPreview() {
         DoRunErrorScreen(
             modifier = Modifier.fillMaxSize(),
             title = "네트워크 연결이 불안정해요",
-            subtitle = "연결상태를 확인한 뒤 다시 시도해주세요",
-            confirmButtonText = "확인",
+            description = "연결상태를 확인한 뒤 다시 시도해주세요",
+            confirmButtonText = "홈으로 돌아가기",
             onConfirmClick = {},
         )
     }

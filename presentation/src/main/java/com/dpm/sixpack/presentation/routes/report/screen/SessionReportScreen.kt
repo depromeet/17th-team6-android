@@ -17,6 +17,7 @@ import com.dpm.sixpack.presentation.common.components.dialog.DoRunErrorScreen
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
 import com.dpm.sixpack.presentation.routes.report.component.ReportBottomBar
+import com.dpm.sixpack.presentation.routes.report.component.ReportErrorScreen
 import com.dpm.sixpack.presentation.routes.report.contract.ReportIntent
 import com.dpm.sixpack.presentation.routes.report.contract.ReportState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
@@ -79,21 +80,20 @@ internal fun SessionReportScreen(
                     DoRunErrorScreen(
                         modifier = Modifier.fillMaxSize(),
                         title = stringResource(R.string.error_not_found),
-                        subtitle = stringResource(R.string.error_not_found_explanation),
+                        description = stringResource(R.string.error_not_found_explanation),
                         confirmButtonText = stringResource(R.string.back_to_home),
-                        onConfirmClick = {
-                            navigateToHome()
-                        },
+                        onConfirmClick = navigateToHome,
                     )
                 } else {
-                    DoRunErrorScreen(
+                    ReportErrorScreen(
                         modifier = Modifier.fillMaxSize(),
                         title = stringResource(R.string.error_network_connection),
-                        subtitle = stringResource(R.string.error_network_connection_explanation),
+                        description = stringResource(R.string.error_network_connection_explanation),
                         confirmButtonText = stringResource(R.string.retry),
                         onConfirmClick = {
                             onIntent(ReportIntent.LoadSessionDetail(sessionId))
                         },
+                        navigateToHome = navigateToHome,
                     )
                 }
             }
