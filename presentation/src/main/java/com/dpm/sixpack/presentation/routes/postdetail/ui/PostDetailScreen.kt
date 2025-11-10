@@ -22,9 +22,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.graphics.Color.Companion.Transparent
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.dpm.sixpack.presentation.common.components.bottomsheet.EmojiSelectionBottomSheet
 import com.dpm.sixpack.presentation.common.components.bottomsheet.ReactionUsersBottomSheet
 import com.dpm.sixpack.presentation.common.components.post.PostDropDownActionType
@@ -41,7 +46,6 @@ import com.dpm.sixpack.presentation.routes.feed.component.dialog.PostReportDialo
 import com.dpm.sixpack.presentation.routes.postdetail.contract.PostDetailIntent
 import com.dpm.sixpack.presentation.routes.postdetail.contract.PostDetailUiState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -52,6 +56,25 @@ fun PostDetailScreen(
     onSavePostImage: (Bitmap) -> Unit = {},
 ) {
     val captureController = rememberCaptureController()
+    val postImageUrl = uiState.post?.postImageUrl ?: ""
+
+    Box(
+        modifier = modifier.fillMaxSize()
+    ) {
+        AsyncImage(
+            model = postImageUrl,
+            contentDescription =null,
+            modifier = Modifier
+                .fillMaxSize()
+                .blur(radius = 20.dp, edgeTreatment = BlurredEdgeTreatment.Rectangle),
+            contentScale = ContentScale.Crop,
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(SixpackTheme.colors.gray900.copy(alpha = 0.6f))
+        )
+    }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -61,7 +84,7 @@ fun PostDetailScreen(
                 isDarkTheme = true,
             )
         },
-        containerColor = SixpackTheme.colors.gray900,
+        containerColor = Transparent,
     ) { innerPadding ->
         Box(
             modifier =
@@ -195,7 +218,6 @@ private fun PostDetailContent(
         modifier =
             modifier
                 .fillMaxSize()
-                .background(SixpackTheme.colors.gray900)
                 .verticalScroll(rememberScrollState()),
     ) {
         Spacer(modifier = Modifier.height(80.dp))
