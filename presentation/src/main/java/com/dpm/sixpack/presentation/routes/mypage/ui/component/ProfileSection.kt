@@ -71,6 +71,7 @@ internal fun ProfileSection(
         // Stats
         Row(
             modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             StatItem(
                 label = "누적 거리",
@@ -95,6 +96,7 @@ private fun StatItem(
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = label,
