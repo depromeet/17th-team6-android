@@ -42,7 +42,8 @@ fun PostDetailRoute(
         onIntent = viewModel::onIntent,
         onSavePostImage = { bitmap ->
             coroutineScope.launch {
-                val fileName = "sixpack_post_${state.post?.feedId ?: System.currentTimeMillis()}_${System.currentTimeMillis()}"
+                val fileName =
+                    "sixpack_post_${state.post?.feedId ?: System.currentTimeMillis()}_${System.currentTimeMillis()}"
                 ImageSaver
                     .saveToGallery(
                         context = context,

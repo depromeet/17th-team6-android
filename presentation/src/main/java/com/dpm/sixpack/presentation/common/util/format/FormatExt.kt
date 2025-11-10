@@ -90,8 +90,6 @@ fun String.toDateWithDayOfWeekOrNullInstant(): String? =
         Timber.e("날짜 파싱 실패! 에러: ${error.message}")
     }.getOrNull()
 
-
-
 fun String.toTimeOnlyOrNullInstant(): String? =
     runCatching {
         val instant = Instant.parse(this)

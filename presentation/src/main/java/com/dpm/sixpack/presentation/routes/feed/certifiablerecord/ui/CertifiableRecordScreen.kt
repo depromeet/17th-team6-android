@@ -108,7 +108,6 @@ fun CertifiableRecordScreen(
                         )
 
                         item { Spacer(Modifier.height(70.dp)) }
-
                     }
                 } else {
                     Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {

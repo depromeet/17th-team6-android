@@ -67,10 +67,11 @@ private data class WeeklyCalendarDay(
 fun FeedWeeklyCalendar(
     modifier: Modifier = Modifier,
     feedCalenderUiState: FeedCalenderUiState = FeedCalenderUiState(),
-    pagerState: PagerState = rememberPagerState(
-        initialPage = INITIAL_PAGE_INDEX,
-        pageCount = { PAGER_PAGE_COUNT },
-    ),
+    pagerState: PagerState =
+        rememberPagerState(
+            initialPage = INITIAL_PAGE_INDEX,
+            pageCount = { PAGER_PAGE_COUNT },
+        ),
     onDateSelected: (LocalDate) -> Unit = {},
     onWeekDisplayed: (LocalDate) -> Unit = {},
     startDayOfWeek: DayOfWeek = DayOfWeek.SUNDAY,
