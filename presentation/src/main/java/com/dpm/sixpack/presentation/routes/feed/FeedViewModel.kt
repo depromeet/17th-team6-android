@@ -224,7 +224,7 @@ class FeedViewModel @Inject constructor(
     /**
      * 날짜 선택 시
      * 1. 선택된 날짜의 FeedDateState 결정
-     * 2. 선택된 날짜의 인증 유저 로딩 및 내 정보 업데이트
+     * 2. 게시물이 있는 경우에만 인증 유저 로딩 및 내 정보 업데이트
      */
     private fun handleDateSelected(date: LocalDate) =
         intent {
@@ -235,7 +235,17 @@ class FeedViewModel @Inject constructor(
                     feedDateState = feedDateState,
                 )
             }
-            loadCertifiedUsers(date.toYyyyMmDdString())
+
+            if (feedDateState == FeedDateUiState.PostsAvailable) {
+                loadCertifiedUsers(date.toYyyyMmDdString())
+            } else {
+                reduce {
+                    state.copy(
+                        postingUserInfo = emptyList(),
+                        myPostingInfo = null,
+                    )
+                }
+            }
         }
 
     private fun handleFeedDateState(selectedDate: LocalDate): FeedDateUiState {

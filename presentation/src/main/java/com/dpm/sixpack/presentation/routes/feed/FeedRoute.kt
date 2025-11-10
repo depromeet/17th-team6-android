@@ -42,7 +42,7 @@ fun FeedRoute(
             is FeedSideEffect.NavigateToPostUpload -> navigateToCertifiableRecord()
             is FeedSideEffect.NavigateToPostEdit -> navigateToPostEdit(sideEffect.feedId)
             is FeedSideEffect.ShowToast -> {
-                // TODO: Show toast
+                Toast.makeText(context, sideEffect.message, Toast.LENGTH_SHORT).show()
             }
             is FeedSideEffect.RefreshPagingList -> feedPagingItems.refresh()
         }
