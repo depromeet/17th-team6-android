@@ -14,16 +14,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dpm.sixpack.SixPackAppState
-import com.dpm.sixpack.core.permission.SixPackPermissions.Companion.AllPermissions
 import com.dpm.sixpack.main.navigation.MainNavHost
 import com.dpm.sixpack.presentation.common.components.DoRunSnackBar
 import com.dpm.sixpack.presentation.common.components.FullScreenLoadingIndicator
-import com.dpm.sixpack.presentation.common.util.PermissionHandler
 import com.dpm.sixpack.presentation.navigation.MainBottomBar
 import com.dpm.sixpack.presentation.navigation.MainNavTab
 import com.dpm.sixpack.presentation.theme.SixpackTheme
@@ -36,23 +32,15 @@ internal fun MainScreen(
     showFullScreenLoading: Boolean = false,
     setFullScreenLoading: (Boolean) -> Unit = {},
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackBarHostState = remember { SnackbarHostState() }
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
 
     // FIXME: Replace with actual string resource
     val notConnectedMessage = "stringResource(R.string.not_connected)"
 
-    PermissionHandler(
-        context = LocalContext.current,
-        lifecycleOwner = LocalLifecycleOwner.current,
-        permissionsToRequest = AllPermissions,
-        onPermissionResult = { isGranted ->
-        },
-    )
-
     LaunchedEffect(isOffline) {
         if (isOffline) {
-            snackbarHostState.showSnackbar(
+            snackBarHostState.showSnackbar(
                 message = notConnectedMessage,
                 duration = Indefinite,
             )
@@ -62,7 +50,7 @@ internal fun MainScreen(
     MainScreenContent(
         modifier = modifier,
         appState = appState,
-        snackbarHostState = snackbarHostState,
+        snackbarHostState = snackBarHostState,
         showFullScreenLoading = showFullScreenLoading,
         setFullScreenLoading = setFullScreenLoading,
     )

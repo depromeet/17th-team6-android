@@ -42,10 +42,13 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.dpm.sixpack.core.permission.PermissionUtil
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
+import com.dpm.sixpack.presentation.common.components.dialog.DialogButtonType
+import com.dpm.sixpack.presentation.common.components.dialog.DoRunDefaultDialog
 import com.dpm.sixpack.presentation.common.model.FriendItem
-import com.dpm.sixpack.presentation.common.util.PermissionHandler
+import com.dpm.sixpack.presentation.common.util.BackgroundPermissionHandler
 import com.dpm.sixpack.presentation.routes.running.map.MapConstants.DEFAULT_ZOOM
 import com.dpm.sixpack.presentation.routes.running.map.MapConstants.FINAL_RESOLUTION
+import com.dpm.sixpack.presentation.routes.running.map.MapConstants.MAP_PERMISSIONS
 import com.dpm.sixpack.presentation.routes.running.map.MapConstants.SNAPSHOT_PADDING
 import com.dpm.sixpack.presentation.routes.running.map.component.DoRunMarker
 import com.dpm.sixpack.presentation.routes.running.map.component.LocationTrackingButton
@@ -103,6 +106,9 @@ internal fun RunningMapScreen(
     val state by mapViewModel.collectAsState()
     val pagingItems = mapViewModel.friendPagingFlow.collectAsLazyPagingItems()
 
+    // 설정으로 이동하는 런처
+    var settingsLauncher by remember { mutableStateOf<(() -> Unit)?>(null) }
+
     mapViewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
             is MapSideEffect.SetBottomBarVisibility -> {
@@ -130,14 +136,42 @@ internal fun RunningMapScreen(
         }
     }
 
-    PermissionHandler(
+    BackgroundPermissionHandler(
         context = LocalContext.current,
         lifecycleOwner = LocalLifecycleOwner.current,
-        permissionsToRequest = MapConstants.MAP_PERMISSIONS,
-        onPermissionResult = { isGranted ->
-            mapViewModel.onIntent(MapIntent.UpdatePermission(isGranted))
+        foregroundPermissions = MapConstants.MAP_PERMISSIONS,
+        onPermissionResult = { foregroundGranted, backgroundGranted ->
+            // 1단계(전경)와 2단계(백그라운드)가 모두 승인되어야 최종 승인
+            if (foregroundGranted && backgroundGranted) {
+                mapViewModel.onIntent(MapIntent.AllPermissionsGranted)
+            } else {
+                mapViewModel.onIntent(MapIntent.PermissionsRejected)
+            }
+        },
+        onShowRationale = { launchSettings ->
+            settingsLauncher = launchSettings
+            mapViewModel.onIntent(MapIntent.RequestBackgroundPermissionDialog)
         },
     )
+
+    if (state.showRationaleDialog) {
+        DoRunDefaultDialog(
+            title = "위치 권한 안내",
+            subtitle = "러닝기록측정을 위해선 설정에서 위치권한을\n'항상 허용'으로 변경해주세요.",
+            onDismissRequest = {
+                mapViewModel.onIntent(MapIntent.DismissBackgroundPermissionDialog)
+            },
+            onCancelClick = {
+                mapViewModel.onIntent(MapIntent.DismissBackgroundPermissionDialog)
+            },
+            cancelButtonText = "취소",
+            confirmButtonText = "이동",
+            onConfirmClick = {
+                settingsLauncher?.invoke()
+            },
+            confirmButtonType = DialogButtonType.Primary,
+        )
+    }
 
     RunningMapScreenContent(
         modifier = modifier,
@@ -386,17 +420,13 @@ private fun RunningMapScreenContent(
                     )
 
                     RunningStartButton(
-                        enabled = mapState.isStartButtonEnabled,
                         modifier =
                             Modifier.constrainAs(startButtonRef) {
                                 bottom.linkTo(parent.bottom)
                             },
+                        enabled = mapState.allPermissionsGranted,
                         onStartClick = {
-                            if (PermissionUtil.hasPermissions(context, MapConstants.MAP_PERMISSIONS)) {
-                                onMapIntent(MapIntent.SessionStartClick)
-                            } else {
-                                onMapIntent(MapIntent.SessionStartFailed)
-                            }
+                            onMapIntent(MapIntent.SessionStartClick)
                         },
                     )
                 }

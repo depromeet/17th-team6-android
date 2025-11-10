@@ -33,9 +33,11 @@ class FcmService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
+        Timber.d("fcm data received: ${remoteMessage.data}")
+
         // 데이터 페이로드 처리 (서버에서 보낸 key-value 데이터)
         if (remoteMessage.data.isNotEmpty()) {
-            // 데이터 처리 로직 (예: UI 갱신, 백그라운드 작업)
+            Timber.d("fcm data received not null: ${remoteMessage.data}")
         }
 
         // ⬇️ 포그라운드 상태에서 '알림' 메시지를 받았을 때

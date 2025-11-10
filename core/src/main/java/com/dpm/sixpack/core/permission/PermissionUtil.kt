@@ -52,7 +52,7 @@ object PermissionUtil {
             }
         }
 
-    fun requestPermission(
+    fun requestPermissions(
         context: Context,
         permissionsLauncher: ManagedActivityResultLauncher<Array<String>, Map<String, Boolean>>,
         permissions: List<SixPackPermissions>,
@@ -61,6 +61,15 @@ object PermissionUtil {
             savePermissionRequested(context, it)
         }
         permissionsLauncher.launch(permissions.toStringArray())
+    }
+
+    fun requestPermission(
+        context: Context,
+        permissionsLauncher: ManagedActivityResultLauncher<String, Boolean>,
+        permissions: SixPackPermissions,
+    ) {
+        savePermissionRequested(context, permissions)
+        permissionsLauncher.launch(permissions.permission)
     }
 
     fun clearAllPermissionData(context: Context) {

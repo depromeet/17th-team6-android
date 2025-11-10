@@ -93,7 +93,10 @@ class MapViewModel @Inject constructor(
             MapIntent.FollowingModeOff -> handleToggleFollowingModeOff()
             is MapIntent.SessionFinish -> handleSessionFinish(intent.mapImage)
             is MapIntent.UpdateUserLocation -> handleUserLocationChange(intent.latLng)
-            is MapIntent.UpdatePermission -> handlePermissionUpdate(intent.isGranted)
+            MapIntent.AllPermissionsGranted -> handleAllPermissionsGranted()
+            MapIntent.PermissionsRejected -> handlePermissionsRejected()
+            is MapIntent.RequestBackgroundPermissionDialog -> handleBackgroundPermissionDialog(true)
+            is MapIntent.DismissBackgroundPermissionDialog -> handleBackgroundPermissionDialog(false)
             is MapIntent.UpdateRunningMapPath -> updateRunningMapPath(intent.pathState)
         }
     }
@@ -147,32 +150,26 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
-    private fun handlePermissionUpdate(isGranted: Boolean) {
-        if (isGranted) {
-            loadLocationFromClient(
-                onSuccess = { latLng ->
-                    intent {
-                        reduce {
-                            state.copy(
-                                isStartButtonEnabled = true,
-                            )
-                        }
-                        postSideEffect(MapSideEffect.SetCameraPosition(latLng))
-                    }
-                },
-            )
-        } else {
-            intent {
-                reduce {
-                    state.copy(
-                        isStartButtonEnabled = false,
-                    )
-                }
-                postSideEffect(MapSideEffect.SetCameraPosition(MapConstants.DEFAULT_CAMERA_POSITION.target))
+    // 👇 [수정] handleBackgroundPermissionGranted -> handleAllPermissionsGranted
+    private fun handleAllPermissionsGranted() =
+        intent {
+            reduce {
+                state.copy(
+                    showRationaleDialog = false,
+                    allPermissionsGranted = true, // 이름 변경
+                )
             }
         }
-    }
+
+    // 👇 [추가]
+    private fun handlePermissionsRejected() =
+        intent {
+            reduce {
+                state.copy(
+                    allPermissionsGranted = false,
+                )
+            }
+        }
 
     private fun handleSessionStartButtonClick() =
         intent {
@@ -181,7 +178,6 @@ class MapViewModel @Inject constructor(
                     mapViewState = MapViewState.Running(),
                 )
             }
-
             postSideEffect(MapSideEffect.SetBottomBarVisibility(false))
         }
 
@@ -189,11 +185,20 @@ class MapViewModel @Inject constructor(
         intent {
             reduce {
                 state.copy(
-                    isStartButtonEnabled = false,
+                    allPermissionsGranted = false, // 이름 변경
                 )
             }
             postSideEffect(MapSideEffect.SetBottomBarVisibility(true))
             postSideEffect(MapSideEffect.ShowToast(R.string.running_permission_toast))
+        }
+
+    private fun handleBackgroundPermissionDialog(showDialog: Boolean) =
+        intent {
+            reduce {
+                state.copy(
+                    showRationaleDialog = showDialog,
+                )
+            }
         }
 
     // 세션 종료 준비

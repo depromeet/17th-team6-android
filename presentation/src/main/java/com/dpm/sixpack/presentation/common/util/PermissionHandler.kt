@@ -61,7 +61,7 @@ fun PermissionHandler(
             PermissionUtil.hasPermissions(context, permissionsToRequest)
 
         if (!allPermissionsGranted) {
-            PermissionUtil.requestPermission(context, launcher, permissionsToRequest)
+            PermissionUtil.requestPermissions(context, launcher, permissionsToRequest)
         }
     }
 }
