@@ -22,9 +22,13 @@ class SessionDetailRepositoryImpl @Inject constructor(
 
                 DoRunResult.Success(sessionDetail)
             } catch (e: HttpException) {
-                DoRunResult.Failure(DoRunException.DataError("${e.code()} HTTP 에러: ${e.message}"))
+                if (e.code() == 404) {
+                    DoRunResult.Failure(DoRunException.DataError("${e.code()} HTTP 에러: ${e.message}"))
+                } else {
+                    DoRunResult.Failure(DoRunException.ServerError(e.code(), e.message.toString()))
+                }
             } catch (e: Exception) {
-                DoRunResult.Failure(DoRunException.DataError("네트워크 요청에 실패했습니다: ${e.message}"))
+                DoRunResult.Failure(DoRunException.UnknownError(e.message.toString()))
             }
         }
 }
