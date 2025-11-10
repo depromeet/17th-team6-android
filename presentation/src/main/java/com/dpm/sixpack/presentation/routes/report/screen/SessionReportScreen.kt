@@ -85,16 +85,17 @@ internal fun SessionReportScreen(
                             navigateToHome()
                         },
                     )
+                } else {
+                    DoRunErrorScreen(
+                        modifier = Modifier.fillMaxSize(),
+                        title = stringResource(R.string.error_network_connection),
+                        subtitle = stringResource(R.string.error_network_connection_explanation),
+                        confirmButtonText = stringResource(R.string.retry),
+                        onConfirmClick = {
+                            onIntent(ReportIntent.LoadSessionDetail(sessionId))
+                        },
+                    )
                 }
-                DoRunErrorScreen(
-                    modifier = Modifier.fillMaxSize(),
-                    title = stringResource(R.string.error_network_connection),
-                    subtitle = stringResource(R.string.error_network_connection_explanation),
-                    confirmButtonText = stringResource(R.string.retry),
-                    onConfirmClick = {
-                        onIntent(ReportIntent.LoadSessionDetail(sessionId))
-                    },
-                )
             }
         }
     }
