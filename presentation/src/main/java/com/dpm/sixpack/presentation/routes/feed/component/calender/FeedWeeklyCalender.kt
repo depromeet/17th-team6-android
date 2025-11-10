@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -66,6 +67,10 @@ private data class WeeklyCalendarDay(
 fun FeedWeeklyCalendar(
     modifier: Modifier = Modifier,
     feedCalenderUiState: FeedCalenderUiState = FeedCalenderUiState(),
+    pagerState: PagerState = rememberPagerState(
+        initialPage = INITIAL_PAGE_INDEX,
+        pageCount = { PAGER_PAGE_COUNT },
+    ),
     onDateSelected: (LocalDate) -> Unit = {},
     onWeekDisplayed: (LocalDate) -> Unit = {},
     startDayOfWeek: DayOfWeek = DayOfWeek.SUNDAY,
@@ -76,12 +81,6 @@ fun FeedWeeklyCalendar(
     val selectedDate = feedCalenderUiState.selectedDate
     val today = feedCalenderUiState.today
     val isLoading = feedCalenderUiState.isLoading
-
-    val pagerState =
-        rememberPagerState(
-            initialPage = INITIAL_PAGE_INDEX,
-            pageCount = { PAGER_PAGE_COUNT },
-        )
 
     val firstDayOfInitialPagerWeek =
         remember(key1 = today, key2 = startDayOfWeek) {

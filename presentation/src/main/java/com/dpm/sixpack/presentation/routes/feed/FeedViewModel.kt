@@ -224,27 +224,23 @@ class FeedViewModel @Inject constructor(
     /**
      * 날짜 선택 시
      * 1. 선택된 날짜의 FeedDateState 결정
-     * 2. 게시물이 있는 경우에만 인증 유저 로딩 및 내 정보 업데이트
+     * 2. 게시물이 있는 경우 인증 유저 로딩, 없으면 빈 상태 유지
      */
     private fun handleDateSelected(date: LocalDate) =
         intent {
             val feedDateState = handleFeedDateState(date)
+
             reduce {
                 state.copy(
                     calendarState = state.calendarState.copy(selectedDate = date),
                     feedDateState = feedDateState,
+                    postingUserInfo = emptyList(),
                 )
             }
 
+            // 게시물이 있는 경우에만 인증 유저 로딩
             if (feedDateState == FeedDateUiState.PostsAvailable) {
                 loadCertifiedUsers(date.toYyyyMmDdString())
-            } else {
-                reduce {
-                    state.copy(
-                        postingUserInfo = emptyList(),
-                        myPostingInfo = null,
-                    )
-                }
             }
         }
 

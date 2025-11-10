@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -70,6 +71,7 @@ internal fun LazyListScope.feedRefreshLoadingItem(isRefreshLoading: Boolean) {
  */
 internal fun LazyListScope.feedCalendarItem(
     calendarState: FeedCalenderUiState,
+    pagerState: PagerState,
     onDateSelected: (LocalDate) -> Unit,
     onWeekDisplayed: (LocalDate) -> Unit,
 ) {
@@ -80,6 +82,7 @@ internal fun LazyListScope.feedCalendarItem(
                     .padding(horizontal = 20.dp)
                     .padding(top = 16.dp),
             feedCalenderUiState = calendarState,
+            pagerState = pagerState,
             onDateSelected = onDateSelected,
             onWeekDisplayed = onWeekDisplayed,
         )
