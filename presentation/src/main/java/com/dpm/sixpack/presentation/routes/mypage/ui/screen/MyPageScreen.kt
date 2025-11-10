@@ -1,6 +1,8 @@
 package com.dpm.sixpack.presentation.routes.mypage.ui.screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
@@ -30,6 +33,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunTopBarSlot
+import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.routes.mypage.contract.CertificationStatus
 import com.dpm.sixpack.presentation.routes.mypage.contract.GridItemType
 import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageIntent
@@ -158,7 +162,7 @@ private fun MyPageTopBar(
     modifier: Modifier = Modifier,
 ) {
     DoRunTopBarSlot(
-        modifier = modifier,
+        modifier = modifier.padding(start = 10.dp),
         leadingContent = {
             Text(
                 text = "마이",
@@ -167,7 +171,12 @@ private fun MyPageTopBar(
             )
         },
         trailingContent = {
-            IconButton(onClick = onSettingClick) {
+            Box(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .noRippleClickable(onClick = onSettingClick),
+                contentAlignment = Alignment.Center,
+            ) {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_settings),
                     contentDescription = "설정",
