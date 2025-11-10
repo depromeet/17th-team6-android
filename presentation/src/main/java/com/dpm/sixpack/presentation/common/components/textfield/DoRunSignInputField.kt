@@ -14,14 +14,22 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,6 +48,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
  * @param isError 에러 상태 여부
  * @param style "default" 또는 "id" 스타일
  * @param keyboardType 키보드 타입
+ * @param maxLength 최대 입력 길이 제한 (선택사항)
  * @param trailingIcon 우측 아이콘 컨텐츠 (선택사항)
  * @param bottomHelper 보조 텍스트 (선택사항)
  * @param modifier 레이아웃 모디파이어
@@ -56,6 +65,7 @@ fun DoRunSignInputField(
     style: String = "default",
     keyboardType: KeyboardType = KeyboardType.Text,
     singleLine: Boolean = true,
+    maxLength: Int? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: @Composable (() -> Unit)? = null,
     bottomHelper: @Composable (() -> Unit)? = null,
@@ -87,57 +97,85 @@ fun DoRunSignInputField(
                 else -> SixpackTheme.colors.gray900
             }
 
-        BasicTextField(
-            value = value,
-            onValueChange = onValueChange,
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .heightIn(min = 52.dp)
-                    .border(
-                        width = 1.dp,
-                        color = borderColor,
-                        shape = SixpackTheme.shapes.round8,
+        // TextFieldValue로 관리하되 커서를 항상 맨 끝으로 강제
+        // value가 key이므로 value 변경 시 자동으로 새 TextFieldValue 생성
+        var textFieldValueState by remember(value) {
+            mutableStateOf(TextFieldValue(text = value, selection = TextRange(value.length)))
+        }
+
+        val customTextSelectionColors =
+            TextSelectionColors(
+                handleColor = SixpackTheme.colors.blue300,
+                backgroundColor = SixpackTheme.colors.blue600.copy(alpha = 0.4f),
+            )
+
+        CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
+            BasicTextField(
+                value = textFieldValueState,
+                onValueChange = { newValue ->
+
+                    // 최대 길이 제한 적용
+                    val newText = if (maxLength != null) {
+                        newValue.text.take(maxLength)
+                    } else {
+                        newValue.text
+                    }
+                    val newLength = newText.length
+                    textFieldValueState = TextFieldValue(
+                        text = newText,
+                        selection = TextRange(newLength),
+                    )
+                    onValueChange(newText)
+                },
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 52.dp)
+                        .border(
+                            width = 1.dp,
+                            color = borderColor,
+                            shape = SixpackTheme.shapes.round8,
+                        ),
+                enabled = enabled,
+                textStyle = SixpackTheme.typography.b2Regular.copy(color = textColor),
+                keyboardOptions =
+                    KeyboardOptions(
+                        keyboardType = keyboardType,
                     ),
-            enabled = enabled,
-            textStyle = SixpackTheme.typography.b2Regular.copy(color = textColor),
-            keyboardOptions =
-                KeyboardOptions(
-                    keyboardType = keyboardType,
-                ),
-            singleLine = singleLine,
-            visualTransformation = visualTransformation,
-            cursorBrush = SolidColor(SixpackTheme.colors.blue600),
-            interactionSource = interactionSource,
-            decorationBox = { innerTextField ->
-                Box(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(start = 16.dp, end = 12.dp),
-                    contentAlignment = Alignment.CenterStart,
-                ) {
-                    if (value.isEmpty() && placeholder != null) {
-                        Text(
-                            text = placeholder,
-                            style = SixpackTheme.typography.b2Regular,
-                            color = SixpackTheme.colors.gray300,
-                            modifier = Modifier.fillMaxWidth(),
-                        )
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
+                singleLine = singleLine,
+                visualTransformation = visualTransformation,
+                cursorBrush = SolidColor(SixpackTheme.colors.blue600),
+                interactionSource = interactionSource,
+                decorationBox = { innerTextField ->
+                    Box(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(start = 16.dp, end = 12.dp),
+                        contentAlignment = Alignment.CenterStart,
                     ) {
-                        Box(modifier = Modifier.weight(1f)) {
-                            innerTextField()
+                        if (textFieldValueState.text.isEmpty() && placeholder != null) {
+                            Text(
+                                text = placeholder,
+                                style = SixpackTheme.typography.b2Regular,
+                                color = SixpackTheme.colors.gray300,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
                         }
-                        trailingIcon?.invoke()
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                        ) {
+                            Box(modifier = Modifier.weight(1f)) {
+                                innerTextField()
+                            }
+                            trailingIcon?.invoke()
+                        }
                     }
-                }
-            },
-        )
+                },
+            )
+        }
         if (bottomHelper != null) {
             Spacer(modifier = Modifier.height(8.dp))
             bottomHelper()

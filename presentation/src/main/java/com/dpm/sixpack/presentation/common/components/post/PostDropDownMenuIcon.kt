@@ -46,7 +46,8 @@ enum class PostDropDownActionType {
 fun PostDropDownMenuIcon(
     isMyPost: Boolean,
     isMenuExpanded: Boolean,
-    onMenuClick: (Boolean) -> Unit,
+    onMenuClick: () -> Unit,
+    onMenuDismiss: () -> Unit,
     onDropDownMenuClick: (PostDropDownActionType) -> Unit,
     modifier: Modifier = Modifier,
     isDarkTheme: Boolean = false,
@@ -56,7 +57,7 @@ fun PostDropDownMenuIcon(
         modifier = modifier.wrapContentSize(Alignment.TopEnd),
     ) {
         IconButton(
-            onClick = { onMenuClick(!isMenuExpanded) },
+            onClick = { onMenuClick() },
             modifier = Modifier.size(24.dp),
         ) {
             Icon(
@@ -68,7 +69,7 @@ fun PostDropDownMenuIcon(
 
         DropdownMenu(
             expanded = isMenuExpanded,
-            onDismissRequest = { onMenuClick(!isMenuExpanded) },
+            onDismissRequest = { onMenuDismiss() },
             offset = DpOffset(x = 0.dp, y = (-1).dp),
             shape = SixpackTheme.shapes.round12,
             containerColor = SixpackTheme.colors.gray0,
@@ -84,12 +85,12 @@ fun PostDropDownMenuIcon(
         ) {
             if (isMyPost) {
                 MyPostMenuItems(
-                    onMenuClick = { onMenuClick(!isMenuExpanded) },
+                    onMenuClick = { onMenuClick() },
                     onDropDownMenuClick = onDropDownMenuClick,
                 )
             } else {
                 FriendPostMenuItems(
-                    onMenuClick = { onMenuClick(!isMenuExpanded) },
+                    onMenuClick = { onMenuClick() },
                     onDropDownMenuClick = onDropDownMenuClick,
                 )
             }
@@ -209,6 +210,7 @@ fun MyPostDropDownMenuPreview() {
                 isMenuExpanded = isMenuExpanded,
                 onMenuClick = { isMenuExpanded = !isMenuExpanded },
                 onDropDownMenuClick = {},
+                onMenuDismiss = { isMenuExpanded = false },
             )
         }
     }
@@ -225,6 +227,7 @@ fun FriendPostDropDownMenuPreview() {
                 isMenuExpanded = isMenuExpanded,
                 onMenuClick = { isMenuExpanded = !isMenuExpanded },
                 onDropDownMenuClick = {},
+                onMenuDismiss = { isMenuExpanded = false },
             )
         }
     }

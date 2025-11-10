@@ -1,7 +1,6 @@
 package com.dpm.sixpack.presentation.common.components.bottomsheet
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.model.Emoji
+import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,7 +54,7 @@ fun EmojiSelectionBottomSheet(
                     modifier =
                         Modifier
                             .size(48.dp)
-                            .clickable {
+                            .noRippleClickable {
                                 onEmojiSelected(emoji)
                                 onDismissRequest()
                             },

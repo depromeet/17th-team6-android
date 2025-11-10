@@ -24,6 +24,8 @@ import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrappe
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
 import com.dpm.sixpack.presentation.common.model.PostResource
 import com.dpm.sixpack.presentation.common.model.RunningSummary
+import com.dpm.sixpack.presentation.common.util.capture.CaptureController
+import com.dpm.sixpack.presentation.common.util.capture.rememberCaptureController
 import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.routes.postedit.contract.PostEditUiState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
@@ -31,6 +33,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 @Composable
 fun PostEditScreen(
     state: PostEditUiState,
+    captureController: CaptureController,
     modifier: Modifier = Modifier,
     onBackButtonClick: () -> Unit = {},
     onSaveIconClick: () -> Unit = {},
@@ -80,6 +83,7 @@ fun PostEditScreen(
                 onImageEditClick = onImageEditButtonClick,
                 buttonText = stringResource(id = R.string.feed_post_edit_change_background_button),
                 modifier = Modifier.fillMaxWidth(),
+                captureController = captureController,
             )
 
             Spacer(Modifier.weight(1f))
@@ -121,6 +125,7 @@ fun PostEditScreenPreview() {
     DoRunPreviewWrapper {
         PostEditScreen(
             state = dummyState,
+            captureController = rememberCaptureController(),
         )
     }
 }

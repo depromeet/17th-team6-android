@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -65,7 +67,13 @@ private data class WeeklyCalendarDay(
 @Composable
 fun FeedWeeklyCalendar(
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     feedCalenderUiState: FeedCalenderUiState = FeedCalenderUiState(),
+    pagerState: PagerState =
+        rememberPagerState(
+            initialPage = INITIAL_PAGE_INDEX,
+            pageCount = { PAGER_PAGE_COUNT },
+        ),
     onDateSelected: (LocalDate) -> Unit = {},
     onWeekDisplayed: (LocalDate) -> Unit = {},
     startDayOfWeek: DayOfWeek = DayOfWeek.SUNDAY,
@@ -76,12 +84,6 @@ fun FeedWeeklyCalendar(
     val selectedDate = feedCalenderUiState.selectedDate
     val today = feedCalenderUiState.today
     val isLoading = feedCalenderUiState.isLoading
-
-    val pagerState =
-        rememberPagerState(
-            initialPage = INITIAL_PAGE_INDEX,
-            pageCount = { PAGER_PAGE_COUNT },
-        )
 
     val firstDayOfInitialPagerWeek =
         remember(key1 = today, key2 = startDayOfWeek) {
@@ -113,6 +115,7 @@ fun FeedWeeklyCalendar(
                 .background(colors.calendarBackgroundColor),
     ) {
         WeeklyCalendarHeader(
+            modifier = Modifier.padding(contentPadding),
             currentDisplayWeekViewStartDate = currentDisplayWeekStartDate,
             selectedDate = selectedDate,
             onPreviousWeek = {
@@ -159,6 +162,7 @@ fun FeedWeeklyCalendar(
             }
 
             WeekRow(
+                modifier = Modifier.padding(contentPadding),
                 days = currentPageWeekDays,
                 selectedDate = selectedDate,
                 isLoading = isLoading,
@@ -183,6 +187,7 @@ private fun WeeklyCalendarHeader(
     onNextWeek: () -> Unit,
     colors: WeeklyCalendarColors,
     typography: WeeklyCalendarTypography,
+    modifier: Modifier = Modifier,
 ) {
     val displayDateForMonth = currentDisplayWeekViewStartDate.getDisplayMonth(selectedDate)
 
@@ -201,7 +206,7 @@ private fun WeeklyCalendarHeader(
         }
 
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
@@ -253,10 +258,11 @@ private fun WeekRow(
     onDateClick: (LocalDate) -> Unit,
     colors: WeeklyCalendarColors,
     typography: WeeklyCalendarTypography,
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly,
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         days.forEach { day ->
             val isSelected = day.date == selectedDate
@@ -268,7 +274,6 @@ private fun WeekRow(
                     DayCell(
                         dayData = day,
                         isSelected = isSelected,
-                        modifier = Modifier.weight(1f),
                         onClick = {
                             onDateClick(day.date)
                         },
@@ -301,7 +306,6 @@ private fun DayCell(
     Column(
         modifier =
             modifier
-                .fillMaxWidth()
                 .noRippleClickable(enabled = !dayData.isDisabled, onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,

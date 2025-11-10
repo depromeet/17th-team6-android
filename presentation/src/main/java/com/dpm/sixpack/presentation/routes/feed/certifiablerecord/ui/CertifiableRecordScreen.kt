@@ -88,7 +88,7 @@ fun CertifiableRecordScreen(
                 )
 
                 if (!isEmpty) {
-                    Spacer(Modifier.height(32.dp))
+                    Spacer(Modifier.height(16.dp))
 
                     LazyColumn(
                         modifier =
@@ -97,6 +97,8 @@ fun CertifiableRecordScreen(
                                 .weight(1f),
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
+                        item { Spacer(Modifier.height(16.dp)) }
+
                         dateGroupedRecordItems(
                             groupedRecords = groupedRecords,
                             selectedRecordId = state.selectedRecord?.sessionId,
@@ -104,6 +106,8 @@ fun CertifiableRecordScreen(
                                 onIntent(CertifiableRecordIntent.OnRecordClick(record))
                             },
                         )
+
+                        item { Spacer(Modifier.height(70.dp)) }
                     }
                 } else {
                     Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {

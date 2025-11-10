@@ -110,7 +110,7 @@
     <!-- region Post Upload -->
     <string name="post_upload_certifiable_record_submit_button">불러오기</string>
     <string name="post_upload_certifiable_record_title">이전 러닝 내역</string>
-    <string name="post_upload_certifiable_record_subtitle">이틀 이내 달린 기록을 인증할 수 있어요.</string>
+    <string name="post_upload_certifiable_record_subtitle">이틀 이내 달린 기록을 인증할 수 있어요.\n날짜별로 1회만 가능합니다.</string>
     <string name="post_upload_certifiable_record_empty_title">인증 가능한 기록이 없어요..</string>
     <string name="post_upload_certifiable_record_empty_subtitle">지금 바로 러닝을 시작해봐요!</string>
     <string name="post_upload_certifiable_record_empty_image_description">인증 가능한 기록 없음</string>

@@ -18,6 +18,7 @@ data class FeedUiState(
     val selectedPostMenuId: Long? = null,
     // Calender
     val calendarState: FeedCalenderUiState = FeedCalenderUiState(),
+    val isCertifiableDate: Boolean = true,
     // Dialog
     val dialogState: FeedDialogState = FeedDialogState(),
     // BottomSheet

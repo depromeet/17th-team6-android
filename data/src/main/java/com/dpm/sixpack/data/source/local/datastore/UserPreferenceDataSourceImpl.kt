@@ -79,6 +79,13 @@ class UserPreferenceDataSourceImpl @Inject constructor(
         dataStore.edit { preferences ->
             preferences.remove(ACCESS_TOKEN)
             preferences.remove(REFRESH_TOKEN)
+            preferences.remove(USER_ID)
+        }
+    }
+
+    override suspend fun clearUserId() {
+        dataStore.edit { preferences ->
+            preferences.remove(USER_ID)
         }
     }
 
