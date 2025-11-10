@@ -75,6 +75,9 @@ sealed interface FeedIntent : UiIntent {
     // FloatingActionButton
     data object OnFloatingActionButtonClick : FeedIntent
 
+    // Refresh
+    data object OnRefreshAll : FeedIntent
+
     sealed interface Observed : FeedIntent {
         data class VisibleWeeksChanged(
             val startDate: LocalDate,

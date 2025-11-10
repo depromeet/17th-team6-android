@@ -2,7 +2,6 @@ package com.dpm.sixpack.presentation.routes.postupload
 
 import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.dpm.sixpack.domain.repository.FeedRepository
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
@@ -13,8 +12,6 @@ import com.dpm.sixpack.presentation.routes.postupload.contract.PostUploadIntent
 import com.dpm.sixpack.presentation.routes.postupload.contract.PostUploadSideEffect
 import com.dpm.sixpack.presentation.routes.postupload.contract.PostUploadUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
@@ -95,21 +92,18 @@ class PostUploadViewModel @Inject constructor(
         intent {
             reduce { state.copy(isLoading = true) }
 
-            viewModelScope.launch {
-                feedRepository
-                    .uploadPost(
-                        sessionId = state.sessionId,
-                        content = null,
-                        imageUri = state.selectedImageUri,
-                    ).onSuccess {
-                        delay(2000L)
-                        reduce { state.copy(isLoading = false) }
-                        postSideEffect(PostUploadSideEffect.ShowToast("게시물이 업로드되었습니다."))
-                        postSideEffect(PostUploadSideEffect.NavigateToFeed)
-                    }.onError { error ->
-                        reduce { state.copy(isLoading = false) }
-                        postSideEffect(PostUploadSideEffect.ShowError(error.message ?: "게시물 업로드에 실패했습니다."))
-                    }
-            }
+            feedRepository
+                .uploadPost(
+                    sessionId = state.sessionId,
+                    content = null,
+                    imageUri = state.selectedImageUri,
+                ).onSuccess {
+                    reduce { state.copy(isLoading = false) }
+                    postSideEffect(PostUploadSideEffect.ShowToast("게시물이 업로드되었습니다."))
+                    postSideEffect(PostUploadSideEffect.NavigateToFeed)
+                }.onError { error ->
+                    reduce { state.copy(isLoading = false) }
+                    postSideEffect(PostUploadSideEffect.ShowError(error.message ?: "게시물 업로드에 실패했습니다."))
+                }
         }
 }

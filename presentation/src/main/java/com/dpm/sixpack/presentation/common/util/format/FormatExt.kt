@@ -79,25 +79,23 @@ fun String.toPostTimeStringOrNullInstant(): String? =
         Timber.e("파싱 실패! 에러: ${error.message}")
     }.getOrNull()
 
-fun String.toDateWithDayOfWeekOrNull(): String? =
+fun String.toDateWithDayOfWeekOrNullInstant(): String? =
     runCatching {
-        val localDateTime = LocalDateTime.parse(this, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+        val instant = Instant.parse(this)
 
-        localDateTime
-            .atZone(ZoneId.of("UTC"))
-            .withZoneSameInstant(ASIA_ZONE_ID)
+        instant
+            .atZone(ASIA_ZONE_ID)
             .format(DATE_WITH_DAY_FORMATTER)
     }.onFailure { error ->
         Timber.e("날짜 파싱 실패! 에러: ${error.message}")
     }.getOrNull()
 
-fun String.toTimeOnlyOrNull(): String? =
+fun String.toTimeOnlyOrNullInstant(): String? =
     runCatching {
-        val localDateTime = LocalDateTime.parse(this, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+        val instant = Instant.parse(this)
 
-        localDateTime
-            .atZone(ZoneId.of("UTC"))
-            .withZoneSameInstant(ASIA_ZONE_ID)
+        instant
+            .atZone(ASIA_ZONE_ID)
             .format(AM_PM_TIME_FORMATTER)
     }.onFailure { error ->
         Timber.e("시간 파싱 실패! 에러: ${error.message}")

@@ -62,6 +62,20 @@ class MainNavigator(
         )
     }
 
+    fun navigateToFeed() {
+        navController.navigateToFeed(
+            navOptions {
+                popUpTo(
+                    navController.graph.findStartDestination().id,
+                ) {
+                    inclusive = false
+                }
+                launchSingleTop = true
+                restoreState = true
+            },
+        )
+    }
+
     fun navigate(tab: MainNavTab) {
         val navOptions =
             navOptions {

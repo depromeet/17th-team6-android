@@ -1,5 +1,6 @@
 package com.dpm.sixpack.presentation.routes.feed.ui
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -15,12 +16,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.pullToRefresh
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -73,10 +75,17 @@ fun FeedScreen(
     feedPagingItems: LazyPagingItems<PostResource>,
     modifier: Modifier = Modifier,
     onIntent: (FeedIntent) -> Unit = {},
+    onSaveFeedImage: (PostResource, Bitmap) -> Unit = { _, _ -> },
 ) {
     val lazyListState = rememberLazyListState()
     val pullToRefreshState = rememberPullToRefreshState()
     var isRefreshing by remember { mutableStateOf(false) }
+
+    val calendarPagerState =
+        rememberPagerState(
+            initialPage = Int.MAX_VALUE / 2,
+            pageCount = { Int.MAX_VALUE },
+        )
 
     val isScrolled by remember {
         derivedStateOf {
@@ -108,10 +117,19 @@ fun FeedScreen(
         }
     }
 
-    // 초기 paging 데이터가 비어있는지 감지
-    LaunchedEffect(feedPagingItems.loadState.refresh, feedPagingItems.itemCount, state.feedDateState) {
+    // 초기 paging 데이터가 비어있는지 감지 (postCount 기반)
+    LaunchedEffect(
+        feedPagingItems.loadState.refresh,
+        feedPagingItems.itemCount,
+        state.feedDateState,
+        state.calendarState.selectedDate,
+    ) {
+        val selectedDate = state.calendarState.selectedDate
+        val postCount = state.calendarState.postCounts[selectedDate] ?: 0
+
         if (feedPagingItems.loadState.refresh is LoadState.NotLoading &&
             feedPagingItems.itemCount == 0 &&
+            postCount == 0 &&
             state.feedDateState == FeedDateUiState.PostsAvailable
         ) {
             onIntent(FeedIntent.Observed.PagingDataEmpty)
@@ -153,137 +171,102 @@ fun FeedScreen(
                     }
                 }
 
-        if (state.feedDateState == FeedDateUiState.PostsAvailable) {
-            PullToRefreshBox(
-                isRefreshing = isRefreshing,
-                onRefresh = {
-                    isRefreshing = true
-                    feedPagingItems.refresh()
-                },
-                modifier = contentModifier,
-                state = pullToRefreshState,
-                indicator = {
-                    PullToRefreshDefaults.Indicator(
-                        state = pullToRefreshState,
+        Box(
+            modifier =
+                contentModifier
+                    .padding(paddingValues)
+                    .pullToRefresh(
                         isRefreshing = isRefreshing,
-                        modifier = Modifier.align(Alignment.TopCenter),
-                        color = SixpackTheme.colors.blue600,
-                        containerColor = Color.White,
+                        onRefresh = {
+                            isRefreshing = true
+                            onIntent(FeedIntent.OnRefreshAll)
+                        },
+                        state = pullToRefreshState,
+                        enabled = state.isCertifiableDate,
+                    ),
+            contentAlignment = Alignment.TopStart,
+        ) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                    state = lazyListState,
+                ) {
+                    // Calendar
+                    feedCalendarItem(
+                        calendarState = state.calendarState,
+                        pagerState = calendarPagerState,
+                        onDateSelected = { date -> onIntent(FeedIntent.OnDateSelected(date)) },
+                        onWeekDisplayed = { startDate ->
+                            onIntent(FeedIntent.Observed.VisibleWeeksChanged(startDate))
+                        },
                     )
-                },
-            ) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    LazyColumn(
-                        modifier =
-                            Modifier
-                                .padding(paddingValues)
-                                .fillMaxWidth(),
-                        state = lazyListState,
-                    ) {
-                        // Calendar
-                        feedCalendarItem(
-                            calendarState = state.calendarState,
-                            onDateSelected = { date -> onIntent(FeedIntent.OnDateSelected(date)) },
-                            onWeekDisplayed = { startDate ->
-                                onIntent(FeedIntent.Observed.VisibleWeeksChanged(startDate))
-                            },
-                        )
 
-                        // Divider
-                        feedDividerItem()
+                    // Divider
+                    feedDividerItem()
 
-                        when (state.feedDateState) {
-                            FeedDateUiState.PostsAvailable -> {
-                                feedContentItems(
-                                    isInitialLoad = isInitialLoad,
-                                    postingUserInfo = state.postingUserInfo,
-                                    feedPagingItems = feedPagingItems,
-                                    selectedPostMenuId = state.selectedPostMenuId,
-                                    onCertifiedUsersClick = { onIntent(FeedIntent.OnCertifiedUsersClick) },
-                                    onPostMenuClick = { feedId -> onIntent(FeedIntent.OnPostMenuClick(feedId)) },
-                                    onDropDownMenuClick = {
-                                        post,
-                                        action,
-                                        ->
-                                        onIntent(FeedIntent.OnDropDownMenuClick(post, action))
-                                    },
-                                    onPostImageClick = { post -> onIntent(FeedIntent.OnPostImageClick(post)) },
-                                    onPostUserProfileClick = {
-                                        userId,
-                                        isMe,
-                                        ->
-                                        onIntent(FeedIntent.OnUserProfileClick(userId, isMe))
-                                    },
-                                    onReactionClick = {
-                                        post,
-                                        emoji,
-                                        isReacted,
-                                        ->
-                                        onIntent(FeedIntent.OnPostReactionClick(post, emoji, isReacted))
-                                    },
-                                    onReactionLongClick = {
-                                        feedId,
-                                        reactions,
-                                        emoji,
-                                        ->
-                                        onIntent(FeedIntent.OnPostReactionLongClick(reactions, emoji))
-                                    },
-                                    onAddReactionClick = { post -> onIntent(FeedIntent.OnPostAddReactionClick(post)) },
-                                )
-                            }
-                            else -> {}
+                    when (state.feedDateState) {
+                        FeedDateUiState.PostsAvailable -> {
+                            feedContentItems(
+                                isInitialLoad = isInitialLoad,
+                                postingUserInfo = state.postingUserInfo,
+                                feedPagingItems = feedPagingItems,
+                                selectedPostMenuId = state.selectedPostMenuId,
+                                onCertifiedUsersClick = { onIntent(FeedIntent.OnCertifiedUsersClick) },
+                                onPostMenuClick = { feedId -> onIntent(FeedIntent.OnPostMenuClick(feedId)) },
+                                onDropDownMenuClick = {
+                                    post,
+                                    action,
+                                    ->
+                                    onIntent(FeedIntent.OnDropDownMenuClick(post, action))
+                                },
+                                onPostImageClick = { post -> onIntent(FeedIntent.OnPostImageClick(post)) },
+                                onPostUserProfileClick = {
+                                    userId,
+                                    isMe,
+                                    ->
+                                    onIntent(FeedIntent.OnUserProfileClick(userId, isMe))
+                                },
+                                onReactionClick = {
+                                    post,
+                                    emoji,
+                                    isReacted,
+                                    ->
+                                    onIntent(FeedIntent.OnPostReactionClick(post, emoji, isReacted))
+                                },
+                                onReactionLongClick = {
+                                    feedId,
+                                    reactions,
+                                    emoji,
+                                    ->
+                                    onIntent(FeedIntent.OnPostReactionLongClick(reactions, emoji))
+                                },
+                                onAddReactionClick = { post -> onIntent(FeedIntent.OnPostAddReactionClick(post)) },
+                                onSaveFeedImage = onSaveFeedImage,
+                            )
+                        }
+
+                        FeedDateUiState.NoPostsAndCertifiable -> {
+                            item(key = "empty_certifiable") { EmptyStateCertifiable() }
+                        }
+
+                        FeedDateUiState.NoPostsAndExpired -> {
+                            item(key = "empty_expired") { EmptyStateExpired() }
                         }
                     }
-
-                    FeedFTAButton(
-                        onFTAButtonClick = { onIntent(FeedIntent.OnFloatingActionButtonClick) },
-                        modifier = Modifier.align(Alignment.BottomEnd),
-                    )
                 }
+
+                FeedFTAButton(
+                    onFTAButtonClick = { onIntent(FeedIntent.OnFloatingActionButtonClick) },
+                    modifier = Modifier.align(Alignment.BottomEnd),
+                )
             }
-        } else {
-            // PostsAvailable이 아닐 때는 PullToRefresh 비활성화
-            Box(modifier = contentModifier) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    LazyColumn(
-                        modifier =
-                            Modifier
-                                .padding(paddingValues)
-                                .fillMaxWidth(),
-                        state = lazyListState,
-                    ) {
-                        // Calendar
-                        feedCalendarItem(
-                            calendarState = state.calendarState,
-                            onDateSelected = { date -> onIntent(FeedIntent.OnDateSelected(date)) },
-                            onWeekDisplayed = { startDate ->
-                                onIntent(FeedIntent.Observed.VisibleWeeksChanged(startDate))
-                            },
-                        )
-
-                        // Divider
-                        feedDividerItem()
-
-                        when (state.feedDateState) {
-                            FeedDateUiState.NoPostsAndCertifiable -> {
-                                item(key = "empty_certifiable") { EmptyStateCertifiable() }
-                            }
-
-                            FeedDateUiState.NoPostsAndExpired -> {
-                                item(key = "empty_expired") { EmptyStateExpired() }
-                            }
-
-                            else -> {}
-                        }
-                    }
-
-                    FeedFTAButton(
-                        enabled = state.feedDateState != FeedDateUiState.NoPostsAndExpired,
-                        onFTAButtonClick = { onIntent(FeedIntent.OnFloatingActionButtonClick) },
-                        modifier = Modifier.align(Alignment.BottomEnd),
-                    )
-                }
-            }
+            PullToRefreshDefaults.Indicator(
+                state = pullToRefreshState,
+                isRefreshing = isRefreshing,
+                modifier = Modifier.align(Alignment.TopCenter),
+                color = SixpackTheme.colors.blue600,
+                containerColor = Color.White,
+            )
         }
     }
     ReactionUsersBottomSheet(

@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.filter
 import androidx.paging.map
+import com.dpm.sixpack.domain.constants.FeedConstants
 import com.dpm.sixpack.domain.event.FeedUpdateEvent
 import com.dpm.sixpack.domain.repository.FeedListItem
 import com.dpm.sixpack.domain.repository.FeedRepository
@@ -63,14 +64,9 @@ class FeedViewModel @Inject constructor(
     // 마지막으로 처리한 이벤트의 타임스탬프 (중복 처리 방지)
     private var lastProcessedTimestamp = 0L
 
-    /**
-     * TODO SB 추후에 48시간 이내로 정확하게 구현
-     * 선택된 날짜가 인증 가능한 날짜인지 확인
-     * 오늘 기준 2일 전까지만 인증 가능
-     */
     private fun isCertifiable(selectedDate: LocalDate): Boolean {
         val today = LocalDate.now()
-        val minCertifiableDate = today.minusDays(2)
+        val minCertifiableDate = today.minusDays(FeedConstants.CERTIFIABLE_DAYS)
         return !selectedDate.isBefore(minCertifiableDate)
     }
 
@@ -112,7 +108,7 @@ class FeedViewModel @Inject constructor(
 
     /**
      * Repository에서 발생하는 Feed 변경 이벤트를 구독
-     * 수정/업로드 시 자동으로 Paging을 갱신
+     * 수정/업로드 시 자동으로 Calendar, CertifiedUsers, Paging을 갱신
      */
     private fun observeFeedUpdateEvents() {
         // TODO Room 구현시 싹다 삭제
@@ -126,14 +122,12 @@ class FeedViewModel @Inject constructor(
 
                     lastProcessedTimestamp = event.timestamp
 
-                    intent {
-                        when (event) {
-                            is FeedUpdateEvent.Updated -> {
-                                postSideEffect(FeedSideEffect.RefreshPagingList)
-                            }
-                            is FeedUpdateEvent.Uploaded -> {
-                                postSideEffect(FeedSideEffect.RefreshPagingList)
-                            }
+                    when (event) {
+                        is FeedUpdateEvent.Updated -> {
+                            onIntent(FeedIntent.OnRefreshAll)
+                        }
+                        is FeedUpdateEvent.Uploaded -> {
+                            onIntent(FeedIntent.OnRefreshAll)
                         }
                     }
                 }
@@ -183,6 +177,9 @@ class FeedViewModel @Inject constructor(
             // FAB
             FeedIntent.OnFloatingActionButtonClick -> handleFloatingActionButtonClick()
 
+            // Refresh
+            FeedIntent.OnRefreshAll -> handleRefreshAll()
+
             // UI Observations (시스템 관찰 이벤트)
             is FeedIntent.Observed.VisibleWeeksChanged -> handleVisibleWeeksChanged(intent.startDate)
             FeedIntent.Observed.PagingDataEmpty -> handlePagingDataEmpty()
@@ -223,18 +220,26 @@ class FeedViewModel @Inject constructor(
     /**
      * 날짜 선택 시
      * 1. 선택된 날짜의 FeedDateState 결정
-     * 2. 선택된 날짜의 인증 유저 로딩 및 내 정보 업데이트
+     * 2. 게시물이 있는 경우 인증 유저 로딩, 없으면 빈 상태 유지
      */
     private fun handleDateSelected(date: LocalDate) =
         intent {
             val feedDateState = handleFeedDateState(date)
+            val isCertifiableDate = isCertifiable(date)
+
             reduce {
                 state.copy(
                     calendarState = state.calendarState.copy(selectedDate = date),
                     feedDateState = feedDateState,
+                    isCertifiableDate = isCertifiableDate,
+                    postingUserInfo = emptyList(),
                 )
             }
-            loadCertifiedUsers(date.toYyyyMmDdString())
+
+            // 게시물이 있는 경우에만 인증 유저 로딩
+            if (feedDateState == FeedDateUiState.PostsAvailable) {
+                loadCertifiedUsers(date.toYyyyMmDdString())
+            }
         }
 
     private fun handleFeedDateState(selectedDate: LocalDate): FeedDateUiState {
@@ -507,6 +512,7 @@ class FeedViewModel @Inject constructor(
                     .deletePost(feedId)
                     .onSuccess {
                         postSideEffect(FeedSideEffect.ShowToast("게시물이 삭제되었습니다."))
+                        onIntent(FeedIntent.OnRefreshAll)
                     }.onError { exception ->
                         reduce {
                             state.copy(
@@ -522,6 +528,53 @@ class FeedViewModel @Inject constructor(
         intent {
             val selectedDate = state.calendarState.selectedDate
             postSideEffect(FeedSideEffect.NavigateToPostUpload(selectedDate))
+        }
+
+    /**
+     * 전체 새로고침
+     * 1. 오늘부터 인증 가능 기간까지의 Calendar postCounts 업데이트
+     * 2. 현재 선택된 날짜의 certifiedUsers 업데이트
+     * 3. Paging data refresh
+     */
+    private fun handleRefreshAll() =
+        intent {
+            val today = LocalDate.now()
+            val certifiableStartDate = today.minusDays(FeedConstants.CERTIFIABLE_DAYS)
+            val selectedDate = state.calendarState.selectedDate
+
+            feedRepository
+                .getSelfieCalendar(
+                    certifiableStartDate.toYyyyMmDdString(),
+                    today.toYyyyMmDdString(),
+                ).onSuccess { selfieCounts ->
+                    val newCountsMap =
+                        selfieCounts.counts
+                            .mapNotNull { selfieCount ->
+                                try {
+                                    LocalDate.parse(selfieCount.date) to selfieCount.selfieCount
+                                } catch (e: DateTimeParseException) {
+                                    null
+                                }
+                            }.toMap()
+
+                    val mergedCounts = state.calendarState.postCounts + newCountsMap
+
+                    reduce {
+                        state.copy(
+                            calendarState = state.calendarState.copy(postCounts = mergedCounts),
+                        )
+                    }
+
+                    val feedDateState = handleFeedDateState(selectedDate)
+                    reduce {
+                        state.copy(feedDateState = feedDateState)
+                    }
+                }.onError { exception ->
+                }
+
+            loadCertifiedUsers(selectedDate.toYyyyMmDdString())
+
+            postSideEffect(FeedSideEffect.RefreshPagingList)
         }
 
     private fun handlePagingDataEmpty() =

@@ -23,6 +23,8 @@ import com.dpm.sixpack.presentation.common.model.PostResource
 import com.dpm.sixpack.presentation.common.model.PostingUserInfo
 import com.dpm.sixpack.presentation.common.model.RunningSummary
 import com.dpm.sixpack.presentation.common.model.UserInfo
+import com.dpm.sixpack.presentation.common.util.capture.CaptureController
+import com.dpm.sixpack.presentation.common.util.capture.rememberCaptureController
 import com.dpm.sixpack.presentation.common.util.toTimeAgoString
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
@@ -32,6 +34,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
  * LazyList에서 재사용 가능하도록 설계되었습니다.
  *
  * @param postDetail 포스트 상세 정보
+ * @param captureController 이미지 캡처 컨트롤러 (이미지 저장용)
  * @param onReactionChipClick  반응 클릭 핸들러
  * @param onAddReactionClick 이모지 추가 버튼 클릭 핸들러
  * @param modifier 컴포저블 수정자
@@ -40,10 +43,12 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 fun FeedPostCard(
     postDetail: PostResource,
     isMenuExpanded: Boolean,
+    captureController: CaptureController,
     modifier: Modifier = Modifier,
     onPostUserProfileClick: (Long, Boolean) -> Unit = { _, _ -> },
     onPostImageClick: () -> Unit = {},
     onMenuClick: () -> Unit = {},
+    onMenuDismiss: () -> Unit = {},
     onDropDownMenuClick: (PostDropDownActionType) -> Unit = {},
     onReactionChipClick: (Emoji, Boolean) -> Unit = { _, _ -> },
     onReactionChipLongClick: (Emoji, List<PostReaction>) -> Unit = { _, _ -> },
@@ -59,6 +64,7 @@ fun FeedPostCard(
             postingUser = postDetail.user,
             isMenuExpanded = isMenuExpanded,
             onMenuClick = onMenuClick,
+            onMenuDismiss = onMenuDismiss,
             onDropDownMenuClick = onDropDownMenuClick,
             onPostUserProfileClick = { onPostUserProfileClick(postDetail.user.user.id, postDetail.user.user.isMe) },
         )
@@ -69,6 +75,7 @@ fun FeedPostCard(
             postImageUrl = postDetail.postImageUrl,
             runningSummary = postDetail.runningInfo,
             onPostImageClick = onPostImageClick,
+            captureController = captureController,
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -92,6 +99,7 @@ private fun PostUserInfoRow(
     postingUser: PostingUserInfo,
     isMenuExpanded: Boolean,
     onMenuClick: () -> Unit,
+    onMenuDismiss: () -> Unit,
     onPostUserProfileClick: () -> Unit,
     onDropDownMenuClick: (PostDropDownActionType) -> Unit,
     modifier: Modifier = Modifier,
@@ -114,7 +122,8 @@ private fun PostUserInfoRow(
         PostDropDownMenuIcon(
             isMyPost = postingUser.user.isMe,
             isMenuExpanded = isMenuExpanded,
-            onMenuClick = { isMenuExpanded -> onMenuClick() },
+            onMenuClick = { onMenuClick() },
+            onMenuDismiss = onMenuDismiss,
             onDropDownMenuClick = onDropDownMenuClick,
         )
     }
@@ -125,6 +134,7 @@ private fun PostUserInfoRow(
 fun FeedPostCardPreview() {
     DoRunPreviewWrapper {
         var isMenuExpanded by remember { (mutableStateOf(true)) }
+        val captureController = rememberCaptureController()
 
         FeedPostCard(
             postDetail =
@@ -157,6 +167,7 @@ fun FeedPostCardPreview() {
                         ),
                 ),
             isMenuExpanded,
+            captureController,
             onMenuClick = { isMenuExpanded = !isMenuExpanded },
         )
     }
@@ -167,6 +178,7 @@ fun FeedPostCardPreview() {
 fun FeedFreindPostCardPreview() {
     DoRunPreviewWrapper {
         var isMenuExpanded by remember { (mutableStateOf(true)) }
+        val captureController = rememberCaptureController()
 
         FeedPostCard(
             postDetail =
@@ -199,6 +211,7 @@ fun FeedFreindPostCardPreview() {
                         ),
                 ),
             isMenuExpanded,
+            captureController,
             onMenuClick = { isMenuExpanded = !isMenuExpanded },
         )
     }

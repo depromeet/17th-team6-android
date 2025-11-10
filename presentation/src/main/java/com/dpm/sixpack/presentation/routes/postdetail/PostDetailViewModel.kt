@@ -216,7 +216,7 @@ class PostDetailViewModel @Inject constructor(
             }
 
             PostDropDownActionType.SAVE_IMAGE -> {
-                postSideEffect(PostDetailSideEffect.ShowToast("이미지 저장 기능은 준비 중입니다."))
+                postSideEffect(PostDetailSideEffect.ShowToast("이미지가 저장되었습니다."))
             }
 
             PostDropDownActionType.REPORT -> {
