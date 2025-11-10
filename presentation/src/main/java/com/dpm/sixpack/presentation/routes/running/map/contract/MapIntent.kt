@@ -15,10 +15,6 @@ sealed interface MapIntent : RunningRouteIntent {
         val latLng: LatLng,
     ) : MapIntent
 
-    data class UpdatePermission(
-        val isGranted: Boolean,
-    ) : MapIntent
-
     data object SessionStartFailed : MapIntent
 
     data class UpdateRunningMapPath(
@@ -32,6 +28,19 @@ sealed interface MapIntent : RunningRouteIntent {
     data class SessionFinish(
         val mapImage: Bitmap,
     ) : MapIntent
+
+    // region Permission
+
+    /** 모든 권한 (전경 + 백그라운드)이 최종 승인됨 */
+    data object AllPermissionsGranted : MapIntent
+
+    /** 권한 중 하나라도 최종 거부됨 */
+    data object PermissionsRejected : MapIntent
+
+    data object RequestBackgroundPermissionDialog : MapIntent
+
+    data object DismissBackgroundPermissionDialog : MapIntent
+    // endregion
 
     sealed interface FriendSheetIntent : MapIntent {
         data class ClickFriendItem(

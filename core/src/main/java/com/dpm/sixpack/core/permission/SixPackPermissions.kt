@@ -80,13 +80,6 @@ sealed class SixPackPermissions(
                 FineLocationPermission,
                 CourseLocationPermission,
             )
-//                if (Build.VERSION.SDK_INT >=
-//                    Build.VERSION_CODES.Q
-//                ) {
-//                    listOf(BackgroundLocationPermission)
-//                } else {
-//                    emptyList()
-//                }
         }
 
         val ForegroundServicePermissions by lazy {
@@ -102,16 +95,14 @@ sealed class SixPackPermissions(
 
         val SensorPermissions by lazy {
             mutableListOf<SixPackPermissions>().apply {
-                addAll(ForegroundServicePermissions)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     add(ActivityRecognitionPermission)
                 }
             }
         }
 
-        val RequiredPermissions by lazy {
+        val NotificationPermissions by lazy {
             mutableListOf<SixPackPermissions>().apply {
-                addAll(SensorPermissions)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     add(NotificationPermission)
                 }
@@ -127,9 +118,5 @@ sealed class SixPackPermissions(
                 }
             }
         }
-
-        val OptionalPermissions = LocationPermissions
-
-        val AllPermissions = RequiredPermissions + OptionalPermissions
     }
 }
