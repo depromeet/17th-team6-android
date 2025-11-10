@@ -7,6 +7,7 @@ import androidx.paging.cachedIn
 import androidx.paging.filter
 import androidx.paging.insertSeparators
 import androidx.paging.map
+import com.dpm.sixpack.core.util.TimeUtil
 import com.dpm.sixpack.domain.repository.FeedListItem
 import com.dpm.sixpack.domain.usecase.GetMyUserFeedsUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
@@ -20,8 +21,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -56,11 +55,16 @@ class MyPagePostTabViewModel
                         .map<Post, GridItemType> { post ->
                             GridItemType.PostItem(post)
                         }.insertSeparators { before, after ->
-                            // Insert MonthLabel when month changes
+                            // 첫 번째 아이템이거나 월이 바뀔 때 MonthLabel 삽입
                             val beforeYearMonth = before?.let { getYearMonthFromPost(it) }
                             val afterYearMonth = after?.let { getYearMonthFromPost(it) }
 
-                            if (after != null && afterYearMonth != null && beforeYearMonth != afterYearMonth) {
+                            val shouldInsertLabel =
+                                after != null &&
+                                    afterYearMonth != null &&
+                                    (before == null || beforeYearMonth != afterYearMonth)
+
+                            if (shouldInsertLabel) {
                                 GridItemType.MonthLabel(
                                     year = afterYearMonth.first,
                                     month = afterYearMonth.second,
@@ -74,17 +78,12 @@ class MyPagePostTabViewModel
         private fun getYearMonthFromPost(gridItem: GridItemType): Pair<Int, Int>? =
             when (gridItem) {
                 is GridItemType.PostItem -> {
-                    try {
-                        val dateTime =
-                            LocalDateTime.parse(
-                                gridItem.post.createdAt,
-                                DateTimeFormatter.ISO_DATE_TIME,
-                            )
+                    // TimeUtil의 공통 날짜 파싱 함수 사용
+                    TimeUtil.parseToLocalDateTime(gridItem.post.createdAt)?.let { dateTime ->
                         Pair(dateTime.year, dateTime.monthValue)
-                    } catch (_: Exception) {
-                        null
                     }
                 }
+
                 is GridItemType.MonthLabel -> null
             }
 

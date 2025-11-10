@@ -66,9 +66,9 @@ data class SessionDetailFeedDto(
     @SerialName("mapImage")
     val mapImage: String,
     @SerialName("selfieImage")
-    val selfieImage: String,
+    val selfieImage: String?,
     @SerialName("content")
-    val content: String,
+    val content: String?,
     @SerialName("createdAt")
     val createdAt: String,
 ) {

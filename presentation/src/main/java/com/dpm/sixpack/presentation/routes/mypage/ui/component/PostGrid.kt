@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -73,6 +74,7 @@ internal fun PostGrid(
                         modifier = Modifier.height(109.dp),
                     )
                 }
+
                 is GridItemType.PostItem -> {
                     PostGridItem(
                         post = item.post,
@@ -80,6 +82,7 @@ internal fun PostGrid(
                         modifier = Modifier.size(109.dp),
                     )
                 }
+
                 null -> {
                     // Loading placeholder
                     Box(
@@ -106,7 +109,7 @@ private fun MonthGridItem(
             modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp))
-                .background(SixpackTheme.colors.gray50)
+                .background(Color.Transparent)
                 .padding(horizontal = 24.dp, vertical = 24.dp),
         contentAlignment = Alignment.Center,
     ) {

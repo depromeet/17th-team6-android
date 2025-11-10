@@ -26,6 +26,7 @@ class GpsDataSource @Inject constructor(
                 LocationRequest
                     .Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000L)
                     .setWaitForAccurateLocation(true)
+                    .setMinUpdateDistanceMeters(5.0f)
                     .build()
 
             val locationCallback =
