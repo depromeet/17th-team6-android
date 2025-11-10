@@ -247,6 +247,7 @@ private fun PostDetailContent(
                     isMyPost = uiState.post.user.user.isMe,
                     isMenuExpanded = uiState.isMenuExpanded,
                     onMenuClick = { onIntent(PostDetailIntent.OnMenuClick(!uiState.isMenuExpanded)) },
+                    onMenuDismiss = { onIntent(PostDetailIntent.OnMenuClick(false)) },
                     onDropDownMenuClick = { action ->
                         if (action == PostDropDownActionType.SAVE_IMAGE) {
                             coroutineScope.launch {

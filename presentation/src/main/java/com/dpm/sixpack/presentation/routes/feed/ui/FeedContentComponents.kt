@@ -174,6 +174,7 @@ internal fun LazyListScope.feedPostItems(
                 isMenuExpanded = isMenuExpanded,
                 captureController = captureController,
                 onMenuClick = { onPostMenuClick(post.feedId) },
+                onMenuDismiss = { onPostMenuClick(-1) },
                 onDropDownMenuClick = { action ->
                     // SAVE_IMAGE 액션 처리
                     if (action == PostDropDownActionType.SAVE_IMAGE) {

@@ -48,6 +48,7 @@ fun FeedPostCard(
     onPostUserProfileClick: (Long, Boolean) -> Unit = { _, _ -> },
     onPostImageClick: () -> Unit = {},
     onMenuClick: () -> Unit = {},
+    onMenuDismiss: () -> Unit = {},
     onDropDownMenuClick: (PostDropDownActionType) -> Unit = {},
     onReactionChipClick: (Emoji, Boolean) -> Unit = { _, _ -> },
     onReactionChipLongClick: (Emoji, List<PostReaction>) -> Unit = { _, _ -> },
@@ -63,6 +64,7 @@ fun FeedPostCard(
             postingUser = postDetail.user,
             isMenuExpanded = isMenuExpanded,
             onMenuClick = onMenuClick,
+            onMenuDismiss = onMenuDismiss,
             onDropDownMenuClick = onDropDownMenuClick,
             onPostUserProfileClick = { onPostUserProfileClick(postDetail.user.user.id, postDetail.user.user.isMe) },
         )
@@ -97,6 +99,7 @@ private fun PostUserInfoRow(
     postingUser: PostingUserInfo,
     isMenuExpanded: Boolean,
     onMenuClick: () -> Unit,
+    onMenuDismiss: () -> Unit,
     onPostUserProfileClick: () -> Unit,
     onDropDownMenuClick: (PostDropDownActionType) -> Unit,
     modifier: Modifier = Modifier,
@@ -119,7 +122,8 @@ private fun PostUserInfoRow(
         PostDropDownMenuIcon(
             isMyPost = postingUser.user.isMe,
             isMenuExpanded = isMenuExpanded,
-            onMenuClick = { isMenuExpanded -> onMenuClick() },
+            onMenuClick = { onMenuClick() },
+            onMenuDismiss = onMenuDismiss,
             onDropDownMenuClick = onDropDownMenuClick,
         )
     }
