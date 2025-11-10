@@ -23,6 +23,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.pullToRefresh
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -170,23 +171,19 @@ fun FeedScreen(
                     }
                 }
 
-        PullToRefreshBox(
-            isRefreshing = isRefreshing,
-            onRefresh = {
-                isRefreshing = true
-                onIntent(FeedIntent.OnRefreshAll)
-            },
-            modifier = contentModifier.padding(paddingValues),
-            state = pullToRefreshState,
-            indicator = {
-                PullToRefreshDefaults.Indicator(
-                    state = pullToRefreshState,
+        Box(
+            modifier = contentModifier
+                .padding(paddingValues)
+                .pullToRefresh(
                     isRefreshing = isRefreshing,
-                    modifier = Modifier.align(Alignment.TopCenter),
-                    color = SixpackTheme.colors.blue600,
-                    containerColor = Color.White,
-                )
-            },
+                    onRefresh = {
+                        isRefreshing = true
+                        onIntent(FeedIntent.OnRefreshAll)
+                    },
+                    state = pullToRefreshState,
+                    enabled = state.isCertifiableDate,
+                ),
+            contentAlignment = Alignment.TopStart
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
                 LazyColumn(
@@ -262,6 +259,13 @@ fun FeedScreen(
                     modifier = Modifier.align(Alignment.BottomEnd),
                 )
             }
+            PullToRefreshDefaults.Indicator(
+                state = pullToRefreshState,
+                isRefreshing = isRefreshing,
+                modifier = Modifier.align(Alignment.TopCenter),
+                color = SixpackTheme.colors.blue600,
+                containerColor = Color.White,
+            )
         }
     }
     ReactionUsersBottomSheet(

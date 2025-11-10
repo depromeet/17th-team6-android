@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.filter
 import androidx.paging.map
+import com.dpm.sixpack.domain.constants.FeedConstants
 import com.dpm.sixpack.domain.event.FeedUpdateEvent
 import com.dpm.sixpack.domain.repository.FeedListItem
 import com.dpm.sixpack.domain.repository.FeedRepository
@@ -63,14 +64,9 @@ class FeedViewModel @Inject constructor(
     // 마지막으로 처리한 이벤트의 타임스탬프 (중복 처리 방지)
     private var lastProcessedTimestamp = 0L
 
-    /**
-     * TODO SB 추후에 48시간 이내로 정확하게 구현
-     * 선택된 날짜가 인증 가능한 날짜인지 확인
-     * 오늘 기준 2일 전까지만 인증 가능
-     */
     private fun isCertifiable(selectedDate: LocalDate): Boolean {
         val today = LocalDate.now()
-        val minCertifiableDate = today.minusDays(2)
+        val minCertifiableDate = today.minusDays(FeedConstants.CERTIFIABLE_DAYS)
         return !selectedDate.isBefore(minCertifiableDate)
     }
 
@@ -229,11 +225,13 @@ class FeedViewModel @Inject constructor(
     private fun handleDateSelected(date: LocalDate) =
         intent {
             val feedDateState = handleFeedDateState(date)
+            val isCertifiableDate = isCertifiable(date)
 
             reduce {
                 state.copy(
                     calendarState = state.calendarState.copy(selectedDate = date),
                     feedDateState = feedDateState,
+                    isCertifiableDate = isCertifiableDate,
                     postingUserInfo = emptyList(),
                 )
             }
@@ -534,20 +532,19 @@ class FeedViewModel @Inject constructor(
 
     /**
      * 전체 새로고침
-     * 1. 오늘부터 2일 전까지의 Calendar postCounts 업데이트
+     * 1. 오늘부터 인증 가능 기간까지의 Calendar postCounts 업데이트
      * 2. 현재 선택된 날짜의 certifiedUsers 업데이트
      * 3. Paging data refresh
      */
     private fun handleRefreshAll() =
         intent {
             val today = LocalDate.now()
-            val twoDaysAgo = today.minusDays(2)
+            val certifiableStartDate = today.minusDays(FeedConstants.CERTIFIABLE_DAYS)
             val selectedDate = state.calendarState.selectedDate
 
-            // 1. 오늘부터 2일 전까지의 Calendar postCounts 업데이트
             feedRepository
                 .getSelfieCalendar(
-                    twoDaysAgo.toYyyyMmDdString(),
+                    certifiableStartDate.toYyyyMmDdString(),
                     today.toYyyyMmDdString(),
                 ).onSuccess { selfieCounts ->
                     val newCountsMap =
