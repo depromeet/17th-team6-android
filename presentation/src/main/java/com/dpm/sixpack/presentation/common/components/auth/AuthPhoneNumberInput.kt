@@ -36,7 +36,11 @@ fun AuthPhoneNumberInput(
 ) {
     DoRunSignInputField(
         value = phoneNumber,
-        onValueChange = onPhoneNumberChanged,
+        onValueChange = { newValue ->
+            // 숫자만 필터링하여 전달 (최대 11자리)
+            val digitsOnly = newValue.filter { it.isDigit() }.take(11)
+            onPhoneNumberChanged(digitsOnly)
+        },
         topLabel = topLabel,
         placeholder = placeholder,
         modifier = modifier,

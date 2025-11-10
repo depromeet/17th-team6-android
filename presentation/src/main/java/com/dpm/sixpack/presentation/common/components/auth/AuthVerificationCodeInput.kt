@@ -49,7 +49,11 @@ fun AuthVerificationCodeInput(
     Column(modifier = modifier) {
         DoRunSignInputField(
             value = verificationCode,
-            onValueChange = onVerificationCodeChanged,
+            onValueChange = { newValue ->
+                // 숫자만 필터링하여 전달 (최대 6자리)
+                val digitsOnly = newValue.filter { it.isDigit() }.take(6)
+                onVerificationCodeChanged(digitsOnly)
+            },
             topLabel = topLabel,
             placeholder = placeholder,
             enabled = enabled,
