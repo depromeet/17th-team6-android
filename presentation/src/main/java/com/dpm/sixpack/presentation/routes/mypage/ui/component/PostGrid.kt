@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.dpm.sixpack.core.util.TimeUtil
 import com.dpm.sixpack.presentation.common.components.image.DoRunAsyncImage
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.util.compose.rememberAdaptiveGridMinSize
@@ -34,8 +35,6 @@ import com.dpm.sixpack.presentation.routes.mypage.contract.GridItemType
 import com.dpm.sixpack.presentation.routes.mypage.contract.Post
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 import kotlinx.coroutines.flow.flowOf
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @Composable
 internal fun PostGrid(
@@ -138,13 +137,11 @@ private fun PostGridItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    // TimeUtil의 공통 날짜 파싱 함수 사용
     val day =
-        try {
-            val dateTime = LocalDateTime.parse(post.createdAt, DateTimeFormatter.ISO_DATE_TIME)
+        TimeUtil.parseToLocalDateTime(post.createdAt)?.let { dateTime ->
             "${dateTime.dayOfMonth}일"
-        } catch (_: Exception) {
-            ""
-        }
+        } ?: ""
 
     Box(
         modifier =

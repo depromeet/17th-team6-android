@@ -59,10 +59,7 @@ constructor(
                         val beforeYearMonth = before?.let { getYearMonthFromPost(it) }
                         val afterYearMonth = after?.let { getYearMonthFromPost(it) }
 
-                        val shouldInsertLabel =
-                            after != null && afterYearMonth != null && (before == null || beforeYearMonth != afterYearMonth)
-
-                        if (shouldInsertLabel) {
+                        if (after != null && afterYearMonth != null && (before == null || beforeYearMonth != afterYearMonth)) {
                             GridItemType.MonthLabel(
                                 year = afterYearMonth.first,
                                 month = afterYearMonth.second,
@@ -81,7 +78,6 @@ constructor(
                     Pair(dateTime.year, dateTime.monthValue)
                 }
             }
-
             is GridItemType.MonthLabel -> null
         }
 
