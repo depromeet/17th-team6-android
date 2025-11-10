@@ -256,7 +256,7 @@ private fun WeekRow(
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly,
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         days.forEach { day ->
             val isSelected = day.date == selectedDate
@@ -268,7 +268,6 @@ private fun WeekRow(
                     DayCell(
                         dayData = day,
                         isSelected = isSelected,
-                        modifier = Modifier.weight(1f),
                         onClick = {
                             onDateClick(day.date)
                         },
@@ -301,7 +300,6 @@ private fun DayCell(
     Column(
         modifier =
             modifier
-                .fillMaxWidth()
                 .noRippleClickable(enabled = !dayData.isDisabled, onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
