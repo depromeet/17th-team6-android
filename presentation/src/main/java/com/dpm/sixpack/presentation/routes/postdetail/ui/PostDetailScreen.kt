@@ -59,20 +59,22 @@ fun PostDetailScreen(
     val postImageUrl = uiState.post?.postImageUrl ?: ""
 
     Box(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         AsyncImage(
             model = postImageUrl,
-            contentDescription =null,
-            modifier = Modifier
-                .fillMaxSize()
-                .blur(radius = 20.dp, edgeTreatment = BlurredEdgeTreatment.Rectangle),
+            contentDescription = null,
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .blur(radius = 20.dp, edgeTreatment = BlurredEdgeTreatment.Rectangle),
             contentScale = ContentScale.Crop,
         )
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(SixpackTheme.colors.gray900.copy(alpha = 0.6f))
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(SixpackTheme.colors.gray900.copy(alpha = 0.6f)),
         )
     }
 
