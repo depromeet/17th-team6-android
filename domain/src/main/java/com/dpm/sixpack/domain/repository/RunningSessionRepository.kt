@@ -31,5 +31,6 @@ interface RunningSessionRepository {
     suspend fun getRunSessions(
         isSelfied: Boolean?,
         startDateTime: String?,
+        endDateTime: String?,
     ): DoRunResult<List<RunSession>>
 }

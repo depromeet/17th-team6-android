@@ -233,16 +233,20 @@ class RunningSessionRepositoryImpl @Inject constructor(
     override suspend fun getRunSessions(
         isSelfied: Boolean?,
         startDateTime: String?,
+        endDateTime: String?,
     ): DoRunResult<List<RunSession>> =
         withContext(Dispatchers.IO) {
             try {
-                val response = runningSessionDataSource.getRunSessions(isSelfied, startDateTime)
+                Timber.d("RunningSessionRepository - API 호출: isSelfied=$isSelfied, startDateTime=$startDateTime, endDateTime=$endDateTime")
+                val response = runningSessionDataSource.getRunSessions(isSelfied, startDateTime, endDateTime)
                 val runSessions =
                     response.data?.map { it.toRunSession() }
                         ?: throw DoRunException.DataError("서버 응답 데이터가 비어 있습니다.")
 
+                Timber.d("RunningSessionRepository - API 응답: ${runSessions.size}개 세션 조회 성공")
                 DoRunResult.Success(runSessions)
             } catch (e: Exception) {
+                Timber.e(e, "RunningSessionRepository - API 요청 실패")
                 DoRunResult.Failure(DoRunException.DataError("네트워크 요청에 실패했습니다: ${e.message}"))
             }
         }

@@ -18,6 +18,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
 import javax.inject.Inject
@@ -102,5 +103,9 @@ class RunningSessionDataSource @Inject constructor(
     suspend fun getRunSessions(
         isSelfied: Boolean?,
         startDateTime: String?,
-    ): BaseResponse<List<RunSessionListResponseDto>> = runningSessionServiceApi.getRunSessions(isSelfied, startDateTime)
+        endDateTime: String?,
+    ): BaseResponse<List<RunSessionListResponseDto>> {
+        Timber.d("DataSource - Retrofit 호출: GET /api/runs/sessions?isSelfied=$isSelfied&startDateTime=$startDateTime&endDateTime=$endDateTime")
+        return runningSessionServiceApi.getRunSessions(isSelfied, startDateTime, endDateTime)
+    }
 }

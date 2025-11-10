@@ -42,6 +42,7 @@ interface RunningSessionServiceApi {
     suspend fun getRunSessions(
         @Query("isSelfied") isSelfied: Boolean? = null,
         @Query("startDateTime") startDateTime: String? = null,
+        @Query("endDateTime") endDateTime: String? = null,
     ): BaseResponse<List<RunSessionListResponseDto>>
 
     @GET("$API/$RUNS/$SESSIONS/{sessionId}")

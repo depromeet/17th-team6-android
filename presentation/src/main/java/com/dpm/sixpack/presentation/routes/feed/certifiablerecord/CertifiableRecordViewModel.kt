@@ -39,7 +39,7 @@ class CertifiableRecordViewModel @Inject constructor(
             val startDateTime = fortyEightHoursAgo.format(formatter)
 
             runningRepository
-                .getRunSessions(isSelfied = false, startDateTime = startDateTime)
+                .getRunSessions(isSelfied = false, startDateTime = startDateTime, endDateTime = null)
                 .onSuccess { sessions ->
                     reduce {
                         state.copy(

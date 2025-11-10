@@ -95,6 +95,7 @@ class MockRunningSessionServiceApi
         override suspend fun getRunSessions(
             isSelfied: Boolean?,
             startDateTime: String?,
+            endDateTime: String?,
         ): BaseResponse<List<RunSessionListResponseDto>> {
             delay(500L) // 네트워크 지연 시뮬레이션
 
