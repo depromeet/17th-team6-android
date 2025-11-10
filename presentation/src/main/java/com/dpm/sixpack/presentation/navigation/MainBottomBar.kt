@@ -49,16 +49,6 @@ fun MainBottomBar(
         )
     AnimatedVisibility(
         visible = visible,
-        enter =
-            slideInVertically(
-                initialOffsetY = { it },
-                animationSpec = navigationAnimationSpec,
-            ) + fadeIn(fadeAnimationSpec),
-        exit =
-            slideOutVertically(
-                targetOffsetY = { it },
-                animationSpec = navigationAnimationSpec,
-            ) + fadeOut(fadeAnimationSpec),
     ) {
         val borderColor = SixpackTheme.colors.gray50
         BottomAppBar(
