@@ -33,17 +33,13 @@ internal fun RecordTabContent(
 ) {
     val pullRefreshState = rememberPullToRefreshState()
 
-    // 첫 로딩인지 판단 (데이터가 없으면서 로딩 중)
-    val isInitialLoading = state.isLoading && state.records.isEmpty()
-
-    // Pull-to-Refresh 로딩 중 (데이터가 있으면서 로딩 중)
-    val isRefreshing = state.isLoading && state.records.isNotEmpty()
-
     when {
-        isInitialLoading -> {
+        // 로딩 중일 때는 항상 스켈레톤 표시
+        state.isLoading -> {
             RecordTabLoadingState(modifier = modifier)
         }
 
+        // 에러 발생 시
         state.error != null -> {
             Column(modifier = modifier) {
                 // Month Navigation
@@ -63,6 +59,7 @@ internal fun RecordTabContent(
             }
         }
 
+        // 데이터 표시
         else -> {
             Column(modifier = modifier) {
                 // Month Navigation
@@ -77,13 +74,13 @@ internal fun RecordTabContent(
                 // PullToRefreshBox로 콘텐츠 감싸기
                 PullToRefreshBox(
                     state = pullRefreshState,
-                    isRefreshing = isRefreshing,
+                    isRefreshing = false,
                     onRefresh = { onIntent(MyPageRecordTabIntent.OnRefresh) },
                     modifier = Modifier.fillMaxSize(),
                     indicator = {
                         Indicator(
                             state = pullRefreshState,
-                            isRefreshing = isRefreshing,
+                            isRefreshing = false,
                             modifier = Modifier.align(Alignment.TopCenter),
                             color = SixpackTheme.colors.blue600,
                             containerColor = Color.White,
