@@ -30,34 +30,7 @@ enum class ImageFormat(
 }
 
 /**
- * Bitmap을 갤러리에 고품질로 저장하는 유틸리티
- *
- * **인스타그램 피드 품질 지원:**
- * - PNG 무손실 포맷 (최고 품질, 큰 용량)
- * - JPEG 100% 품질 (고품질, 효율적 용량)
- *
- * Android 버전별로 적절한 저장 방식을 사용합니다:
- * - Android 10 (API 29) 이상: MediaStore API 사용 (Scoped Storage)
- * - Android 10 미만: File API 사용
- *
- * **사용 예시:**
- * ```kotlin
- * // PNG 무손실 저장 (최고 품질)
- * ImageSaver.saveToGallery(
- *     context = context,
- *     bitmap = bitmap,
- *     fileName = "sixpack_${timestamp}",
- *     format = ImageFormat.PNG
- * )
- *
- * // JPEG 고품질 저장 (용량 효율적)
- * ImageSaver.saveToGallery(
- *     context = context,
- *     bitmap = bitmap,
- *     fileName = "sixpack_${timestamp}",
- *     format = ImageFormat.JPEG  // 기본값
- * )
- * ```
+ * Bitmap을 갤러리에 저장하는 유틸리티
  */
 object ImageSaver {
     private const val DIRECTORY_NAME = "Sixpack"

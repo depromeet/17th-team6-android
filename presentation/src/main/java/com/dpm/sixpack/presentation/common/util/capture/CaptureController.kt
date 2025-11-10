@@ -14,7 +14,7 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 /**
- * Composable View를 고품질 Bitmap으로 캡처하는 컨트롤러
+ * Composable View를 Bitmap으로 캡처하는 컨트롤러
  *
  * **사용 방법:**
  * ```kotlin
@@ -44,7 +44,6 @@ class CaptureController internal constructor(
     /**
      * 현재 캡처 대상 Composable을 고품질 Bitmap으로 변환합니다.
      *
-     * **인스타그램 피드 품질 보장:**
      * - 최소 1080x1080 해상도 (필요시 자동 업스케일)
      * - ARGB_8888 Config (고품질 색상)
      * - 안티앨리어싱 + 필터링 (선명도 유지)

@@ -6,10 +6,6 @@ import androidx.compose.ui.graphics.layer.drawLayer
 
 /**
  * Composable을 캡처 가능하게 만드는 Modifier extension
- *
- * 이 modifier를 적용한 Composable은 CaptureController를 통해 Bitmap으로 캡처할 수 있습니다.
- * 성능 최적화를 위해 GraphicsLayer를 사용하여 하드웨어 가속을 활용합니다.
- *
  * **사용 예시:**
  * ```kotlin
  * val captureController = rememberCaptureController()
@@ -35,7 +31,6 @@ import androidx.compose.ui.graphics.layer.drawLayer
  */
 fun Modifier.capturable(controller: CaptureController): Modifier =
     this.drawWithContent {
-        // GraphicsLayer에 현재 컨텐츠를 기록
         controller.graphicsLayer.record {
             this@drawWithContent.drawContent()
         }
