@@ -96,7 +96,7 @@ fun DoRunSignInputField(
             }
 
         // TextFieldValue를 사용하여 커서 위치 제어
-        var textFieldValue by remember(value) {
+        var textFieldValue by remember {
             mutableStateOf(
                 TextFieldValue(
                     text = value,
@@ -107,11 +107,13 @@ fun DoRunSignInputField(
 
         // value가 외부에서 변경될 때 textFieldValue 업데이트
         LaunchedEffect(value) {
+            // 텍스트가 변경되었을 때만 업데이트
             if (textFieldValue.text != value) {
+                // 커서를 항상 맨 끝으로 이동 (새로운 텍스트 길이 기준)
                 textFieldValue =
                     TextFieldValue(
                         text = value,
-                        selection = TextRange(value.length),
+                        selection = TextRange(value.length.coerceAtLeast(0)),
                     )
             }
         }
@@ -126,7 +128,17 @@ fun DoRunSignInputField(
             BasicTextField(
                 value = textFieldValue,
                 onValueChange = { newTextFieldValue ->
-                    textFieldValue = newTextFieldValue
+                    // 커서 위치가 텍스트 길이를 초과하지 않도록 보정
+                    val safeSelection =
+                        TextRange(
+                            newTextFieldValue.selection.start.coerceIn(0, newTextFieldValue.text.length),
+                            newTextFieldValue.selection.end.coerceIn(0, newTextFieldValue.text.length),
+                        )
+
+                    textFieldValue =
+                        newTextFieldValue.copy(
+                            selection = safeSelection,
+                        )
                     onValueChange(newTextFieldValue.text)
                 },
                 modifier =
