@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -66,6 +67,7 @@ private data class WeeklyCalendarDay(
 @Composable
 fun FeedWeeklyCalendar(
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     feedCalenderUiState: FeedCalenderUiState = FeedCalenderUiState(),
     pagerState: PagerState =
         rememberPagerState(
@@ -113,6 +115,7 @@ fun FeedWeeklyCalendar(
                 .background(colors.calendarBackgroundColor),
     ) {
         WeeklyCalendarHeader(
+            modifier = Modifier.padding(contentPadding),
             currentDisplayWeekViewStartDate = currentDisplayWeekStartDate,
             selectedDate = selectedDate,
             onPreviousWeek = {
@@ -159,6 +162,7 @@ fun FeedWeeklyCalendar(
             }
 
             WeekRow(
+                modifier = Modifier.padding(contentPadding),
                 days = currentPageWeekDays,
                 selectedDate = selectedDate,
                 isLoading = isLoading,
@@ -183,6 +187,7 @@ private fun WeeklyCalendarHeader(
     onNextWeek: () -> Unit,
     colors: WeeklyCalendarColors,
     typography: WeeklyCalendarTypography,
+    modifier: Modifier = Modifier,
 ) {
     val displayDateForMonth = currentDisplayWeekViewStartDate.getDisplayMonth(selectedDate)
 
@@ -201,7 +206,7 @@ private fun WeeklyCalendarHeader(
         }
 
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
@@ -253,9 +258,10 @@ private fun WeekRow(
     onDateClick: (LocalDate) -> Unit,
     colors: WeeklyCalendarColors,
     typography: WeeklyCalendarTypography,
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         days.forEach { day ->

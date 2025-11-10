@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -79,8 +80,8 @@ internal fun LazyListScope.feedCalendarItem(
         FeedWeeklyCalendar(
             modifier =
                 Modifier
-                    .padding(horizontal = 20.dp)
                     .padding(top = 16.dp),
+            contentPadding = PaddingValues(horizontal = 20.dp),
             feedCalenderUiState = calendarState,
             pagerState = pagerState,
             onDateSelected = onDateSelected,
