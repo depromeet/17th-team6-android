@@ -12,4 +12,6 @@ sealed interface MyPageRecordTabIntent : UiIntent {
     ) : MyPageRecordTabIntent
 
     data object OnRetryClick : MyPageRecordTabIntent
+
+    data object OnRefresh : MyPageRecordTabIntent
 }

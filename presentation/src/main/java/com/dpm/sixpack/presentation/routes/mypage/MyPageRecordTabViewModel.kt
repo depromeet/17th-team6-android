@@ -44,6 +44,7 @@ class MyPageRecordTabViewModel
                 is MyPageRecordTabIntent.OnNextMonthClick -> handleNextMonthClick()
                 is MyPageRecordTabIntent.OnRecordClick -> handleRecordClick(intent.recordId)
                 is MyPageRecordTabIntent.OnRetryClick -> loadRecords()
+                is MyPageRecordTabIntent.OnRefresh -> loadRecords()
             }
         }
 
