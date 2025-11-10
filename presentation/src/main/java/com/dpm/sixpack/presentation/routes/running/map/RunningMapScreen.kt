@@ -39,7 +39,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.dpm.sixpack.core.permission.PermissionUtil
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultButton
 import com.dpm.sixpack.presentation.common.components.dialog.DialogButtonType
@@ -48,7 +47,6 @@ import com.dpm.sixpack.presentation.common.model.FriendItem
 import com.dpm.sixpack.presentation.common.util.BackgroundPermissionHandler
 import com.dpm.sixpack.presentation.routes.running.map.MapConstants.DEFAULT_ZOOM
 import com.dpm.sixpack.presentation.routes.running.map.MapConstants.FINAL_RESOLUTION
-import com.dpm.sixpack.presentation.routes.running.map.MapConstants.MAP_PERMISSIONS
 import com.dpm.sixpack.presentation.routes.running.map.MapConstants.SNAPSHOT_PADDING
 import com.dpm.sixpack.presentation.routes.running.map.component.DoRunMarker
 import com.dpm.sixpack.presentation.routes.running.map.component.LocationTrackingButton
