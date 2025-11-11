@@ -215,7 +215,9 @@ class SignUpViewModel @Inject constructor(
                     delay(1000)
                     intent {
                         reduce {
-                            state.copy(remainingTimeInSeconds = state.remainingTimeInSeconds - 1)
+                            // 음수 방지: 0 이하로 내려가지 않도록 보장
+                            val newTime = (state.remainingTimeInSeconds - 1).coerceAtLeast(0)
+                            state.copy(remainingTimeInSeconds = newTime)
                         }
                     }
                 }
