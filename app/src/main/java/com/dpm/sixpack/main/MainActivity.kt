@@ -1,7 +1,6 @@
 package com.dpm.sixpack.main
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,6 +17,7 @@ import com.dpm.sixpack.BuildConfig
 import com.dpm.sixpack.LocalTimeZone
 import com.dpm.sixpack.core.util.NetworkMonitor
 import com.dpm.sixpack.core.util.TimeZoneMonitor
+import com.dpm.sixpack.main.navigation.MainNavigator
 import com.dpm.sixpack.main.navigation.rememberMainNavigator
 import com.dpm.sixpack.presentation.destinations.OnboardingRoute
 import com.dpm.sixpack.presentation.theme.SixpackTheme
@@ -34,6 +34,8 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var timeZoneMonitor: TimeZoneMonitor
     private val viewModel: MainViewModel by viewModels()
+
+    private lateinit var mainNavigator: MainNavigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
@@ -53,9 +55,10 @@ class MainActivity : ComponentActivity() {
             val showFullScreenLoading by viewModel.showFullScreenLoading.collectAsStateWithLifecycle()
 
             if (!isLoading) {
+                mainNavigator = rememberMainNavigator(startDestination = startDestination)
                 val appState =
                     rememberSixPackAppState(
-                        navigator = rememberMainNavigator(startDestination = startDestination),
+                        navigator = mainNavigator,
                         networkMonitor = networkMonitor,
                         timeZoneMonitor = timeZoneMonitor,
                     )
@@ -77,6 +80,10 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
+                LaunchedEffect(Unit) {
+                    handleNotificationData(intent)
+                }
+
                 CompositionLocalProvider(
                     LocalTimeZone provides currentTimeZone,
                 ) {
@@ -90,8 +97,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-
-        handleNotificationData(intent)
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -102,16 +107,21 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun handleNotificationData(intent: Intent?) {
+        if (!::mainNavigator.isInitialized) {
+            Timber.w("NavController is not yet initialized. Skipping deeplink.")
+            return
+        }
         // 1. Intent의 extras에서 data 페이로드의 키("deeplink")를 확인
         val deeplink = intent?.extras?.getString("deeplink")
 
         if (deeplink != null) {
             Timber.d("Received deeplink from notification: $deeplink")
-
-            // 2. 딥링크 Uri로 이동 (NavHostController 또는 Intent 처리)
             val uri = deeplink.toUri()
 
-            // TODO: 딥링크 URI를 처리하는 실제 내비게이션 로직 구현
+            // ⬇️ 7. (핵심!) NavController에게 Uri로 이동하라고 명령
+            // NavHost에 정의된 딥링크 패턴과 일치하는 Composable로
+            // NavController가 알아서 이동시켜 줍니다.
+            mainNavigator.navController.navigate(uri)
         }
     }
 

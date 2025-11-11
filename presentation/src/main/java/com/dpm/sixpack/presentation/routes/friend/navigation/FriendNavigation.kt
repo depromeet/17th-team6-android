@@ -58,7 +58,12 @@ fun NavGraphBuilder.addFriendNavGraph(
             )
         }
 
-        composable<AddFriendRoute> { backStackEntry ->
+        composable<AddFriendRoute>(
+            deepLinks =
+                listOf(
+                    navDeepLink<AddFriendRoute>(basePath = DeepLinks.Friend.ADD),
+                ),
+        ) { backStackEntry ->
             val parentEntry =
                 remember(backStackEntry) {
                     navController.getBackStackEntry<Friend>()

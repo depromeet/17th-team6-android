@@ -4,9 +4,8 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
-import android.net.Uri
-import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.net.toUri
 import com.dpm.sixpack.background.R
 import com.dpm.sixpack.core.network.di.ApplicationScope
 import com.dpm.sixpack.domain.usecase.user.SaveFcmTokenUseCase
@@ -73,18 +72,33 @@ class FcmService : FirebaseMessagingService() {
         notification: RemoteMessage.Notification, // 1. Notification 객체 전체를 받음
         data: Map<String, String>, // 2. data 페이로드(Map)를 받음
     ) {
-        // 3. ⚠️ data에서 deeplink 값을 추출합니다.
-        //    (로그를 보니 "deeplink" 키를 사용하고 계십니다)
-        val deeplinkUri =
-            data["deeplink"]?.let {
-                Uri.parse(it)
-            } ?: Uri.parse("dorundorun://main") // 딥링크가 없을 경우의 기본 Uri (필요시 수정)
+        // 3. 딥링크가 있는지 확인
+        val deeplink = data["deepLink"]
 
-        // 딥링크 Uri로 Intent 생성
-        val intent =
-            Intent(Intent.ACTION_VIEW, deeplinkUri).apply {
-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        // 4. 딥링크 존재 여부에 따라 Intent를 다르게 생성
+        val intent: Intent? =
+            if (deeplink != null) {
+                // ✅ Case 1: 딥링크가 있을 때 (기존 로직)
+                Timber.d("Deeplink found: $deeplink")
+                Intent(Intent.ACTION_VIEW, deeplink.toUri()).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                }
+            } else {
+                // ✅ Case 2: 딥링크가 없을 때 (모듈 분리 솔루션)
+                // '패키지 이름'을 기반으로 앱의 '메인 실행 Intent'를 찾습니다.
+                // FcmService(Context)는 자신의 packageName을 알고 있습니다.
+                Timber.d("No deeplink. Getting launch intent for package: $packageName")
+                packageManager.getLaunchIntentForPackage(packageName)?.apply {
+                    // 알림을 통해 실행될 때 기존 스택을 정리
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                }
             }
+
+        // 5. (안전 장치) Intent 생성에 실패하면 알림을 보내지 않음
+        if (intent == null) {
+            Timber.e("Could not create intent for notification. (Package: $packageName)")
+            return
+        }
 
         // Intent로 PendingIntent 생성
         val pendingIntent =
@@ -108,16 +122,13 @@ class FcmService : FirebaseMessagingService() {
                 .setContentIntent(pendingIntent) // 10. 딥링크가 담긴 PendingIntent 설정
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
 
-        // 11. (필수) Android 8.0 이상에서 채널 생성
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel =
-                NotificationChannel(
-                    channelId,
-                    "기본 알림",
-                    NotificationManager.IMPORTANCE_HIGH,
-                )
-            notificationManager.createNotificationChannel(channel)
-        }
+        val channel =
+            NotificationChannel(
+                channelId,
+                "기본 알림",
+                NotificationManager.IMPORTANCE_HIGH,
+            )
+        notificationManager.createNotificationChannel(channel)
 
         notificationManager.notify(0, notificationBuilder.build())
     }
