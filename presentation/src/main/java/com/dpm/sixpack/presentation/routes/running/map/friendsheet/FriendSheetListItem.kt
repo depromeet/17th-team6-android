@@ -140,8 +140,8 @@ internal fun FriendSheetListItem(
                         color = SixpackTheme.colors.blue600,
                     ) {
                         Text(
-                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp),
-                            text = "나",
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                            text = stringResource(id = R.string.feed_post_user_info_my_post_badge),
                             color = SixpackTheme.colors.gray0,
                             style = SixpackTheme.typography.c1Medium,
                         )
