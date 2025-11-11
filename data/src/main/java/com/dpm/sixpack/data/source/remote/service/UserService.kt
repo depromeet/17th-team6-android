@@ -1,13 +1,18 @@
 package com.dpm.sixpack.data.source.remote.service
 
+import com.dpm.sixpack.data.source.remote.dto.request.NewFcmTokenRequestDto
 import com.dpm.sixpack.data.source.remote.dto.response.MyProfileUpdateResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.UserProfileResponseDto
 import com.dpm.sixpack.data.source.remote.util.base.BaseResponse
+import com.dpm.sixpack.data.source.remote.util.constant.ApiConstants.API
+import com.dpm.sixpack.data.source.remote.util.constant.ApiConstants.USERS
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
+import retrofit2.http.POST
 import retrofit2.http.Part
 
 /**
@@ -19,7 +24,7 @@ interface UserService {
      *
      * @return 사용자 프로필 정보
      */
-    @GET("/api/users/me/profile")
+    @GET("$API/$USERS/me/profile")
     suspend fun getMyProfile(): BaseResponse<UserProfileResponseDto>
 
     /**
@@ -30,9 +35,14 @@ interface UserService {
      * @return 수정된 프로필 이미지 URL
      */
     @Multipart
-    @PATCH("/api/users/me")
+    @PATCH("$API/$USERS/me")
     suspend fun updateMyProfile(
         @Part("data") data: RequestBody,
         @Part profileImage: MultipartBody.Part?,
     ): BaseResponse<MyProfileUpdateResponseDto>
+
+    @PATCH("$API/$USERS/me/device-token")
+    suspend fun postNewFcmToken(
+        @Body body: NewFcmTokenRequestDto,
+    ): BaseResponse<Unit>
 }

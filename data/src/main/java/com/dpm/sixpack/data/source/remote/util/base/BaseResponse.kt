@@ -1,10 +1,8 @@
 package com.dpm.sixpack.data.source.remote.util.base
 
-import android.annotation.SuppressLint
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class BaseResponse<T>(
     @SerialName("status")

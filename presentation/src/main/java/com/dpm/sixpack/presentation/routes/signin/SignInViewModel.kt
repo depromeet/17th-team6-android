@@ -102,9 +102,11 @@ class SignInViewModel @Inject constructor(
                         is DoRunException.ValidationError -> {
                             postSideEffect(SignInSideEffect.ShowInvalidPhoneNumberError)
                         }
+
                         is DoRunException.RateLimitError -> {
                             postSideEffect(SignInSideEffect.ShowRateLimitError)
                         }
+
                         else -> {
                             postSideEffect(SignInSideEffect.ShowCodeSendFailedError)
                         }
@@ -161,9 +163,11 @@ class SignInViewModel @Inject constructor(
                         is DoRunException.CodeMismatchError -> {
                             postSideEffect(SignInSideEffect.ShowCodeMismatchError)
                         }
+
                         is DoRunException.CodeExpiredError -> {
                             postSideEffect(SignInSideEffect.ShowCodeExpiredError)
                         }
+
                         else -> {
                             postSideEffect(SignInSideEffect.ShowCodeMismatchError)
                         }

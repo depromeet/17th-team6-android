@@ -1,10 +1,15 @@
 package com.dpm.sixpack.firebaseMessageService
 
+import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context
+import android.app.PendingIntent
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import androidx.core.app.NotificationCompat
+import com.dpm.sixpack.background.R
 import com.dpm.sixpack.core.network.di.ApplicationScope
-import com.dpm.sixpack.domain.repository.UserPreferenceRepository
+import com.dpm.sixpack.domain.usecase.user.SaveFcmTokenUseCase
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import dagger.hilt.android.AndroidEntryPoint
@@ -15,6 +20,8 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
+const val PRIMARY_PUSH_CHANNEL_ID = "primary_channel"
+
 @AndroidEntryPoint
 class FcmService : FirebaseMessagingService() {
     @Inject
@@ -22,7 +29,7 @@ class FcmService : FirebaseMessagingService() {
     lateinit var appScope: CoroutineScope
 
     @Inject
-    lateinit var userPreferenceRepository: UserPreferenceRepository
+    lateinit var saveFcmTokenUseCase: SaveFcmTokenUseCase
 
     /**
      * FCM 메시지를 수신할 때마다 호출됩니다.
@@ -35,16 +42,10 @@ class FcmService : FirebaseMessagingService() {
 
         Timber.d("fcm data received: ${remoteMessage.data}")
 
-        // 데이터 페이로드 처리 (서버에서 보낸 key-value 데이터)
-        if (remoteMessage.data.isNotEmpty()) {
-            Timber.d("fcm data received not null: ${remoteMessage.data}")
-        }
-
-        // ⬇️ 포그라운드 상태에서 '알림' 메시지를 받았을 때
+        // '알림'과 '데이터' 둘 다 sendNotification으로 넘깁니다.
         remoteMessage.notification?.let { notification ->
-            // ⚠️ 이 로직이 없으면 포그라운드 알림이 무시됩니다.
             Timber.d("Notification received: ${notification.title}, ${notification.body}")
-            sendNotification(notification.title, notification.body)
+            sendNotification(notification, remoteMessage.data)
         }
     }
 
@@ -58,33 +59,66 @@ class FcmService : FirebaseMessagingService() {
 
         // 이 토큰을 로컬에 저장
         saveTokenToLocal(token)
-
-        // TODO SK : 서버에 토큰 업데이트 추가
     }
 
     private fun saveTokenToLocal(token: String) {
         appScope.launch {
             withContext(Dispatchers.IO) {
-                userPreferenceRepository.updateFcmDeviceToken(token)
+                saveFcmTokenUseCase(token)
             }
         }
     }
 
-    // 포그라운드 알림을 수동으로 띄우는 함수 예시
     private fun sendNotification(
-        title: String?,
-        messageBody: String?,
+        notification: RemoteMessage.Notification, // 1. Notification 객체 전체를 받음
+        data: Map<String, String>, // 2. data 페이로드(Map)를 받음
     ) {
-        // (알림 채널 생성, PendingIntent 설정 등...)
-        // TODO: NotificationManager를 사용하여 알림을 생성하고 띄우는
-        //       '알림 빌더(Notification Builder)' 로직 구현
+        // 3. ⚠️ data에서 deeplink 값을 추출합니다.
+        //    (로그를 보니 "deeplink" 키를 사용하고 계십니다)
+        val deeplinkUri =
+            data["deeplink"]?.let {
+                Uri.parse(it)
+            } ?: Uri.parse("dorundorun://main") // 딥링크가 없을 경우의 기본 Uri (필요시 수정)
 
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        // 딥링크 Uri로 Intent 생성
+        val intent =
+            Intent(Intent.ACTION_VIEW, deeplinkUri).apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            }
+
+        // Intent로 PendingIntent 생성
+        val pendingIntent =
+            PendingIntent.getActivity(
+                this,
+                0,
+                intent,
+                PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE,
+            )
+
+        val channelId = PRIMARY_PUSH_CHANNEL_ID
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+
         val notificationBuilder =
             NotificationCompat
-                .Builder(this, "CHANNEL_ID")
-                .setContentTitle(title)
-                .setContentText(messageBody)
+                .Builder(this, channelId)
+                .setSmallIcon(R.drawable.ill_loading_overlay)
+                .setContentTitle(notification.title)
+                .setContentText(notification.body)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent) // 10. 딥링크가 담긴 PendingIntent 설정
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+
+        // 11. (필수) Android 8.0 이상에서 채널 생성
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel =
+                NotificationChannel(
+                    channelId,
+                    "기본 알림",
+                    NotificationManager.IMPORTANCE_HIGH,
+                )
+            notificationManager.createNotificationChannel(channel)
+        }
+
         notificationManager.notify(0, notificationBuilder.build())
     }
 }

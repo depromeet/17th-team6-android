@@ -11,7 +11,7 @@ class SignUpUseCase
     @Inject
     constructor(
         private val authRepository: AuthRepository,
-        private val userPreferenceRepository: UserRepository,
+        private val userRepository: UserRepository,
     ) {
         suspend operator fun invoke(
             nickname: String,
@@ -20,8 +20,9 @@ class SignUpUseCase
             marketingConsentAt: String?,
             locationConsentAt: String?,
             personalConsentAt: String,
-            deviceToken: String?,
         ): DoRunResult<SignUpResult> {
+            val fcmToken = userRepository.getFcmDeviceToken()
+
             val result =
                 authRepository.signUp(
                     nickname = nickname,
@@ -30,14 +31,14 @@ class SignUpUseCase
                     marketingConsentAt = marketingConsentAt,
                     locationConsentAt = locationConsentAt,
                     personalConsentAt = personalConsentAt,
-                    deviceToken = deviceToken,
+                    deviceToken = fcmToken,
                 )
 
             // 회원가입 성공 시 userId, token 저장
             result.onSuccess { signUpResult ->
-                userPreferenceRepository.updateUserId(signUpResult.user.id)
-                userPreferenceRepository.updateAccessToken(signUpResult.token.accessToken)
-                userPreferenceRepository.updateRefreshToken(signUpResult.token.refreshToken)
+                userRepository.updateUserId(signUpResult.user.id)
+                userRepository.updateAccessToken(signUpResult.token.accessToken)
+                userRepository.updateRefreshToken(signUpResult.token.refreshToken)
             }
 
             return result
