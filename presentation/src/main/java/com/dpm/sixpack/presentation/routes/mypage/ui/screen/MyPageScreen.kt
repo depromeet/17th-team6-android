@@ -31,8 +31,10 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.dpm.sixpack.presentation.R
+import com.dpm.sixpack.presentation.common.components.dialog.DoRunErrorScreen
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunTopBarSlot
+import com.dpm.sixpack.presentation.common.model.NetworkErrorType
 import com.dpm.sixpack.presentation.common.util.modifier.noRippleClickable
 import com.dpm.sixpack.presentation.routes.mypage.contract.CertificationStatus
 import com.dpm.sixpack.presentation.routes.mypage.contract.GridItemType
@@ -62,6 +64,18 @@ fun MyPageScreen(
     onRecordTabIntent: (MyPageRecordTabIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    // 에러가 있는 경우 에러 화면 표시
+    if (state.error != null) {
+        DoRunErrorScreen(
+            modifier = modifier.fillMaxSize(),
+            title = state.error.title,
+            description = state.error.description,
+            confirmButtonText = "다시 시도",
+            onConfirmClick = { onIntent(MyPageIntent.OnRetryClick) },
+        )
+        return
+    }
+
     val pagerState = rememberPagerState(initialPage = state.selectedTab.ordinal) { 2 }
 
     LaunchedEffect(pagerState) {
@@ -287,6 +301,66 @@ private fun MyPageScreenEmptyPreview() {
                             totalDistanceKm = 0.0,
                             certificationCount = 0,
                         ),
+                ),
+            recordTabState = MyPageRecordTabState(),
+            gridItemsPagingItems = gridItemsPagingItems,
+            onIntent = {},
+            onPostTabIntent = {},
+            onRecordTabIntent = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun MyPageScreenError404Preview() {
+    DoRunPreviewWrapper {
+        val gridItemsPagingItems = flowOf(PagingData.from(emptyList<GridItemType>())).collectAsLazyPagingItems()
+
+        MyPageScreen(
+            state =
+                MyPageState(
+                    error = NetworkErrorType.NotFound,
+                ),
+            recordTabState = MyPageRecordTabState(),
+            gridItemsPagingItems = gridItemsPagingItems,
+            onIntent = {},
+            onPostTabIntent = {},
+            onRecordTabIntent = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun MyPageScreenError500Preview() {
+    DoRunPreviewWrapper {
+        val gridItemsPagingItems = flowOf(PagingData.from(emptyList<GridItemType>())).collectAsLazyPagingItems()
+
+        MyPageScreen(
+            state =
+                MyPageState(
+                    error = NetworkErrorType.ServerError,
+                ),
+            recordTabState = MyPageRecordTabState(),
+            gridItemsPagingItems = gridItemsPagingItems,
+            onIntent = {},
+            onPostTabIntent = {},
+            onRecordTabIntent = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun MyPageScreenError502Preview() {
+    DoRunPreviewWrapper {
+        val gridItemsPagingItems = flowOf(PagingData.from(emptyList<GridItemType>())).collectAsLazyPagingItems()
+
+        MyPageScreen(
+            state =
+                MyPageState(
+                    error = NetworkErrorType.BadGateway,
                 ),
             recordTabState = MyPageRecordTabState(),
             gridItemsPagingItems = gridItemsPagingItems,

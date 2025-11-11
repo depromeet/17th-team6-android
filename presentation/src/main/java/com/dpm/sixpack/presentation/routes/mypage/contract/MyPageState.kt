@@ -2,6 +2,7 @@ package com.dpm.sixpack.presentation.routes.mypage.contract
 
 import android.os.Parcelable
 import com.dpm.sixpack.presentation.common.base.UiState
+import com.dpm.sixpack.presentation.common.model.NetworkErrorType
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -9,6 +10,7 @@ data class MyPageState(
     val selectedTab: MyPageTab = MyPageTab.CERTIFICATION,
     val profileInfo: ProfileInfo = ProfileInfo(),
     val isLoading: Boolean = false,
+    val error: NetworkErrorType? = null,
 ) : UiState,
     Parcelable
 

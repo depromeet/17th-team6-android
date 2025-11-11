@@ -45,18 +45,19 @@ fun DoRunErrorScreen(
             Image(
                 painter = painterResource(id = R.drawable.img_error),
                 contentDescription = "Error",
-                modifier = Modifier.size(100.dp),
+                modifier = Modifier.size(120.dp),
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             Text(
                 text = title,
                 style = SixpackTheme.typography.t2Bold,
                 color = SixpackTheme.colors.gray900,
+                textAlign = TextAlign.Center,
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             Text(
                 text = description,
@@ -65,13 +66,13 @@ fun DoRunErrorScreen(
                 color = SixpackTheme.colors.gray700,
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             DoRunDefaultButton(
                 modifier =
                     Modifier
                         .wrapContentWidth()
-                        .height(56.dp),
+                        .height(44.dp),
                 text = confirmButtonText,
                 onClick = onConfirmClick,
                 textColor = SixpackTheme.colors.gray0,

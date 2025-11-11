@@ -10,6 +10,7 @@ import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.auth.AuthClickableTextLink
 import com.dpm.sixpack.presentation.common.components.auth.AuthScreen
 import com.dpm.sixpack.presentation.common.components.dialog.CommonDialog
+import com.dpm.sixpack.presentation.common.components.dialog.DoRunErrorDialog
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.model.PhoneAuthStep
 import com.dpm.sixpack.presentation.routes.signin.contract.SignInIntent
@@ -78,6 +79,21 @@ fun SignInScreen(
             secondaryButtonText = stringResource(R.string.common_cancel),
             secondaryButtonOnClick = {
                 onIntent(SignInIntent.OnDismissUnregisteredDialog)
+            },
+        )
+    }
+
+    // 네트워크 에러 다이얼로그
+    state.networkError?.let { errorType ->
+        DoRunErrorDialog(
+            title = errorType.title,
+            subtitle = errorType.description,
+            confirmButtonText = "다시 시도",
+            onConfirmClick = {
+                onIntent(SignInIntent.OnErrorRetry)
+            },
+            onDismissRequest = {
+                onIntent(SignInIntent.OnErrorDialogDismiss)
             },
         )
     }

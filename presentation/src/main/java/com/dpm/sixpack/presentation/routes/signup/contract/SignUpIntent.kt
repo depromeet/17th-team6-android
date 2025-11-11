@@ -46,4 +46,14 @@ sealed interface SignUpIntent : UiIntent {
      * 이미 가입된 사용자 다이얼로그 닫기
      */
     data object OnDismissRegisteredDialog : SignUpIntent
+
+    /**
+     * 네트워크 에러 다이얼로그 닫기
+     */
+    data object OnErrorDialogDismiss : SignUpIntent
+
+    /**
+     * 네트워크 에러 재시도 버튼 클릭 시
+     */
+    data object OnErrorRetry : SignUpIntent
 }

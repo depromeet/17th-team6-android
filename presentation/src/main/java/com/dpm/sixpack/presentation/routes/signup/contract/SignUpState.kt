@@ -2,6 +2,7 @@ package com.dpm.sixpack.presentation.routes.signup.contract
 
 import android.os.Parcelable
 import com.dpm.sixpack.presentation.common.base.UiState
+import com.dpm.sixpack.presentation.common.model.NetworkErrorType
 import com.dpm.sixpack.presentation.common.model.PhoneAuthStep
 import kotlinx.parcelize.Parcelize
 
@@ -13,6 +14,7 @@ data class SignUpState(
     val remainingTimeInSeconds: Int = 180, // 3 minutes
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
+    val networkError: NetworkErrorType? = null,
     val showRegisteredDialog: Boolean = false,
     val registeredPhoneNumber: String = "",
 ) : UiState,

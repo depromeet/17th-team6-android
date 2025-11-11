@@ -6,6 +6,7 @@ import com.dpm.sixpack.domain.exception.DoRunException
 import com.dpm.sixpack.domain.usecase.SendSmsCodeUseCase
 import com.dpm.sixpack.domain.usecase.VerifySmsCodeUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
+import com.dpm.sixpack.presentation.common.model.NetworkErrorType
 import com.dpm.sixpack.presentation.common.model.PhoneAuthStep
 import com.dpm.sixpack.presentation.routes.signin.contract.SignInIntent
 import com.dpm.sixpack.presentation.routes.signin.contract.SignInSideEffect
@@ -43,6 +44,8 @@ class SignInViewModel @Inject constructor(
             is SignInIntent.OnSignUpClick -> handleSignUp(intent.phoneNumber)
             is SignInIntent.OnFindAccountClick -> handleFindAccount()
             is SignInIntent.OnDismissUnregisteredDialog -> handleDismissUnregisteredDialog()
+            is SignInIntent.OnErrorDialogDismiss -> handleErrorDialogDismiss()
+            is SignInIntent.OnErrorRetry -> handleErrorRetry()
         }
     }
 
@@ -91,6 +94,14 @@ class SignInViewModel @Inject constructor(
                     Timber.d("Verification code sent to ${state.phoneNumber}")
                 }.onError { exception ->
                     Timber.e("Failed to send verification code: ${exception.message}")
+
+                    // 네트워크 관련 에러는 다이얼로그로 표시
+                    if (isNetworkRelatedError(exception)) {
+                        showNetworkErrorDialog(exception)
+                        return@onError
+                    }
+
+                    // 비즈니스 에러는 기존 토스트로 처리
                     reduce {
                         state.copy(
                             isLoading = false,
@@ -150,6 +161,14 @@ class SignInViewModel @Inject constructor(
                     }
                 }.onError { exception ->
                     Timber.e("Failed to verify phone number: ${exception.message}")
+
+                    // 네트워크 관련 에러는 다이얼로그로 표시
+                    if (isNetworkRelatedError(exception)) {
+                        showNetworkErrorDialog(exception)
+                        return@onError
+                    }
+
+                    // 비즈니스 에러는 기존 토스트로 처리
                     reduce {
                         state.copy(
                             isLoading = false,
@@ -256,6 +275,73 @@ class SignInViewModel @Inject constructor(
                     unregisteredPhoneNumber = "",
                 )
             }
+        }
+
+    private fun handleErrorDialogDismiss() =
+        intent {
+            reduce {
+                state.copy(networkError = null)
+            }
+        }
+
+    private fun handleErrorRetry() =
+        intent {
+            // 에러 다이얼로그 닫기
+            reduce {
+                state.copy(networkError = null)
+            }
+
+            // 현재 단계에 맞는 재시도 로직 실행
+            when (state.step) {
+                PhoneAuthStep.PHONE_INPUT -> handleSendVerificationCode()
+                PhoneAuthStep.VERIFICATION_INPUT -> handleVerifyCode()
+            }
+        }
+
+    /**
+     * DoRunException을 NetworkErrorType으로 매핑
+     */
+    private fun mapExceptionToErrorType(exception: DoRunException): NetworkErrorType {
+        return when (exception) {
+            is DoRunException.NetworkError -> NetworkErrorType.NetworkConnection
+            is DoRunException.ServerError -> {
+                when (exception.code) {
+                    404 -> NetworkErrorType.NotFound
+                    500 -> NetworkErrorType.ServerError
+                    502 -> NetworkErrorType.BadGateway
+                    else -> NetworkErrorType.ServerError
+                }
+            }
+            else -> NetworkErrorType.Custom(
+                title = "오류가 발생했어요.",
+                description = exception.message ?: "알 수 없는 오류가 발생했습니다.",
+            )
+        }
+    }
+
+    /**
+     * 네트워크 에러가 발생한 경우 다이얼로그 표시
+     */
+    private fun showNetworkErrorDialog(exception: DoRunException) =
+        intent {
+            val errorType = mapExceptionToErrorType(exception)
+            reduce {
+                state.copy(
+                    isLoading = false,
+                    networkError = errorType,
+                )
+            }
+        }
+
+    /**
+     * 네트워크 관련 에러인지 확인
+     */
+    private fun isNetworkRelatedError(exception: DoRunException): Boolean =
+        when (exception) {
+            is DoRunException.NetworkError,
+            is DoRunException.ServerError,
+            -> true
+            else -> false
         }
 
     override fun onCleared() {
