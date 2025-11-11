@@ -126,6 +126,7 @@ class FeedViewModel @Inject constructor(
                         is FeedUpdateEvent.Updated -> {
                             onIntent(FeedIntent.OnRefreshAll)
                         }
+
                         is FeedUpdateEvent.Uploaded -> {
                             onIntent(FeedIntent.OnRefreshAll)
                         }
@@ -224,6 +225,8 @@ class FeedViewModel @Inject constructor(
      */
     private fun handleDateSelected(date: LocalDate) =
         intent {
+            if (date == state.calendarState.selectedDate) return@intent
+
             val feedDateState = handleFeedDateState(date)
             val isCertifiableDate = isCertifiable(date)
 
@@ -262,7 +265,7 @@ class FeedViewModel @Inject constructor(
             val today = LocalDate.now()
             val todayString = today.toYyyyMmDdString()
 
-            loadCalendarCounts(pivotDate = today)
+            loadCalendarCounts(pivotDate = today, updateFeedDateState = true)
 
             loadCertifiedUsers(todayString)
         }
@@ -623,8 +626,13 @@ class FeedViewModel @Inject constructor(
      * 캘린더 카운트 로딩 (1개월 단위)
      * - Mutex로 동시 호출 방지
      * - 기존 데이터와 병합하여 캐시
+     * @param pivotDate 기준 날짜
+     * @param updateFeedDateState true일 경우 로딩 완료 후 현재 선택된 날짜의 feedDateState 업데이트
      */
-    private fun loadCalendarCounts(pivotDate: LocalDate) {
+    private fun loadCalendarCounts(
+        pivotDate: LocalDate,
+        updateFeedDateState: Boolean = false,
+    ) {
         viewModelScope.launch {
             calendarApiLock.withLock {
                 intent {
@@ -681,6 +689,15 @@ class FeedViewModel @Inject constructor(
                                             isLoading = false,
                                         ),
                                 )
+                            }
+
+                            // 초기 로딩 시 현재 선택된 날짜의 feedDateState 업데이트
+                            if (updateFeedDateState) {
+                                val selectedDate = state.calendarState.selectedDate
+                                val feedDateState = handleFeedDateState(selectedDate)
+                                reduce {
+                                    state.copy(feedDateState = feedDateState)
+                                }
                             }
                         }.onError { exception ->
                             // API 호출 실패 시 로딩 상태를 해제하여 Shimmer가 사라지도록 함
