@@ -95,9 +95,9 @@ fun FeedScreen(
 
     val isInitialLoad by remember {
         derivedStateOf {
-            feedPagingItems.itemCount == 0 &&
-                feedPagingItems.loadState.refresh is LoadState.Loading &&
-                state.feedDateState == FeedDateUiState.PostsAvailable
+            state.feedDateState == FeedDateUiState.PostsAvailable &&
+                ((feedPagingItems.itemCount == 0 && feedPagingItems.loadState.refresh is LoadState.Loading) ||
+                    state.postingUserInfo.isNotEmpty())
         }
     }
 

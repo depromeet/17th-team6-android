@@ -16,6 +16,7 @@ import com.dpm.sixpack.presentation.common.components.post.PostDropDownActionTyp
 import com.dpm.sixpack.presentation.common.model.Emoji
 import com.dpm.sixpack.presentation.common.model.PostReaction
 import com.dpm.sixpack.presentation.common.model.PostResource
+import com.dpm.sixpack.presentation.common.model.PostingUserInfo
 import com.dpm.sixpack.presentation.common.model.ReactingUserInfo
 import com.dpm.sixpack.presentation.common.model.UserInfo
 import com.dpm.sixpack.presentation.common.model.toPostResource
@@ -72,6 +73,7 @@ class FeedViewModel @Inject constructor(
 
     private val pagingFlowCache = ConcurrentHashMap<LocalDate, Flow<PagingData<PostResource>>>()
     private val reactionDebounceJobs = ConcurrentHashMap<Pair<Long, Emoji>, Job>()
+    private val certifiedUsersCache = ConcurrentHashMap<String, List<PostingUserInfo>>()
     private val optimisticPostsFlow = container.stateFlow.map { it.optimisticPosts }.distinctUntilChanged()
     private val optimisticDeletedFeedIdsFlow =
         container.stateFlow
@@ -270,26 +272,41 @@ class FeedViewModel @Inject constructor(
             loadCertifiedUsers(todayString)
         }
 
-    private fun loadCertifiedUsers(date: String) =
-        intent {
-            viewModelScope.launch {
-                feedRepository
-                    .getCertifiedUsers(date)
-                    .onSuccess { certifiedUsers ->
-                        val postingUsers = certifiedUsers.map { it.toPostingUserInfo() }
-                        val myInfo = postingUsers.find { it.user.isMe }
-
-                        reduce {
-                            state.copy(
-                                postingUserInfo = postingUsers,
-                                myPostingInfo = myInfo,
-                            )
-                        }
-                    }.onError { error ->
-                        // Handle error silently or log it
-                    }
+    private fun loadCertifiedUsers(
+        date: String,
+        forceRefresh: Boolean = false,
+    ) = intent {
+        val cached = certifiedUsersCache[date]
+        if (!forceRefresh && cached != null) {
+            reduce {
+                state.copy(
+                    postingUserInfo = cached,
+                    myPostingInfo = cached.find { it.user.isMe },
+                )
             }
+            return@intent
         }
+
+        viewModelScope.launch {
+            feedRepository
+                .getCertifiedUsers(date)
+                .onSuccess { certifiedUsers ->
+                    val postingUsers = certifiedUsers.map { it.toPostingUserInfo() }
+                    val myInfo = postingUsers.find { it.user.isMe }
+
+                    certifiedUsersCache[date] = postingUsers
+
+                    reduce {
+                        state.copy(
+                            postingUserInfo = postingUsers,
+                            myPostingInfo = myInfo,
+                        )
+                    }
+                }.onError { error ->
+                    // Handle error silently or log it
+                }
+        }
+    }
 
     private fun handleVisibleWeeksChanged(startDate: LocalDate) {
         onWeekDisplayed(startDate)
@@ -575,7 +592,7 @@ class FeedViewModel @Inject constructor(
                 }.onError { exception ->
                 }
 
-            loadCertifiedUsers(selectedDate.toYyyyMmDdString())
+            loadCertifiedUsers(selectedDate.toYyyyMmDdString(), forceRefresh = true)
 
             postSideEffect(FeedSideEffect.RefreshPagingList)
         }
