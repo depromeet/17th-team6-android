@@ -128,7 +128,7 @@ internal fun RunningMapScreen(
             }
 
             is MapSideEffect.ShowToast -> {
-                val message = context.getString(sideEffect.resId)
+                val message = context.getString(sideEffect.resId, sideEffect.args)
                 onShowSnackBar(message, null)
             }
         }
