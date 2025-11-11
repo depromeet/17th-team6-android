@@ -127,10 +127,10 @@ class SignInViewModel @Inject constructor(
                     verificationCode = state.verificationCode,
                 )
 
-            stopTimer()
-
             result
                 .onSuccess { verificationResult ->
+                    // 인증 성공 시에만 타이머 중지
+                    stopTimer()
                     reduce { state.copy(isLoading = false) }
 
                     // isExistingUser 필드로 기존/신규 사용자 구분
