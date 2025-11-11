@@ -129,6 +129,7 @@ internal fun MainNavHost(
 
             addSessionReportNavGraph(
                 navigateToBack = navigator::popBackStack,
+                navigateToHome = navigator::navigateToHome,
                 onShowSnackBar = onShowSnackBar,
                 navigateToPostUpload = { sessionId, mapImageUrl, runningSummary ->
                     navController.navigateToPostUpload(sessionId, mapImageUrl, runningSummary)

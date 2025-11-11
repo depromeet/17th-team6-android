@@ -51,6 +51,20 @@ class MainNavigator(
         navController.popBackStack()
     }
 
+    fun navigateToHome() {
+        val navOptions =
+            navOptions {
+                // 그래프의 시작점을 찾아서 그곳까지 팝합니다.
+                popUpTo(navController.graph.findStartDestination().id) {
+                    inclusive = true // startDestination을 포함한 스택 전체를 제거
+                }
+                // 홈 화면이 스택의 유일한 인스턴스가 되도록 보장합니다.
+                launchSingleTop = true
+            }
+
+        navController.navigate(startDestination, navOptions)
+    }
+
     fun navigateToSessionReport(sessionId: Long) {
         navController.navigateSessionReport(
             sessionId,

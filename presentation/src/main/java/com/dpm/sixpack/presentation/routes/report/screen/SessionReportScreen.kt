@@ -1,21 +1,11 @@
 package com.dpm.sixpack.presentation.routes.report.screen
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,9 +13,11 @@ import com.dpm.sixpack.domain.model.SessionDetail
 import com.dpm.sixpack.domain.model.SessionDetailFeed
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.FullScreenLoadingIndicator
+import com.dpm.sixpack.presentation.common.components.dialog.DoRunErrorScreen
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
 import com.dpm.sixpack.presentation.routes.report.component.ReportBottomBar
+import com.dpm.sixpack.presentation.routes.report.component.ReportErrorScreen
 import com.dpm.sixpack.presentation.routes.report.contract.ReportIntent
 import com.dpm.sixpack.presentation.routes.report.contract.ReportState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
@@ -35,6 +27,7 @@ internal fun SessionReportScreen(
     sessionId: Long,
     state: ReportState,
     onIntent: (ReportIntent) -> Unit,
+    navigateToHome: () -> Unit = { },
 ) {
     Scaffold(
         topBar = {
@@ -82,47 +75,26 @@ internal fun SessionReportScreen(
                 )
             }
 
-            ReportState.Error -> {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Text(
-                        text = stringResource(R.string.data_load_failed),
-                        style = SixpackTheme.typography.t1Bold,
-                        color = SixpackTheme.colors.gray700,
+            is ReportState.Error -> {
+                if (state.code == 404) {
+                    DoRunErrorScreen(
+                        modifier = Modifier.fillMaxSize(),
+                        title = stringResource(R.string.error_not_found),
+                        description = stringResource(R.string.error_not_found_explanation),
+                        confirmButtonText = stringResource(R.string.back_to_home),
+                        onConfirmClick = navigateToHome,
                     )
-
-                    TextButton(
-                        onClick = {
+                } else {
+                    ReportErrorScreen(
+                        modifier = Modifier.fillMaxSize(),
+                        title = stringResource(R.string.error_network_connection),
+                        description = stringResource(R.string.error_network_connection_explanation),
+                        confirmButtonText = stringResource(R.string.retry),
+                        onConfirmClick = {
                             onIntent(ReportIntent.LoadSessionDetail(sessionId))
                         },
-                        colors =
-                            ButtonDefaults.textButtonColors(
-                                containerColor = Color.Transparent,
-                                contentColor = SixpackTheme.colors.gray700,
-                                disabledContainerColor = Color.Transparent,
-                                disabledContentColor = Color.Transparent,
-                            ),
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(all = 12.dp),
-                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Text(
-                                text = stringResource(R.string.request_retry),
-                                style = SixpackTheme.typography.b1Regular,
-                                color = SixpackTheme.colors.gray700,
-                            )
-                            Icon(
-                                imageVector = Icons.Default.Refresh,
-                                contentDescription = null,
-                                tint = SixpackTheme.colors.gray700,
-                            )
-                        }
-                    }
+                        navigateToHome = navigateToHome,
+                    )
                 }
             }
         }

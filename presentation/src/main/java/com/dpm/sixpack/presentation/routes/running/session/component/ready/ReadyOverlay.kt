@@ -17,7 +17,6 @@ internal fun ReadyOverlay(
     BaseReadyOverlay(
         modifier = modifier,
         primaryText = primaryText,
-        secondaryText = "",
         onlyText = readyState.onlyText,
         countdown = readyState.countdown,
     )
