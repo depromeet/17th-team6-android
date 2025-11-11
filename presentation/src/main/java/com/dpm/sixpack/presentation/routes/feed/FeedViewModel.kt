@@ -41,6 +41,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
+import timber.log.Timber
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
 import java.util.concurrent.ConcurrentHashMap
@@ -302,6 +303,7 @@ class FeedViewModel @Inject constructor(
         userId: Long,
         isMe: Boolean,
     ) = intent {
+        Timber.d("SR-N userId $userId, $isMe")
         if (isMe) {
             postSideEffect(FeedSideEffect.NavigateToMyPage)
         } else {

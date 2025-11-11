@@ -49,7 +49,7 @@ import com.dpm.sixpack.presentation.routes.mypage.contract.ProfileInfo
 import com.dpm.sixpack.presentation.routes.mypage.contract.RecordItem
 import com.dpm.sixpack.presentation.routes.mypage.ui.component.MyPageTabText
 import com.dpm.sixpack.presentation.routes.mypage.ui.component.ProfileSection
-import com.dpm.sixpack.presentation.routes.mypage.ui.content.PostTabContent
+import com.dpm.sixpack.presentation.common.components.post.PostGridContent
 import com.dpm.sixpack.presentation.routes.mypage.ui.content.RecordTabContent
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 import kotlinx.coroutines.flow.flowOf
@@ -153,9 +153,15 @@ fun MyPageScreen(
         ) { page ->
             when (page) {
                 0 ->
-                    PostTabContent(
+                    PostGridContent(
                         gridItemsPagingItems = gridItemsPagingItems,
-                        onIntent = onPostTabIntent,
+                        onPostClick = { postId ->
+                            onPostTabIntent(MyPagePostTabIntent.OnPostClick(postId))
+                        },
+                        onRetry = {
+                            onPostTabIntent(MyPagePostTabIntent.OnRetryClick)
+                            gridItemsPagingItems.retry()
+                        },
                         modifier = Modifier.fillMaxSize(),
                     )
 

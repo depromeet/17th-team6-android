@@ -12,8 +12,11 @@ import com.dpm.sixpack.presentation.routes.feed.navigation.addFeedNavGraph
 import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToCertifiableRecord
 import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToCertifiedUsers
 import com.dpm.sixpack.presentation.routes.friend.navigation.addFriendNavGraph
+import com.dpm.sixpack.presentation.routes.friend.navigation.addFriendProfileNavGraph
 import com.dpm.sixpack.presentation.routes.friend.navigation.navigateToFriendGraph
+import com.dpm.sixpack.presentation.routes.friend.navigation.navigateToFriendProfile
 import com.dpm.sixpack.presentation.routes.mypage.navigation.addMyPageNavGraph
+import com.dpm.sixpack.presentation.routes.mypage.navigation.navigateMyPage
 import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
 import com.dpm.sixpack.presentation.routes.postdetail.navigation.addPostDetailNavGraph
 import com.dpm.sixpack.presentation.routes.postdetail.navigation.navigateToPostDetail
@@ -143,6 +146,8 @@ internal fun MainNavHost(
                 navigateToPostEdit = navController::navigateToPostEdit,
                 navigateToCertifiableRecord = navController::navigateToCertifiableRecord,
                 navigateToPostUpload = navController::navigateToPostUpload,
+                navigateToUserProfile = navController::navigateToFriendProfile,
+                navigateToMyPage = navController::navigateMyPage,
             )
 
             addPostDetailNavGraph(
@@ -180,13 +185,10 @@ internal fun MainNavHost(
             )
 
             // Friend 관련 딥링크 지원을 위한 NavGraph 추가
-//            addFriendProfileNavGraph(
-//                navigateToBack = navigator::popBackStack,
-//            )
-
-//            addFriendAddNavGraph(
-//                navigateToBack = navigator::popBackStack,
-//            )
+            addFriendProfileNavGraph(
+                navigateToBack = navigator::popBackStack,
+                navigateToPostDetail = navController::navigateToPostDetail,
+            )
 
             addFriendNavGraph(
                 navController = navigator.navController,
