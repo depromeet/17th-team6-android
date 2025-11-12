@@ -142,6 +142,7 @@ internal fun MainNavHost(
                 navigateToPostEdit = navController::navigateToPostEdit,
                 navigateToCertifiableRecord = navController::navigateToCertifiableRecord,
                 navigateToPostUpload = navController::navigateToPostUpload,
+                onShowSnackBar = onShowSnackBar,
             )
 
             addPostDetailNavGraph(
@@ -149,15 +150,18 @@ internal fun MainNavHost(
                 navigateToPostEdit = navController::navigateToPostEdit,
                 navigateToUserProfile = {},
                 navigateToMyPage = {},
+                onShowSnackBar = onShowSnackBar,
             )
 
             addPostEditNavGraph(
                 navigateToBack = { navController.popBackStack() },
+                onShowSnackBar = onShowSnackBar,
             )
 
             addPostUploadNavGraph(
                 navigateBack = { navController.popBackStack() },
                 navigateToFeed = { navigator.navigateToFeed() },
+                onShowSnackBar = onShowSnackBar,
             )
 
             addMyPageNavGraph(

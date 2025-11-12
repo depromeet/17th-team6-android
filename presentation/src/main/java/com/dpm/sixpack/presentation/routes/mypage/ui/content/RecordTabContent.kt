@@ -122,7 +122,11 @@ internal fun RecordTabContent(
                                             recordsForDate.forEach { record ->
                                                 RecordCard(
                                                     record = record,
-                                                    onClick = { onIntent(MyPageRecordTabIntent.OnRecordClick(record.id)) },
+                                                    onClick = {
+                                                        onIntent(
+                                                            MyPageRecordTabIntent.OnRecordClick(record.id),
+                                                        )
+                                                    },
                                                 )
                                             }
                                         }

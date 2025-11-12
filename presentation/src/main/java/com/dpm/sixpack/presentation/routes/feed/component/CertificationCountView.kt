@@ -32,7 +32,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 @Composable
 fun CertificationCountView(
     users: List<PostingUserInfo>,
-    isMeCertified : Boolean,
+    isMeCertified: Boolean,
     onViewClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -145,7 +145,7 @@ private fun CertificationCountViewWithMePreview() {
             modifier = Modifier.padding(16.dp),
             onViewClick = {},
             isMeCertified = false,
-            )
+        )
     }
 }
 

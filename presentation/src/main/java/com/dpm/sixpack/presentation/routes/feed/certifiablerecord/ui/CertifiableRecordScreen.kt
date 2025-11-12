@@ -128,17 +128,16 @@ fun CertifiableRecordScreen(
             }
 
             // 인증된 기록이 있을 때는 버튼을 숨김
-                DoRunDefaultButton(
-                    text = stringResource(id = R.string.post_upload_certifiable_record_submit_button),
-                    enabled = state.selectedRecord != null,
-                    onClick = { onIntent(CertifiableRecordIntent.OnUploadClick) },
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .align(Alignment.BottomCenter)
-                            .padding(start = 20.dp, end = 20.dp, bottom = 20.dp),
-                )
-
+            DoRunDefaultButton(
+                text = stringResource(id = R.string.post_upload_certifiable_record_submit_button),
+                enabled = state.selectedRecord != null,
+                onClick = { onIntent(CertifiableRecordIntent.OnUploadClick) },
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.BottomCenter)
+                        .padding(start = 20.dp, end = 20.dp, bottom = 20.dp),
+            )
         }
     }
 }
@@ -192,7 +191,10 @@ private fun CertifiedRecord(modifier: Modifier = Modifier) {
     ) {
         Image(
             imageVector = ImageVector.vectorResource(R.drawable.ic_happy_dorun_with_smile),
-            contentDescription = stringResource(id = R.string.post_upload_certifiable_record_certified_image_description),
+            contentDescription =
+                stringResource(
+                    id = R.string.post_upload_certifiable_record_certified_image_description,
+                ),
             modifier = Modifier.size(120.dp),
             contentScale = ContentScale.Fit,
         )

@@ -1,6 +1,5 @@
 package com.dpm.sixpack.presentation.routes.mypage.ui.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,7 +11,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -172,9 +170,10 @@ private fun MyPageTopBar(
         },
         trailingContent = {
             Box(
-                modifier = Modifier
-                    .padding(10.dp)
-                    .noRippleClickable(onClick = onSettingClick),
+                modifier =
+                    Modifier
+                        .padding(10.dp)
+                        .noRippleClickable(onClick = onSettingClick),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(

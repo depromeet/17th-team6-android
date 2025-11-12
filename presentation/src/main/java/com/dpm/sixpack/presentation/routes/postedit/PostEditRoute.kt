@@ -1,12 +1,10 @@
 package com.dpm.sixpack.presentation.routes.postedit
 
 import android.content.ContentValues
-import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -40,6 +38,7 @@ import java.io.IOException
 fun PostEditRoute(
     viewModel: PostEditViewModel = hiltViewModel(),
     navigateBack: () -> Unit,
+    onShowSnackBar: (String, String?) -> Unit,
 ) {
     val state by viewModel.collectAsState()
 
@@ -96,16 +95,16 @@ fun PostEditRoute(
 
             is PostEditSideEffect.SaveImageToGallery -> {
                 coroutineScope.launch {
-                    saveImageToGallery(context, sideEffect.imageUrl)
+                    saveImageToGallery(context, sideEffect.imageUrl, onShowSnackBar)
                 }
             }
 
             is PostEditSideEffect.ShowToast -> {
-                Toast.makeText(context, sideEffect.message, Toast.LENGTH_SHORT).show()
+                onShowSnackBar(sideEffect.message, null)
             }
 
             is PostEditSideEffect.ShowError -> {
-                Toast.makeText(context, sideEffect.message, Toast.LENGTH_SHORT).show()
+                onShowSnackBar(sideEffect.message, null)
             }
         }
     }
@@ -127,27 +126,12 @@ fun PostEditRoute(
                             ImageSaver
                                 .saveToGallery(context, bitmap, fileName)
                                 .onSuccess { uri ->
-                                    Toast
-                                        .makeText(
-                                            context,
-                                            "이미지가 갤러리에 저장되었습니다.",
-                                            Toast.LENGTH_SHORT,
-                                        ).show()
+                                    onShowSnackBar("이미지가 갤러리에 저장되었습니다.", null)
                                 }.onFailure { exception ->
-                                    Toast
-                                        .makeText(
-                                            context,
-                                            "이미지 저장 실패: ${exception.message}",
-                                            Toast.LENGTH_SHORT,
-                                        ).show()
+                                    onShowSnackBar("이미지 저장 실패: ${exception.message}", null)
                                 }
                         } else {
-                            Toast
-                                .makeText(
-                                    context,
-                                    "이미지 캡처에 실패했습니다.",
-                                    Toast.LENGTH_SHORT,
-                                ).show()
+                            onShowSnackBar("이미지 캡처에 실패했습니다.", null)
                         }
                     }
                 },
@@ -175,8 +159,9 @@ fun PostEditRoute(
 
 // TODO SB 이미지 저장 Util로 구현 제대로 해야함
 private suspend fun saveImageToGallery(
-    context: Context,
+    context: android.content.Context,
     imageUrl: String,
+    onShowSnackBar: (String, String?) -> Unit,
 ) {
     withContext(Dispatchers.IO) {
         try {
@@ -213,22 +198,22 @@ private suspend fun saveImageToGallery(
                     }
 
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(context, "이미지가 갤러리에 저장되었습니다.", Toast.LENGTH_SHORT).show()
+                        onShowSnackBar("이미지가 갤러리에 저장되었습니다.", null)
                     }
                 } ?: run {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(context, "이미지 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                        onShowSnackBar("이미지 저장에 실패했습니다.", null)
                     }
                 }
             } else {
                 // HTTP URL인 경우 - TODO: 이미지 다운로드 후 저장
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, "URL 이미지 저장은 아직 지원하지 않습니다.", Toast.LENGTH_SHORT).show()
+                    onShowSnackBar("URL 이미지 저장은 아직 지원하지 않습니다.", null)
                 }
             }
         } catch (e: IOException) {
             withContext(Dispatchers.Main) {
-                Toast.makeText(context, "이미지 저장 중 오류가 발생했습니다: ${e.message}", Toast.LENGTH_SHORT).show()
+                onShowSnackBar("이미지 저장 중 오류가 발생했습니다: ${e.message}", null)
             }
         }
     }

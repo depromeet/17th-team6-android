@@ -12,7 +12,10 @@ fun NavController.navigateToPostEdit(feedId: Long) {
     navigate(PostEdit(feedId = feedId))
 }
 
-fun NavGraphBuilder.addPostEditNavGraph(navigateToBack: () -> Unit = {}) {
+fun NavGraphBuilder.addPostEditNavGraph(
+    navigateToBack: () -> Unit = {},
+    onShowSnackBar: (String, String?) -> Unit = { _, _ -> },
+) {
     composable<PostEdit>(
         deepLinks =
             listOf(
@@ -21,6 +24,7 @@ fun NavGraphBuilder.addPostEditNavGraph(navigateToBack: () -> Unit = {}) {
     ) {
         PostEditRoute(
             navigateBack = navigateToBack,
+            onShowSnackBar = onShowSnackBar,
         )
     }
 }

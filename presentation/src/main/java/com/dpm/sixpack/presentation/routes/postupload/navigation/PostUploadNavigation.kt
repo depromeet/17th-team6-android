@@ -20,6 +20,7 @@ fun NavController.navigateToPostUpload(
 fun NavGraphBuilder.addPostUploadNavGraph(
     navigateBack: () -> Unit = {},
     navigateToFeed: () -> Unit = {},
+    onShowSnackBar: (String, String?) -> Unit = { _, _ -> },
 ) {
     composable<PostUpload>(
         typeMap =
@@ -30,6 +31,7 @@ fun NavGraphBuilder.addPostUploadNavGraph(
         PostUploadRoute(
             navigateBack = navigateBack,
             navigateToFeed = navigateToFeed,
+            onShowSnackBar = onShowSnackBar,
         )
     }
 }
