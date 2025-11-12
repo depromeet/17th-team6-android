@@ -60,7 +60,7 @@ internal fun FriendListItem(
             contentDescription = null,
             modifier =
                 Modifier
-                    .size(50.dp)
+                    .size(60.dp)
                     .clip(CircleShape)
                     .border(1.dp, SixpackTheme.colors.gray200, shape = CircleShape),
             placeholder = ColorPainter(SixpackTheme.colors.gray50),

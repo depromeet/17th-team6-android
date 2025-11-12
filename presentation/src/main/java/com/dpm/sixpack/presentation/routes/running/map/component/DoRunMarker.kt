@@ -24,7 +24,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
@@ -59,7 +58,6 @@ internal fun DoRunMarker(
     @DrawableRes pinIconResId: Int = R.drawable.ill_marker_background,
 ) {
     val pinBackgroundSize = 80.dp
-    val context = LocalContext.current
 
     MarkerComposable(
         keys = arrayOf(userName, profileImageUrl, pinIconResId, profileImageSize),

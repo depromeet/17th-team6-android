@@ -3,6 +3,7 @@ package com.dpm.sixpack.core.network.di
 import android.content.Context
 import coil3.ImageLoader
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
+import coil3.request.allowHardware
 import coil3.util.DebugLogger
 import com.dpm.sixpack.core.BuildConfig
 import dagger.Module
@@ -29,7 +30,8 @@ internal object NetworkModule {
                         callFactory = { okHttpCallFactory.get() },
                     ),
                 )
-            }.apply {
+            }.allowHardware(false)
+            .apply {
                 if (BuildConfig.DEBUG) {
                     logger(DebugLogger())
                 }
