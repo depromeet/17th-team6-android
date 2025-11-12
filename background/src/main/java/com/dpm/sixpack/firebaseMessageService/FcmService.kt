@@ -4,7 +4,10 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
+import android.graphics.BitmapFactory
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toUri
 import com.dpm.sixpack.background.R
 import com.dpm.sixpack.core.network.di.ApplicationScope
@@ -112,10 +115,17 @@ class FcmService : FirebaseMessagingService() {
         val channelId = PRIMARY_PUSH_CHANNEL_ID
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
+        val largeIconBitmap =
+            BitmapFactory.decodeResource(
+                resources,
+                R.drawable.img_logo, // ⬅️ 앱의 메인 아이콘 (컬러)
+            )
+
         val notificationBuilder =
             NotificationCompat
                 .Builder(this, channelId)
-                .setSmallIcon(R.drawable.ill_loading_overlay)
+                .setSmallIcon(R.drawable.img_notification_icon)
+                .setLargeIcon(largeIconBitmap)
                 .setContentTitle(notification.title)
                 .setContentText(notification.body)
                 .setAutoCancel(true)
