@@ -14,8 +14,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.dpm.sixpack.R
 import com.dpm.sixpack.SixPackAppState
 import com.dpm.sixpack.main.navigation.MainNavHost
 import com.dpm.sixpack.presentation.common.components.DoRunSnackBar
@@ -36,7 +38,7 @@ internal fun MainScreen(
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
 
     // FIXME: Replace with actual string resource
-    val notConnectedMessage = "stringResource(R.string.not_connected)"
+    val notConnectedMessage = stringResource(R.string.not_connected)
 
     LaunchedEffect(isOffline) {
         if (isOffline) {
