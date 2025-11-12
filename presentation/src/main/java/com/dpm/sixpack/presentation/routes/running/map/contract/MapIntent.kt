@@ -26,7 +26,7 @@ sealed interface MapIntent : RunningRouteIntent {
     data object ReadyToFinish : MapIntent
 
     data class SessionFinish(
-        val mapImage: Bitmap,
+        val mapImage: Bitmap?,
     ) : MapIntent
 
     // region Permission

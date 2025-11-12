@@ -8,4 +8,6 @@ sealed interface MyPageIntent : UiIntent {
     ) : MyPageIntent
 
     data object OnSettingClick : MyPageIntent
+
+    data object OnRetryClick : MyPageIntent
 }

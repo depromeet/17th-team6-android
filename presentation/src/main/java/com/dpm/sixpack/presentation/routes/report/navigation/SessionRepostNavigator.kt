@@ -18,6 +18,7 @@ fun NavController.navigateSessionReport(
 
 fun NavGraphBuilder.addSessionReportNavGraph(
     navigateToBack: () -> Unit,
+    navigateToHome: () -> Unit,
     onShowSnackBar: (String, String?) -> Unit,
     navigateToPostUpload: (Long, String, RunningSummary) -> Unit,
 ) {
@@ -27,6 +28,7 @@ fun NavGraphBuilder.addSessionReportNavGraph(
         ReportRoute(
             sessionId = sessionId,
             navigateToBack = navigateToBack,
+            navigateToHome = navigateToHome,
             navigateToPostUpload = { sessionId, mapImageUrl, runningSummary ->
                 navigateToPostUpload(sessionId, mapImageUrl, runningSummary)
             },

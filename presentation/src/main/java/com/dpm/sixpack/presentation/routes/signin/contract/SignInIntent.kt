@@ -53,4 +53,14 @@ sealed interface SignInIntent : UiIntent {
      * 계정찾기 버튼 클릭 시
      */
     data object OnFindAccountClick : SignInIntent
+
+    /**
+     * 네트워크 에러 다이얼로그 닫기
+     */
+    data object OnErrorDialogDismiss : SignInIntent
+
+    /**
+     * 네트워크 에러 재시도 버튼 클릭 시
+     */
+    data object OnErrorRetry : SignInIntent
 }

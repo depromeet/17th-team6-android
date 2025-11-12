@@ -1,6 +1,7 @@
 package com.dpm.sixpack.presentation.routes.report
 
 import androidx.lifecycle.SavedStateHandle
+import com.dpm.sixpack.domain.exception.DoRunException
 import com.dpm.sixpack.domain.model.MaxPaceData
 import com.dpm.sixpack.domain.model.RunningSessionResult
 import com.dpm.sixpack.domain.usecase.running.GetSessionDetailUseCase
@@ -36,20 +37,28 @@ class SessionReportViewModel @Inject constructor(
 
     private fun handleLoadSessionDetail(sessionId: Long) =
         intent {
-            getSessionDetailUseCase(sessionId)
-                .onSuccess {
-                    Timber.d("Success to get session detail: $it")
-                    reduce {
-                        ReportState.Success(
-                            sessionDetail = it,
-                        )
+            if (sessionId != -1L) {
+                getSessionDetailUseCase(sessionId)
+                    .onSuccess {
+                        Timber.d("Success to get session detail: $it")
+                        reduce {
+                            ReportState.Success(
+                                sessionDetail = it,
+                            )
+                        }
+                    }.onError {
+                        Timber.w("Failed to get session detail: ${it.message}")
+                        val code = if (it is DoRunException.DataError) 404 else 0
+                        reduce {
+                            ReportState.Error(code)
+                        }
                     }
-                }.onError {
-                    Timber.w("Failed to get session detail: ${it.message}")
-                    reduce {
-                        ReportState.Error
-                    }
+            } else {
+                // -1 이면 이전 화면에서 종료 API 실패
+                reduce {
+                    ReportState.Error()
                 }
+            }
         }
 
     private fun handleNavigateBack() =

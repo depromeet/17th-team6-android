@@ -12,7 +12,9 @@ import com.dpm.sixpack.presentation.routes.feed.navigation.addFeedNavGraph
 import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToCertifiableRecord
 import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToCertifiedUsers
 import com.dpm.sixpack.presentation.routes.friend.navigation.addFriendNavGraph
+import com.dpm.sixpack.presentation.routes.friend.navigation.addFriendProfileNavGraph
 import com.dpm.sixpack.presentation.routes.friend.navigation.navigateToFriendGraph
+import com.dpm.sixpack.presentation.routes.friend.navigation.navigateToFriendProfile
 import com.dpm.sixpack.presentation.routes.mypage.navigation.addMyPageNavGraph
 import com.dpm.sixpack.presentation.routes.mypage.navigation.navigateMyPage
 import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
@@ -130,6 +132,7 @@ internal fun MainNavHost(
 
             addSessionReportNavGraph(
                 navigateToBack = navigator::popBackStack,
+                navigateToHome = navigator::navigateToHome,
                 onShowSnackBar = onShowSnackBar,
                 navigateToPostUpload = { sessionId, mapImageUrl, runningSummary ->
                     navController.navigateToPostUpload(sessionId, mapImageUrl, runningSummary)
@@ -138,7 +141,7 @@ internal fun MainNavHost(
 
             addFeedNavGraph(
                 navigateToBack = { navController.popBackStack() },
-                navigateToUserProfile = { /* TODO: User Profile */ },
+                navigateToUserProfile = navController::navigateToFriendProfile,
                 navigateToMyPage = { navigator.navigateToMyPage() },
                 navigateToCertifiedUsers = navController::navigateToCertifiedUsers,
                 navigateToPostDetail = navController::navigateToPostDetail,
@@ -186,13 +189,10 @@ internal fun MainNavHost(
             )
 
             // Friend 관련 딥링크 지원을 위한 NavGraph 추가
-//            addFriendProfileNavGraph(
-//                navigateToBack = navigator::popBackStack,
-//            )
-
-//            addFriendAddNavGraph(
-//                navigateToBack = navigator::popBackStack,
-//            )
+            addFriendProfileNavGraph(
+                navigateToBack = navigator::popBackStack,
+                navigateToPostDetail = navController::navigateToPostDetail,
+            )
 
             addFriendNavGraph(
                 navController = navigator.navController,

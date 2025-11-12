@@ -47,7 +47,6 @@ import com.dpm.sixpack.presentation.common.model.FriendItem
 import com.dpm.sixpack.presentation.common.util.BackgroundPermissionHandler
 import com.dpm.sixpack.presentation.routes.running.map.MapConstants.DEFAULT_ZOOM
 import com.dpm.sixpack.presentation.routes.running.map.MapConstants.FINAL_RESOLUTION
-import com.dpm.sixpack.presentation.routes.running.map.MapConstants.MAP_PERMISSIONS
 import com.dpm.sixpack.presentation.routes.running.map.MapConstants.SNAPSHOT_PADDING
 import com.dpm.sixpack.presentation.routes.running.map.component.DoRunMarker
 import com.dpm.sixpack.presentation.routes.running.map.component.LocationTrackingButton
@@ -356,7 +355,7 @@ private fun RunningMapScreenContent(
                         val mapInstance = naverMapInstance
                         if (mapInstance == null) {
                             Timber.e("NaverMap 객체가 null이라 캡처에 실패했습니다.")
-                            // TODO: 캡처 실패 처리 (예: onMapIntent(MapIntent.SessionFinish(null)))
+                            onMapIntent(MapIntent.SessionFinish(null))
                             return@LaunchedEffect
                         }
                         mapInstance.locationOverlay.isVisible = false
@@ -366,15 +365,13 @@ private fun RunningMapScreenContent(
                         // 2. 카메라 이동
                         cameraPositionState.move(CameraUpdate.fitBounds(bounds, SNAPSHOT_PADDING))
 
-                        // 3. 카메라가 멈출 때까지 대기
+                        // 3. 카메라가 멈출 때까지 대기 (..snapshotFlow.. delay..)
                         snapshotFlow { cameraPositionState.isMoving }
-                            .filterNot { isMoving -> isMoving } // isMoving이 false가 될 때까지
-                            .first() // false가 되면 통과
-
-                        // 타일 로딩을 위한 아주 짧은 추가 대기
+                            .filterNot { isMoving -> isMoving }
+                            .first()
                         delay(200)
 
-                        // 맵 객체로 직접 캡처 (awaitSnapshot 헬퍼 함수 사용)
+                        // 맵 객체로 직접 캡처
                         val bitmap =
                             try {
                                 mapInstance.awaitSnapshot()
@@ -382,14 +379,10 @@ private fun RunningMapScreenContent(
                                 Timber.e(e, "맵 스냅샷 캡처 중 오류 발생")
                                 null
                             }
-
-                        if (bitmap != null) {
-                            onMapIntent(MapIntent.SessionFinish(bitmap))
-                        } else {
-                            Timber.e("캡처된 비트맵이 null입니다.")
-                        }
-
                         mapInstance.locationOverlay.isVisible = true
+                        setFullScreenLoading(false)
+
+                        onMapIntent(MapIntent.SessionFinish(bitmap))
                     }
                 }
 

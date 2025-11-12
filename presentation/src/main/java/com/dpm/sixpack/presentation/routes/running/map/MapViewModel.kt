@@ -236,16 +236,20 @@ class MapViewModel @Inject constructor(
             postSideEffect(MapSideEffect.SetBottomBarVisibility(true))
         }
 
-    private fun handleSessionFinish(mapImage: Bitmap) =
+    private fun handleSessionFinish(mapImage: Bitmap?) =
         intent {
-            finishRunningSessionUseCase(mapImage)
-                .onSuccess { id ->
-                    Timber.d("session finish success, sessionId : $id")
-                    postSideEffect(MapSideEffect.NavigateToReport(id))
-                }.onError {
-                    Timber.d("session finish failed: ${it.message}")
-                }
-
+            if (mapImage != null) {
+                finishRunningSessionUseCase(mapImage)
+                    .onSuccess { id ->
+                        Timber.d("session finish success, sessionId : $id")
+                        postSideEffect(MapSideEffect.NavigateToReport(id))
+                    }.onError {
+                        Timber.d("session finish failed: ${it.message}")
+                        postSideEffect(MapSideEffect.NavigateToReport(-1L))
+                    }
+            } else {
+                postSideEffect(MapSideEffect.NavigateToReport(-1L))
+            }
             reduce {
                 state.copy(
                     mapViewState = MapViewState.Friend(),

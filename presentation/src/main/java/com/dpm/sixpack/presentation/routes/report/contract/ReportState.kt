@@ -15,5 +15,7 @@ sealed interface ReportState : UiState {
     ) : ReportState
 
     @Parcelize
-    data object Error : ReportState
+    data class Error(
+        val code: Int? = null,
+    ) : ReportState
 }

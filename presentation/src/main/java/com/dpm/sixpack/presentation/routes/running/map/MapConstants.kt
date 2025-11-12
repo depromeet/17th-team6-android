@@ -1,7 +1,5 @@
 package com.dpm.sixpack.presentation.routes.running.map
 
-import android.os.Build
-import com.dpm.sixpack.core.permission.SixPackPermissions
 import com.dpm.sixpack.core.permission.SixPackPermissions.Companion.ForegroundServicePermissions
 import com.dpm.sixpack.core.permission.SixPackPermissions.Companion.LocationPermissions
 import com.dpm.sixpack.core.permission.SixPackPermissions.Companion.NotificationPermissions
@@ -25,11 +23,4 @@ object MapConstants {
 
     val MAP_PERMISSIONS =
         LocationPermissions + SensorPermissions + NotificationPermissions + ForegroundServicePermissions
-
-    val BACKGROUND_PERMISSIONS: List<SixPackPermissions> =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            listOf(SixPackPermissions.BackgroundLocationPermission)
-        } else {
-            emptyList()
-        }
 }

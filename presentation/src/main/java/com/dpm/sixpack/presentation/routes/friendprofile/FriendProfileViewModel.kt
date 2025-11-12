@@ -1,34 +1,38 @@
-package com.dpm.sixpack.presentation.routes.mypage
+package com.dpm.sixpack.presentation.routes.friendprofile
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.dpm.sixpack.domain.exception.DoRunException
 import com.dpm.sixpack.domain.usecase.GetUserSummaryUseCase
 import com.dpm.sixpack.domain.util.DoRunResult
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.common.model.NetworkErrorType
-import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageIntent
-import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageSideEffect
-import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageState
-import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageTab
+import com.dpm.sixpack.presentation.destinations.FriendProfile
+import com.dpm.sixpack.presentation.routes.friendprofile.contract.FriendProfileIntent
+import com.dpm.sixpack.presentation.routes.friendprofile.contract.FriendProfileSideEffect
+import com.dpm.sixpack.presentation.routes.friendprofile.contract.FriendProfileState
 import com.dpm.sixpack.presentation.routes.mypage.contract.ProfileInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class MyPageViewModel
+class FriendProfileViewModel
     @Inject
     constructor(
         savedStateHandle: SavedStateHandle,
         private val getUserSummaryUseCase: GetUserSummaryUseCase,
-    ) : BaseViewModel<MyPageState, MyPageIntent, MyPageSideEffect>() {
-        override val initialState: MyPageState = MyPageState()
+    ) : BaseViewModel<FriendProfileState, FriendProfileIntent, FriendProfileSideEffect>() {
+        override val initialState: FriendProfileState = FriendProfileState()
 
-        override val container: Container<MyPageState, MyPageSideEffect> =
+        override val container: Container<FriendProfileState, FriendProfileSideEffect> =
             container(initialState = initialState, savedStateHandle = savedStateHandle)
+
+        private val userId: Long = savedStateHandle.toRoute<FriendProfile>().friendId
 
         init {
             loadUserProfile()
@@ -40,7 +44,7 @@ class MyPageViewModel
                     reduce { state.copy(isLoading = true) }
                 }
 
-                when (val result = getUserSummaryUseCase()) {
+                when (val result = getUserSummaryUseCase(userId)) {
                     is DoRunResult.Success -> {
                         val userSummary = result.data
                         intent {
@@ -61,6 +65,7 @@ class MyPageViewModel
                         }
                     }
                     is DoRunResult.Failure -> {
+                        Timber.d("SR-N ${result.exception}")
                         val errorType = mapExceptionToErrorType(result.exception)
                         intent {
                             reduce {
@@ -78,8 +83,8 @@ class MyPageViewModel
         /**
          * DoRunException을 NetworkErrorType으로 매핑
          */
-        private fun mapExceptionToErrorType(exception: DoRunException): NetworkErrorType =
-            when (exception) {
+        private fun mapExceptionToErrorType(exception: DoRunException): NetworkErrorType {
+            return when (exception) {
                 is DoRunException.NetworkError -> NetworkErrorType.NetworkConnection
                 is DoRunException.ServerError -> {
                     when (exception.code) {
@@ -94,25 +99,24 @@ class MyPageViewModel
                     description = exception.message ?: "알 수 없는 오류가 발생했습니다.",
                 )
             }
+        }
 
-        override fun onIntent(intent: MyPageIntent) {
+        override fun onIntent(intent: FriendProfileIntent) {
             when (intent) {
-                is MyPageIntent.OnTabClick -> handleTabClick(intent.tab)
-                is MyPageIntent.OnSettingClick -> handleSettingClick()
-                is MyPageIntent.OnRetryClick -> handleRetryClick()
+                is FriendProfileIntent.OnBackClick -> handleBackClick()
+                is FriendProfileIntent.OnPostClick -> handlePostClick(intent.postId)
+                is FriendProfileIntent.OnRetryClick -> handleRetryClick()
             }
         }
 
-        private fun handleTabClick(tab: MyPageTab) =
+        private fun handleBackClick() =
             intent {
-                reduce {
-                    state.copy(selectedTab = tab)
-                }
+                postSideEffect(FriendProfileSideEffect.NavigateBack)
             }
 
-        private fun handleSettingClick() =
+        private fun handlePostClick(postId: Long) =
             intent {
-                postSideEffect(MyPageSideEffect.NavigateToSettings)
+                postSideEffect(FriendProfileSideEffect.NavigateToPostDetail(postId))
             }
 
         private fun handleRetryClick() {

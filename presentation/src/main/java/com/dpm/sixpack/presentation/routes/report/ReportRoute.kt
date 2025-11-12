@@ -15,6 +15,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 fun ReportRoute(
     sessionId: Long,
     viewModel: SessionReportViewModel = hiltViewModel(),
+    navigateToHome: () -> Unit = {},
     navigateToBack: () -> Unit = {},
     navigateToPostUpload: (Long, String, RunningSummary) -> Unit = { _, _, _ -> },
     onShowSnackBar: (String, String?) -> Unit = { _, _ -> },
@@ -47,5 +48,6 @@ fun ReportRoute(
         sessionId = sessionId,
         state = state.value,
         onIntent = viewModel::onIntent,
+        navigateToHome = navigateToHome,
     )
 }

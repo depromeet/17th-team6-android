@@ -100,7 +100,7 @@ internal fun FriendListLazyColumn(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
-                        text = stringResource(R.string.data_load_failed),
+                        text = stringResource(R.string.error_load_failed),
                         style = SixpackTheme.typography.b1Regular,
                         color = SixpackTheme.colors.gray700,
                     )
