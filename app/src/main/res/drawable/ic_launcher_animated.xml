@@ -10,4 +10,7 @@
     <target
         android:name="logo_group"
         android:animation="@animator/splash_scale_y" />
+    <target
+        android:name="logo_group"
+        android:animation="@animator/splash_translate_y" />
 </animated-vector>
