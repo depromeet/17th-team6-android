@@ -105,6 +105,11 @@ class MainNavigator(
     }
 
     fun navigate(tab: MainNavTab) {
+        // 이미 같은 탭에 있으면 네비게이션 실행하지 않음 (화면 재구성 방지)
+        if (navController.currentDestination?.hasRoute(tab.route::class) == true) {
+            return
+        }
+
         val navOptions =
             navOptions {
                 popUpTo(navController.graph.findStartDestination().id) {
