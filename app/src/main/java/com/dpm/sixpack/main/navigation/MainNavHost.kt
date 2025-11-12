@@ -16,7 +16,6 @@ import com.dpm.sixpack.presentation.routes.friend.navigation.addFriendProfileNav
 import com.dpm.sixpack.presentation.routes.friend.navigation.navigateToFriendGraph
 import com.dpm.sixpack.presentation.routes.friend.navigation.navigateToFriendProfile
 import com.dpm.sixpack.presentation.routes.mypage.navigation.addMyPageNavGraph
-import com.dpm.sixpack.presentation.routes.mypage.navigation.navigateMyPage
 import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
 import com.dpm.sixpack.presentation.routes.postdetail.navigation.addPostDetailNavGraph
 import com.dpm.sixpack.presentation.routes.postdetail.navigation.navigateToPostDetail
@@ -77,6 +76,7 @@ internal fun MainNavHost(
                     navigator.navController.navigateProfileCreation(phoneNumber = phoneNumber)
                 },
                 onNavigateBack = navigator::popBackStack,
+                onShowSnackBar = onShowSnackBar,
             )
 
             addProfileCreationNavGraph(
@@ -119,6 +119,7 @@ internal fun MainNavHost(
                     )
                 },
                 onNavigateBack = navigator::popBackStack,
+                onShowSnackBar = onShowSnackBar,
             )
 
             addRunningNavGraph(

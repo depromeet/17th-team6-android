@@ -7,7 +7,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.util.context.openUrlInBrowser
-import com.dpm.sixpack.presentation.common.util.context.showToastByResId
 import com.dpm.sixpack.presentation.routes.signup.contract.SignUpSideEffect
 import com.dpm.sixpack.presentation.routes.signup.ui.screen.SignUpScreen
 import org.orbitmvi.orbit.compose.collectAsState
@@ -19,6 +18,7 @@ fun SignUpRoute(
     viewModel: SignUpViewModel = hiltViewModel(),
     onNavigateToProfileCreation: (String) -> Unit,
     onNavigateBack: () -> Unit,
+    onShowSnackBar: (String, String?) -> Unit,
 ) {
     val context = LocalContext.current
     val screenState by viewModel.collectAsState()
@@ -31,25 +31,25 @@ fun SignUpRoute(
                 context.openUrlInBrowser("") // TODO SR-N 채우기
             }
             is SignUpSideEffect.ShowInvalidPhoneNumberError -> {
-                context.showToastByResId(R.string.auth_error_invalid_phone_number)
+                onShowSnackBar(context.getString(R.string.auth_error_invalid_phone_number), null)
             }
             is SignUpSideEffect.ShowCodeSentSuccess -> {
-                context.showToastByResId(R.string.auth_success_code_sent)
+                onShowSnackBar(context.getString(R.string.auth_success_code_sent), null)
             }
             is SignUpSideEffect.ShowCodeSendFailedError -> {
-                context.showToastByResId(R.string.auth_error_code_send_failed)
+                onShowSnackBar(context.getString(R.string.auth_error_code_send_failed), null)
             }
             is SignUpSideEffect.ShowRateLimitError -> {
-                context.showToastByResId(R.string.auth_error_rate_limit)
+                onShowSnackBar(context.getString(R.string.auth_error_rate_limit), null)
             }
             is SignUpSideEffect.ShowInvalidCodeLengthError -> {
-                context.showToastByResId(R.string.signup_error_code_length)
+                onShowSnackBar(context.getString(R.string.signup_error_code_length), null)
             }
             is SignUpSideEffect.ShowCodeMismatchError -> {
-                context.showToastByResId(R.string.auth_error_code_mismatch)
+                onShowSnackBar(context.getString(R.string.auth_error_code_mismatch), null)
             }
             is SignUpSideEffect.ShowCodeExpiredError -> {
-                context.showToastByResId(R.string.auth_error_code_expired)
+                onShowSnackBar(context.getString(R.string.auth_error_code_expired), null)
             }
         }
     }

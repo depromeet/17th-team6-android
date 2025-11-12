@@ -15,12 +15,14 @@ fun NavGraphBuilder.addSignInNavGraph(
     onNavigateToHome: () -> Unit,
     onNavigateToSignUp: (phoneNumber: String) -> Unit,
     onNavigateBack: () -> Unit,
+    onShowSnackBar: (String, String?) -> Unit,
 ) {
     composable<SignInRoute> {
         SignInRoute(
             onNavigateToHome = onNavigateToHome,
             onNavigateToSignUp = onNavigateToSignUp,
             onNavigateBack = onNavigateBack,
+            onShowSnackBar = onShowSnackBar,
         )
     }
 }
