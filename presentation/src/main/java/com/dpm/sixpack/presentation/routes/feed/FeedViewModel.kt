@@ -67,8 +67,7 @@ class FeedViewModel @Inject constructor(
 
     private fun isCertifiable(selectedDate: LocalDate): Boolean {
         val today = LocalDate.now()
-        val minCertifiableDate = today.minusDays(FeedConstants.CERTIFIABLE_DAYS)
-        return !selectedDate.isBefore(minCertifiableDate)
+        return selectedDate == today
     }
 
     private val pagingFlowCache = ConcurrentHashMap<LocalDate, Flow<PagingData<PostResource>>>()
@@ -572,7 +571,7 @@ class FeedViewModel @Inject constructor(
     private fun handleRefreshAll() =
         intent {
             val today = LocalDate.now()
-            val certifiableStartDate = today.minusDays(FeedConstants.CERTIFIABLE_DAYS)
+            val certifiableStartDate = today
             val selectedDate = state.calendarState.selectedDate
 
             feedRepository

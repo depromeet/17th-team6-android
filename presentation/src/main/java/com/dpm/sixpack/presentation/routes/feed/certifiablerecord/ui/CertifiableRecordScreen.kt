@@ -43,6 +43,7 @@ fun CertifiableRecordScreen(
     onIntent: (CertifiableRecordIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val hasCertifiedRecord = state.certifiedRecord != null
     val isEmpty = state.records.isEmpty()
     val groupedRecords =
         remember(state.records) {
@@ -87,45 +88,57 @@ fun CertifiableRecordScreen(
                     modifier = Modifier,
                 )
 
-                if (!isEmpty) {
-                    Spacer(Modifier.height(16.dp))
-
-                    LazyColumn(
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                    ) {
-                        item { Spacer(Modifier.height(16.dp)) }
-
-                        dateGroupedRecordItems(
-                            groupedRecords = groupedRecords,
-                            selectedRecordId = state.selectedRecord?.sessionId,
-                            onRecordClick = { record ->
-                                onIntent(CertifiableRecordIntent.OnRecordClick(record))
-                            },
-                        )
-
-                        item { Spacer(Modifier.height(70.dp)) }
+                when {
+                    hasCertifiedRecord -> {
+                        Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                            CertifiedRecord()
+                        }
                     }
-                } else {
-                    Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                        EmptyRecord()
+                    isEmpty -> {
+                        // 인증 가능한 기록이 없는 경우
+                        Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                            EmptyRecord()
+                        }
+                    }
+                    else -> {
+                        // 인증 가능한 기록이 있는 경우
+                        Spacer(Modifier.height(16.dp))
+
+                        LazyColumn(
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .weight(1f),
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                        ) {
+                            item { Spacer(Modifier.height(16.dp)) }
+
+                            dateGroupedRecordItems(
+                                groupedRecords = groupedRecords,
+                                selectedRecordId = state.selectedRecord?.sessionId,
+                                onRecordClick = { record ->
+                                    onIntent(CertifiableRecordIntent.OnRecordClick(record))
+                                },
+                            )
+
+                            item { Spacer(Modifier.height(70.dp)) }
+                        }
                     }
                 }
             }
 
-            DoRunDefaultButton(
-                text = stringResource(id = R.string.post_upload_certifiable_record_submit_button),
-                enabled = state.selectedRecord != null,
-                onClick = { onIntent(CertifiableRecordIntent.OnUploadClick) },
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.BottomCenter)
-                        .padding(start = 20.dp, end = 20.dp, bottom = 20.dp),
-            )
+            // 인증된 기록이 있을 때는 버튼을 숨김
+                DoRunDefaultButton(
+                    text = stringResource(id = R.string.post_upload_certifiable_record_submit_button),
+                    enabled = state.selectedRecord != null,
+                    onClick = { onIntent(CertifiableRecordIntent.OnUploadClick) },
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.BottomCenter)
+                            .padding(start = 20.dp, end = 20.dp, bottom = 20.dp),
+                )
+
         }
     }
 }
@@ -160,6 +173,43 @@ private fun EmptyRecord(modifier: Modifier = Modifier) {
 
         Text(
             text = stringResource(id = R.string.post_upload_certifiable_record_empty_subtitle),
+            style = SixpackTheme.typography.b2Regular,
+            color = SixpackTheme.colors.gray700,
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
+@Composable
+private fun CertifiedRecord(modifier: Modifier = Modifier) {
+    Column(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(vertical = 80.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Image(
+            imageVector = ImageVector.vectorResource(R.drawable.ic_happy_dorun_with_smile),
+            contentDescription = stringResource(id = R.string.post_upload_certifiable_record_certified_image_description),
+            modifier = Modifier.size(120.dp),
+            contentScale = ContentScale.Fit,
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Text(
+            text = stringResource(id = R.string.post_upload_certifiable_record_certified_title),
+            style = SixpackTheme.typography.t2Bold,
+            color = SixpackTheme.colors.gray900,
+            textAlign = TextAlign.Center,
+        )
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Text(
+            text = stringResource(id = R.string.post_upload_certifiable_record_certified_subtitle),
             style = SixpackTheme.typography.b2Regular,
             color = SixpackTheme.colors.gray700,
             textAlign = TextAlign.Center,

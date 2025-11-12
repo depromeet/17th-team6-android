@@ -9,6 +9,7 @@ import kotlinx.parcelize.Parcelize
 data class CertifiableRecordUiState(
     val records: List<RecordItem> = emptyList(),
     val selectedRecord: RecordItem? = null,
+    val certifiedRecord: RecordItem? = null,
     val isLoading: Boolean = false,
 ) : UiState,
     Parcelable
