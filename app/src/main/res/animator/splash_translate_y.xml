@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
     android:duration="800"
-    android:propertyName="scaleX"
-    android:valueFrom="0.5"
-    android:valueTo="1.0"
+    android:propertyName="translateY"
+    android:valueFrom="-20"
+    android:valueTo="0"
     android:interpolator="@android:interpolator/bounce" />
