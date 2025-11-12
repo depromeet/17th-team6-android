@@ -31,7 +31,7 @@ object DeepLinks {
          * 사용처:
          * - CHEER_FRIEND: 친구 응원 알림
          */
-        const val PROFILE = "$SCHEME://friend/profile"
+        const val PROFILE = "$SCHEME://friend/profile/{userId}"
 
         /**
          * 친구 추가 화면
@@ -55,7 +55,7 @@ object DeepLinks {
          * - FEED_UPLOADED: 친구의 피드 업로드 알림
          * - FEED_REACTION: 피드 리액션 알림
          */
-        const val DETAIL = "$SCHEME://feed"
+        const val DETAIL = "$SCHEME://feed/{feedId}"
 
         /**
          * 피드 업로드 화면 (새 글 작성)

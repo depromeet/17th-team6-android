@@ -1,5 +1,6 @@
 package com.dpm.sixpack.main
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -15,11 +17,13 @@ import com.dpm.sixpack.BuildConfig
 import com.dpm.sixpack.LocalTimeZone
 import com.dpm.sixpack.core.util.NetworkMonitor
 import com.dpm.sixpack.core.util.TimeZoneMonitor
+import com.dpm.sixpack.main.navigation.MainNavigator
 import com.dpm.sixpack.main.navigation.rememberMainNavigator
 import com.dpm.sixpack.presentation.destinations.OnboardingRoute
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 import com.dpm.sixpack.rememberSixPackAppState
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -30,6 +34,8 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var timeZoneMonitor: TimeZoneMonitor
     private val viewModel: MainViewModel by viewModels()
+
+    private lateinit var mainNavigator: MainNavigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
@@ -49,9 +55,10 @@ class MainActivity : ComponentActivity() {
             val showFullScreenLoading by viewModel.showFullScreenLoading.collectAsStateWithLifecycle()
 
             if (!isLoading) {
+                mainNavigator = rememberMainNavigator(startDestination = startDestination)
                 val appState =
                     rememberSixPackAppState(
-                        navigator = rememberMainNavigator(startDestination = startDestination),
+                        navigator = mainNavigator,
                         networkMonitor = networkMonitor,
                         timeZoneMonitor = timeZoneMonitor,
                     )
@@ -73,6 +80,10 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
+                LaunchedEffect(Unit) {
+                    handleNotificationData(intent)
+                }
+
                 CompositionLocalProvider(
                     LocalTimeZone provides currentTimeZone,
                 ) {
@@ -85,6 +96,32 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+
+        // ⚠️ 앱이 이미 켜져있는데(백그라운드 상태) 알림을 클릭한 경우
+        handleNotificationData(intent)
+    }
+
+    private fun handleNotificationData(intent: Intent?) {
+        if (!::mainNavigator.isInitialized) {
+            Timber.w("NavController is not yet initialized. Skipping deeplink.")
+            return
+        }
+        // 1. Intent의 extras에서 data 페이로드의 키("deeplink")를 확인
+        val deeplink = intent?.extras?.getString("deeplink")
+
+        if (deeplink != null) {
+            Timber.d("Received deeplink from notification: $deeplink")
+            val uri = deeplink.toUri()
+
+            // ⬇️ 7. (핵심!) NavController에게 Uri로 이동하라고 명령
+            // NavHost에 정의된 딥링크 패턴과 일치하는 Composable로
+            // NavController가 알아서 이동시켜 줍니다.
+            mainNavigator.navController.navigate(uri)
         }
     }
 

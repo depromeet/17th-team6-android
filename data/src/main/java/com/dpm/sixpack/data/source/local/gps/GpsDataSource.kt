@@ -51,9 +51,4 @@ class GpsDataSource @Inject constructor(
                 locationClient.removeLocationUpdates(locationCallback)
             }
         }
-//            .shareIn(
-//            scope = appScope, // 앱 생명주기를 따르는 스코프
-//            started = SharingStarted.WhileSubscribed(1000L), // 구독자가 없어진 후 3초간 유지
-//            replay = 1, // 새로운 구독자에게 최신 값 1개를 즉시 재전송
-//        )
 }

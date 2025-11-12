@@ -9,7 +9,7 @@ data class RecordState(
     // 00:32:10
     val currentDuration: Int = 0,
     // 5'30"
-    val avgPace: Int = 0,
+    val pace: Int = 0,
     // 180
     val cadence: Int = 0,
 ) : Parcelable

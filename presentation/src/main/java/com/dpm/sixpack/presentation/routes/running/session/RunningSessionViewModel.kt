@@ -198,7 +198,7 @@ class RunningSessionViewModel @Inject constructor(
             RecordState(
                 currentDistance = realtimeRunningData.distanceInMeter,
                 currentDuration = realtimeRunningData.durationInSec,
-                avgPace = realtimeRunningData.avgPace,
+                pace = realtimeRunningData.instantPace,
                 cadence = realtimeRunningData.avgCadence,
             )
         return newRecord

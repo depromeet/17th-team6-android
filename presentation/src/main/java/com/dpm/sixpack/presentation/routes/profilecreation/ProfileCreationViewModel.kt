@@ -100,7 +100,6 @@ class ProfileCreationViewModel @Inject constructor(
                     marketingConsentAt = currentTimestamp, // TODO 제거
                     locationConsentAt = currentTimestamp, // TODO 제거
                     personalConsentAt = currentTimestamp, // TODO 제거
-                    deviceToken = state.deviceToken ?: "fcm_token_example_123", // TODO 진짜로 바꾸기
                 )
 
             result

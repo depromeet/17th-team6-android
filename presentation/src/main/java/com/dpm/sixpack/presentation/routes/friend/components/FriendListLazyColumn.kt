@@ -88,7 +88,9 @@ internal fun FriendListLazyColumn(
             is LoadState.Loading -> {
                 if (pagingItems.itemCount == 0) {
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator()
+                        CircularProgressIndicator(
+                            color = SixpackTheme.colors.gray400,
+                        )
                     }
                 }
             }

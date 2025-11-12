@@ -316,7 +316,7 @@ class MapViewModel @Inject constructor(
         intent {
             postFriendNotificationUseCase(userId)
                 .onSuccess { result ->
-                    postSideEffect(MapSideEffect.ShowToast(R.string.friend_awake_toast, result))
+                    postSideEffect(MapSideEffect.ShowToast(R.string.friend_awake_toast, listOf(result)))
                     refresh()
                 }.onError { e ->
                     Timber.w("FriendSheetViewModel: Failed to post friend notification: ${e.message}")

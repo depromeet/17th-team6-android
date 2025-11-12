@@ -190,6 +190,7 @@
     <string name="record_total_distance">전체 거리</string>
     <string name="record_running_duration">러닝 시간</string>
     <string name="record_total_duration">달린 시간</string>
+    <string name="record_pace">페이스</string>
     <string name="record_average_pace">평균 페이스</string>
     <string name="record_cadence">케이던스</string>
     <string name="record_average_cadence">케이던스</string>

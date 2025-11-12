@@ -1,6 +1,5 @@
 package com.dpm.sixpack.presentation.routes.friend
 
-import android.R.id.message
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context

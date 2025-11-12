@@ -11,6 +11,7 @@ object ApiConstants {
     const val PLANS = "plans"
     const val SELFIE = "selfie"
     const val FEEDS = "feeds"
+    const val USERS = "users"
 
     const val TOKEN_REFRESH_PATH = "/api/auth/refresh"
 }

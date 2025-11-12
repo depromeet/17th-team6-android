@@ -4,6 +4,7 @@ import com.dpm.sixpack.data.source.remote.dto.request.AddFriendRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.FriendDeleteRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.FriendNotificationRequestDto
 import com.dpm.sixpack.data.source.remote.dto.response.AddFriendResponseDto
+import com.dpm.sixpack.data.source.remote.dto.response.DeleteFriendResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.FriendCodeResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.FriendNotifyResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.FriendsRunningStatusResponseDto
@@ -24,7 +25,7 @@ interface FriendServiceApi {
     @POST("$API/$FRIENDS/delete")
     suspend fun deleteFriend(
         @Body requestDto: FriendDeleteRequestDto,
-    ): BaseResponse<Nothing>
+    ): BaseResponse<DeleteFriendResponseDto>
 
     @GET("$API/$FRIENDS/running/status")
     suspend fun getFriendsRunningStatus(

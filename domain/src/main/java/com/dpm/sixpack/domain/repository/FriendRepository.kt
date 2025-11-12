@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface FriendRepository {
     suspend fun postFriendNotification(friendUserId: Long): DoRunResult<String>
 
-    suspend fun deleteFriend(friendUidList: List<Long>): DoRunResult<Unit>
+    suspend fun deleteFriend(friendUidList: List<Long>): DoRunResult<List<Long>>
 
     fun getFriendsRunningStatusPager(): Flow<PagingData<Friend>>
 
