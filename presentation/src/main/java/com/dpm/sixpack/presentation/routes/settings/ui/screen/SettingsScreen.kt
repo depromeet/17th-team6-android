@@ -59,10 +59,10 @@ internal fun SettingsScreen(
                 title = stringResource(R.string.settings_account_info),
                 onClick = { onIntent(SettingsIntent.OnAccountInfoClick) },
             )
-            SettingsMenuItem(
-                title = stringResource(R.string.settings_push_notification),
-                onClick = { onIntent(SettingsIntent.OnPushNotificationClick) },
-            )
+//            SettingsMenuItem(
+//                title = stringResource(R.string.settings_push_notification),
+//                onClick = { onIntent(SettingsIntent.OnPushNotificationClick) },
+//            )
 
             SettingsDivider()
 
