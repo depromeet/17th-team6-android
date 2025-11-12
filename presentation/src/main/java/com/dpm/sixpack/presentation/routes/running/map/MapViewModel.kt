@@ -2,8 +2,14 @@ package com.dpm.sixpack.presentation.routes.running.map
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Bitmap
+import android.location.LocationManager
 import androidx.annotation.RequiresPermission
+import androidx.core.location.LocationManagerCompat
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -26,6 +32,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,6 +54,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MapViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    @ApplicationContext private val context: Context,
     private val fusedLocationProviderClient: FusedLocationProviderClient,
     private val finishRunningSessionUseCase: FinishRunningSessionUseCase,
     private val getFriendRunningStatusUseCase: GetFriendRunningStatusUseCase,
@@ -71,12 +79,50 @@ class MapViewModel @Inject constructor(
                 }
             }.cachedIn(viewModelScope)
 
+    private val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+    private val locationServiceStateReceiver =
+        object : BroadcastReceiver() {
+            override fun onReceive(
+                context: Context,
+                intent: Intent,
+            ) {
+                if (intent.action == LocationManager.PROVIDERS_CHANGED_ACTION) {
+                    val isEnabled = LocationManagerCompat.isLocationEnabled(locationManager)
+                    updateLocationServiceStatus(isEnabled)
+                }
+            }
+        }
+
     init {
         intent {
             delay(1000L)
             reduce {
                 state.copy(
                     mapViewState = MapViewState.Friend(),
+                )
+            }
+        }
+
+        context.registerReceiver(
+            locationServiceStateReceiver,
+            IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION),
+        )
+        updateLocationServiceStatus(LocationManagerCompat.isLocationEnabled(locationManager))
+    }
+
+    override fun onCleared() {
+        context.unregisterReceiver(locationServiceStateReceiver)
+        super.onCleared()
+    }
+
+    // 👇 [추가] GPS 상태 업데이트를 위한 private 함수
+    private fun updateLocationServiceStatus(isEnabled: Boolean) {
+        intent {
+            reduce {
+                state.copy(
+                    isLocationServiceEnabled = isEnabled,
+                    isFollowingModeEnabled = if (isEnabled) state.isFollowingModeEnabled else false,
                 )
             }
         }
@@ -123,8 +169,19 @@ class MapViewModel @Inject constructor(
     @SuppressLint("MissingPermission")
     private fun handleToggleFollowingMode() =
         intent {
-            val currentFollowMode = state.isFollowingModeEnabled
-            if (!currentFollowMode) {
+            val newFollowMode = !state.isFollowingModeEnabled
+
+            val finalFollowMode =
+                if (newFollowMode) {
+                    // 켜려고 할 때: GPS가 활성화되어 있어야만 켤 수 있음
+                    state.isLocationServiceEnabled
+                } else {
+                    // 끄려고 할 때: 언제나 끌 수 있음
+                    false
+                }
+
+            // 최종 상태가 true일 때만 (즉, 켜는 데 성공했을 때만) 카메라 이동
+            if (finalFollowMode) {
                 loadLocationFromClient(
                     onSuccess = { latLng ->
                         viewModelScope.launch {
@@ -133,10 +190,9 @@ class MapViewModel @Inject constructor(
                     },
                 )
             }
+
             reduce {
-                state.copy(
-                    isFollowingModeEnabled = !currentFollowMode,
-                )
+                state.copy(isFollowingModeEnabled = finalFollowMode)
             }
         }
 

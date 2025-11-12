@@ -416,7 +416,7 @@ private fun RunningMapScreenContent(
                             Modifier.constrainAs(startButtonRef) {
                                 bottom.linkTo(parent.bottom)
                             },
-                        enabled = mapState.allPermissionsGranted,
+                        enabled = mapState.allPermissionsGranted && mapState.isLocationServiceEnabled,
                         onStartClick = {
                             onMapIntent(MapIntent.SessionStartClick)
                         },

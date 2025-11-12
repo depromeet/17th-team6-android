@@ -10,6 +10,7 @@ import kotlinx.parcelize.Parcelize
 data class MapUiState(
     val isFollowingModeEnabled: Boolean = true,
     val allPermissionsGranted: Boolean = false,
+    val isLocationServiceEnabled: Boolean = false,
     val showRationaleDialog: Boolean = false,
     val mapViewState: MapViewState = MapViewState.Loading,
 ) : RunningRouteUiState
