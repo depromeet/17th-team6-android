@@ -46,8 +46,8 @@ internal fun MainRunningRecordGrid(
             )
             Spacer(modifier = Modifier.height(20.dp))
             RecordItem(
-                label = stringResource(R.string.record_average_pace),
-                recordValue = formatPaceToString(recordState.avgPace),
+                label = stringResource(R.string.record_pace),
+                recordValue = if (recordState.pace <= 0) "-'--\"" else formatPaceToString(recordState.pace),
             )
         }
         // 오른쪽 열
@@ -63,29 +63,7 @@ internal fun MainRunningRecordGrid(
             Spacer(modifier = Modifier.height(20.dp))
             RecordItem(
                 label = stringResource(R.string.record_cadence),
-                recordValue = "${recordState.cadence} spm",
-            )
-        }
-    }
-}
-
-@Composable
-internal fun PrePostRunningRecordGrid(
-    recordState: RecordState,
-    modifier: Modifier = Modifier,
-) {
-    // TODO SK: Change to string resources
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Start,
-    ) {
-        // 왼쪽 열
-        Column(
-            horizontalAlignment = Alignment.Start,
-        ) {
-            RecordItem(
-                label = stringResource(R.string.record_running_duration),
-                recordValue = formatSecondsToTime(recordState.currentDuration),
+                recordValue = if (recordState.cadence <= 0) "- spm" else "${recordState.cadence} spm",
             )
         }
     }
@@ -104,28 +82,8 @@ private fun PreviewMainRecordGrid() {
             RecordState(
                 currentDistance = 15400,
                 currentDuration = 1530,
-                avgPace = 440,
-                cadence = 154,
-            ),
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun PreviewPrePostRecordGrid() {
-    Box(
-        modifier =
-            Modifier
-                .background(color = Color.White)
-                .padding(10.dp),
-    ) {
-        PrePostRunningRecordGrid(
-            RecordState(
-                currentDistance = 15400,
-                currentDuration = 1530,
-                avgPace = 440,
-                cadence = 154,
+                pace = 0,
+                cadence = 0,
             ),
         )
     }

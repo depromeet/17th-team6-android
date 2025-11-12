@@ -25,7 +25,7 @@ class CollectAndSaveRunningDataUseCase @Inject constructor(
     private val runningSessionRepository: RunningSessionRepository,
     private val stateTracker: RunningStateTracker,
 ) {
-    private val useCaseScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    private val useCaseScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     // Coroutine Jobs
     private var timerJob: Job? = null
@@ -36,13 +36,6 @@ class CollectAndSaveRunningDataUseCase @Inject constructor(
     val runningDataState: Flow<RealtimeRunningData?> = stateTracker.runningDataState
 
     init {
-        // Tracker가 "첫 위치 받음" 이벤트를 보내면, 그때 타이머를 시작
-        useCaseScope.launch {
-            stateTracker.onFirstLocationReceived.collect {
-                startTimer()
-            }
-        }
-
         //  1초마다 로컬DB 저장 수행
         useCaseScope.launch {
             stateTracker.runningDataState.filterNotNull().collect { data ->
@@ -58,6 +51,8 @@ class CollectAndSaveRunningDataUseCase @Inject constructor(
         stateTracker.initStates()
         stateTracker.resume() // isPaused = false
         startDataCollectionJobs()
+
+        startTimer()
     }
 
     fun pause() {

@@ -19,6 +19,7 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 internal fun FriendBottomBar(
+    modifier: Modifier = Modifier,
     onAddFriendClick: () -> Unit,
     onCopyCodeClick: () -> Unit,
 ) {
@@ -28,7 +29,7 @@ internal fun FriendBottomBar(
     ) {
         Column(
             modifier =
-                Modifier
+                modifier
                     .fillMaxWidth()
                     .padding(16.dp)
                     .padding(bottom = 16.dp),
