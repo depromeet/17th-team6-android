@@ -10,12 +10,12 @@
     <!-- 로고: 중앙에 축소 배치 -->
     <group
         android:name="logo_group"
-        android:pivotX="144"
-        android:pivotY="144"
+        android:pivotX="100"
+        android:pivotY="100"
         android:scaleX="0.7"
         android:scaleY="0.7"
         android:translateX="44"
-        android:translateY="64">
+        android:translateY="44">
         <path
             android:fillColor="#00000000"
             android:pathData="M24,0L176,0A24,24 0,0 1,200 24L200,176A24,24 0,0 1,176 200L24,200A24,24 0,0 1,0 176L0,24A24,24 0,0 1,24 0z" />
