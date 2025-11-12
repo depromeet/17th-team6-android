@@ -3,6 +3,7 @@ package com.dpm.sixpack.presentation.theme
 import SixPackTypographyValue
 import SixpackTypography
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -36,7 +37,7 @@ fun SixpackTheme(
         LocalSixpackShapes provides SixPackShapesValue,
     ) {
         // BuildConfig.DEBUG
-        if (isDebug) DebugColorTheme(content) else content
+        if (isDebug) DebugColorTheme(content) else MaterialTheme(content = content)
     }
 }
 
