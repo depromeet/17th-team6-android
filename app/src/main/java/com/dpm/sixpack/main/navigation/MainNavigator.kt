@@ -76,6 +76,20 @@ class MainNavigator(
         )
     }
 
+    fun navigateToMyPage() {
+        navController.navigateMyPage(
+            navOptions {
+                popUpTo(
+                    navController.graph.findStartDestination().id,
+                ) {
+                    inclusive = false
+                }
+                launchSingleTop = true
+                restoreState = true
+            },
+        )
+    }
+
     fun navigate(tab: MainNavTab) {
         val navOptions =
             navOptions {

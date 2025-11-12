@@ -14,6 +14,7 @@ import com.dpm.sixpack.presentation.routes.feed.navigation.navigateToCertifiedUs
 import com.dpm.sixpack.presentation.routes.friend.navigation.addFriendNavGraph
 import com.dpm.sixpack.presentation.routes.friend.navigation.navigateToFriendGraph
 import com.dpm.sixpack.presentation.routes.mypage.navigation.addMyPageNavGraph
+import com.dpm.sixpack.presentation.routes.mypage.navigation.navigateMyPage
 import com.dpm.sixpack.presentation.routes.onboarding.navigation.addOnboardingNavGraph
 import com.dpm.sixpack.presentation.routes.postdetail.navigation.addPostDetailNavGraph
 import com.dpm.sixpack.presentation.routes.postdetail.navigation.navigateToPostDetail
@@ -137,6 +138,8 @@ internal fun MainNavHost(
 
             addFeedNavGraph(
                 navigateToBack = { navController.popBackStack() },
+                navigateToUserProfile = { /* TODO: User Profile */ },
+                navigateToMyPage = { navigator.navigateToMyPage() },
                 navigateToCertifiedUsers = navController::navigateToCertifiedUsers,
                 navigateToPostDetail = navController::navigateToPostDetail,
                 navigateToPostEdit = navController::navigateToPostEdit,
@@ -148,8 +151,8 @@ internal fun MainNavHost(
             addPostDetailNavGraph(
                 navigateToBack = { navController.popBackStack() },
                 navigateToPostEdit = navController::navigateToPostEdit,
-                navigateToUserProfile = {},
-                navigateToMyPage = {},
+                navigateToUserProfile = { /* TODO: User Profile */ },
+                navigateToMyPage = { navigator.navigateToMyPage() },
                 onShowSnackBar = onShowSnackBar,
             )
 
