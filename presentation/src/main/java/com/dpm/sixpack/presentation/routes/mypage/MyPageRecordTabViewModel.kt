@@ -9,11 +9,13 @@ import com.dpm.sixpack.presentation.routes.mypage.contract.MyPageRecordTabState
 import com.dpm.sixpack.presentation.routes.mypage.contract.YearMonth
 import com.dpm.sixpack.presentation.routes.mypage.util.RunSessionMapper.toRecordItems
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
 import timber.log.Timber
 import java.time.LocalDate
 import javax.inject.Inject
+import kotlin.math.max
 
 @HiltViewModel
 class MyPageRecordTabViewModel
@@ -75,6 +77,7 @@ class MyPageRecordTabViewModel
 
         private fun loadRecords() =
             intent {
+                val startTime = System.currentTimeMillis()
                 reduce { state.copy(isLoading = true) }
 
                 getRunSessionsUseCase(
@@ -83,6 +86,13 @@ class MyPageRecordTabViewModel
                 ).onSuccess { runSessions ->
                     val records = runSessions.toRecordItems()
                     val navigationState = calculateNavigationState()
+
+                    // 최소 300ms 로딩 시간 보장
+                    val elapsedTime = System.currentTimeMillis() - startTime
+                    val remainingTime = max(0, MINIMUM_LOADING_DURATION_MS - elapsedTime)
+                    if (remainingTime > 0) {
+                        delay(remainingTime)
+                    }
 
                     reduce {
                         state.copy(
@@ -95,6 +105,14 @@ class MyPageRecordTabViewModel
                     }
                 }.onError { exception ->
                     Timber.e("Failed to load run sessions: ${exception.message}")
+
+                    // 에러 시에도 최소 로딩 시간 보장
+                    val elapsedTime = System.currentTimeMillis() - startTime
+                    val remainingTime = max(0, MINIMUM_LOADING_DURATION_MS - elapsedTime)
+                    if (remainingTime > 0) {
+                        delay(remainingTime)
+                    }
+
                     reduce {
                         state.copy(
                             records = emptyList(),
@@ -125,4 +143,8 @@ class MyPageRecordTabViewModel
             val canGoPrevious: Boolean,
             val canGoNext: Boolean,
         )
+
+        companion object {
+            private const val MINIMUM_LOADING_DURATION_MS = 500L
+        }
     }
