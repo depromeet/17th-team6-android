@@ -1,5 +1,6 @@
 package com.dpm.sixpack.presentation.routes.report.component
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -51,8 +52,8 @@ internal fun ReportBottomBar(
             horizontalArrangement = Arrangement.SpaceBetween, // 아이콘과 텍스트 양 끝 배치
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ill_feed_certification), // 임시 아이콘, 이미지에 맞는 아이콘으로 교체 필요
+                Image(
+                    painter = painterResource(id = R.drawable.ill_feed_certification),
                     contentDescription = null,
                 )
                 Spacer(modifier = Modifier.width(12.dp))
