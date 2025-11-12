@@ -27,10 +27,20 @@ import com.dpm.sixpack.presentation.destinations.FriendProfile
 import com.dpm.sixpack.presentation.routes.friend.AddFriendRoute
 import com.dpm.sixpack.presentation.routes.friend.FriendListRoute
 import com.dpm.sixpack.presentation.routes.friend.FriendViewModel
+import com.dpm.sixpack.presentation.routes.friendprofile.FriendProfileRoute as FriendProfileRouteComposable
 import com.dpm.sixpack.presentation.theme.SixpackTheme
+import timber.log.Timber
 
 fun NavController.navigateToFriendGraph(navOptions: NavOptions? = null) {
     navigate(Friend, navOptions)
+}
+
+fun NavController.navigateToFriendProfile(
+    friendId: Long,
+    navOptions: NavOptions? = null,
+) {
+    Timber.d("SR-N 이동전 아이디는? ${friendId}")
+    navigate(FriendProfile(friendId = friendId), navOptions)
 }
 
 fun NavGraphBuilder.addFriendNavGraph(
@@ -82,7 +92,10 @@ fun NavGraphBuilder.addFriendNavGraph(
 /**
  * 친구 프로필 NavGraph 추가
  */
-fun NavGraphBuilder.addFriendProfileNavGraph(navigateToBack: () -> Unit = {}) {
+fun NavGraphBuilder.addFriendProfileNavGraph(
+    navigateToBack: () -> Unit = {},
+    navigateToPostDetail: (Long) -> Unit = {},
+) {
     composable<FriendProfile>(
         deepLinks =
             listOf(
@@ -90,50 +103,10 @@ fun NavGraphBuilder.addFriendProfileNavGraph(navigateToBack: () -> Unit = {}) {
             ),
     ) { backStackEntry ->
         val route = backStackEntry.toRoute<FriendProfile>()
-        FriendProfileScreen(
-            friendId = route.friendId,
-            navigateToBack = navigateToBack,
+        Timber.d("SR-N 아이디는? ${route.friendId}")
+        FriendProfileRouteComposable(
+            onNavigateBack = navigateToBack,
+            onNavigateToPostDetail = navigateToPostDetail,
         )
-    }
-}
-
-// 임시 플레이스홀더 화면들
-
-/**
- * 친구 프로필 화면 (임시 구현)
- * TODO: 실제 구현 필요
- */
-@Composable
-private fun FriendProfileScreen(
-    friendId: Long,
-    navigateToBack: () -> Unit,
-) {
-    Scaffold(
-        topBar = {
-            DoRunNavigationTopBar(
-                navigateToBack = navigateToBack,
-                titleContent = {
-                    Text(
-                        text = "친구 프로필",
-                        style = SixpackTheme.typography.t1Bold,
-                        color = SixpackTheme.colors.gray900,
-                    )
-                },
-            )
-        },
-    ) { paddingValues ->
-        Box(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                text = "친구 프로필 화면 (Friend ID: $friendId)\n\n구현 예정",
-                style = SixpackTheme.typography.b1Regular,
-                color = SixpackTheme.colors.gray700,
-            )
-        }
     }
 }

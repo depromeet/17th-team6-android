@@ -7,6 +7,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.auth.AuthScreen
 import com.dpm.sixpack.presentation.common.components.dialog.CommonDialog
+import com.dpm.sixpack.presentation.common.components.dialog.DoRunErrorDialog
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.model.PhoneAuthStep
 import com.dpm.sixpack.presentation.routes.signup.contract.SignUpIntent
@@ -61,6 +62,21 @@ fun SignUpScreen(
             secondaryButtonText = stringResource(R.string.common_cancel),
             secondaryButtonOnClick = {
                 onIntent(SignUpIntent.OnDismissRegisteredDialog)
+            },
+        )
+    }
+
+    // 네트워크 에러 다이얼로그
+    state.networkError?.let { errorType ->
+        DoRunErrorDialog(
+            title = errorType.title,
+            subtitle = errorType.description,
+            confirmButtonText = "다시 시도",
+            onConfirmClick = {
+                onIntent(SignUpIntent.OnErrorRetry)
+            },
+            onDismissRequest = {
+                onIntent(SignUpIntent.OnErrorDialogDismiss)
             },
         )
     }

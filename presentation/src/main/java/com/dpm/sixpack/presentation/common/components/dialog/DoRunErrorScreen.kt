@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -45,18 +46,19 @@ fun DoRunErrorScreen(
             Image(
                 painter = painterResource(id = R.drawable.img_error),
                 contentDescription = "Error",
-                modifier = Modifier.size(100.dp),
+                modifier = Modifier.size(120.dp),
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             Text(
                 text = title,
                 style = SixpackTheme.typography.t2Bold,
                 color = SixpackTheme.colors.gray900,
+                textAlign = TextAlign.Center,
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             Text(
                 text = description,
@@ -65,17 +67,18 @@ fun DoRunErrorScreen(
                 color = SixpackTheme.colors.gray700,
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             DoRunDefaultButton(
                 modifier =
                     Modifier
-                        .wrapContentWidth()
-                        .height(56.dp),
+                        .wrapContentWidth(),
                 text = confirmButtonText,
                 onClick = onConfirmClick,
                 textColor = SixpackTheme.colors.gray0,
                 containerColor = SixpackTheme.colors.blue600,
+                buttonContentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp),
+                textPadding = PaddingValues(0.dp)
             )
         }
     }

@@ -22,12 +22,13 @@ class GetMyUserFeedsUseCase
         private val userPreferenceRepository: UserRepository,
     ) {
         /**
-         * Retrieves a paginated flow of feed items for the current user.
+         * Retrieves a paginated flow of feed items.
          *
+         * @param userId Optional user ID. If null, uses the current logged-in user's ID
          * @return Flow emitting PagingData containing FeedListItem (UserSummaryItem or PostItem)
          */
-        operator fun invoke(): Flow<PagingData<FeedListItem>> =
-            userPreferenceRepository.getUserIdFlow().flatMapLatest { userId ->
+        operator fun invoke(userId: Long? = null): Flow<PagingData<FeedListItem>> {
+            return if (userId != null) {
                 feedRepository.getFeedPagingStream(
                     pageSize = 10,
                     initialLoadSize = 20,
@@ -35,5 +36,16 @@ class GetMyUserFeedsUseCase
                     currentDate = null,
                     userId = userId,
                 )
+            } else {
+                userPreferenceRepository.getUserIdFlow().flatMapLatest { currentUserId ->
+                    feedRepository.getFeedPagingStream(
+                        pageSize = 10,
+                        initialLoadSize = 20,
+                        feedType = FeedType.USER_PAGE_FEED,
+                        currentDate = null,
+                        userId = currentUserId,
+                    )
+                }
             }
+        }
     }

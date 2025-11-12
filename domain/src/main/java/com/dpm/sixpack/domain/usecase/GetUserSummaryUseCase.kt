@@ -19,12 +19,13 @@ class GetUserSummaryUseCase
         private val userPreferenceRepository: UserRepository,
     ) {
         /**
-         * Retrieves the user summary for the current logged-in user.
+         * Retrieves the user summary.
          *
+         * @param userId Optional user ID. If null, uses the current logged-in user's ID
          * @return DoRunResult containing UserSummary on success, or error on failure
          */
-        suspend operator fun invoke(): DoRunResult<UserSummary> {
-            val userId = userPreferenceRepository.getUserId()
-            return feedRepository.getUserSummary(userId)
+        suspend operator fun invoke(userId: Long? = null): DoRunResult<UserSummary> {
+            val targetUserId = userId ?: userPreferenceRepository.getUserId()
+            return feedRepository.getUserSummary(targetUserId)
         }
     }
