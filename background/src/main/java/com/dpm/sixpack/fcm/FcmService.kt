@@ -1,4 +1,4 @@
-package com.dpm.sixpack.firebaseMessageService
+package com.dpm.sixpack.fcm
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -115,16 +115,19 @@ class FcmService : FirebaseMessagingService() {
         val channelId = PRIMARY_PUSH_CHANNEL_ID
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
+        // 3. XML(벡터) 리소드를 Drawable로 가져온 뒤 Bitmap으로 변환
+        val vectorDrawable = ContextCompat.getDrawable(this, R.drawable.ill_logo)
+
         val largeIconBitmap =
-            BitmapFactory.decodeResource(
-                resources,
-                R.drawable.img_logo, // ⬅️ 앱의 메인 아이콘 (컬러)
+            vectorDrawable?.toBitmap(
+                width = vectorDrawable.intrinsicWidth,
+                height = vectorDrawable.intrinsicHeight,
             )
 
         val notificationBuilder =
             NotificationCompat
                 .Builder(this, channelId)
-                .setSmallIcon(R.drawable.img_notification_icon)
+                .setSmallIcon(R.drawable.ic_notification)
                 .setLargeIcon(largeIconBitmap)
                 .setContentTitle(notification.title)
                 .setContentText(notification.body)

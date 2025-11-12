@@ -4,12 +4,11 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.SingletonImageLoader
-import com.dpm.sixpack.firebaseMessageService.PRIMARY_PUSH_CHANNEL_ID
+import com.dpm.sixpack.fcm.PRIMARY_PUSH_CHANNEL_ID
 import com.dpm.sixpack.presentation.common.util.navermap.AppInitializer
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
