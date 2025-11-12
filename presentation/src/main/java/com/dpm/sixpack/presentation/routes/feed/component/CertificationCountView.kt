@@ -32,13 +32,10 @@ import com.dpm.sixpack.presentation.theme.SixpackTheme
 @Composable
 fun CertificationCountView(
     users: List<PostingUserInfo>,
+    isMeCertified: Boolean,
     onViewClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    if (users.isEmpty()) return
-
-    val isMeCertified = users.any { it.user.isMe }
-
     val text =
         if (isMeCertified) {
             stringResource(id = R.string.feed_certification_count_view_others_certified, users.size)
@@ -147,6 +144,7 @@ private fun CertificationCountViewWithMePreview() {
                 ),
             modifier = Modifier.padding(16.dp),
             onViewClick = {},
+            isMeCertified = false,
         )
     }
 }
@@ -164,6 +162,7 @@ private fun CertificationCountViewWithoutMePreview() {
                     PostingUserInfo(UserInfo(name = "User2", profileImageUrl = "")),
                 ),
             modifier = Modifier.padding(16.dp),
+            isMeCertified = false,
             onViewClick = {},
         )
     }

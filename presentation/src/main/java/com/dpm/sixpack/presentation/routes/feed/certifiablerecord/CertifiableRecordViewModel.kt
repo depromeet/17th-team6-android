@@ -34,10 +34,35 @@ class CertifiableRecordViewModel @Inject constructor(
         intent {
             reduce { state.copy(isLoading = true) }
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
-            val now = LocalDateTime.now()
-            val fortyEightHoursAgo = now.minusHours(48)
-            val startDateTime = fortyEightHoursAgo.format(formatter)
+            val today = LocalDateTime.now().toLocalDate()
+            val startOfDay = today.atStartOfDay()
+            val startDateTime = startOfDay.format(formatter)
 
+            // 1. 먼저 오늘 인증한 기록이 있는지 확인 (isSelfied = true)
+            runningRepository
+                .getRunSessions(isSelfied = true, startDateTime = startDateTime, endDateTime = null)
+                .onSuccess { certifiedSessions ->
+                    if (certifiedSessions.isNotEmpty()) {
+                        // 오늘 이미 인증한 기록이 있음 -> certifiedRecord에 저장
+                        reduce {
+                            state.copy(
+                                certifiedRecord = certifiedSessions.toRecordItems().first(),
+                                records = emptyList(),
+                                isLoading = false,
+                            )
+                        }
+                    } else {
+                        // 인증한 기록이 없음 -> 인증 가능한 기록 조회 (isSelfied = false)
+                        loadUncertifiedRecords(startDateTime)
+                    }
+                }.onError { error ->
+                    // 에러 발생 시에도 인증 가능한 기록 조회 시도
+                    loadUncertifiedRecords(startDateTime)
+                }
+        }
+
+    private fun loadUncertifiedRecords(startDateTime: String) =
+        intent {
             runningRepository
                 .getRunSessions(isSelfied = false, startDateTime = startDateTime, endDateTime = null)
                 .onSuccess { sessions ->

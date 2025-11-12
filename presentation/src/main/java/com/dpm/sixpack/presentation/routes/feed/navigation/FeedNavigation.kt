@@ -35,6 +35,7 @@ fun NavGraphBuilder.addFeedNavGraph(
     navigateToPostUpload: (Long, String, RunningSummary) -> Unit = { _, _, _ -> },
     navigateToPostEdit: (Long) -> Unit = {},
     navigateToCertifiedUsers: (String) -> Unit = {},
+    onShowSnackBar: (String, String?) -> Unit = { _, _ -> },
 ) {
     composable<MainRoute.Feed> {
         FeedRoute(
@@ -46,6 +47,7 @@ fun NavGraphBuilder.addFeedNavGraph(
             navigateToPostDetail = navigateToPostDetail,
             navigateToCertifiableRecord = navigateToCertifiableRecord,
             navigateToPostEdit = navigateToPostEdit,
+            onShowSnackBar = onShowSnackBar,
         )
     }
 

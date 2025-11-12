@@ -141,29 +141,33 @@ internal fun MainNavHost(
 
             addFeedNavGraph(
                 navigateToBack = { navController.popBackStack() },
+                navigateToUserProfile = navController::navigateToFriendProfile,
+                navigateToMyPage = { navigator.navigateToMyPage() },
                 navigateToCertifiedUsers = navController::navigateToCertifiedUsers,
                 navigateToPostDetail = navController::navigateToPostDetail,
                 navigateToPostEdit = navController::navigateToPostEdit,
                 navigateToCertifiableRecord = navController::navigateToCertifiableRecord,
                 navigateToPostUpload = navController::navigateToPostUpload,
-                navigateToUserProfile = navController::navigateToFriendProfile,
-                navigateToMyPage = navController::navigateMyPage,
+                onShowSnackBar = onShowSnackBar,
             )
 
             addPostDetailNavGraph(
                 navigateToBack = { navController.popBackStack() },
                 navigateToPostEdit = navController::navigateToPostEdit,
-                navigateToUserProfile = {},
-                navigateToMyPage = {},
+                navigateToUserProfile = { /* TODO: User Profile */ },
+                navigateToMyPage = { navigator.navigateToMyPage() },
+                onShowSnackBar = onShowSnackBar,
             )
 
             addPostEditNavGraph(
                 navigateToBack = { navController.popBackStack() },
+                onShowSnackBar = onShowSnackBar,
             )
 
             addPostUploadNavGraph(
                 navigateBack = { navController.popBackStack() },
                 navigateToFeed = { navigator.navigateToFeed() },
+                onShowSnackBar = onShowSnackBar,
             )
 
             addMyPageNavGraph(

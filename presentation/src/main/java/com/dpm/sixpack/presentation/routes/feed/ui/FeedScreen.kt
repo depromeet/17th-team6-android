@@ -95,9 +95,11 @@ fun FeedScreen(
 
     val isInitialLoad by remember {
         derivedStateOf {
-            feedPagingItems.itemCount == 0 &&
-                feedPagingItems.loadState.refresh is LoadState.Loading &&
-                state.feedDateState == FeedDateUiState.PostsAvailable
+            state.feedDateState == FeedDateUiState.PostsAvailable &&
+                (
+                    (feedPagingItems.itemCount == 0 && feedPagingItems.loadState.refresh is LoadState.Loading) ||
+                        state.isCertifiedUsersLoading
+                )
         }
     }
 
@@ -209,6 +211,7 @@ fun FeedScreen(
                             feedContentItems(
                                 isInitialLoad = isInitialLoad,
                                 postingUserInfo = state.postingUserInfo,
+                                isMeCertified = state.isMeCertified,
                                 feedPagingItems = feedPagingItems,
                                 selectedPostMenuId = state.selectedPostMenuId,
                                 onCertifiedUsersClick = { onIntent(FeedIntent.OnCertifiedUsersClick) },

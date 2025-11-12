@@ -103,13 +103,13 @@ private fun CertificationBadge(
     val (text, backgroundColor, textColor) =
         when (status) {
             CertificationStatus.AVAILABLE -> Triple("인증 가능", SixpackTheme.colors.blue100, SixpackTheme.colors.blue600)
-            CertificationStatus.COMPLETED -> Triple("인증 완료", SixpackTheme.colors.gray100, SixpackTheme.colors.gray700)
+            CertificationStatus.COMPLETED -> Triple("인증 완료", SixpackTheme.colors.blue600, SixpackTheme.colors.lime600)
         }
 
     Box(
         modifier =
             modifier
-                .background(backgroundColor, RoundedCornerShape(4.dp))
+                .background(backgroundColor, SixpackTheme.shapes.round16)
                 .padding(horizontal = 6.dp, vertical = 2.dp),
     ) {
         Text(

@@ -24,6 +24,7 @@ fun NavGraphBuilder.addPostDetailNavGraph(
     navigateToUserProfile: (Long) -> Unit = {},
     navigateToMyPage: () -> Unit = {},
     navigateToPostEdit: (Long) -> Unit = {},
+    onShowSnackBar: (String, String?) -> Unit = { _, _ -> },
 ) {
     val navigationAnimationSpec =
         tween<IntOffset>(
@@ -64,6 +65,7 @@ fun NavGraphBuilder.addPostDetailNavGraph(
             navigateToBack = navigateToBack,
             navigateToUserProfile = navigateToUserProfile,
             navigateToPostEdit = navigateToPostEdit,
+            onShowSnackBar = onShowSnackBar,
         )
     }
 }
