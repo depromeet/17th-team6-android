@@ -70,6 +70,8 @@ data class FeedDto(
     val date: String,
     @SerialName("userName")
     val userName: String,
+    @SerialName("userId")
+    val userId: Long,
     @SerialName("profileImageUrl")
     val profileImageUrl: String,
     @SerialName("selfieTime")
@@ -95,6 +97,7 @@ data class FeedDto(
             date = date,
             user =
                 User(
+                    userId = userId,
                     nickName = userName,
                     profileImgUrl = profileImageUrl,
                     isMe = isMyFeed,
