@@ -4,6 +4,7 @@ import com.dpm.sixpack.data.source.remote.dto.request.AddFriendRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.FriendDeleteRequestDto
 import com.dpm.sixpack.data.source.remote.dto.request.FriendNotificationRequestDto
 import com.dpm.sixpack.data.source.remote.dto.response.AddFriendResponseDto
+import com.dpm.sixpack.data.source.remote.dto.response.DeleteFriendResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.FriendCodeResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.FriendNotifyResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.FriendsRunningStatusResponseDto
@@ -26,7 +27,7 @@ class FriendDataSource @Inject constructor(
     /**
      * 친구 삭제
      */
-    suspend fun deleteFriend(requestDto: FriendDeleteRequestDto): BaseResponse<Nothing> =
+    suspend fun deleteFriend(requestDto: FriendDeleteRequestDto): BaseResponse<DeleteFriendResponseDto> =
         friendServiceApi.deleteFriend(requestDto)
 
     /**

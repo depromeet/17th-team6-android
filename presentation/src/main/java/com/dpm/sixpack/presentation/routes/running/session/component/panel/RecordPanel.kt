@@ -122,7 +122,7 @@ private fun PreviewMainRunningStatsPanel() {
                     RecordState(
                         currentDistance = 15400,
                         currentDuration = 1530,
-                        avgPace = 440,
+                        pace = 440,
                         cadence = 154,
                     ),
             ),
@@ -142,7 +142,7 @@ private fun PreviewMainRunningStatsPanelPause() {
                     RecordState(
                         currentDistance = 15400,
                         currentDuration = 1530,
-                        avgPace = 440,
+                        pace = 440,
                         cadence = 154,
                     ),
             ),

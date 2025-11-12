@@ -1,5 +1,6 @@
 package com.dpm.sixpack.presentation.routes.postdetail.navigation
 
+import android.content.Intent
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -39,7 +40,10 @@ fun NavGraphBuilder.addPostDetailNavGraph(
     composable<PostDetail>(
         deepLinks =
             listOf(
-                navDeepLink<PostDetail>(basePath = DeepLinks.Feed.DETAIL),
+                navDeepLink {
+                    action = Intent.ACTION_VIEW
+                    uriPattern = DeepLinks.Feed.DETAIL
+                },
             ),
         enterTransition = {
             slideInHorizontally(

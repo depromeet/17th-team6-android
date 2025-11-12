@@ -7,6 +7,6 @@ import javax.inject.Inject
 class DeleteFriendUseCase @Inject constructor(
     private val friendRepository: FriendRepository,
 ) {
-    suspend operator fun invoke(friendUidList: List<Long>): DoRunResult<Unit> =
+    suspend operator fun invoke(friendUidList: List<Long>): DoRunResult<List<Long>> =
         friendRepository.deleteFriend(friendUidList)
 }

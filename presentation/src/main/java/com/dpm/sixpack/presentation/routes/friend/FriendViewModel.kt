@@ -132,8 +132,9 @@ class FriendViewModel @Inject constructor(
         intent {
             val curState = state as? FriendUiState.FriendList ?: return@intent
             deleteFriendUseCase(listOf(uid))
-                .onSuccess {
-                    Timber.d("Success to delete Friend: $uid")
+                .onSuccess { uids ->
+                    Timber.d("Success to delete Friend: ${uids.joinToString(" ")}")
+                    handleRefresh()
                 }.onError {
                     Timber.w("Failed to delete Friend: ${it.message}")
                 }
@@ -196,7 +197,11 @@ class FriendViewModel @Inject constructor(
                     .onSuccess { nickname ->
                         Timber.d("Success to add friend: $code")
                         postSideEffect(FriendSideEffect.ShowToast(R.string.friend_add_success, nickname))
+                        reduce {
+                            FriendUiState.FriendList()
+                        }
                         postSideEffect(FriendSideEffect.NavigateToFriendList)
+                        handleRefresh()
                     }.onError { exception ->
                         if (exception is DoRunException.ServerError) {
                             if (exception.code == 400) {

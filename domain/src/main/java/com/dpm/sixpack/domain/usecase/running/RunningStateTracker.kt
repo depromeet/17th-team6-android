@@ -30,6 +30,10 @@ class RunningStateTracker @Inject constructor() {
     private var maxPace: MaxPaceData = MaxPaceData.default
     private var maxCadence: Int = 0
 
+    private var instantPace: Int = 0
+    private var instantCadence: Int = 0
+    private var stepsAtLastTick: Long = 0L // 순간 케이던스 계산용
+
     // --- 외부 공개 상태 ---
     private val _runningDataState = MutableStateFlow<RealtimeRunningData?>(null)
     val runningDataState: Flow<RealtimeRunningData?> = _runningDataState.asStateFlow()
@@ -49,6 +53,11 @@ class RunningStateTracker @Inject constructor() {
         avgCadence = 0
         maxPace = MaxPaceData.default
         maxCadence = 0
+
+        instantPace = 0
+        instantCadence = 0
+        stepsAtLastTick = 0L
+
         _runningDataState.value = null
         _onFirstLocationReceived.resetReplayCache()
     }
@@ -60,6 +69,9 @@ class RunningStateTracker @Inject constructor() {
 
     fun resume() {
         isPaused = false
+        // 재개 시, 마지막 틱의 걸음 수를 현재 중지 전 걸음 수로 설정
+        // (일시정지 후 첫 틱에서 케이던스가 튀는 것을 방지)
+        stepsAtLastTick = stepsBeforePause
     }
 
     /**
@@ -69,6 +81,12 @@ class RunningStateTracker @Inject constructor() {
         if (isPaused) return
 
         durationInSeconds += 1
+
+        // 순간 케이던스 계산 (지난 1초간의 걸음 수 * 60)
+        // (processNewSteps가 currentSteps를 계속 갱신한다고 가정)
+        val stepsInLastSecond = currentSteps - stepsAtLastTick
+        instantCadence = (stepsInLastSecond * 60).toInt()
+        stepsAtLastTick = currentSteps
 
         if (durationInSeconds % CALCULATE_PERIOD == 0 || durationInSeconds == 1) {
             avgPace = calculateAvgPace(totalDistance, durationInSeconds)
@@ -84,6 +102,10 @@ class RunningStateTracker @Inject constructor() {
     fun processNewLocation(newLocation: Location) {
         if (isPaused) return
 
+        // 순간 페이스 계산 (location.speed 기반)
+        // (이 값은 1초 틱마다 postCurrentRunningDataState()를 통해 발행됨)
+        instantPace = calculateInstantPace(newLocation.speed)
+
         val isFirstLocation = (lastLocation == null)
 
         lastLocation?.let {
@@ -91,7 +113,6 @@ class RunningStateTracker @Inject constructor() {
         }
         lastLocation = newLocation
 
-        // 첫 번째 위치를 받았다면, UseCase에게 타이머 시작을 알림
         if (isFirstLocation) {
             _onFirstLocationReceived.tryEmit(Unit)
         }
@@ -119,9 +140,11 @@ class RunningStateTracker @Inject constructor() {
                     altitude = it.altitude,
                     speed = it.speed.toDouble(),
                     avgPace = avgPace,
-                    maxPace = maxPace,
                     avgCadence = avgCadence,
+                    maxPace = maxPace,
                     maxCadence = maxCadence,
+                    instantPace = instantPace,
+                    instantCadence = instantCadence,
                     distanceInMeter = roundedDistance,
                     durationInSec = durationInSeconds,
                     timestamp = System.currentTimeMillis(),
@@ -142,11 +165,11 @@ class RunningStateTracker @Inject constructor() {
 
         val speedInMps = totalDistanceInMeters / durationInSeconds
         if (speedInMps <= 0) return 0
+        // (1000m / speed) = 초/km
         val secondsPerKilometer = 1000.0 / speedInMps
 
         val newPace = secondsPerKilometer.toInt()
 
-        // 최대 페이스 갱신
         if (newPace > 0 && lastLocation != null) {
             val maxPaceValue = if (maxPace.value == -1) newPace else minOf(maxPace.value, newPace)
 
@@ -159,6 +182,20 @@ class RunningStateTracker @Inject constructor() {
         }
 
         return newPace
+    }
+
+    /**
+     * location.speed (m/s)를 기반으로 순간 페이스(초/km)를 계산
+     */
+    private fun calculateInstantPace(speedInMetersPerSecond: Float): Int {
+        if (speedInMetersPerSecond <= 0.2f) {
+            // 속도가 0.2 m/s 이하이면 (거의 정지 상태), 페이스를 0으로 처리
+            return 0
+        }
+
+        // (1000 m/km) / (speed m/s) = seconds/km
+        val secondsPerKilometer = 1000.0 / speedInMetersPerSecond
+        return secondsPerKilometer.toInt()
     }
 
     /**

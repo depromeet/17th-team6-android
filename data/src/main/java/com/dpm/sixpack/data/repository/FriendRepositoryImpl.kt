@@ -55,14 +55,18 @@ class FriendRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun deleteFriend(friendUidList: List<Long>): DoRunResult<Unit> =
+    // 삭제된 친구들 uid
+    override suspend fun deleteFriend(friendUidList: List<Long>): DoRunResult<List<Long>> =
         withContext(Dispatchers.IO) {
             try {
                 val requestDto = FriendDeleteRequestDto(friendIds = friendUidList)
 
-                friendDataSource.deleteFriend(requestDto)
+                val response =
+                    friendDataSource.deleteFriend(requestDto).data ?: throw DoRunException.DataError("응답 데이터가 없습니다")
 
-                DoRunResult.Success(Unit)
+                DoRunResult.Success(
+                    response.deletedFriends.keys.map { it.toLong() },
+                )
             } catch (e: HttpException) {
                 DoRunResult.Failure(DoRunException.ServerError(e.code(), e.message.toString()))
             } catch (e: Exception) {

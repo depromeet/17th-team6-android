@@ -7,6 +7,7 @@ import com.dpm.sixpack.domain.model.UserProfile
 import com.dpm.sixpack.domain.util.DoRunResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.firstOrNull
 import java.io.File
 
 /**
@@ -71,4 +72,10 @@ interface UserRepository {
      * 토큰 갱신 실패시 로그아웃 시키고 로그인 화면으로 리다이렉트 시키려고 만듦
      */
     suspend fun emitAuthEvent(event: AuthEvent)
+
+    suspend fun getFcmDeviceToken(): String?
+
+    suspend fun updateFcmDeviceToken(token: String)
+
+    suspend fun postNewFcmToken(): DoRunResult<Unit>
 }
