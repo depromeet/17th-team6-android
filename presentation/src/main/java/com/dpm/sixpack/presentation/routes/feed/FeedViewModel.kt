@@ -237,7 +237,8 @@ class FeedViewModel @Inject constructor(
                     calendarState = state.calendarState.copy(selectedDate = date),
                     feedDateState = feedDateState,
                     isCertifiableDate = isCertifiableDate,
-                    postingUserInfo = emptyList(),
+                    isMeCertified = false,
+                    isCertifiedUsersLoading = false,
                 )
             }
 
@@ -278,13 +279,20 @@ class FeedViewModel @Inject constructor(
     ) = intent {
         val cached = certifiedUsersCache[date]
         if (!forceRefresh && cached != null) {
+            val myInfo = cached.find { it.user.isMe }
             reduce {
                 state.copy(
                     postingUserInfo = cached,
-                    myPostingInfo = cached.find { it.user.isMe },
+                    myPostingInfo = myInfo,
+                    isMeCertified = myInfo != null,
+                    isCertifiedUsersLoading = false,
                 )
             }
             return@intent
+        }
+
+        reduce {
+            state.copy(isCertifiedUsersLoading = true)
         }
 
         viewModelScope.launch {
@@ -300,10 +308,15 @@ class FeedViewModel @Inject constructor(
                         state.copy(
                             postingUserInfo = postingUsers,
                             myPostingInfo = myInfo,
+                            isMeCertified = myInfo != null,
+                            isCertifiedUsersLoading = false,
                         )
                     }
                 }.onError { error ->
-                    // Handle error silently or log it
+                    // 에러 발생 시에도 로딩 해제
+                    reduce {
+                        state.copy(isCertifiedUsersLoading = false)
+                    }
                 }
         }
     }

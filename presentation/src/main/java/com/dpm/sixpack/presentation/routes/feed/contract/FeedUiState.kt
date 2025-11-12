@@ -27,6 +27,8 @@ data class FeedUiState(
     // Certification User
     val postingUserInfo: List<PostingUserInfo> = listOf(),
     val myPostingInfo: PostingUserInfo? = null,
+    val isMeCertified: Boolean = false,
+    val isCertifiedUsersLoading: Boolean = false,
     // Optimistic Update
     val optimisticPosts: Map<Long, PostResource> = emptyMap(),
     val optimisticDeletedFeedIds: Set<Long> = emptySet(),

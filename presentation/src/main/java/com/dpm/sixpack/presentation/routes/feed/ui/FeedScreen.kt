@@ -97,7 +97,7 @@ fun FeedScreen(
         derivedStateOf {
             state.feedDateState == FeedDateUiState.PostsAvailable &&
                 ((feedPagingItems.itemCount == 0 && feedPagingItems.loadState.refresh is LoadState.Loading) ||
-                    state.postingUserInfo.isNotEmpty())
+                    state.isCertifiedUsersLoading)
         }
     }
 
@@ -209,6 +209,7 @@ fun FeedScreen(
                             feedContentItems(
                                 isInitialLoad = isInitialLoad,
                                 postingUserInfo = state.postingUserInfo,
+                                isMeCertified = state.isMeCertified,
                                 feedPagingItems = feedPagingItems,
                                 selectedPostMenuId = state.selectedPostMenuId,
                                 onCertifiedUsersClick = { onIntent(FeedIntent.OnCertifiedUsersClick) },
