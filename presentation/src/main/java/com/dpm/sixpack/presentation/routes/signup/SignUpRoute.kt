@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dpm.sixpack.presentation.R
+import com.dpm.sixpack.presentation.common.util.constant.Url
 import com.dpm.sixpack.presentation.common.util.context.openUrlInBrowser
 import com.dpm.sixpack.presentation.routes.signup.contract.SignUpSideEffect
 import com.dpm.sixpack.presentation.routes.signup.ui.screen.SignUpScreen
@@ -28,7 +29,7 @@ fun SignUpRoute(
             is SignUpSideEffect.NavigateToProfileCreation -> onNavigateToProfileCreation(sideEffect.phoneNumber)
             is SignUpSideEffect.NavigateBack -> onNavigateBack()
             is SignUpSideEffect.NavigateToFindAccount -> {
-                context.openUrlInBrowser("") // TODO SR-N 채우기
+                context.openUrlInBrowser(Url.ACCOUNT_FIND_URL)
             }
             is SignUpSideEffect.ShowInvalidPhoneNumberError -> {
                 onShowSnackBar(context.getString(R.string.auth_error_invalid_phone_number), null)
