@@ -112,7 +112,10 @@ class FcmService : FirebaseMessagingService() {
                 PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE,
             )
 
-        val channelId = PRIMARY_PUSH_CHANNEL_ID
+        // data 맵에서 "notificationType"을 추출
+        val notificationType = data["notificationType"]
+        val channelId = getChannelIdForType(notificationType)
+
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
         // 3. XML(벡터) 리소드를 Drawable로 가져온 뒤 Bitmap으로 변환
@@ -145,4 +148,33 @@ class FcmService : FirebaseMessagingService() {
 
         notificationManager.notify(0, notificationBuilder.build())
     }
+
+    /**
+     * 서버에서 받은 notificationType을 기반으로
+     * 사용할 알림 채널 ID를 반환합니다.
+     */
+    private fun getChannelIdForType(notificationType: String?): String =
+        when (notificationType) {
+            // 1. 응원/깨우기 채널
+            "CHEER_FRIEND" ->
+                NotificationChannelIds.CHEER
+
+            // 2. 소셜/피드 채널
+            "FEED_UPLOADED",
+            "FEED_REACTION",
+            ->
+                NotificationChannelIds.SOCIAL
+
+            // 3. 리마인더/독촉 채널
+            "FEED_REMINDER",
+            "RUNNING_PROGRESS_REMINDER",
+            "NEW_USER_RUNNING_REMINDER",
+            "NEW_USER_FRIEND_REMINDER",
+            ->
+                NotificationChannelIds.REMINDER
+
+            // 4. 그 외 알 수 없는 타입은 기본 채널로 보냅니다.
+            else ->
+                NotificationChannelIds.SOCIAL // (또는 별도의 '기타' 채널)
+        }
 }

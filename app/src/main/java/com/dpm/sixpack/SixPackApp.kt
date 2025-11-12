@@ -3,12 +3,11 @@ package com.dpm.sixpack
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.SingletonImageLoader
-import com.dpm.sixpack.fcm.PRIMARY_PUSH_CHANNEL_ID
+import com.dpm.sixpack.fcm.NotificationChannelIds
 import com.dpm.sixpack.presentation.common.util.navermap.AppInitializer
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
@@ -31,7 +30,7 @@ class SixPackApp :
 
         setDarkMode()
         initTimber()
-        createNotificationChannel()
+        createNotificationChannels()
     }
 
     private fun setDarkMode() {
@@ -44,21 +43,43 @@ class SixPackApp :
         }
     }
 
-    private fun createNotificationChannel() {
-        val name = "푸시 알림"
-        val descriptionText = "앱의 주요 알림을 받습니다."
-        val importance = NotificationManager.IMPORTANCE_HIGH
+    private fun createNotificationChannels() {
+        val manager = getSystemService(NotificationManager::class.java)
 
-        // 3. 채널 객체 생성
-        val channel =
-            NotificationChannel(PRIMARY_PUSH_CHANNEL_ID, name, importance).apply {
-                description = descriptionText
+        // 1. 응원 채널 (중요도 HIGH: 팝업 + 소리)
+        val cheerChannel =
+            NotificationChannel(
+                NotificationChannelIds.CHEER,
+                "응원 및 깨우기",
+                NotificationManager.IMPORTANCE_HIGH,
+            ).apply {
+                description = "친구가 보낸 응원 및 깨우기 알림입니다."
             }
 
-        // 4. NotificationManager를 통해 시스템에 이 채널을 등록
-        val notificationManager: NotificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.createNotificationChannel(channel)
+        // 2. 소셜 채널 (중요도 DEFAULT: 소리)
+        val socialChannel =
+            NotificationChannel(
+                NotificationChannelIds.SOCIAL,
+                "피드 및 소셜 활동",
+                NotificationManager.IMPORTANCE_DEFAULT,
+            ).apply {
+                description = "새 피드, 좋아요 등 친구들의 활동 소식입니다."
+            }
+
+        // 3. 리마인더 채널 (중요도 LOW: 조용히)
+        val reminderChannel =
+            NotificationChannel(
+                NotificationChannelIds.REMINDER,
+                "활동 알림",
+                NotificationManager.IMPORTANCE_LOW, // (소리 X, 팝업 X, 트레이에만 표시)
+            ).apply {
+                description = "러닝 및 피드 업로드를 독려하는 알림입니다."
+            }
+
+        // 시스템에 모든 채널 등록
+        manager.createNotificationChannel(cheerChannel)
+        manager.createNotificationChannel(socialChannel)
+        manager.createNotificationChannel(reminderChannel)
     }
 
     override fun newImageLoader(context: PlatformContext): ImageLoader = imageLoader.get()
