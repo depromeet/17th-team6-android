@@ -34,9 +34,14 @@ internal fun RecordTabContent(
     val pullRefreshState = rememberPullToRefreshState()
 
     when {
-        // 로딩 중일 때는 항상 스켈레톤 표시
+        // 로딩 중일 때도 현재 선택된 월을 표시
         state.isLoading -> {
-            RecordTabLoadingState(modifier = modifier)
+            RecordTabLoadingState(
+                yearMonth = state.currentYearMonth,
+                canGoPrevious = state.canGoPreviousMonth,
+                canGoNext = state.canGoNextMonth,
+                modifier = modifier,
+            )
         }
 
         // 에러 발생 시
@@ -122,7 +127,11 @@ internal fun RecordTabContent(
                                             recordsForDate.forEach { record ->
                                                 RecordCard(
                                                     record = record,
-                                                    onClick = { onIntent(MyPageRecordTabIntent.OnRecordClick(record.id)) },
+                                                    onClick = {
+                                                        onIntent(
+                                                            MyPageRecordTabIntent.OnRecordClick(record.id),
+                                                        )
+                                                    },
                                                 )
                                             }
                                         }

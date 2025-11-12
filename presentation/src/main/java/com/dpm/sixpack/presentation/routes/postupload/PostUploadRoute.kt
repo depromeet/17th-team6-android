@@ -1,7 +1,6 @@
 package com.dpm.sixpack.presentation.routes.postupload
 
 import android.net.Uri
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,6 +28,7 @@ fun PostUploadRoute(
     viewModel: PostUploadViewModel = hiltViewModel(),
     navigateBack: () -> Unit,
     navigateToFeed: () -> Unit,
+    onShowSnackBar: (String, String?) -> Unit,
 ) {
     val state by viewModel.collectAsState()
 
@@ -82,11 +82,11 @@ fun PostUploadRoute(
             }
 
             is PostUploadSideEffect.ShowToast -> {
-                Toast.makeText(context, sideEffect.message, Toast.LENGTH_SHORT).show()
+                onShowSnackBar(sideEffect.message, null)
             }
 
             is PostUploadSideEffect.ShowError -> {
-                Toast.makeText(context, sideEffect.message, Toast.LENGTH_SHORT).show()
+                onShowSnackBar(sideEffect.message, null)
             }
 
             PostUploadSideEffect.NavigateToFeed -> {

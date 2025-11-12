@@ -19,7 +19,6 @@ import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -115,16 +114,18 @@ fun DoRunSignInputField(
                 onValueChange = { newValue ->
 
                     // 최대 길이 제한 적용
-                    val newText = if (maxLength != null) {
-                        newValue.text.take(maxLength)
-                    } else {
-                        newValue.text
-                    }
+                    val newText =
+                        if (maxLength != null) {
+                            newValue.text.take(maxLength)
+                        } else {
+                            newValue.text
+                        }
                     val newLength = newText.length
-                    textFieldValueState = TextFieldValue(
-                        text = newText,
-                        selection = TextRange(newLength),
-                    )
+                    textFieldValueState =
+                        TextFieldValue(
+                            text = newText,
+                            selection = TextRange(newLength),
+                        )
                     onValueChange(newText)
                 },
                 modifier =

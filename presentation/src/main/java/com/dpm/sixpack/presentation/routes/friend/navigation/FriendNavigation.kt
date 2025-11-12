@@ -1,14 +1,6 @@
 package com.dpm.sixpack.presentation.routes.friend.navigation
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -18,7 +10,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
-import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
 import com.dpm.sixpack.presentation.common.util.constant.DeepLinks
 import com.dpm.sixpack.presentation.destinations.AddFriendRoute
 import com.dpm.sixpack.presentation.destinations.Friend
@@ -27,9 +18,8 @@ import com.dpm.sixpack.presentation.destinations.FriendProfile
 import com.dpm.sixpack.presentation.routes.friend.AddFriendRoute
 import com.dpm.sixpack.presentation.routes.friend.FriendListRoute
 import com.dpm.sixpack.presentation.routes.friend.FriendViewModel
-import com.dpm.sixpack.presentation.routes.friendprofile.FriendProfileRoute as FriendProfileRouteComposable
-import com.dpm.sixpack.presentation.theme.SixpackTheme
 import timber.log.Timber
+import com.dpm.sixpack.presentation.routes.friendprofile.FriendProfileRoute as FriendProfileRouteComposable
 
 fun NavController.navigateToFriendGraph(navOptions: NavOptions? = null) {
     navigate(Friend, navOptions)
@@ -39,7 +29,6 @@ fun NavController.navigateToFriendProfile(
     friendId: Long,
     navOptions: NavOptions? = null,
 ) {
-    Timber.d("SR-N 이동전 아이디는? ${friendId}")
     navigate(FriendProfile(friendId = friendId), navOptions)
 }
 

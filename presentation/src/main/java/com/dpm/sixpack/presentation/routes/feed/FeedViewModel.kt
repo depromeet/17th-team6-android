@@ -6,7 +6,6 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.filter
 import androidx.paging.map
-import com.dpm.sixpack.domain.constants.FeedConstants
 import com.dpm.sixpack.domain.event.FeedUpdateEvent
 import com.dpm.sixpack.domain.repository.FeedListItem
 import com.dpm.sixpack.domain.repository.FeedRepository
@@ -16,6 +15,7 @@ import com.dpm.sixpack.presentation.common.components.post.PostDropDownActionTyp
 import com.dpm.sixpack.presentation.common.model.Emoji
 import com.dpm.sixpack.presentation.common.model.PostReaction
 import com.dpm.sixpack.presentation.common.model.PostResource
+import com.dpm.sixpack.presentation.common.model.PostingUserInfo
 import com.dpm.sixpack.presentation.common.model.ReactingUserInfo
 import com.dpm.sixpack.presentation.common.model.UserInfo
 import com.dpm.sixpack.presentation.common.model.toPostResource
@@ -67,12 +67,12 @@ class FeedViewModel @Inject constructor(
 
     private fun isCertifiable(selectedDate: LocalDate): Boolean {
         val today = LocalDate.now()
-        val minCertifiableDate = today.minusDays(FeedConstants.CERTIFIABLE_DAYS)
-        return !selectedDate.isBefore(minCertifiableDate)
+        return selectedDate == today
     }
 
     private val pagingFlowCache = ConcurrentHashMap<LocalDate, Flow<PagingData<PostResource>>>()
     private val reactionDebounceJobs = ConcurrentHashMap<Pair<Long, Emoji>, Job>()
+    private val certifiedUsersCache = ConcurrentHashMap<String, List<PostingUserInfo>>()
     private val optimisticPostsFlow = container.stateFlow.map { it.optimisticPosts }.distinctUntilChanged()
     private val optimisticDeletedFeedIdsFlow =
         container.stateFlow
@@ -127,6 +127,7 @@ class FeedViewModel @Inject constructor(
                         is FeedUpdateEvent.Updated -> {
                             onIntent(FeedIntent.OnRefreshAll)
                         }
+
                         is FeedUpdateEvent.Uploaded -> {
                             onIntent(FeedIntent.OnRefreshAll)
                         }
@@ -225,6 +226,8 @@ class FeedViewModel @Inject constructor(
      */
     private fun handleDateSelected(date: LocalDate) =
         intent {
+            if (date == state.calendarState.selectedDate) return@intent
+
             val feedDateState = handleFeedDateState(date)
             val isCertifiableDate = isCertifiable(date)
 
@@ -233,7 +236,8 @@ class FeedViewModel @Inject constructor(
                     calendarState = state.calendarState.copy(selectedDate = date),
                     feedDateState = feedDateState,
                     isCertifiableDate = isCertifiableDate,
-                    postingUserInfo = emptyList(),
+                    isMeCertified = false,
+                    isCertifiedUsersLoading = false,
                 )
             }
 
@@ -263,31 +267,58 @@ class FeedViewModel @Inject constructor(
             val today = LocalDate.now()
             val todayString = today.toYyyyMmDdString()
 
-            loadCalendarCounts(pivotDate = today)
+            loadCalendarCounts(pivotDate = today, updateFeedDateState = true)
 
             loadCertifiedUsers(todayString)
         }
 
-    private fun loadCertifiedUsers(date: String) =
-        intent {
-            viewModelScope.launch {
-                feedRepository
-                    .getCertifiedUsers(date)
-                    .onSuccess { certifiedUsers ->
-                        val postingUsers = certifiedUsers.map { it.toPostingUserInfo() }
-                        val myInfo = postingUsers.find { it.user.isMe }
-
-                        reduce {
-                            state.copy(
-                                postingUserInfo = postingUsers,
-                                myPostingInfo = myInfo,
-                            )
-                        }
-                    }.onError { error ->
-                        // Handle error silently or log it
-                    }
+    private fun loadCertifiedUsers(
+        date: String,
+        forceRefresh: Boolean = false,
+    ) = intent {
+        val cached = certifiedUsersCache[date]
+        if (!forceRefresh && cached != null) {
+            val myInfo = cached.find { it.user.isMe }
+            reduce {
+                state.copy(
+                    postingUserInfo = cached,
+                    myPostingInfo = myInfo,
+                    isMeCertified = myInfo != null,
+                    isCertifiedUsersLoading = false,
+                )
             }
+            return@intent
         }
+
+        reduce {
+            state.copy(isCertifiedUsersLoading = true)
+        }
+
+        viewModelScope.launch {
+            feedRepository
+                .getCertifiedUsers(date)
+                .onSuccess { certifiedUsers ->
+                    val postingUsers = certifiedUsers.map { it.toPostingUserInfo() }
+                    val myInfo = postingUsers.find { it.user.isMe }
+
+                    certifiedUsersCache[date] = postingUsers
+
+                    reduce {
+                        state.copy(
+                            postingUserInfo = postingUsers,
+                            myPostingInfo = myInfo,
+                            isMeCertified = myInfo != null,
+                            isCertifiedUsersLoading = false,
+                        )
+                    }
+                }.onError { error ->
+                    // 에러 발생 시에도 로딩 해제
+                    reduce {
+                        state.copy(isCertifiedUsersLoading = false)
+                    }
+                }
+        }
+    }
 
     private fun handleVisibleWeeksChanged(startDate: LocalDate) {
         onWeekDisplayed(startDate)
@@ -541,7 +572,7 @@ class FeedViewModel @Inject constructor(
     private fun handleRefreshAll() =
         intent {
             val today = LocalDate.now()
-            val certifiableStartDate = today.minusDays(FeedConstants.CERTIFIABLE_DAYS)
+            val certifiableStartDate = today
             val selectedDate = state.calendarState.selectedDate
 
             feedRepository
@@ -574,7 +605,7 @@ class FeedViewModel @Inject constructor(
                 }.onError { exception ->
                 }
 
-            loadCertifiedUsers(selectedDate.toYyyyMmDdString())
+            loadCertifiedUsers(selectedDate.toYyyyMmDdString(), forceRefresh = true)
 
             postSideEffect(FeedSideEffect.RefreshPagingList)
         }
@@ -625,8 +656,13 @@ class FeedViewModel @Inject constructor(
      * 캘린더 카운트 로딩 (1개월 단위)
      * - Mutex로 동시 호출 방지
      * - 기존 데이터와 병합하여 캐시
+     * @param pivotDate 기준 날짜
+     * @param updateFeedDateState true일 경우 로딩 완료 후 현재 선택된 날짜의 feedDateState 업데이트
      */
-    private fun loadCalendarCounts(pivotDate: LocalDate) {
+    private fun loadCalendarCounts(
+        pivotDate: LocalDate,
+        updateFeedDateState: Boolean = false,
+    ) {
         viewModelScope.launch {
             calendarApiLock.withLock {
                 intent {
@@ -683,6 +719,15 @@ class FeedViewModel @Inject constructor(
                                             isLoading = false,
                                         ),
                                 )
+                            }
+
+                            // 초기 로딩 시 현재 선택된 날짜의 feedDateState 업데이트
+                            if (updateFeedDateState) {
+                                val selectedDate = state.calendarState.selectedDate
+                                val feedDateState = handleFeedDateState(selectedDate)
+                                reduce {
+                                    state.copy(feedDateState = feedDateState)
+                                }
                             }
                         }.onError { exception ->
                             // API 호출 실패 시 로딩 상태를 해제하여 Shimmer가 사라지도록 함

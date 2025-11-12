@@ -89,10 +89,11 @@ class MyPageViewModel
                         else -> NetworkErrorType.ServerError
                     }
                 }
-                else -> NetworkErrorType.Custom(
-                    title = "오류가 발생했어요.",
-                    description = exception.message ?: "알 수 없는 오류가 발생했습니다.",
-                )
+                else ->
+                    NetworkErrorType.Custom(
+                        title = "오류가 발생했어요.",
+                        description = exception.message ?: "알 수 없는 오류가 발생했습니다.",
+                    )
             }
 
         override fun onIntent(intent: MyPageIntent) {

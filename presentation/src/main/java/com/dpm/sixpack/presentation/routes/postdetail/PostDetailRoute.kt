@@ -1,6 +1,5 @@
 package com.dpm.sixpack.presentation.routes.postdetail
 
-import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -20,6 +19,7 @@ fun PostDetailRoute(
     navigateToBack: () -> Unit,
     navigateToUserProfile: (Long) -> Unit,
     navigateToPostEdit: (Long) -> Unit,
+    onShowSnackBar: (String, String?) -> Unit,
 ) {
     val state by viewModel.collectAsState()
     val context = LocalContext.current
@@ -32,7 +32,7 @@ fun PostDetailRoute(
             is PostDetailSideEffect.NavigateToUserPage -> navigateToUserProfile(sideEffect.userId)
             is PostDetailSideEffect.NavigateToPostEdit -> navigateToPostEdit(sideEffect.feedId)
             is PostDetailSideEffect.ShowToast -> {
-                Toast.makeText(context, sideEffect.message, Toast.LENGTH_SHORT).show()
+                onShowSnackBar(sideEffect.message, null)
             }
         }
     }
@@ -50,19 +50,9 @@ fun PostDetailRoute(
                         bitmap = bitmap,
                         fileName = fileName,
                     ).onSuccess { uri ->
-                        Toast
-                            .makeText(
-                                context,
-                                "포스트 이미지가 저장되었습니다",
-                                Toast.LENGTH_SHORT,
-                            ).show()
+                        onShowSnackBar("포스트 이미지가 저장되었습니다", null)
                     }.onFailure { exception ->
-                        Toast
-                            .makeText(
-                                context,
-                                "이미지 저장 실패: ${exception.message}",
-                                Toast.LENGTH_SHORT,
-                            ).show()
+                        onShowSnackBar("이미지 저장 실패: ${exception.message}", null)
                     }
             }
         },

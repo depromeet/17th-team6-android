@@ -126,11 +126,13 @@ internal fun LazyListScope.feedInitialLoadingItems() {
  */
 internal fun LazyListScope.feedCertificationCountItem(
     postingUserInfo: List<PostingUserInfo>,
+    isMeCertified: Boolean,
     onCertifiedUsersClick: () -> Unit,
 ) {
     item(key = "certification_count") {
         CertificationCountView(
             users = postingUserInfo,
+            isMeCertified = isMeCertified,
             onViewClick = onCertifiedUsersClick,
             modifier = Modifier.padding(horizontal = 20.dp),
         )
@@ -288,6 +290,7 @@ internal fun LazyListScope.feedLoadStateItems(feedPagingItems: LazyPagingItems<P
 internal fun LazyListScope.feedContentItems(
     isInitialLoad: Boolean,
     postingUserInfo: List<PostingUserInfo>,
+    isMeCertified: Boolean,
     feedPagingItems: LazyPagingItems<PostResource>,
     selectedPostMenuId: Long?,
     onCertifiedUsersClick: () -> Unit,
@@ -304,7 +307,7 @@ internal fun LazyListScope.feedContentItems(
         feedInitialLoadingItems()
     } else {
         // 실제 컨텐츠
-        feedCertificationCountItem(postingUserInfo, onCertifiedUsersClick)
+        feedCertificationCountItem(postingUserInfo, isMeCertified, onCertifiedUsersClick)
 
         item(key = "spacer_after_count") {
             Spacer(modifier = Modifier.height(32.dp))
