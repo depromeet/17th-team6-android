@@ -14,20 +14,24 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
+import com.dpm.sixpack.presentation.routes.mypage.contract.YearMonth
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
-internal fun RecordTabLoadingState(modifier: Modifier = Modifier) {
+internal fun RecordTabLoadingState(
+    yearMonth: YearMonth,
+    canGoPrevious: Boolean,
+    canGoNext: Boolean,
+    modifier: Modifier = Modifier,
+) {
     Column(modifier = modifier) {
-        // Month Navigation - 실제와 동일하게 표시
+        // Month Navigation - 실제 선택된 월 표시
         MonthNavigation(
-            yearMonth =
-                com.dpm.sixpack.presentation.routes.mypage.contract
-                    .YearMonth(),
+            yearMonth = yearMonth,
             onPreviousClick = {},
             onNextClick = {},
-            canGoPrevious = false,
-            canGoNext = false,
+            canGoPrevious = canGoPrevious,
+            canGoNext = canGoNext,
         )
 
         // Skeleton Cards
@@ -66,6 +70,10 @@ internal fun RecordTabLoadingState(modifier: Modifier = Modifier) {
 @Composable
 private fun RecordTabLoadingStatePreview() {
     DoRunPreviewWrapper {
-        RecordTabLoadingState()
+        RecordTabLoadingState(
+            yearMonth = YearMonth(),
+            canGoPrevious = true,
+            canGoNext = false,
+        )
     }
 }
