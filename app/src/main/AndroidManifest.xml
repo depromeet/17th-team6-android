@@ -84,7 +84,7 @@
         </provider>
 
         <service
-            android:name=".runningservice.RunningService"
+            android:name="com.dpm.sixpack.runningservice.RunningService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="location" />

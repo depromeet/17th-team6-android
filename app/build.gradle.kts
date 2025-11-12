@@ -10,6 +10,12 @@ android {
     buildFeatures {
         compose = true
     }
+
+    lint {
+        // Hilt가 custom AppComponentFactory를 사용하므로
+        // LifecycleService에 대한 Instantiatable 체크는 false positive
+        disable += "Instantiatable"
+    }
 }
 
 dependencies {
