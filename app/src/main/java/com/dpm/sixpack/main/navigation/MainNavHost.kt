@@ -142,6 +142,7 @@ internal fun MainNavHost(
 
             addFeedNavGraph(
                 navigateToBack = { navController.popBackStack() },
+                navigateToGroup = { navController.navigateToFriendGraph() },
                 navigateToUserProfile = navController::navigateToFriendProfile,
                 navigateToMyPage = { navigator.navigateToMyPage() },
                 navigateToCertifiedUsers = navController::navigateToCertifiedUsers,
@@ -155,7 +156,7 @@ internal fun MainNavHost(
             addPostDetailNavGraph(
                 navigateToBack = { navController.popBackStack() },
                 navigateToPostEdit = navController::navigateToPostEdit,
-                navigateToUserProfile = { /* TODO: User Profile */ },
+                navigateToUserProfile = navController::navigateToFriendProfile,
                 navigateToMyPage = { navigator.navigateToMyPage() },
                 onShowSnackBar = onShowSnackBar,
             )
