@@ -22,5 +22,9 @@ sealed interface MapSideEffect : RunningRouteSideEffect {
         val args: List<Any>? = null,
     ) : MapSideEffect
 
+    data class ShowToastWithMessage(
+        val message: String,
+    ) : MapSideEffect
+
     data object NavigateToFriendList : MapSideEffect
 }
