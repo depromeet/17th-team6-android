@@ -6,6 +6,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.constraintlayout.compose.ConstrainScope
 import androidx.constraintlayout.compose.ConstrainedLayoutReference
 import androidx.constraintlayout.compose.ConstraintLayoutScope
@@ -32,6 +33,7 @@ fun ConstraintLayoutScope.RunningSessionScreen(
     setFullScreenLoading: (Boolean) -> Unit,
     sessionViewModel: RunningSessionViewModel = hiltViewModel(),
 ) {
+    val view = LocalView.current
     val context = LocalContext.current
     val sessionState = sessionViewModel.collectAsState().value
 
@@ -55,7 +57,10 @@ fun ConstraintLayoutScope.RunningSessionScreen(
     }
 
     DisposableEffect(Unit) {
+        // 화면 항상 켜져있게
+        view.keepScreenOn = true
         onDispose {
+            view.keepScreenOn = false
             setFullScreenLoading(false)
         }
     }
