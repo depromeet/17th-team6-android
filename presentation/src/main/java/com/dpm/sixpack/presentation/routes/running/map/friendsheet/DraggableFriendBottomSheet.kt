@@ -104,6 +104,9 @@ internal fun DraggableFriendBottomSheet(
                 pagingItems = pagingItems,
                 itemPadding = PaddingValues(horizontal = HORIZONTAL_PADDING, 12.dp),
                 selected = friendSheetState.selectedFriend,
+                onRefresh = {
+                    onIntent(MapIntent.FriendSheetIntent.PullToRefresh)
+                },
                 onAwakeClick = { userId ->
                     onIntent(MapIntent.FriendSheetIntent.AwakeFriend(userId))
                 },

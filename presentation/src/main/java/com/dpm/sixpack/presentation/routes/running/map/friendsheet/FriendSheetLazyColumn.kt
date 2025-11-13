@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.ButtonDefaults
@@ -48,14 +50,14 @@ internal fun FriendSheetLazyColumn(
     modifier: Modifier = Modifier,
     selected: FriendItem? = null,
     onAwakeClick: (Long) -> Unit = {},
+    onRefresh: () -> Unit = {},
     onItemClick: (FriendItem) -> Unit = {},
 ) {
     var isRefreshing by remember { mutableStateOf(false) }
     val pullRefreshState = rememberPullToRefreshState()
 
     LaunchedEffect(pagingItems.loadState.refresh) {
-        if (isRefreshing && pagingItems.loadState.refresh !is LoadState.Loading) {
-            delay(300)
+        if (pagingItems.loadState.refresh !is LoadState.Loading) {
             isRefreshing = false
         }
     }
@@ -74,7 +76,7 @@ internal fun FriendSheetLazyColumn(
         isRefreshing = isRefreshing,
         onRefresh = {
             isRefreshing = true
-            pagingItems.refresh()
+            onRefresh()
         },
         indicator = {
             Indicator(
@@ -145,7 +147,10 @@ internal fun FriendSheetLazyColumn(
                 // 친구 없고 나만 있을때
                 if (pagingItems.itemCount == 1 && pagingItems[0]?.isMe == true) {
                     Column(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .verticalScroll(rememberScrollState()),
                     ) {
                         pagingItems[0]?.let {
                             FriendSheetListItem(

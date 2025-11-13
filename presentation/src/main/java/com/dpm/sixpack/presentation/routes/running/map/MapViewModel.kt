@@ -65,13 +65,12 @@ class MapViewModel @Inject constructor(
     override val container: Container<MapUiState, MapSideEffect> =
         container(initialState = initialState, savedStateHandle = savedStateHandle)
 
+    private var isFirstScreenStart = true
     private val refreshTrigger = MutableStateFlow(0)
 
     val friendPagingFlow: Flow<PagingData<FriendItem>> =
         refreshTrigger
             .flatMapLatest {
-                // 'refreshTrigger'의 값이 바뀔 때마다
-                //  flatMapLatest가 기존 Flow를 취소하고 getFriendRunningStatusUseCase()를 재호출합니다.
                 getFriendRunningStatusUseCase()
             }.map { pagingData: PagingData<Friend> ->
                 pagingData.map { friend: Friend ->
@@ -144,6 +143,7 @@ class MapViewModel @Inject constructor(
             is MapIntent.RequestBackgroundPermissionDialog -> handleBackgroundPermissionDialog(true)
             is MapIntent.DismissBackgroundPermissionDialog -> handleBackgroundPermissionDialog(false)
             is MapIntent.UpdateRunningMapPath -> updateRunningMapPath(intent.pathState)
+            MapIntent.ScreenStarted -> handleScreenStarted()
         }
     }
 
@@ -155,6 +155,18 @@ class MapViewModel @Inject constructor(
                 intent {
                     postSideEffect(MapSideEffect.NavigateToFriendList)
                 }
+
+            MapIntent.FriendSheetIntent.PullToRefresh -> refresh()
+        }
+    }
+
+    private fun handleScreenStarted() {
+        if (isFirstScreenStart) {
+            // 첫 실행: Paging이 알아서 로드할 것이므로 플래그만 변경
+            isFirstScreenStart = false
+        } else {
+            // 두 번째 이후 실행 (돌아온 경우): 강제 새로고침
+            refresh()
         }
     }
 
@@ -403,10 +415,8 @@ class MapViewModel @Inject constructor(
             }
         }
 
-    private fun refresh() =
-        intent {
-            refreshTrigger.value++
-        }
-
+    private fun refresh() {
+        refreshTrigger.value++
+    }
     // endregion
 }
