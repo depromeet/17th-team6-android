@@ -33,8 +33,7 @@ import com.dpm.sixpack.domain.model.SessionDetail
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.DoRunDefaultAsyncImage
 import com.dpm.sixpack.presentation.common.components.record.RecordItem
-import com.dpm.sixpack.presentation.common.util.format.toPostTimeStringOrNull
-import com.dpm.sixpack.presentation.common.util.format.toPostTimeStringOrNullInstant
+import com.dpm.sixpack.presentation.common.util.format.toPostTimeStringSafe
 import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
 import com.dpm.sixpack.presentation.common.util.formatPaceToString
 import com.dpm.sixpack.presentation.common.util.formatSecondsToTime
@@ -71,8 +70,7 @@ internal fun SessionReportScreenSuccessContent(
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text =
-                    sessionDetail.finishedAt.toPostTimeStringOrNullInstant()
-                        ?: sessionDetail.finishedAt.toPostTimeStringOrNull() ?: "",
+                    sessionDetail.createdAt.toPostTimeStringSafe(),
                 style = SixpackTheme.typography.b2Medium,
                 color = SixpackTheme.colors.gray700,
             )
