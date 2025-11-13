@@ -1,6 +1,5 @@
 package com.dpm.sixpack.presentation.routes.friendprofile.ui.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding

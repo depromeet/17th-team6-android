@@ -44,9 +44,13 @@ class CertifiedUsersViewModel @Inject constructor(
                 feedRepository
                     .getCertifiedUsers(date)
                     .onSuccess { certifiedUsers ->
+                        val uniqueUsers =
+                            certifiedUsers
+                                .map { it.toPostingUserInfo() }
+                                .distinctBy { it.user.id }
                         reduce {
                             state.copy(
-                                users = certifiedUsers.map { it.toPostingUserInfo() },
+                                users = uniqueUsers,
                                 isLoading = false,
                             )
                         }

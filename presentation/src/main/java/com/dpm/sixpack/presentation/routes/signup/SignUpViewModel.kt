@@ -137,11 +137,10 @@ class SignUpViewModel @Inject constructor(
                     verificationCode = state.verificationCode,
                 )
 
-
             result
                 .onSuccess { verificationResult ->
                     stopTimer()
-                    
+
                     reduce { state.copy(isLoading = false) }
 
                     // isExistingUser 필드로 기존/신규 사용자 구분
@@ -294,8 +293,8 @@ class SignUpViewModel @Inject constructor(
     /**
      * DoRunException을 NetworkErrorType으로 매핑
      */
-    private fun mapExceptionToErrorType(exception: DoRunException): NetworkErrorType {
-        return when (exception) {
+    private fun mapExceptionToErrorType(exception: DoRunException): NetworkErrorType =
+        when (exception) {
             is DoRunException.NetworkError -> NetworkErrorType.NetworkConnection
             is DoRunException.ServerError -> {
                 when (exception.code) {
@@ -305,12 +304,12 @@ class SignUpViewModel @Inject constructor(
                     else -> NetworkErrorType.ServerError
                 }
             }
-            else -> NetworkErrorType.Custom(
-                title = "오류가 발생했어요.",
-                description = exception.message ?: "알 수 없는 오류가 발생했습니다.",
-            )
+            else ->
+                NetworkErrorType.Custom(
+                    title = "오류가 발생했어요.",
+                    description = exception.message ?: "알 수 없는 오류가 발생했습니다.",
+                )
         }
-    }
 
     /**
      * 네트워크 에러가 발생한 경우 다이얼로그 표시

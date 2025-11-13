@@ -298,7 +298,10 @@ class FeedViewModel @Inject constructor(
             feedRepository
                 .getCertifiedUsers(date)
                 .onSuccess { certifiedUsers ->
-                    val postingUsers = certifiedUsers.map { it.toPostingUserInfo() }
+                    val postingUsers =
+                        certifiedUsers
+                            .map { it.toPostingUserInfo() }
+                            .distinctBy { it.user.id }
                     val myInfo = postingUsers.find { it.user.isMe }
 
                     certifiedUsersCache[date] = postingUsers
