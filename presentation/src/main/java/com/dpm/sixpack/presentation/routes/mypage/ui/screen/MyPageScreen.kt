@@ -30,6 +30,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.components.dialog.DoRunErrorScreen
+import com.dpm.sixpack.presentation.common.components.post.PostGridContent
 import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrapper
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunTopBarSlot
 import com.dpm.sixpack.presentation.common.model.NetworkErrorType
@@ -47,7 +48,6 @@ import com.dpm.sixpack.presentation.routes.mypage.contract.ProfileInfo
 import com.dpm.sixpack.presentation.routes.mypage.contract.RecordItem
 import com.dpm.sixpack.presentation.routes.mypage.ui.component.MyPageTabText
 import com.dpm.sixpack.presentation.routes.mypage.ui.component.ProfileSection
-import com.dpm.sixpack.presentation.common.components.post.PostGridContent
 import com.dpm.sixpack.presentation.routes.mypage.ui.content.RecordTabContent
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 import kotlinx.coroutines.flow.flowOf

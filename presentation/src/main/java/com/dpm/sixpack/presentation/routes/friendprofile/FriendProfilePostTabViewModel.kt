@@ -11,8 +11,8 @@ import androidx.paging.map
 import com.dpm.sixpack.core.util.TimeUtil
 import com.dpm.sixpack.domain.repository.FeedListItem
 import com.dpm.sixpack.domain.usecase.GetMyUserFeedsUseCase
-import com.dpm.sixpack.presentation.destinations.FriendProfile
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
+import com.dpm.sixpack.presentation.destinations.FriendProfile
 import com.dpm.sixpack.presentation.routes.mypage.contract.GridItemType
 import com.dpm.sixpack.presentation.routes.mypage.contract.MyPagePostTabIntent
 import com.dpm.sixpack.presentation.routes.mypage.contract.MyPagePostTabSideEffect
@@ -63,7 +63,10 @@ class FriendProfilePostTabViewModel
                             val beforeYearMonth = before?.let { getYearMonthFromPost(it) }
                             val afterYearMonth = after?.let { getYearMonthFromPost(it) }
 
-                            if (after != null && afterYearMonth != null && (before == null || beforeYearMonth != afterYearMonth)) {
+                            if (after != null &&
+                                afterYearMonth != null &&
+                                (before == null || beforeYearMonth != afterYearMonth)
+                            ) {
                                 GridItemType.MonthLabel(
                                     year = afterYearMonth.first,
                                     month = afterYearMonth.second,

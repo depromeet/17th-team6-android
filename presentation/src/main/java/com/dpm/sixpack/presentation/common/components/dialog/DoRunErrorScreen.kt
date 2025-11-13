@@ -78,7 +78,7 @@ fun DoRunErrorScreen(
                 textColor = SixpackTheme.colors.gray0,
                 containerColor = SixpackTheme.colors.blue600,
                 buttonContentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp),
-                textPadding = PaddingValues(0.dp)
+                textPadding = PaddingValues(0.dp),
             )
         }
     }

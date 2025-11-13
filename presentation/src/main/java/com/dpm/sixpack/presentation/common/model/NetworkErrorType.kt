@@ -55,7 +55,7 @@ sealed class NetworkErrorType(
         override val title: String,
         override val description: String,
     ) : NetworkErrorType(
-        title = title,
-        description = description,
-    )
+            title = title,
+            description = description,
+        )
 }

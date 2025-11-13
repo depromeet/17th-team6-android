@@ -133,6 +133,10 @@ internal fun RunningMapScreen(
                 val message = context.getString(sideEffect.resId, sideEffect.args)
                 onShowSnackBar(message, null)
             }
+
+            is MapSideEffect.ShowToastWithMessage -> {
+                onShowSnackBar(sideEffect.message, null)
+            }
         }
     }
 
@@ -411,7 +415,8 @@ private fun RunningMapScreenContent(
                                 .constrainAs(sheetRef) {
                                     start.linkTo(parent.start)
                                     end.linkTo(parent.end)
-                                }.fillMaxWidth()
+                                }
+                                .fillMaxWidth()
                                 .offset {
                                     val yOffset = draggableState.offset
                                     if (yOffset.isNaN()) {
