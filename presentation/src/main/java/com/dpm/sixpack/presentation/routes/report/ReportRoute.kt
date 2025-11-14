@@ -13,11 +13,11 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 fun ReportRoute(
-    sessionId: Long,
     viewModel: SessionReportViewModel = hiltViewModel(),
     navigateToHome: () -> Unit = {},
     navigateToBack: () -> Unit = {},
     navigateToPostUpload: (Long, String, RunningSummary) -> Unit = { _, _, _ -> },
+    navigateToPostDetail: (Long) -> Unit = {},
     onShowSnackBar: (String, String?) -> Unit = { _, _ -> },
 ) {
     val context = LocalContext.current
@@ -33,19 +33,20 @@ fun ReportRoute(
                     sideEffect.runningSummary,
                 )
 
-            is ReportSideEffect.ShowToast -> {
+            is ReportSideEffect.ShowSnackBar -> {
                 val message = context.getString(sideEffect.resId)
                 onShowSnackBar(message, null)
             }
+
+            is ReportSideEffect.NavigateToPostDetail -> navigateToPostDetail(sideEffect.feedId)
         }
     }
 
-    LaunchedEffect(sessionId) {
-        viewModel.onIntent(ReportIntent.LoadSessionDetail(sessionId))
+    LaunchedEffect(Unit) {
+        viewModel.onIntent(ReportIntent.LoadSessionDetail)
     }
 
     SessionReportScreen(
-        sessionId = sessionId,
         state = state.value,
         onIntent = viewModel::onIntent,
         navigateToHome = navigateToHome,

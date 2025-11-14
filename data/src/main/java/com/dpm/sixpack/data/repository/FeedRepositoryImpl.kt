@@ -18,6 +18,7 @@ import com.dpm.sixpack.domain.model.CertifiedUser
 import com.dpm.sixpack.domain.model.Feed
 import com.dpm.sixpack.domain.model.ReactionResult
 import com.dpm.sixpack.domain.model.SelfieCounts
+import com.dpm.sixpack.domain.model.Uploadable
 import com.dpm.sixpack.domain.model.UserSummary
 import com.dpm.sixpack.domain.repository.FeedListItem
 import com.dpm.sixpack.domain.repository.FeedRepository
@@ -216,6 +217,19 @@ class FeedRepositoryImpl @Inject constructor(
                 DoRunResult.Success(Unit)
             } catch (e: Exception) {
                 DoRunResult.Failure(DoRunException.DataError("게시물 수정에 실패했습니다: ${e.message}"))
+            }
+        }
+
+    override suspend fun getUploadable(sessionId: Long): DoRunResult<Uploadable> =
+        withContext(Dispatchers.IO) {
+            try {
+                val uploadable =
+                    feedDataSource.getUploadable(sessionId).data?.toDomain()
+                        ?: throw DoRunException.DataError("데이터 변환에 실패했습니다")
+
+                DoRunResult.Success(uploadable)
+            } catch (e: Exception) {
+                DoRunResult.Failure(DoRunException.DataError("업로드 가능 여부 조회 실패: ${e.message}"))
             }
         }
 }

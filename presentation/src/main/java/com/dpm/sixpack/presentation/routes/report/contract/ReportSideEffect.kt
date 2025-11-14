@@ -14,7 +14,12 @@ sealed interface ReportSideEffect : SideEffect {
         val runningSummary: RunningSummary,
     ) : ReportSideEffect
 
-    data class ShowToast(
+    // 인증게시물(피드) 화면으로 이동
+    data class NavigateToPostDetail(
+        val feedId: Long,
+    ) : ReportSideEffect
+
+    data class ShowSnackBar(
         @StringRes val resId: Int,
     ) : ReportSideEffect
 }

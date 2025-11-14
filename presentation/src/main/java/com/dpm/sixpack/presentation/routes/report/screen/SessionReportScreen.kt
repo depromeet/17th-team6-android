@@ -18,13 +18,13 @@ import com.dpm.sixpack.presentation.common.components.preview.DoRunPreviewWrappe
 import com.dpm.sixpack.presentation.common.components.topbar.DoRunNavigationTopBar
 import com.dpm.sixpack.presentation.routes.report.component.ReportBottomBar
 import com.dpm.sixpack.presentation.routes.report.component.ReportErrorScreen
+import com.dpm.sixpack.presentation.routes.report.contract.ReportBottomBarType
 import com.dpm.sixpack.presentation.routes.report.contract.ReportIntent
 import com.dpm.sixpack.presentation.routes.report.contract.ReportState
 import com.dpm.sixpack.presentation.theme.SixpackTheme
 
 @Composable
 internal fun SessionReportScreen(
-    sessionId: Long,
     state: ReportState,
     onIntent: (ReportIntent) -> Unit,
     navigateToHome: () -> Unit = { },
@@ -41,17 +41,20 @@ internal fun SessionReportScreen(
         },
         bottomBar = {
             if (state is ReportState.Success) {
-                if (state.sessionDetail.feed == null) {
-                    ReportBottomBar(
-                        modifier =
-                            Modifier
-                                .padding(horizontal = 24.dp)
-                                .padding(bottom = 12.dp),
-                        onClick = {
-                            onIntent(ReportIntent.NavigateToPostUpload(sessionId))
+                ReportBottomBar(
+                    imageUrl = state.sessionDetail.feed?.selfieImage ?: state.sessionDetail.feed?.mapImage,
+                    bottomBarType =
+                        if (state.sessionDetail.feed != null) {
+                            ReportBottomBarType.DETAIL
+                        } else {
+                            state.bottomBarType
                         },
-                    )
-                }
+                    modifier =
+                        Modifier
+                            .padding(horizontal = 24.dp)
+                            .padding(bottom = 12.dp),
+                    onIntent = onIntent,
+                )
             }
         },
         containerColor = SixpackTheme.colors.gray0,
@@ -91,7 +94,7 @@ internal fun SessionReportScreen(
                         description = stringResource(R.string.error_network_connection_explanation),
                         confirmButtonText = stringResource(R.string.retry),
                         onConfirmClick = {
-                            onIntent(ReportIntent.LoadSessionDetail(sessionId))
+                            onIntent(ReportIntent.LoadSessionDetail)
                         },
                         navigateToHome = navigateToHome,
                     )
@@ -148,7 +151,6 @@ fun RunningRecordDetailScreenPreview() {
 //            )
 //            Spacer(modifier = Modifier.height(20.dp))
             SessionReportScreen(
-                sessionId = 123,
                 state =
                     ReportState.Success(
                         sessionDetail = sampleSessionDetailWithFeed,

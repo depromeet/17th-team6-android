@@ -6,6 +6,7 @@ import com.dpm.sixpack.data.source.remote.dto.response.FeedDto
 import com.dpm.sixpack.data.source.remote.dto.response.FeedPageDto
 import com.dpm.sixpack.data.source.remote.dto.response.ReactionResultDto
 import com.dpm.sixpack.data.source.remote.dto.response.SelfieCountsDto
+import com.dpm.sixpack.data.source.remote.dto.response.UploadableResponseDto
 import com.dpm.sixpack.data.source.remote.util.base.BaseResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -76,4 +77,9 @@ interface FeedService {
         @Query("startDate") startDate: String,
         @Query("endDate") endDate: String,
     ): BaseResponse<SelfieCountsDto>
+
+    @GET("/api/selfie/uploadable")
+    suspend fun getUploadable(
+        @Query("runSessionId") sessionId: Long,
+    ): BaseResponse<UploadableResponseDto>
 }

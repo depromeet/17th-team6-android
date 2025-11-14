@@ -138,6 +138,9 @@ internal fun MainNavHost(
                 navigateToPostUpload = { sessionId, mapImageUrl, runningSummary ->
                     navController.navigateToPostUpload(sessionId, mapImageUrl, runningSummary)
                 },
+                navigateToPostDetail = { feedId ->
+                    navController.navigateToPostDetail(feedId)
+                },
             )
 
             addFeedNavGraph(
