@@ -6,12 +6,11 @@ import com.dpm.sixpack.domain.model.RunSession
 import com.dpm.sixpack.presentation.common.util.format.formatCadence
 import com.dpm.sixpack.presentation.common.util.format.formatPace
 import com.dpm.sixpack.presentation.common.util.format.formatSecondsToTimeInFeed
-import com.dpm.sixpack.presentation.common.util.format.toDateWithDayOfWeekOrNullInstant
-import com.dpm.sixpack.presentation.common.util.format.toPostTimeStringOrNull
-import com.dpm.sixpack.presentation.common.util.format.toTimeOnlyOrNullInstant
+import com.dpm.sixpack.presentation.common.util.format.toDateWithDayOfWeekSafe
+import com.dpm.sixpack.presentation.common.util.format.toPostTimeStringSafe
+import com.dpm.sixpack.presentation.common.util.format.toTimeOnlySafe
 import com.dpm.sixpack.presentation.common.util.formatDistanceToKm
 import kotlinx.parcelize.Parcelize
-import java.time.LocalDate
 
 @Parcelize
 @Immutable
@@ -23,9 +22,9 @@ data class RecordItem(
     val postTime: String = "",
 ) : Parcelable {
     val formattedTime: String
-        get() = postTime.toTimeOnlyOrNullInstant() ?: LocalDate.now().toString()
+        get() = postTime.toTimeOnlySafe()
     val formattedDate: String
-        get() = postTime.toDateWithDayOfWeekOrNullInstant() ?: LocalDate.now().toString()
+        get() = postTime.toDateWithDayOfWeekSafe()
 }
 
 fun RunSession.toRecordItem(): RecordItem =
@@ -37,11 +36,11 @@ fun RunSession.toRecordItem(): RecordItem =
                 totalTime = formatSecondsToTimeInFeed(durationTotal.toLong()),
                 averagePace = formatPace(paceAvg),
                 cadence = formatCadence(cadenceAvg),
-                recordDateTime = finishedAt.toPostTimeStringOrNull() ?: LocalDate.now().toString(),
+                recordDateTime = createdAt.toPostTimeStringSafe(),
             ),
         mapImageUrl = mapImage,
         isPosted = isSelfied,
-        postTime = finishedAt,
+        postTime = createdAt,
     )
 
 fun List<RunSession>.toRecordItems(): List<RecordItem> = map { it.toRecordItem() }

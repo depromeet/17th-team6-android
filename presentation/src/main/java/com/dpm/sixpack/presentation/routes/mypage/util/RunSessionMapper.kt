@@ -1,6 +1,8 @@
 package com.dpm.sixpack.presentation.routes.mypage.util
 
 import com.dpm.sixpack.domain.model.RunSession
+import com.dpm.sixpack.presentation.common.util.format.toDateWithDayOfWeekSafe
+import com.dpm.sixpack.presentation.common.util.format.toTimeOnlySafe
 import com.dpm.sixpack.presentation.routes.mypage.contract.CertificationStatus
 import com.dpm.sixpack.presentation.routes.mypage.contract.RecordItem
 import java.time.LocalDateTime
@@ -36,22 +38,25 @@ object RunSessionMapper {
         }
 
     fun RunSession.toRecordItem(): RecordItem {
-        val finishedDateTime = parseDateTime(finishedAt)
+//        val finishedDateTime = parseDateTime(finishedAt)
+//
+//        // Format: "2025.09.30 (화)"
+//        val dateFormatted =
+//            String.format(
+//                Locale.getDefault(),
+//                "%04d.%02d.%02d (%s)",
+//                finishedDateTime.year,
+//                finishedDateTime.monthValue,
+//                finishedDateTime.dayOfMonth,
+//                dayOfWeekKorean[finishedDateTime.dayOfWeek.value] ?: "",
+//            )
+//
+//        // Format: "오전 10:11" or "오후 11:12"
+//        val timeFormatted =
+//            DateTimeFormatter.ofPattern("a hh:mm", Locale.KOREAN).format(finishedDateTime)
 
-        // Format: "2025.09.30 (화)"
-        val dateFormatted =
-            String.format(
-                Locale.getDefault(),
-                "%04d.%02d.%02d (%s)",
-                finishedDateTime.year,
-                finishedDateTime.monthValue,
-                finishedDateTime.dayOfMonth,
-                dayOfWeekKorean[finishedDateTime.dayOfWeek.value] ?: "",
-            )
-
-        // Format: "오전 10:11" or "오후 11:12"
-        val timeFormatted =
-            DateTimeFormatter.ofPattern("a hh:mm", Locale.KOREAN).format(finishedDateTime)
+        val createdAtTime = createdAt.toTimeOnlySafe()
+        val createdAtDate = createdAt.toDateWithDayOfWeekSafe()
 
         // Convert meters to km
         val distanceKm = distanceTotal / 1000.0
@@ -77,8 +82,8 @@ object RunSessionMapper {
 
         return RecordItem(
             id = runSessionId,
-            date = dateFormatted,
-            time = timeFormatted,
+            date = createdAtDate,
+            time = createdAtTime,
             distanceKm = distanceKm,
             durationFormatted = durationFormatted,
             paceFormatted = paceFormatted,

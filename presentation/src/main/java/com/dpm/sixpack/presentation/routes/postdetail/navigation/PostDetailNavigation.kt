@@ -10,14 +10,18 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.ui.unit.IntOffset
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
 import com.dpm.sixpack.presentation.common.util.constant.DeepLinks
 import com.dpm.sixpack.presentation.destinations.PostDetail
 import com.dpm.sixpack.presentation.routes.postdetail.PostDetailRoute
 
-fun NavController.navigateToPostDetail(feedId: Long) {
-    navigate(PostDetail(feedId = feedId))
+fun NavController.navigateToPostDetail(
+    feedId: Long,
+    navOptions: NavOptions? = null,
+) {
+    navigate(PostDetail(feedId = feedId), navOptions)
 }
 
 fun NavGraphBuilder.addPostDetailNavGraph(

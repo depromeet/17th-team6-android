@@ -1,10 +1,8 @@
 package com.dpm.sixpack.fcm
 
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
-import android.graphics.BitmapFactory
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
@@ -21,8 +19,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
-
-const val PRIMARY_PUSH_CHANNEL_ID = "primary_channel"
 
 @AndroidEntryPoint
 class FcmService : FirebaseMessagingService() {
@@ -71,28 +67,60 @@ class FcmService : FirebaseMessagingService() {
         }
     }
 
+    /**
+     * 서버에서 받은 notificationType을 기반으로
+     * 사용할 알림 채널 ID를 반환합니다.
+     */
+    private fun getChannelIdForType(notificationType: String?): String =
+        when (notificationType) {
+            // 1. 응원/깨우기 채널
+            "CHEER_FRIEND" ->
+                NotificationChannelIds.CHEER
+
+            // 2. 소셜/피드 채널
+            "FEED_UPLOADED",
+            "FEED_REACTION",
+            ->
+                NotificationChannelIds.SOCIAL
+
+            // 3. 리마인더/독촉 채널
+            "FEED_REMINDER",
+            "RUNNING_PROGRESS_REMINDER",
+            "NEW_USER_RUNNING_REMINDER",
+            "NEW_USER_FRIEND_REMINDER",
+            ->
+                NotificationChannelIds.REMINDER
+
+            // 4. 그 외 알 수 없는 타입은 기본 채널로 보냅니다.
+            else ->
+                NotificationChannelIds.SOCIAL // (또는 별도의 '기타' 채널)
+        }
+
     private fun sendNotification(
-        notification: RemoteMessage.Notification, // 1. Notification 객체 전체를 받음
-        data: Map<String, String>, // 2. data 페이로드(Map)를 받음
+        notification: RemoteMessage.Notification,
+        data: Map<String, String>,
     ) {
-        // 3. 딥링크가 있는지 확인
-        val deeplink = data["deepLink"]
+        // notification 페이로드의 'link' 속성을 확인합니다. (Uri -> String)
+        val deeplinkFromNotification = notification.link?.toString()
+
+        // data 페이로드의 'deepLink' 키를 확인합니다.
+        val deeplinkFromData = data["deepLink"]
+
+        // 딥링크를 확정합니다. (notification.link를 우선)
+        val deeplink: String? = deeplinkFromNotification ?: deeplinkFromData
 
         // 4. 딥링크 존재 여부에 따라 Intent를 다르게 생성
         val intent: Intent? =
             if (deeplink != null) {
-                // ✅ Case 1: 딥링크가 있을 때 (기존 로직)
+                // ✅ Case 1: 딥링크가 있을 때 (어느 쪽이든 OK)
                 Timber.d("Deeplink found: $deeplink")
                 Intent(Intent.ACTION_VIEW, deeplink.toUri()).apply {
                     addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 }
             } else {
-                // ✅ Case 2: 딥링크가 없을 때 (모듈 분리 솔루션)
-                // '패키지 이름'을 기반으로 앱의 '메인 실행 Intent'를 찾습니다.
-                // FcmService(Context)는 자신의 packageName을 알고 있습니다.
+                // ✅ Case 2: 딥링크가 없을 때 (메인 실행)
                 Timber.d("No deeplink. Getting launch intent for package: $packageName")
                 packageManager.getLaunchIntentForPackage(packageName)?.apply {
-                    // 알림을 통해 실행될 때 기존 스택을 정리
                     addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 }
             }
@@ -135,46 +163,9 @@ class FcmService : FirebaseMessagingService() {
                 .setContentTitle(notification.title)
                 .setContentText(notification.body)
                 .setAutoCancel(true)
-                .setContentIntent(pendingIntent) // 10. 딥링크가 담긴 PendingIntent 설정
+                .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-
-        val channel =
-            NotificationChannel(
-                channelId,
-                "기본 알림",
-                NotificationManager.IMPORTANCE_HIGH,
-            )
-        notificationManager.createNotificationChannel(channel)
 
         notificationManager.notify(0, notificationBuilder.build())
     }
-
-    /**
-     * 서버에서 받은 notificationType을 기반으로
-     * 사용할 알림 채널 ID를 반환합니다.
-     */
-    private fun getChannelIdForType(notificationType: String?): String =
-        when (notificationType) {
-            // 1. 응원/깨우기 채널
-            "CHEER_FRIEND" ->
-                NotificationChannelIds.CHEER
-
-            // 2. 소셜/피드 채널
-            "FEED_UPLOADED",
-            "FEED_REACTION",
-            ->
-                NotificationChannelIds.SOCIAL
-
-            // 3. 리마인더/독촉 채널
-            "FEED_REMINDER",
-            "RUNNING_PROGRESS_REMINDER",
-            "NEW_USER_RUNNING_REMINDER",
-            "NEW_USER_FRIEND_REMINDER",
-            ->
-                NotificationChannelIds.REMINDER
-
-            // 4. 그 외 알 수 없는 타입은 기본 채널로 보냅니다.
-            else ->
-                NotificationChannelIds.SOCIAL // (또는 별도의 '기타' 채널)
-        }
 }

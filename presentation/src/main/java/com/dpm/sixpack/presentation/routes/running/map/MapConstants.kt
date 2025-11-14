@@ -11,7 +11,7 @@ object MapConstants {
     const val DEFAULT_ZOOM = 16.0
     const val MIN_ZOOM_LEVEL = 6.0
     const val MAX_ZOOM_LEVEL = 18.0
-    const val SNAPSHOT_PADDING = 300
+    const val SNAPSHOT_PADDING = 150
     const val FINAL_RESOLUTION = 720
 
     val DEFAULT_CAMERA_POSITION =

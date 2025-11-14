@@ -4,12 +4,15 @@ import androidx.lifecycle.SavedStateHandle
 import com.dpm.sixpack.domain.exception.DoRunException
 import com.dpm.sixpack.domain.model.MaxPaceData
 import com.dpm.sixpack.domain.model.RunningSessionResult
+import com.dpm.sixpack.domain.usecase.feed.GetFeedUploadableUseCase
 import com.dpm.sixpack.domain.usecase.running.GetSessionDetailUseCase
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
 import com.dpm.sixpack.presentation.common.model.toRunningSummary
+import com.dpm.sixpack.presentation.routes.report.contract.ReportBottomBarType
 import com.dpm.sixpack.presentation.routes.report.contract.ReportIntent
 import com.dpm.sixpack.presentation.routes.report.contract.ReportSideEffect
 import com.dpm.sixpack.presentation.routes.report.contract.ReportState
+import com.dpm.sixpack.presentation.routes.report.contract.toBottomBarType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
@@ -20,7 +23,10 @@ import javax.inject.Inject
 class SessionReportViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getSessionDetailUseCase: GetSessionDetailUseCase,
+    private val getFeedUploadableUseCase: GetFeedUploadableUseCase,
 ) : BaseViewModel<ReportState, ReportIntent, ReportSideEffect>() {
+    private val sessionId: Long = savedStateHandle.get<Long>("sessionId") ?: -1L
+
     override val initialState: ReportState = ReportState.Loading
 
     override val container: Container<ReportState, ReportSideEffect> =
@@ -28,24 +34,41 @@ class SessionReportViewModel @Inject constructor(
 
     override fun onIntent(intent: ReportIntent) {
         when (intent) {
-            is ReportIntent.LoadSessionDetail -> handleLoadSessionDetail(intent.sessionId)
+            is ReportIntent.LoadSessionDetail -> handleLoadSessionDetail(sessionId)
             ReportIntent.NavigateBack -> handleNavigateBack()
             is ReportIntent.NavigateToPostUpload -> handleNavigateToPostEdit()
-            ReportIntent.RetryLoad -> handleRetryLoad()
+            ReportIntent.NavigateToPostDetail -> handleNavigateToPostUpload()
         }
     }
 
     private fun handleLoadSessionDetail(sessionId: Long) =
         intent {
+            reduce {
+                ReportState.Loading
+            }
+
             if (sessionId != -1L) {
                 getSessionDetailUseCase(sessionId)
-                    .onSuccess {
-                        Timber.d("Success to get session detail: $it")
-                        reduce {
-                            ReportState.Success(
-                                sessionDetail = it,
-                            )
-                        }
+                    .onSuccess { detail ->
+                        Timber.d("Success to get session detail: $detail")
+                        getFeedUploadableUseCase(sessionId)
+                            .onSuccess { uploadable ->
+                                Timber.d("Success to get uploadable: $uploadable")
+                                reduce {
+                                    ReportState.Success(
+                                        sessionDetail = detail,
+                                        bottomBarType = uploadable.toBottomBarType(),
+                                    )
+                                }
+                            }.onError {
+                                Timber.w("Failed to get uploadable: ${it.message}")
+                                reduce {
+                                    ReportState.Success(
+                                        sessionDetail = detail,
+                                        bottomBarType = ReportBottomBarType.NONE,
+                                    )
+                                }
+                            }
                     }.onError {
                         Timber.w("Failed to get session detail: ${it.message}")
                         val code = if (it is DoRunException.DataError) 404 else 0
@@ -86,6 +109,12 @@ class SessionReportViewModel @Inject constructor(
                     maxCadence = sessionDetail.cadenceMax,
                 ).toRunningSummary(sessionDetail.finishedAt)
             postSideEffect(ReportSideEffect.NavigateToPostUpload(sessionId, mapImageUrl, runningSummary))
+        }
+
+    private fun handleNavigateToPostUpload() =
+        intent {
+            val feedId = (state as? ReportState.Success)?.sessionDetail?.feed?.id ?: return@intent
+            postSideEffect(ReportSideEffect.NavigateToPostDetail(feedId))
         }
 
     private fun handleRetryLoad() =

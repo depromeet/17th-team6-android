@@ -8,6 +8,7 @@ import com.dpm.sixpack.data.source.remote.dto.response.FeedsWrapperDto
 import com.dpm.sixpack.data.source.remote.dto.response.MetaDto
 import com.dpm.sixpack.data.source.remote.dto.response.ReactionResultDto
 import com.dpm.sixpack.data.source.remote.dto.response.SelfieCountsDto
+import com.dpm.sixpack.data.source.remote.dto.response.UploadableResponseDto
 import com.dpm.sixpack.data.source.remote.dto.response.UserSummaryDto
 import com.dpm.sixpack.data.source.remote.util.base.BaseResponse
 import kotlinx.coroutines.delay
@@ -224,4 +225,16 @@ class MockFeedService @Inject constructor() : FeedService {
             data = Unit,
         )
     }
+
+    override suspend fun getUploadable(sessionId: Long): BaseResponse<UploadableResponseDto> =
+        BaseResponse(
+            status = "200",
+            message = "200",
+            timestamp = getCurrentTimestamp(),
+            data =
+                UploadableResponseDto(
+                    isUploadable = true,
+                    reason = null,
+                ),
+        )
 }

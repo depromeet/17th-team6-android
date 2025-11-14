@@ -7,6 +7,8 @@ import com.dpm.sixpack.presentation.routes.running.session.contract.state.PathSt
 import com.naver.maps.geometry.LatLng
 
 sealed interface MapIntent : RunningRouteIntent {
+    data object ScreenStarted : MapIntent
+
     data object ToggleFollowingMode : MapIntent
 
     data object FollowingModeOff : MapIntent
@@ -52,5 +54,7 @@ sealed interface MapIntent : RunningRouteIntent {
         ) : FriendSheetIntent
 
         data object FriendIconClick : FriendSheetIntent
+
+        data object PullToRefresh : FriendSheetIntent
     }
 }

@@ -6,6 +6,7 @@ import com.dpm.sixpack.data.source.remote.dto.response.FeedDto
 import com.dpm.sixpack.data.source.remote.dto.response.FeedPageDto
 import com.dpm.sixpack.data.source.remote.dto.response.ReactionResultDto
 import com.dpm.sixpack.data.source.remote.dto.response.SelfieCountsDto
+import com.dpm.sixpack.data.source.remote.dto.response.UploadableResponseDto
 import com.dpm.sixpack.data.source.remote.service.FeedService
 import com.dpm.sixpack.data.source.remote.util.base.BaseResponse
 import okhttp3.MultipartBody
@@ -82,5 +83,10 @@ class FeedDataSource @Inject constructor(
             feedId = feedId,
             data = data,
             selfieImage = selfieImage,
+        )
+
+    suspend fun getUploadable(sessionId: Long): BaseResponse<UploadableResponseDto> =
+        feedService.getUploadable(
+            sessionId = sessionId,
         )
 }
