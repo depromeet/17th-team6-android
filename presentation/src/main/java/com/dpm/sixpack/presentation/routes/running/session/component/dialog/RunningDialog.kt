@@ -86,13 +86,13 @@ fun RunningDialog(
                         shape = SixpackTheme.shapes.round12,
                         colors =
                             ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFFF0F0F0), // 회색 배경
+                                containerColor = SixpackTheme.colors.gray100, // 회색 배경
                             ),
                     ) {
                         Text(
                             text = "취소",
                             style = SixpackTheme.typography.b1Bold,
-                            color = SixpackTheme.colors.gray700,
+                            color = SixpackTheme.colors.gray900,
                         )
                     }
 

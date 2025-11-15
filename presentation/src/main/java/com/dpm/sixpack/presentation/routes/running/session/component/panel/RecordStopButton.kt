@@ -17,6 +17,20 @@ internal fun RecordStopButton(
         modifier = modifier,
         text = stringResource(R.string.panel_record_terminate),
         onClick = onClick,
+        textColor = SixpackTheme.colors.gray900,
+        containerColor = SixpackTheme.colors.gray100,
+    )
+}
+
+@Composable
+internal fun RecordStopConfirmButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    DoRunDefaultButton(
+        modifier = modifier,
+        text = stringResource(R.string.panel_record_terminate),
+        onClick = onClick,
         textColor = SixpackTheme.colors.red,
         containerColor = SixpackTheme.colors.redLight,
     )
