@@ -59,6 +59,8 @@ import com.dpm.sixpack.presentation.routes.running.map.contract.MapUiState
 import com.dpm.sixpack.presentation.routes.running.map.contract.MapViewState
 import com.dpm.sixpack.presentation.routes.running.map.friendsheet.DraggableFriendBottomSheet
 import com.dpm.sixpack.presentation.routes.running.session.RunningSessionScreen
+import com.dpm.sixpack.presentation.routes.running.session.RunningSessionViewModel
+import com.dpm.sixpack.presentation.routes.running.session.contract.RunningSessionIntent
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
@@ -101,6 +103,7 @@ internal fun RunningMapScreen(
     navigateToReport: (Long) -> Unit,
     navigateToFriendList: () -> Unit,
     mapViewModel: MapViewModel = hiltViewModel(),
+    sessionViewModel: RunningSessionViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val state by mapViewModel.collectAsState()
@@ -201,6 +204,7 @@ internal fun RunningMapScreen(
         onShowSnackBar = onShowSnackBar,
         onMapIntent = mapViewModel::onIntent,
         pagingItems = pagingItems,
+        sessionViewModel = sessionViewModel,
     )
 }
 
@@ -211,10 +215,11 @@ private fun RunningMapScreenContent(
     pagingItems: LazyPagingItems<FriendItem>,
     cameraPositionState: CameraPositionState,
     locationSource: LocationSource,
+    modifier: Modifier = Modifier,
     setFullScreenLoading: (Boolean) -> Unit,
     onShowSnackBar: (String, String?) -> Unit,
     onMapIntent: (MapIntent) -> Unit,
-    modifier: Modifier,
+    sessionViewModel: RunningSessionViewModel,
 ) {
     val context = LocalContext.current
     val density = LocalDensity.current
@@ -415,8 +420,7 @@ private fun RunningMapScreenContent(
                                 .constrainAs(sheetRef) {
                                     start.linkTo(parent.start)
                                     end.linkTo(parent.end)
-                                }
-                                .fillMaxWidth()
+                                }.fillMaxWidth()
                                 .offset {
                                     val yOffset = draggableState.offset
                                     if (yOffset.isNaN()) {
@@ -441,6 +445,7 @@ private fun RunningMapScreenContent(
                         enabled = mapState.allPermissionsGranted && mapState.isLocationServiceEnabled,
                         onStartClick = {
                             onMapIntent(MapIntent.SessionStartClick)
+                            sessionViewModel.onIntent(RunningSessionIntent.SessionStart)
                         },
                     )
                 }
@@ -456,6 +461,7 @@ private fun RunningMapScreenContent(
                         },
                         onShowSnackBar = onShowSnackBar,
                         setFullScreenLoading = setFullScreenLoading,
+                        sessionViewModel = sessionViewModel,
                     )
                 }
             }

@@ -31,7 +31,7 @@ fun ConstraintLayoutScope.RunningSessionScreen(
     onSessionFinish: () -> Unit,
     onShowSnackBar: (String, String?) -> Unit,
     setFullScreenLoading: (Boolean) -> Unit,
-    sessionViewModel: RunningSessionViewModel = hiltViewModel(),
+    sessionViewModel: RunningSessionViewModel,
 ) {
     val view = LocalView.current
     val context = LocalContext.current
@@ -50,10 +50,6 @@ fun ConstraintLayoutScope.RunningSessionScreen(
 
     BackHandler {
         // 뒤로가기 못하게
-    }
-
-    LaunchedEffect(Unit) {
-        sessionViewModel.onIntent(RunningSessionIntent.SessionStart)
     }
 
     DisposableEffect(Unit) {

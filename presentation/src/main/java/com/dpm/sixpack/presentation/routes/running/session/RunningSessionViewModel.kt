@@ -12,8 +12,8 @@ import com.dpm.sixpack.domain.model.RealtimeRunningData
 import com.dpm.sixpack.domain.usecase.running.StartRunningUseCase
 import com.dpm.sixpack.presentation.R
 import com.dpm.sixpack.presentation.common.base.BaseViewModel
+import com.dpm.sixpack.presentation.common.util.Gongdeok
 import com.dpm.sixpack.presentation.common.util.MockLocationClient
-import com.dpm.sixpack.presentation.common.util.Sungsoo
 import com.dpm.sixpack.presentation.routes.running.session.contract.RunningSessionIntent
 import com.dpm.sixpack.presentation.routes.running.session.contract.RunningSessionSideEffect
 import com.dpm.sixpack.presentation.routes.running.session.contract.RunningSessionUiState
@@ -131,7 +131,7 @@ class RunningSessionViewModel @Inject constructor(
         if (mockLocationClient.isRunning) {
             mockLocationClient.resume()
         } else {
-            mockLocationClient.startWithLatLng(Sungsoo)
+            mockLocationClient.startWithLatLng(Gongdeok)
         }
 
         sendCommandToService(context, RunningActions.START_OR_RESUME)
