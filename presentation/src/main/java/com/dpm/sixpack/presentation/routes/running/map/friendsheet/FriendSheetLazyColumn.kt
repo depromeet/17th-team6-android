@@ -168,6 +168,8 @@ internal fun FriendSheetLazyColumn(
                             )
                         }
 
+                        Spacer(modifier = Modifier.height(24.dp))
+
                         Column(
                             modifier = Modifier.fillMaxSize(),
                             verticalArrangement = Arrangement.Center,
