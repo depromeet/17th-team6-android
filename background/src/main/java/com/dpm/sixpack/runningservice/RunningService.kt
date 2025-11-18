@@ -1,6 +1,5 @@
 package com.dpm.sixpack.runningservice
 
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Intent
 import android.os.Binder
@@ -90,8 +89,7 @@ class RunningService : LifecycleService() {
 
     private fun startService() {
         isPaused = false
-        createNotificationChannel()
-        startForeground(NOTIFICATION_ID, baseNotificationBuilder.build())
+        startForeground(RUNNING_NOTIFICATION_ID, baseNotificationBuilder.build())
 
         // 1. 실시간 데이터 수집 및 UI 발행 시작
         runningDataUseCase.start()
@@ -203,17 +201,7 @@ class RunningService : LifecycleService() {
             baseNotificationBuilder
                 .setContentText(TimeUtil.formatMillisWithDuration(durationInSeconds * 1000L))
                 .build()
-        notificationManager.notify(NOTIFICATION_ID, notification)
-    }
-
-    private fun createNotificationChannel() {
-        val channel =
-            NotificationChannel(
-                NOTIFICATION_CHANNEL_ID,
-                NOTIFICATION_CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_LOW,
-            )
-        notificationManager.createNotificationChannel(channel)
+        notificationManager.notify(RUNNING_NOTIFICATION_ID, notification)
     }
 
     inner class RunningBinder : Binder() {

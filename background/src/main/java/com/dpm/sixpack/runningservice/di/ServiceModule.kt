@@ -3,7 +3,7 @@ package com.dpm.sixpack.runningservice.di
 import android.content.Context
 import androidx.core.app.NotificationCompat
 import com.dpm.sixpack.background.R
-import com.dpm.sixpack.runningservice.NOTIFICATION_CHANNEL_ID
+import com.dpm.sixpack.runningservice.RUNNING_NOTIFICATION_CHANNEL_ID
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,7 +20,7 @@ object ServiceModule {
         @ApplicationContext context: Context,
 //        pendingIntent: PendingIntent
     ) = NotificationCompat
-        .Builder(context, NOTIFICATION_CHANNEL_ID)
+        .Builder(context, RUNNING_NOTIFICATION_CHANNEL_ID)
         .setAutoCancel(false)
         .setOngoing(true)
         .setSmallIcon(R.drawable.ic_notification)
