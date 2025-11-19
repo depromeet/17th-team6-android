@@ -9,6 +9,8 @@ import coil3.PlatformContext
 import coil3.SingletonImageLoader
 import com.dpm.sixpack.fcm.NotificationChannelIds
 import com.dpm.sixpack.presentation.common.util.navermap.AppInitializer
+import com.dpm.sixpack.runningservice.RUNNING_NOTIFICATION_CHANNEL_ID
+import com.dpm.sixpack.runningservice.RUNNING_NOTIFICATION_CHANNEL_NAME
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 import javax.inject.Inject
@@ -76,10 +78,18 @@ class SixPackApp :
                 description = "러닝 및 피드 업로드를 독려하는 알림입니다."
             }
 
+        val runningChannel =
+            NotificationChannel(
+                RUNNING_NOTIFICATION_CHANNEL_ID,
+                RUNNING_NOTIFICATION_CHANNEL_NAME,
+                NotificationManager.IMPORTANCE_LOW,
+            )
+
         // 시스템에 모든 채널 등록
         manager.createNotificationChannel(cheerChannel)
         manager.createNotificationChannel(socialChannel)
         manager.createNotificationChannel(reminderChannel)
+        manager.createNotificationChannel(runningChannel)
     }
 
     override fun newImageLoader(context: PlatformContext): ImageLoader = imageLoader.get()

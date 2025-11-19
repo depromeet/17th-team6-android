@@ -19,6 +19,7 @@ import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -98,8 +99,17 @@ fun DoRunSignInputField(
 
         // TextFieldValue로 관리하되 커서를 항상 맨 끝으로 강제
         // value가 key이므로 value 변경 시 자동으로 새 TextFieldValue 생성
-        var textFieldValueState by remember(value) {
+        var textFieldValueState by remember {
             mutableStateOf(TextFieldValue(text = value, selection = TextRange(value.length)))
+        }
+
+        LaunchedEffect(value) {
+            if (textFieldValueState.text != value) {
+                textFieldValueState = textFieldValueState.copy(
+                    text = value,
+                    selection = TextRange(value.length)
+                )
+            }
         }
 
         val customTextSelectionColors =
@@ -112,21 +122,18 @@ fun DoRunSignInputField(
             BasicTextField(
                 value = textFieldValueState,
                 onValueChange = { newValue ->
+                    if (maxLength != null && newValue.text.length > maxLength) {
+                        // 길이가 초과되면 업데이트 하지 않음 (기존 상태 유지)
+                        return@BasicTextField
+                    }
 
-                    // 최대 길이 제한 적용
-                    val newText =
-                        if (maxLength != null) {
-                            newValue.text.take(maxLength)
-                        } else {
-                            newValue.text
-                        }
-                    val newLength = newText.length
-                    textFieldValueState =
-                        TextFieldValue(
-                            text = newText,
-                            selection = TextRange(newLength),
-                        )
-                    onValueChange(newText)
+                    // 핵심: newValue를 그대로 상태에 반영해야 한글 조합(Composition)이 깨지지 않음
+                    textFieldValueState = newValue
+
+                    // 텍스트가 실제로 변경되었을 때만 상위로 이벤트 전달
+                    if (value != newValue.text) {
+                        onValueChange(newValue.text)
+                    }
                 },
                 modifier =
                     Modifier
