@@ -56,6 +56,8 @@ class RunningSessionViewModel @Inject constructor(
     @SuppressLint("StaticFieldLeak")
     private var runningService: RunningService? = null
 
+    private var isServiceBound = false
+
     private val serviceConnection =
         object : ServiceConnection {
             override fun onServiceConnected(
@@ -64,10 +66,12 @@ class RunningSessionViewModel @Inject constructor(
             ) {
                 val binder = service as? RunningService.RunningBinder ?: return
                 runningService = binder.getService()
+                isServiceBound = true
                 observeServiceState()
             }
 
             override fun onServiceDisconnected(name: ComponentName?) {
+                isServiceBound = false
                 runningService = null
             }
         }
@@ -273,13 +277,22 @@ class RunningSessionViewModel @Inject constructor(
 
     private fun bindToService() {
         Intent(context, RunningService::class.java).also { intent ->
-            context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+            isServiceBound = context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         }
     }
 
     override fun onCleared() {
         mockLocationClient.stop()
-        context.unbindService(serviceConnection)
+        if (isServiceBound) {
+            try {
+                context.unbindService(serviceConnection)
+                isServiceBound = false
+            } catch (e: IllegalArgumentException) {
+                Timber.w("Service already unbound or not registered: ${e.message}")
+            } catch (e: Exception) {
+                Timber.e(e, "Failed to unbind service")
+            }
+        }
         super.onCleared()
     }
 }
