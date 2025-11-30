@@ -2,8 +2,8 @@
 
 # App Version
 coreSplashscreen = "1.0.1"
-versionCode = "00004"
-versionName = "0.0.4"
+versionCode = "10000"
+versionName = "1.0.0"
 
 # Build
 agp = "8.12.1"
