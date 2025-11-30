@@ -18,6 +18,7 @@ object DeviceDataRepositoryModule {
     @Provides
     @Singleton
     fun provideGpsRepository(gpsDataSource: GpsDataSource): GpsRepository = GpsRepositoryImpl(gpsDataSource)
+    // Mock 데이터 필요시 아래 주석 사용
 //        if (BuildConfig.DEBUG) {
 //            MockGpsRepository()
 //        } else {
@@ -28,6 +29,7 @@ object DeviceDataRepositoryModule {
     @Singleton
     fun provideSensorRepository(sensorDataSource: SensorDataSource): SensorRepository =
         SensorRepositoryImpl(sensorDataSource)
+    // Mock 데이터 필요시 아래 주석 사용
 //        if (BuildConfig.DEBUG) {
 //            MockSensorRepository()
 //        } else {

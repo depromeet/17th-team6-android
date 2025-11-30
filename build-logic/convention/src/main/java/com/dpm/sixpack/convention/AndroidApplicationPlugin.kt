@@ -73,11 +73,19 @@ class AndroidApplicationPlugin : Plugin<Project> {
                 // Additional release configuration
                 buildTypes {
                     getByName("debug") {
-//                        applicationIdSuffix = ".dev"
+                        proguardFiles(
+                            getDefaultProguardFile("proguard-android.txt"),
+                            "proguard-debug.pro",
+                        )
                     }
+
                     getByName("release") {
                         signingConfig = signingConfigs.getByName("release")
-                        // TODO 난독화 설정, proguard-rule 설정
+                        isMinifyEnabled = true
+                        proguardFiles(
+                            getDefaultProguardFile("proguard-android.txt"),
+                            "proguard-rules.pro",
+                        )
                     }
                 }
             }

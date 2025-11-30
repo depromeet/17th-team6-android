@@ -1,0 +1,1 @@
+-keep class com.dpm.sixpack.data.source.remote.dto.** { *; }
